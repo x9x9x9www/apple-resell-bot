@@ -83,6 +83,12 @@ def get_main_menu_keyboard(
     rows.extend([
         [
             InlineKeyboardButton(
+                text="🔗 Мониторинг по ссылке (Авито/Юла)",
+                callback_data="menu:stream",
+            ),
+        ],
+        [
+            InlineKeyboardButton(
                 text="📊 Выгрузить Excel-прайс",
                 callback_data="menu:export_excel",
             ),
@@ -262,3 +268,79 @@ def get_back_to_menu_keyboard() -> InlineKeyboardMarkup:
             ]
         ]
     )
+
+
+def get_stream_control_keyboard(stream: Any) -> InlineKeyboardMarkup:
+    """Инлайн-пульт управления поисковым потоком по ссылке (как в видео-гайде)."""
+    status_icon = "⏸ Приостановить" if stream.is_active else "▶️ Возобновить"
+    rows = [
+        [
+            InlineKeyboardButton(
+                text=status_icon,
+                callback_data=f"stream_toggle:{stream.chat_id}",
+            ),
+            InlineKeyboardButton(
+                text="⚙️ Фильтры потока",
+                callback_data=f"stream_filters:{stream.chat_id}",
+            ),
+        ],
+        [
+            InlineKeyboardButton(
+                text="🌐 Открыть поиск на источнике",
+                url=stream.url,
+            ),
+        ],
+        [
+            InlineKeyboardButton(
+                text="⛔️ Стоп-слова",
+                callback_data=f"stream_words:{stream.chat_id}",
+            ),
+            InlineKeyboardButton(
+                text="❌ Отключить поиск",
+                callback_data=f"stream_delete:{stream.chat_id}",
+            ),
+        ],
+    ]
+    return InlineKeyboardMarkup(inline_keyboard=rows)
+
+
+def get_stream_filters_keyboard(stream: Any) -> InlineKeyboardMarkup:
+    """Меню тонкой настройки фильтрации объявлений для потока."""
+    photo_text = "📸 Только с фото: ✅ ВКЛ" if stream.filter_only_photo else "📸 Только с фото: ❌ ВЫКЛ"
+    reserve_text = "📦 Без брони (резерва): ✅ ВКЛ" if stream.filter_exclude_reserved else "📦 Без брони (резерва): ❌ ВЫКЛ"
+    promo_text = "🚫 Без рекламы/промо: ✅ ВКЛ" if stream.filter_exclude_promo else "🚫 Без рекламы/промо: ❌ ВЫКЛ"
+    desc_text = "📝 Только с описанием: ✅ ВКЛ" if stream.filter_only_desc else "📝 Только с описанием: ❌ ВЫКЛ"
+
+    rows = [
+        [
+            InlineKeyboardButton(
+                text=photo_text,
+                callback_data=f"sfilter:{stream.chat_id}:filter_only_photo",
+            ),
+        ],
+        [
+            InlineKeyboardButton(
+                text=reserve_text,
+                callback_data=f"sfilter:{stream.chat_id}:filter_exclude_reserved",
+            ),
+        ],
+        [
+            InlineKeyboardButton(
+                text=promo_text,
+                callback_data=f"sfilter:{stream.chat_id}:filter_exclude_promo",
+            ),
+        ],
+        [
+            InlineKeyboardButton(
+                text=desc_text,
+                callback_data=f"sfilter:{stream.chat_id}:filter_only_desc",
+            ),
+        ],
+        [
+            InlineKeyboardButton(
+                text="⬅️ Назад к пульту потока",
+                callback_data=f"stream_back:{stream.chat_id}",
+            ),
+        ],
+    ]
+    return InlineKeyboardMarkup(inline_keyboard=rows)

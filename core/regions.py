@@ -173,6 +173,9 @@ CITY_ALIASES: dict[str, str] = {
     "петербург": "spb",
     "санкт-петербург": "spb",
     "санкт петербург": "spb",
+    "sankt-peterburg": "spb",
+    "sankt_peterburg": "spb",
+    "saint-petersburg": "spb",
     "ленинград": "spb",
 
     # Якутск (Саха)

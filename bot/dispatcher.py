@@ -76,6 +76,19 @@ def format_lot_message(item: ParsedIPhone) -> str:
         header = f"⚡️ <b>СВЕЖИЙ ЛОТ | {item.platform.value}</b> <i>(Только что)</i>"
         price_line = f"💰 <b>Цена:</b> {price_formatted} ₽{profit_text}"
 
+    # Профиль продавца (рейтинг и отзывы)
+    seller_line = ""
+    if getattr(item, "seller_name", None):
+        s_name = item.seller_name
+        rating_part = f" ⭐ {item.seller_rating}" if getattr(item, "seller_rating", None) else ""
+        rev_part = f" ({item.seller_reviews_count} отзывов)" if getattr(item, "seller_reviews_count", None) else ""
+        seller_line = f"\n👤 <b>Продавец:</b> {s_name}{rating_part}{rev_part}"
+
+    # Статус резерва / брони (Авито Доставка)
+    reserve_line = ""
+    if getattr(item, "is_reserved", False):
+        reserve_line = "\n⚠️ <b>Товар зарезервирован!</b> <i>(Авито Доставка)</i>"
+
     message = (
         f"{header}\n\n"
         f"{model_icon} <b>Модель:</b> {item.model}\n"
@@ -83,6 +96,8 @@ def format_lot_message(item: ParsedIPhone) -> str:
         f"🔋 <b>АКБ:</b> {battery_display}{battery_penalty_text}\n"
         f"{price_line}\n"
         f"📍 <b>Локация:</b> {item.location}"
+        f"{seller_line}"
+        f"{reserve_line}"
     )
 
     # Современная сворачиваемая цитата Telegram для описания продавца
@@ -110,6 +125,7 @@ class ItemDispatcher:
         target_chat_id: Optional[int] = None,
         deduplicator: Optional[RedisDeduplicator] = None,
         region_manager: Optional[RegionManager] = None,
+        stream_manager: Optional[Any] = None,
     ):
         self.bot = bot
         self.queue = queue
@@ -117,6 +133,7 @@ class ItemDispatcher:
         self.target_chat_id = target_chat_id or settings.TARGET_CHAT_ID
         self.deduplicator = deduplicator
         self.region_manager = region_manager
+        self.stream_manager = stream_manager
         self.is_running = False
 
     async def start(self) -> None:
@@ -139,19 +156,38 @@ class ItemDispatcher:
 
     async def _process_single_item(self, raw_item: RawItem) -> None:
         """Обрабатывает одну карточку через конвейер фильтрации и отправляет в чат."""
-        # 0. Строгий региональный фильтр (Gatekeeper)
-        if self.region_manager and not self.region_manager.is_item_matching_current_region(
-            location=raw_item.location,
-            url=raw_item.url,
-        ):
-            logger.info(
-                "[%s] 🚫 ЛОТ ОТКЛОНЕН ПО РЕГИОНУ #%s: '%s' (активен: '%s')",
-                raw_item.platform.value,
-                raw_item.item_id,
-                raw_item.location,
-                self.region_manager.current.get("name"),
-            )
-            return
+        target_chat = raw_item.target_chat_id or self.target_chat_id
+
+        # 0. Строгий региональный фильтр (Gatekeeper) или фильтр поискового стрима
+        if raw_item.target_chat_id:
+            if self.stream_manager:
+                stream = self.stream_manager.get_stream(raw_item.target_chat_id)
+                if stream:
+                    if not stream.is_active:
+                        return
+                    is_ok, reason = self.stream_manager.evaluate_item_for_stream(stream, raw_item)
+                    if not is_ok:
+                        logger.info(
+                            "[%s] 🚫 Лот #%s отсеян фильтром стрима '%s': %s",
+                            raw_item.platform.value,
+                            raw_item.item_id,
+                            stream.title,
+                            reason,
+                        )
+                        return
+        else:
+            if self.region_manager and not self.region_manager.is_item_matching_current_region(
+                location=raw_item.location,
+                url=raw_item.url,
+            ):
+                logger.info(
+                    "[%s] 🚫 ЛОТ ОТКЛОНЕН ПО РЕГИОНУ #%s: '%s' (активен: '%s')",
+                    raw_item.platform.value,
+                    raw_item.item_id,
+                    raw_item.location,
+                    self.region_manager.current.get("name"),
+                )
+                return
 
         # 1. NLP & Regex извлечение параметров и отсев мусора/копий
         custom_models = self.margin_filter.matrix.keys() if self.margin_filter else None
@@ -210,9 +246,9 @@ class ItemDispatcher:
             effect_id = PARTY_EFFECT_ID
 
         # 6. Моментальная отправка в Telegram
-        if not self.target_chat_id:
+        if not target_chat:
             logger.warning(
-                "TARGET_CHAT_ID не настроен в .env! Сформированное сообщение:\n%s\nURL: %s",
+                "Целевой chat_id не настроен! Сформированное сообщение:\n%s\nURL: %s",
                 text,
                 parsed_item.url,
             )
@@ -231,7 +267,7 @@ class ItemDispatcher:
                 if parsed_item.image_url:
                     try:
                         send_kwargs = {
-                            "chat_id": self.target_chat_id,
+                            "chat_id": target_chat,
                             "photo": parsed_item.image_url,
                             "caption": text,
                             "parse_mode": "HTML",
@@ -248,13 +284,16 @@ class ItemDispatcher:
                             await self.bot.send_photo(**send_kwargs)
 
                         logger.info(
-                            "🔥 ФОТО-УВЕДОМЛЕНИЕ ОТПРАВЛЕНО: [%s] %s %dGB за %d ₽ (Выгода: %s ₽)",
+                            "🔥 ФОТО-УВЕДОМЛЕНИЕ ОТПРАВЛЕНО: [%s] %s %dGB за %d ₽ (Выгода: %s ₽) -> Chat %s",
                             parsed_item.platform.value,
                             parsed_item.model,
                             parsed_item.storage_gb,
                             parsed_item.price,
                             parsed_item.profit,
+                            target_chat,
                         )
+                        if raw_item.target_chat_id and self.stream_manager:
+                            self.stream_manager.increment_lots_found(raw_item.target_chat_id)
                         break
                     except TelegramAPIError as photo_err:
                         logger.warning(
@@ -265,7 +304,7 @@ class ItemDispatcher:
 
                 # Отправка текстовым сообщением с LinkPreviewOptions и эффектом
                 msg_kwargs = {
-                    "chat_id": self.target_chat_id,
+                    "chat_id": target_chat,
                     "text": text,
                     "parse_mode": "HTML",
                     "reply_markup": keyboard,
@@ -281,13 +320,16 @@ class ItemDispatcher:
                     await self.bot.send_message(**msg_kwargs)
 
                 logger.info(
-                    "🔥 УВЕДОМЛЕНИЕ ОТПРАВЛЕНО: [%s] %s %dGB за %d ₽ (Выгода: %s ₽)",
+                    "🔥 УВЕДОМЛЕНИЕ ОТПРАВЛЕНО: [%s] %s %dGB за %d ₽ (Выгода: %s ₽) -> Chat %s",
                     parsed_item.platform.value,
                     parsed_item.model,
                     parsed_item.storage_gb,
                     parsed_item.price,
                     parsed_item.profit,
+                    target_chat,
                 )
+                if raw_item.target_chat_id and self.stream_manager:
+                    self.stream_manager.increment_lots_found(raw_item.target_chat_id)
                 break
             except TelegramRetryAfter as e:
                 logger.warning("Telegram Flood Control! Ожидание %d сек...", e.retry_after)

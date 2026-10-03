@@ -403,6 +403,12 @@ class IPhoneNLPParser:
             url=raw.url,
             image_url=raw.image_url,
             published_at=raw.published_at,
+            seller_name=raw.seller_name,
+            seller_rating=raw.seller_rating,
+            seller_reviews_count=raw.seller_reviews_count,
+            is_reserved=raw.is_reserved,
+            is_promoted=raw.is_promoted,
+            target_chat_id=raw.target_chat_id,
         )
 
 

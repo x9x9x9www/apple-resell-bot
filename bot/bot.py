@@ -3,17 +3,25 @@ from __future__ import annotations
 import io
 import json
 import logging
+import re
 from typing import Optional
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.filters import Command
-from aiogram.types import BufferedInputFile, MenuButtonWebApp, WebAppInfo
+from aiogram.types import (
+    BufferedInputFile,
+    MenuButtonWebApp,
+    WebAppInfo,
+    InlineKeyboardMarkup,
+    InlineKeyboardButton,
+)
 
 from config import settings
 from core.margin_filter import MarginFilter
 from core.excel_manager import ExcelPricingManager
 from core.regions import RegionManager
+from core.link_stream import StreamManager, SearchStream, parse_search_url
 from bot.keyboards import (
     get_main_menu_keyboard,
     get_regions_keyboard,
@@ -21,6 +29,8 @@ from bot.keyboards import (
     get_back_to_menu_keyboard,
     get_reply_keyboard,
     get_hide_keyboard,
+    get_stream_control_keyboard,
+    get_stream_filters_keyboard,
 )
 
 logger = logging.getLogger(__name__)
@@ -41,6 +51,7 @@ KNOWN_BUTTON_TEXTS = {
     "📊 Скачать Excel", "📊 Excel-прайс", "Скачать Excel",
     "🔄 Статус воркеров", "🔄 Статус", "Статус",
     "📱 Матрица цен", "Матрица цен", "😎 Матрица цен",
+    "🔗 Мониторинг по ссылке", "🔗 Поиск по ссылке", "Поиск по ссылке",
     "❌ Скрыть клавиатуру", "🙈 Скрыть кнопки", "📴 Скрыть клавиатуру", "Скрыть клавиатуру",
 }
 
@@ -132,11 +143,13 @@ def create_bot() -> Bot:
 def create_bot_dispatcher(
     margin_filter: Optional[MarginFilter] = None,
     region_manager: Optional[RegionManager] = None,
+    stream_manager: Optional[StreamManager] = None,
 ) -> Dispatcher:
     """Создает Dispatcher команд и инлайн-обработчиков для управления ботом."""
     dp = Dispatcher()
     filter_instance = margin_filter if margin_filter is not None else MarginFilter()
     reg_manager = region_manager if region_manager is not None else RegionManager()
+    stream_mgr = stream_manager if stream_manager is not None else StreamManager()
 
     global _active_region_manager
     _active_region_manager = reg_manager
@@ -301,6 +314,93 @@ def create_bot_dispatcher(
     async def cmd_export_prices(message: types.Message):
         await cleanup_user_message(message)
         await _send_excel_file(message, filter_instance)
+
+    @dp.message(Command("stream", "link", "search_link"))
+    async def cmd_stream(message: types.Message):
+        await cleanup_user_message(message)
+        chat_id = message.chat.id
+        stream = stream_mgr.get_stream(chat_id)
+        bot = message.bot
+        if stream:
+            text = _build_stream_dashboard_text(stream)
+            kb = get_stream_control_keyboard(stream)
+            if bot:
+                await send_or_replace_functional_message(chat_id=chat_id, bot=bot, text=text, reply_markup=kb)
+            else:
+                await message.answer(text, reply_markup=kb)
+        else:
+            text = (
+                "🔗 <b>Мониторинг по ссылке с Авито или Юлы</b>\n\n"
+                "Вы можете привязать персональный поиск к этому чату:\n"
+                "1. Откройте Авито или Юлу в браузере.\n"
+                "2. Задайте город, категорию, цены и сортировку «По дате».\n"
+                "3. Скопируйте ссылку и <b>отправьте её прямо в этот чат</b>!\n\n"
+                "<i>Бот сразу начнет отслеживать появление лотов по этой ссылке ⚡️</i>"
+            )
+            if bot:
+                await send_or_replace_functional_message(chat_id=chat_id, bot=bot, text=text)
+            else:
+                await message.answer(text)
+
+    @dp.message(Command("stop_word", "add_stop_word"))
+    async def cmd_add_stop_word(message: types.Message):
+        await cleanup_user_message(message)
+        chat_id = message.chat.id
+        parts = (message.text or "").split(maxsplit=1)
+        bot = message.bot
+        if len(parts) > 1:
+            word = parts[1].strip()
+            ok = stream_mgr.add_blacklist_word(chat_id, word)
+            st = stream_mgr.get_stream(chat_id)
+            if ok:
+                ans = f"✅ Стоп-слово «{word}» добавлено в черный список потока!"
+            else:
+                ans = f"ℹ️ Слово «{word}» уже есть в списке или поиск еще не подключен."
+        else:
+            st = stream_mgr.get_stream(chat_id)
+            if st:
+                words_list = "\n".join(f"• <code>{w}</code>" for w in st.blacklist_words)
+                ans = (
+                    f"⛔️ <b>Черный список стоп-слов потока:</b>\n\n"
+                    f"{words_list}\n\n"
+                    "<i>Чтобы добавить слово: <code>/stop_word слово</code>\n"
+                    "Чтобы удалить слово: <code>/remove_word слово</code></i>"
+                )
+            else:
+                ans = "ℹ️ В этом чате пока нет настроенного поиска. Отправьте ссылку на поиск с Авито или Юлы."
+        if bot:
+            await send_or_replace_functional_message(chat_id=chat_id, bot=bot, text=ans)
+        else:
+            await message.answer(ans)
+
+    @dp.message(Command("remove_word", "del_stop_word"))
+    async def cmd_remove_stop_word(message: types.Message):
+        await cleanup_user_message(message)
+        chat_id = message.chat.id
+        parts = (message.text or "").split(maxsplit=1)
+        bot = message.bot
+        if len(parts) > 1:
+            word = parts[1].strip()
+            ok = stream_mgr.remove_blacklist_word(chat_id, word)
+            ans = f"🗑 Стоп-слово «{word}» удалено из фильтра!" if ok else f"ℹ️ Слово «{word}» не найдено в списке."
+        else:
+            ans = "Укажите слово для удаления: <code>/remove_word слово</code>"
+        if bot:
+            await send_or_replace_functional_message(chat_id=chat_id, bot=bot, text=ans)
+        else:
+            await message.answer(ans)
+
+    @dp.message(Command("del_stream", "delete_stream"))
+    async def cmd_del_stream(message: types.Message):
+        await cleanup_user_message(message)
+        chat_id = message.chat.id
+        deleted = stream_mgr.delete_stream(chat_id)
+        ans = "🗑 <b>Поисковый поток отключен для этого чата.</b>" if deleted else "ℹ️ В этом чате нет активного потока."
+        bot = message.bot
+        if bot:
+            await send_or_replace_functional_message(chat_id=chat_id, bot=bot, text=ans)
+        else:
+            await message.answer(ans)
 
     # ---------------------------------------------------------
     # СИНХРОНИЗАЦИЯ TELEGRAM MINI APP 2.0 (WEB APP DATA)
@@ -547,6 +647,63 @@ def create_bot_dispatcher(
             await send_or_replace_functional_message(chat_id=message.chat.id, bot=bot, text=text)
         else:
             await message.answer(text)
+
+    # ---------------------------------------------------------
+    # МОНИТОРИНГ ПО ССЫЛКЕ И СОБЫТИЯ ГРУПП
+    # ---------------------------------------------------------
+
+    @dp.my_chat_member()
+    async def on_my_chat_member_updated(event: types.ChatMemberUpdated):
+        """Приветствие при добавлении бота в новую группу или супергруппу (беседу)."""
+        if event.new_chat_member.status in ("member", "administrator"):
+            welcome_text = (
+                "👋 <b>Всем привет! Бот по перекупу активирован в этой беседе!</b>\n\n"
+                "Чтобы запустить мониторинг свежих лотов в эту группу:\n"
+                "1. Настройте поиск на Авито или Юле (город, цены, сортировка «По дате»).\n"
+                "2. Скопируйте ссылку из браузера.\n"
+                "3. <b>Отправьте ссылку прямо в эту беседу!</b>\n\n"
+                "<i>Бот начнет отслеживать все выгодные предложения и присылать их сюда ⚡️</i>"
+            )
+            try:
+                await event.bot.send_message(
+                    chat_id=event.chat.id,
+                    text=welcome_text,
+                    parse_mode="HTML",
+                )
+            except Exception as e:
+                logger.debug("Не удалось отправить приветствие в группу %s: %s", event.chat.id, e)
+
+    @dp.message(F.text.regexp(r"(https?://)?([a-zA-Z0-9-]+\.)?(avito\.ru|youla\.ru)/\S+"))
+    async def handle_stream_url(message: types.Message):
+        """Перехватывает ссылки на поиск Авито / Юлы и создает персональный поток."""
+        await cleanup_user_message(message)
+        chat_id = message.chat.id
+        bot = message.bot
+        raw_text = (message.text or "").strip()
+
+        # Извлекаем URL регулярным выражением
+        url_match = re.search(r"(?:https?://)?(?:[a-zA-Z0-9-]+\.)?(?:avito\.ru|youla\.ru)/\S+", raw_text)
+        url = url_match.group(0) if url_match else raw_text
+
+        stream = stream_mgr.create_or_update_stream(chat_id=chat_id, url=url)
+        if not stream:
+            err_text = (
+                "❌ <b>Не удалось распознать ссылку на поиск!</b>\n\n"
+                "Убедитесь, что ссылка ведет на поиск или каталог <b>Авито</b> или <b>Юлы</b>.\n"
+                "Пример: <code>https://www.avito.ru/moskva/telefony/apple-ASgBAgICAUSTAcYOtA0?s=104</code>"
+            )
+            if bot:
+                await send_or_replace_functional_message(chat_id=chat_id, bot=bot, text=err_text)
+            else:
+                await message.answer(err_text)
+            return
+
+        dash_text = _build_stream_dashboard_text(stream)
+        kb = get_stream_control_keyboard(stream)
+        if bot:
+            await send_or_replace_functional_message(chat_id=chat_id, bot=bot, text=dash_text, reply_markup=kb)
+        else:
+            await message.answer(dash_text, reply_markup=kb)
 
     # ---------------------------------------------------------
     # ВВОД ГОРОДА ТЕКСТОМ
@@ -863,7 +1020,195 @@ def create_bot_dispatcher(
                 reply_markup=get_hide_keyboard(),
             )
 
+    @dp.callback_query(F.data.startswith("stream_toggle:"))
+    async def cb_stream_toggle(callback: types.CallbackQuery):
+        cid = int(callback.data.split(":")[1])
+        new_active = stream_mgr.toggle_active(cid)
+        st = stream_mgr.get_stream(cid)
+        if st and callback.message:
+            await callback.answer("Поток возобновлен ▶️" if new_active else "Поток приостановлен ⏸")
+            try:
+                await callback.message.edit_text(
+                    text=_build_stream_dashboard_text(st),
+                    reply_markup=get_stream_control_keyboard(st),
+                    parse_mode="HTML",
+                )
+            except Exception:
+                pass
+        else:
+            await callback.answer("Стрим не найден")
+
+    @dp.callback_query(F.data.startswith("stream_filters:"))
+    async def cb_stream_filters(callback: types.CallbackQuery):
+        cid = int(callback.data.split(":")[1])
+        st = stream_mgr.get_stream(cid)
+        if st and callback.message:
+            await callback.answer()
+            text = (
+                f"⚙️ <b>Настройка фильтров потока:</b> <code>{st.title}</code>\n\n"
+                "Нажимайте на кнопки, чтобы включать или отключать нужные правила:\n\n"
+                "• <b>Только с фото:</b> отсекает объявления без снимков\n"
+                "• <b>Без брони (резерва):</b> отсекает лоты с оформленной Авито Доставкой\n"
+                "• <b>Без рекламы/промо:</b> отсекает продвигаемые платные объявления\n"
+                "• <b>Только с описанием:</b> отсекает пустые карточки"
+            )
+            try:
+                await callback.message.edit_text(
+                    text=text,
+                    reply_markup=get_stream_filters_keyboard(st),
+                    parse_mode="HTML",
+                )
+            except Exception:
+                pass
+        else:
+            await callback.answer("Стрим не найден")
+
+    @dp.callback_query(F.data.startswith("sfilter:"))
+    async def cb_sfilter_toggle(callback: types.CallbackQuery):
+        parts = callback.data.split(":")
+        cid = int(parts[1])
+        filter_key = parts[2]
+        new_val = stream_mgr.toggle_filter(cid, filter_key)
+        st = stream_mgr.get_stream(cid)
+        if st and callback.message:
+            status_word = "ВКЛЮЧЕН ✅" if new_val else "ВЫКЛЮЧЕН ❌"
+            await callback.answer(f"Фильтр {status_word}")
+            try:
+                await callback.message.edit_reply_markup(
+                    reply_markup=get_stream_filters_keyboard(st),
+                )
+            except Exception:
+                pass
+        else:
+            await callback.answer()
+
+    @dp.callback_query(F.data.startswith("stream_back:"))
+    async def cb_stream_back(callback: types.CallbackQuery):
+        cid = int(callback.data.split(":")[1])
+        st = stream_mgr.get_stream(cid)
+        if st and callback.message:
+            await callback.answer()
+            try:
+                await callback.message.edit_text(
+                    text=_build_stream_dashboard_text(st),
+                    reply_markup=get_stream_control_keyboard(st),
+                    parse_mode="HTML",
+                )
+            except Exception:
+                pass
+        else:
+            await callback.answer("Стрим не найден")
+
+    @dp.callback_query(F.data.startswith("stream_words:"))
+    async def cb_stream_words(callback: types.CallbackQuery):
+        cid = int(callback.data.split(":")[1])
+        st = stream_mgr.get_stream(cid)
+        if st and callback.message:
+            await callback.answer()
+            words_formatted = "\n".join(f"• <code>{w}</code>" for w in st.blacklist_words)
+            text = (
+                f"⛔️ <b>Черный список стоп-слов ({len(st.blacklist_words)}):</b>\n\n"
+                f"{words_formatted}\n\n"
+                "<b>Как управлять стоп-словами:</b>\n"
+                "• Добавить: отправьте команду <code>/stop_word слово</code>\n"
+                "• Удалить: отправьте команду <code>/remove_word слово</code>"
+            )
+            back_kb = InlineKeyboardMarkup(inline_keyboard=[[
+                InlineKeyboardButton(text="⬅️ Назад к потоку", callback_data=f"stream_back:{cid}")
+            ]])
+            try:
+                await callback.message.edit_text(
+                    text=text,
+                    reply_markup=back_kb,
+                    parse_mode="HTML",
+                )
+            except Exception:
+                pass
+        else:
+            await callback.answer("Стрим не найден")
+
+    @dp.callback_query(F.data.startswith("stream_delete:"))
+    async def cb_stream_delete(callback: types.CallbackQuery):
+        cid = int(callback.data.split(":")[1])
+        deleted = stream_mgr.delete_stream(cid)
+        if deleted:
+            await callback.answer("Поток успешно отключен 🗑")
+            if callback.message:
+                try:
+                    await callback.message.edit_text(
+                        "🗑 <b>Поисковый поток отключен.</b>\n\nЧтобы подключить новый поиск, просто пришлите ссылку с Авито или Юлы в этот чат.",
+                        parse_mode="HTML",
+                    )
+                except Exception:
+                    pass
+        else:
+            await callback.answer("Стрим уже отключен")
+
+    @dp.callback_query(F.data == "menu:stream")
+    async def cb_menu_stream(callback: types.CallbackQuery):
+        cid = callback.message.chat.id if callback.message else 0
+        st = stream_mgr.get_stream(cid)
+        await callback.answer()
+        if st and callback.message:
+            try:
+                await callback.message.edit_text(
+                    text=_build_stream_dashboard_text(st),
+                    reply_markup=get_stream_control_keyboard(st),
+                    parse_mode="HTML",
+                )
+            except Exception:
+                pass
+        elif callback.message:
+            guide = (
+                "🔗 <b>Мониторинг по ссылке (Авито & Юла)</b>\n\n"
+                "В этом чате пока нет подключенного поиска по ссылке.\n\n"
+                "<b>Как подключить:</b>\n"
+                "1. Откройте Авито или Юлу в браузере или приложении.\n"
+                "2. Настройте город, фильтры цен и категорию (например, iPhone до 60 000 ₽ с сортировкой «По дате»).\n"
+                "3. Скопируйте ссылку и <b>отправьте её прямо в этот чат</b>!\n\n"
+                "<i>Бот автоматически распознает ссылку и включит поток мониторинга ⚡️</i>"
+            )
+            back_kb = get_back_to_menu_keyboard()
+            try:
+                await callback.message.edit_text(text=guide, reply_markup=back_kb, parse_mode="HTML")
+            except Exception:
+                pass
+
     return dp
+
+
+def _build_stream_dashboard_text(stream: SearchStream) -> str:
+    """Генерирует форматированный статус и настройки стрима мониторинга."""
+    status_icon = "🟢 Активен" if stream.is_active else "⏸ На паузе"
+
+    price_info = "любая"
+    if stream.pmin and stream.pmax:
+        price_info = f"{stream.pmin:,} – {stream.pmax:,} ₽".replace(",", " ")
+    elif stream.pmax:
+        price_info = f"до {stream.pmax:,} ₽".replace(",", " ")
+    elif stream.pmin:
+        price_info = f"от {stream.pmin:,} ₽".replace(",", " ")
+
+    stop_words_preview = ", ".join(stream.blacklist_words[:5])
+    if len(stream.blacklist_words) > 5:
+        stop_words_preview += "..."
+
+    return (
+        f"🎯 <b>ПОИСКОВЫЙ ПОТОК:</b> <code>{stream.title}</code>\n\n"
+        f"🔗 <b>Платформа:</b> {stream.platform.value}\n"
+        f"📍 <b>Город/Регион:</b> {stream.city_name}\n"
+        f"🔍 <b>Поисковый запрос:</b> <code>{stream.query or 'Все объявления категории'}</code>\n"
+        f"💰 <b>Ценовой диапазон:</b> {price_info}\n"
+        f"📊 <b>Статус:</b> {status_icon}\n"
+        f"📦 <b>Передано в чат:</b> {stream.lots_found} лотов\n\n"
+        "⚙️ <b>Параметры фильтрации:</b>\n"
+        f"• Только с фото: {'✅ ВКЛ' if stream.filter_only_photo else '❌ ВЫКЛ'}\n"
+        f"• Без брони/резерва: {'✅ ВКЛ' if stream.filter_exclude_reserved else '❌ ВЫКЛ'}\n"
+        f"• Без рекламы/промо: {'✅ ВКЛ' if stream.filter_exclude_promo else '❌ ВЫКЛ'}\n"
+        f"• Только с описанием: {'✅ ВКЛ' if stream.filter_only_desc else '❌ ВЫКЛ'}\n"
+        f"• Стоп-слова ({len(stream.blacklist_words)} шт.): <i>{stop_words_preview}</i>\n\n"
+        "<i>⚡️ Бот проверяет этот поиск каждые 3–5 секунд. Новые выгодные предложения публикуются прямо в этот чат!</i>"
+    )
 
 
 def _build_dashboard_text(

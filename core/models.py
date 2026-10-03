@@ -26,6 +26,13 @@ class RawItem(BaseModel):
     # Поля для снижения цены
     old_price: Optional[int] = None
     is_price_drop: bool = False
+    # Расширенные метаданные объявления (продавец, бронь, чат назначения)
+    seller_name: Optional[str] = None
+    seller_rating: Optional[float] = None
+    seller_reviews_count: Optional[int] = None
+    is_reserved: bool = False
+    is_promoted: bool = False
+    target_chat_id: Optional[int] = None
 
 
 class ParsedGadget(BaseModel):
@@ -52,6 +59,13 @@ class ParsedGadget(BaseModel):
     published_at: datetime
     is_profitable: bool = False
     rejection_reason: Optional[str] = None
+    # Расширенные метаданные
+    seller_name: Optional[str] = None
+    seller_rating: Optional[float] = None
+    seller_reviews_count: Optional[int] = None
+    is_reserved: bool = False
+    is_promoted: bool = False
+    target_chat_id: Optional[int] = None
 
 
 # Псевдоним для обратной совместимости

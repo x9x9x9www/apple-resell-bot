@@ -10,6 +10,7 @@ from core.models import RawItem
 from core.deduplicator import RedisDeduplicator
 from core.margin_filter import MarginFilter
 from core.regions import RegionManager
+from core.link_stream import StreamManager
 from parsers.network import StealthHttpClient, ProxyPool
 from parsers.avito import AvitoWorker
 from parsers.youla import YoulaWorker
@@ -50,11 +51,16 @@ async def main() -> None:
     curr_reg = region_manager.current
     logger.info("Активный регион поиска: %s (Авито: %s, Юла: %s)", curr_reg["name"], curr_reg["avito_id"], curr_reg["youla_id"])
 
-    # 6. Telegram Bot & Диспетчер мгновенных оповещений
+    # 6. Менеджер потоков мониторинга по ссылкам (Multi-Stream)
+    stream_manager = StreamManager()
+    logger.info("Загружено активных пользовательских стримов: %d", len(stream_manager.get_all_active_streams()))
+
+    # 7. Telegram Bot & Диспетчер мгновенных оповещений
     bot = create_bot()
     bot_dp = create_bot_dispatcher(
         margin_filter=margin_filter,
         region_manager=region_manager,
+        stream_manager=stream_manager,
     )
     dispatcher = ItemDispatcher(
         bot=bot,
@@ -62,14 +68,16 @@ async def main() -> None:
         margin_filter=margin_filter,
         deduplicator=deduplicator,
         region_manager=region_manager,
+        stream_manager=stream_manager,
     )
 
-    # 7. Независимые параллельные воркеры мониторинга
+    # 8. Независимые параллельные воркеры мониторинга
     avito_worker = AvitoWorker(
         queue=queue,
         deduplicator=deduplicator,
         http_client=http_client,
         location_id=curr_reg["avito_id"],
+        stream_manager=stream_manager,
     )
     avito_worker.city_name = curr_reg.get("name", "Москва")
     youla_worker = YoulaWorker(
