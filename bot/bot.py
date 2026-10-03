@@ -453,6 +453,22 @@ def create_bot_dispatcher(
             except Exception as e:
                 logger.debug("Ошибка обновления меню регионов: %s", e)
 
+    @dp.callback_query(F.data.startswith("page_regions:"))
+    async def cb_page_regions(callback: types.CallbackQuery):
+        page = int(callback.data.split(":")[1])
+        await callback.answer()
+        if callback.message:
+            try:
+                await callback.message.edit_reply_markup(
+                    reply_markup=get_regions_keyboard(reg_manager.current["key"], page=page)
+                )
+            except Exception as e:
+                logger.debug("Ошибка смены страницы регионов: %s", e)
+
+    @dp.callback_query(F.data == "noop")
+    async def cb_noop(callback: types.CallbackQuery):
+        await callback.answer()
+
     @dp.callback_query(F.data.startswith("set_region:"))
     async def cb_set_region(callback: types.CallbackQuery):
         region_key = callback.data.split(":")[1]

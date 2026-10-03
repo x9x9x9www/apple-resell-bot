@@ -163,12 +163,21 @@ def get_hide_keyboard() -> ReplyKeyboardRemove:
 
 
 
-def get_regions_keyboard(current_key: str = "moskva") -> InlineKeyboardMarkup:
-    """Меню выбора региона поиска."""
+def get_regions_keyboard(current_key: str = "moskva", page: int = 0, per_page: int = 12) -> InlineKeyboardMarkup:
+    """Меню выбора региона поиска с удобной пагинацией."""
     from core.regions import POPULAR_REGIONS
+
+    total = len(POPULAR_REGIONS)
+    total_pages = max(1, (total + per_page - 1) // per_page)
+    page = max(0, min(page, total_pages - 1))
+
+    start = page * per_page
+    end = start + per_page
+    slice_items = POPULAR_REGIONS[start:end]
+
     rows = []
     current_row = []
-    for key, label in POPULAR_REGIONS:
+    for key, label in slice_items:
         check = "✅ " if key == current_key else ""
         btn = InlineKeyboardButton(
             text=f"{check}{label}",
@@ -181,9 +190,19 @@ def get_regions_keyboard(current_key: str = "moskva") -> InlineKeyboardMarkup:
     if current_row:
         rows.append(current_row)
 
+    # Навигация пагинации (если больше 1 страницы)
+    if total_pages > 1:
+        nav_row = []
+        if page > 0:
+            nav_row.append(InlineKeyboardButton(text="◀️ Назад", callback_data=f"page_regions:{page - 1}"))
+        nav_row.append(InlineKeyboardButton(text=f"Стр. {page + 1}/{total_pages}", callback_data="noop"))
+        if page < total_pages - 1:
+            nav_row.append(InlineKeyboardButton(text="Вперёд ▶️", callback_data=f"page_regions:{page + 1}"))
+        rows.append(nav_row)
+
     rows.append([
         InlineKeyboardButton(
-            text="🔍 Ввести город текстом (/city)",
+            text="🔍 Ввести любой город текстом (/city)",
             callback_data="region:custom",
         )
     ])

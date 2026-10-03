@@ -90,6 +90,57 @@ class TestRegionManager(unittest.TestCase):
         for key, label in POPULAR_REGIONS:
             self.assertIn(key, CITY_DATABASE, f"Популярный регион {key} отсутствует в базе данных")
 
+    def test_yakutsk_region_support(self):
+        # 1. По ключу
+        res_key = self.manager.set_region("yakutsk")
+        self.assertIsNotNone(res_key)
+        self.assertEqual(res_key["name"], "Якутск")
+        self.assertEqual(res_key["avito_id"], "655840")
+        self.assertEqual(res_key["youla_slug"], "yakutsk")
+
+        # 2. По русскому названию
+        res_ru = self.manager.set_region("якутск")
+        self.assertIsNotNone(res_ru)
+        self.assertEqual(res_ru["name"], "Якутск")
+
+        # 3. По алиасам (якт, саха)
+        res_ykt = self.manager.set_region("якт")
+        self.assertIsNotNone(res_ykt)
+        self.assertEqual(res_ykt["name"], "Якутск")
+
+        res_sakha = self.manager.set_region("саха")
+        self.assertIsNotNone(res_sakha)
+        self.assertEqual(res_sakha["name"], "Якутск")
+
+    def test_expanded_cities_support(self):
+        cities = [
+            ("Омск", "645830"),
+            ("Улан-Удэ", "625600"),
+            ("Чита", "661950"),
+            ("Благовещенск", "622260"),
+            ("Южно-Сахалинск", "652430"),
+            ("Норильск", "636540"),
+            ("Мурманск", "641320"),
+            ("Севастополь", "652550"),
+        ]
+        for city_name, avito_id in cities:
+            res = self.manager.set_region(city_name)
+            self.assertIsNotNone(res, f"Город {city_name} не найден")
+            self.assertEqual(res["name"], city_name)
+            self.assertEqual(res["avito_id"], avito_id)
+
+    def test_regions_pagination(self):
+        from bot.keyboards import get_regions_keyboard
+        kb_page0 = get_regions_keyboard("moskva", page=0, per_page=12)
+        texts_p0 = [b.text for row in kb_page0.inline_keyboard for b in row]
+        self.assertTrue(any("Вперёд" in t for t in texts_p0))
+        self.assertTrue(any("Якутск" in t for t in texts_p0))
+
+        kb_page1 = get_regions_keyboard("moskva", page=1, per_page=12)
+        texts_p1 = [b.text for row in kb_page1.inline_keyboard for b in row]
+        self.assertTrue(any("Назад" in t for t in texts_p1))
+
 
 if __name__ == "__main__":
     unittest.main()
+
