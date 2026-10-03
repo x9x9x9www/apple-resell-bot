@@ -153,7 +153,7 @@ def get_reply_keyboard(webapp_url: Optional[str] = None) -> ReplyKeyboardMarkup:
     return ReplyKeyboardMarkup(
         keyboard=keyboard,
         resize_keyboard=True,
-        is_persistent=False,
+        is_persistent=True,
     )
 
 

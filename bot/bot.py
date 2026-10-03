@@ -28,6 +28,26 @@ logger = logging.getLogger(__name__)
 # Хранилище ID последнего сервисного/функционального сообщения в чате
 # chat_id -> message_id для предотвращения спама в чате между объявлениями
 _last_functional_messages: dict[int, int] = {}
+# Пользователи, явно скрывшие клавиатуру кнопкой или /hide_keyboard
+_keyboard_hidden_users: dict[int, bool] = {}
+
+# Тексты кнопок всплывающей клавиатуры, которые нельзя воспринимать как названия городов
+KNOWN_BUTTON_TEXTS = {
+    "⚡️ Меню", "⚡️ Главное меню", "Меню",
+    "📍 Сменить регион", "📍 Регион", "Сменить регион",
+    "📊 Скачать Excel", "📊 Excel-прайс", "Скачать Excel",
+    "🔄 Статус воркеров", "🔄 Статус", "Статус",
+    "📱 Матрица цен", "Матрица цен",
+    "❌ Скрыть клавиатуру", "🙈 Скрыть кнопки", "📴 Скрыть клавиатуру", "Скрыть клавиатуру",
+}
+
+
+async def cleanup_user_message(message: types.Message) -> None:
+    """Удаляет входящее служебное сообщение пользователя, чтобы не спамить в чате."""
+    try:
+        await message.delete()
+    except Exception as e:
+        logger.debug("Не удалось удалить сообщение пользователя: %s", e)
 
 
 async def send_or_replace_functional_message(
@@ -49,6 +69,16 @@ async def send_or_replace_functional_message(
         except Exception as e:
             logger.debug("Старое функциональное сообщение не удалено или уже отсутствует: %s", e)
 
+    # Если reply_markup не передан явно:
+    # всегда прикрепляем всплывающую клавиатуру (если пользователь не нажал "Скрыть"),
+    # чтобы кнопки никогда случайно не пропадали с экрана.
+    if reply_markup is None:
+        if _keyboard_hidden_users.get(chat_id, False):
+            reply_markup = get_hide_keyboard()
+        else:
+            webapp_url = getattr(settings, "WEBAPP_URL", "")
+            reply_markup = get_reply_keyboard(webapp_url)
+
     msg = await bot.send_message(
         chat_id=chat_id,
         text=text,
@@ -57,6 +87,30 @@ async def send_or_replace_functional_message(
     )
     _last_functional_messages[chat_id] = msg.message_id
     return msg
+
+
+async def _show_city_selection_guide(message: types.Message, reg_manager: RegionManager) -> None:
+    """Отображает лаконичную инструкцию по выбору города без кнопочного спама."""
+    current_reg = reg_manager.current
+    text = (
+        "📍 <b>Настройка региона поиска (Авито & Юла):</b>\n\n"
+        f"Текущий активный регион: <b>{current_reg['name']}</b>\n\n"
+        "Чтобы изменить регион, просто <b>напишите название города прямо в этот чат</b> (или отправьте команду <code>/city Название</code>):\n"
+        "• <code>Якутск</code> (или <code>якт</code>, <code>саха</code>)\n"
+        "• <code>Санкт-Петербург</code> (или <code>спб</code>, <code>питер</code>)\n"
+        "• <code>Екатеринбург</code> (или <code>екб</code>)\n"
+        "• <code>Новосибирск</code>\n"
+        "• <code>Казань</code>\n"
+        "• <code>Омск</code>\n"
+        "• <code>Краснодар</code>\n"
+        "• <code>Россия</code> (поиск по всей РФ)\n\n"
+        "<i>⚡️ База содержит более 100 городов и моментально переключает мониторинг без перезапуска.</i>"
+    )
+    bot = message.bot
+    if bot:
+        await send_or_replace_functional_message(chat_id=message.chat.id, bot=bot, text=text)
+    else:
+        await message.answer(text)
 
 
 def create_bot() -> Bot:
@@ -82,7 +136,9 @@ def create_bot_dispatcher(
 
     @dp.message(Command("start"))
     async def cmd_start(message: types.Message):
+        await cleanup_user_message(message)
         chat_id = message.chat.id
+        _keyboard_hidden_users[chat_id] = False
         webapp_url = getattr(settings, "WEBAPP_URL", "")
         text = _build_dashboard_text(filter_instance, reg_manager, chat_id)
         # Отправляем ровно ОДНО сервисное сообщение с прикрепленной всплывающей клавиатурой внизу
@@ -99,6 +155,8 @@ def create_bot_dispatcher(
 
     @dp.message(Command("keyboard", "kb", "buttons", "show_keyboard"))
     async def cmd_keyboard(message: types.Message):
+        await cleanup_user_message(message)
+        _keyboard_hidden_users[message.chat.id] = False
         webapp_url = getattr(settings, "WEBAPP_URL", "")
         text = (
             "⌨️ <b>Всплывающая клавиатура активирована!</b>\n\n"
@@ -117,6 +175,8 @@ def create_bot_dispatcher(
 
     @dp.message(Command("hide_keyboard", "hide", "hide_buttons"))
     async def cmd_hide_keyboard(message: types.Message):
+        await cleanup_user_message(message)
+        _keyboard_hidden_users[message.chat.id] = True
         text = (
             "📴 <b>Клавиатура скрыта!</b>\n\n"
             "Чтобы кнопки снова всплыли:\n"
@@ -135,6 +195,7 @@ def create_bot_dispatcher(
 
     @dp.message(Command("menu", "settings"))
     async def cmd_menu(message: types.Message):
+        await cleanup_user_message(message)
         chat_id = message.chat.id
         text = _build_dashboard_text(filter_instance, reg_manager, chat_id)
         bot = message.bot
@@ -149,6 +210,7 @@ def create_bot_dispatcher(
 
     @dp.message(Command("status"))
     async def cmd_status(message: types.Message):
+        await cleanup_user_message(message)
         chat_id = message.chat.id
         text = _build_status_text(filter_instance, reg_manager)
         bot = message.bot
@@ -163,10 +225,14 @@ def create_bot_dispatcher(
 
     @dp.message(Command("city", "region"))
     async def cmd_city(message: types.Message):
+        await cleanup_user_message(message)
         chat_id = message.chat.id
         bot = message.bot
-        text_parts = (message.text or "").strip().split(maxsplit=1)
-        if len(text_parts) > 1:
+        raw_text = (message.text or "").strip()
+        text_parts = raw_text.split(maxsplit=1)
+
+        # Обрабатываем аргумент только если команда вызвана как /city Название или /region Название
+        if len(text_parts) > 1 and text_parts[0].lower().startswith(("/city", "/region")):
             city_query = text_parts[1].strip()
             updated = reg_manager.set_region(city_query)
             if updated:
@@ -202,28 +268,11 @@ def create_bot_dispatcher(
                     await message.answer(ans)
                 return
 
-        current_reg = reg_manager.current
-        text = (
-            "📍 <b>Настройка региона поиска (Авито & Юла):</b>\n\n"
-            f"Текущий активный регион: <b>{current_reg['name']}</b>\n\n"
-            "Чтобы изменить регион, просто <b>напишите название города прямо в этот чат</b> (или отправьте команду <code>/city Название</code>):\n"
-            "• <code>Якутск</code> (или <code>якт</code>, <code>саха</code>)\n"
-            "• <code>Санкт-Петербург</code> (или <code>спб</code>, <code>питер</code>)\n"
-            "• <code>Екатеринбург</code> (или <code>екб</code>)\n"
-            "• <code>Новосибирск</code>\n"
-            "• <code>Казань</code>\n"
-            "• <code>Омск</code>\n"
-            "• <code>Краснодар</code>\n"
-            "• <code>Россия</code> (поиск по всей РФ)\n\n"
-            "<i>⚡️ База содержит более 100 городов и моментально переключает мониторинг без перезапуска.</i>"
-        )
-        if bot:
-            await send_or_replace_functional_message(chat_id=chat_id, bot=bot, text=text)
-        else:
-            await message.answer(text)
+        await _show_city_selection_guide(message, reg_manager)
 
     @dp.message(Command("export_prices"))
     async def cmd_export_prices(message: types.Message):
+        await cleanup_user_message(message)
         await _send_excel_file(message, filter_instance)
 
     # ---------------------------------------------------------
@@ -426,26 +475,32 @@ def create_bot_dispatcher(
 
     @dp.message(F.text.in_({"❌ Скрыть клавиатуру", "🙈 Скрыть кнопки", "📴 Скрыть клавиатуру", "Скрыть клавиатуру"}))
     async def handle_hide_keyboard_btn(message: types.Message):
+        await cleanup_user_message(message)
         await cmd_hide_keyboard(message)
 
     @dp.message(F.text.in_({"⚡️ Меню", "⚡️ Главное меню", "Меню"}))
     async def handle_reply_menu_btn(message: types.Message):
+        await cleanup_user_message(message)
         await cmd_menu(message)
 
     @dp.message(F.text.in_({"📍 Сменить регион", "📍 Регион", "Сменить регион"}))
     async def handle_reply_region_btn(message: types.Message):
-        await cmd_city(message)
+        await cleanup_user_message(message)
+        await _show_city_selection_guide(message, reg_manager)
 
     @dp.message(F.text.in_({"📊 Скачать Excel", "📊 Excel-прайс", "Скачать Excel"}))
     async def handle_reply_export_btn(message: types.Message):
+        await cleanup_user_message(message)
         await _send_excel_file(message, filter_instance)
 
     @dp.message(F.text.in_({"🔄 Статус воркеров", "🔄 Статус", "Статус"}))
     async def handle_reply_status_btn(message: types.Message):
+        await cleanup_user_message(message)
         await cmd_status(message)
 
     @dp.message(F.text.in_({"📱 Матрица цен", "Матрица цен"}))
     async def handle_reply_webapp_btn(message: types.Message):
+        await cleanup_user_message(message)
         webapp_url = getattr(settings, "WEBAPP_URL", "")
         if webapp_url:
             text = (
@@ -476,6 +531,13 @@ def create_bot_dispatcher(
         if not query or len(query) > 40:
             return
 
+        # Игнорируем нажатия на кнопки всплывающей клавиатуры, если они дошли сюда
+        if query in KNOWN_BUTTON_TEXTS:
+            return
+
+        # Удаляем входящее сообщение пользователя, чтобы не спамить в чате
+        await cleanup_user_message(message)
+
         chat_id = message.chat.id
         bot = message.bot
 
@@ -502,10 +564,15 @@ def create_bot_dispatcher(
                 f"🔍 По запросу «{query}» найдены города:\n\n{hints}\n\n"
                 "<i>Напишите точный город из списка выше.</i>"
             )
-            if bot:
-                await send_or_replace_functional_message(chat_id=chat_id, bot=bot, text=ans)
-            else:
-                await message.answer(ans)
+        else:
+            ans = (
+                f"❌ Город «{query}» не найден в базе.\n\n"
+                "<i>Напишите точное название города (например: <code>Якутск</code>, <code>Казань</code>, <code>Омск</code>) или <code>/city Россия</code>.</i>"
+            )
+        if bot:
+            await send_or_replace_functional_message(chat_id=chat_id, bot=bot, text=ans)
+        else:
+            await message.answer(ans)
 
     # ---------------------------------------------------------
     # ИНЛАЙН-КОЛЛБЭКИ МЕНЮ

@@ -278,7 +278,7 @@ class TestModernBotFeatures(unittest.TestCase):
         reply_kb = get_reply_keyboard(webapp_url="https://x9x9x9www.github.io/apple-resell-bot/")
         self.assertIsInstance(reply_kb, ReplyKeyboardMarkup)
         self.assertTrue(reply_kb.resize_keyboard)
-        self.assertFalse(reply_kb.is_persistent)
+        self.assertTrue(reply_kb.is_persistent)
 
         button_texts = [b.text for row in reply_kb.keyboard for b in row]
         self.assertIn("⚡️ Меню", button_texts)
@@ -360,6 +360,16 @@ class TestModernBotFeatures(unittest.TestCase):
         self.assertTrue(any("Перейти к объявлению" in t for t in item_buttons))
         self.assertTrue(any("Шаблон торга" in t for t in item_buttons))
         self.assertTrue(any("В избранное" in t for t in item_buttons))
+
+        # 4. Проверяем удаление сообщений пользователя (отсутствие спама от пользователя)
+        user_msg_mock = MagicMock()
+        user_msg_mock.delete = AsyncMock(return_value=True)
+        from bot.bot import cleanup_user_message, KNOWN_BUTTON_TEXTS
+        asyncio.run(cleanup_user_message(user_msg_mock))
+        user_msg_mock.delete.assert_awaited_once()
+
+        # 5. Проверяем, что текст кнопки "📍 Сменить регион" находится в KNOWN_BUTTON_TEXTS
+        self.assertIn("📍 Сменить регион", KNOWN_BUTTON_TEXTS)
 
 
 if __name__ == "__main__":
