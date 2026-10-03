@@ -166,6 +166,8 @@ CITY_ALIASES: dict[str, str] = {
     "москва": "moskva",
     "мо": "moskva",
     "московская": "moskva",
+    "moskva_i_mo": "moskva",
+    "moskovskaya_oblast": "moskva",
 
     # СПб и ЛО
     "спб": "spb",

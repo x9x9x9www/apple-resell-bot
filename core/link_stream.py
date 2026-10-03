@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 import json
 import logging
 import re
@@ -32,6 +33,24 @@ AVITO_CATEGORY_MAP: dict[str, str] = {
     "bytovaya_tehnika": "21",
     "chasy": "69",
     "elektronika": "84",
+}
+
+AVITO_CATEGORY_TITLES: dict[str, str] = {
+    "telefony": "Телефоны",
+    "mobilnye_telefony": "Телефоны",
+    "noutbuki": "Ноутбуки",
+    "planshety": "Планшеты",
+    "planshety_i_elektronnye_knigi": "Планшеты",
+    "igry_pristavki_i_programmy": "Приставки",
+    "pristavki": "Приставки",
+    "nastolnye_kompyutery": "Компьютеры",
+    "audio_i_video": "Аудио и видео",
+    "naushniki": "Наушники",
+    "fototehnika": "Фототехника",
+    "tovary_dlya_kompyutera": "Комплектующие",
+    "bytovaya_tehnika": "Бытовая техника",
+    "chasy": "Часы",
+    "elektronika": "Электроника",
 }
 
 DEFAULT_BLACKLIST_WORDS: list[str] = [
@@ -155,6 +174,81 @@ class SearchStream:
         )
 
 
+def extract_prices_from_query(query_params: dict[str, list[str]], clean_url: str) -> tuple[Optional[int], Optional[int]]:
+    """
+    Универсальное извлечение цен из всех возможных форматов Авито и Юлы:
+    1. Прямые параметры (pmin, pmax, price_min, price_max, priceMin, priceMax, price_from, price_to)
+    2. Параметр диапазона (price=30000-33000)
+    3. Закодированный base64-фильтр Авито `f` (например, embedded JSON {"from": 30000, "to": 33000})
+    4. Числовые ценовые диапазоны в URL пути (ot-30000-do-33000-rubley, do-33000-rubley)
+    """
+    pmin = None
+    pmax = None
+
+    # 1. Прямые параметры в строке запроса
+    for k_min in ("pmin", "price_min", "priceMin", "price_from", "params[price][from]", "params[price][min]"):
+        if k_min in query_params:
+            try:
+                pmin = int(query_params[k_min][0])
+                break
+            except (ValueError, IndexError):
+                pass
+
+    for k_max in ("pmax", "price_max", "priceMax", "price_to", "params[price][to]", "params[price][max]"):
+        if k_max in query_params:
+            try:
+                pmax = int(query_params[k_max][0])
+                break
+            except (ValueError, IndexError):
+                pass
+
+    # 2. Параметр вида price=30000-33000
+    if "price" in query_params:
+        pv = query_params["price"][0]
+        pm = re.match(r"^(\d+)?-(\d+)?$", pv)
+        if pm:
+            if pm.group(1):
+                pmin = int(pm.group(1))
+            if pm.group(2):
+                pmax = int(pm.group(2))
+
+    # 3. Фильтры Авито в параметре `f` (base64 Protobuf с embedded JSON)
+    if (pmin is None and pmax is None) and "f" in query_params:
+        f_val = query_params["f"][0]
+        parts = re.split(r"[.~]", f_val)
+        for p in parts:
+            clean = p.replace("-", "+").replace("_", "/")
+            pad = clean + "=" * (-len(clean) % 4)
+            try:
+                dec = base64.b64decode(pad)
+                for m in re.finditer(rb"\{[^{}]*\}", dec):
+                    try:
+                        obj = json.loads(m.group(0).decode("utf-8"))
+                        f_v = obj.get("from")
+                        t_v = obj.get("to")
+                        # Цены гаджетов обычно больше 100-500 руб (в отличие от процентов АКБ 50-100)
+                        if (t_v and t_v > 100) or (f_v and f_v >= 500):
+                            if f_v is not None:
+                                pmin = int(f_v)
+                            if t_v is not None:
+                                pmax = int(t_v)
+                    except Exception:
+                        pass
+            except Exception:
+                pass
+
+    # 4. Путь URL (например: /do-33000-rubley или /ot-30000-do-33000-rubley)
+    if pmin is None and pmax is None:
+        path_m = re.search(r"(?:ot-(\d+))?(?:-)?(?:do-(\d+))?-rubley", clean_url)
+        if path_m:
+            if path_m.group(1):
+                pmin = int(path_m.group(1))
+            if path_m.group(2):
+                pmax = int(path_m.group(2))
+
+    return pmin, pmax
+
+
 def parse_search_url(raw_url: str) -> Optional[dict[str, Any]]:
     """
     Интеллектуальный разбор ссылки поиска с Авито или Юлы.
@@ -201,18 +295,7 @@ def parse_search_url(raw_url: str) -> Optional[dict[str, Any]]:
         category_id = AVITO_CATEGORY_MAP.get(cat_slug, "84")
 
         # Цены
-        pmin = None
-        pmax = None
-        if "pmin" in query_params:
-            try:
-                pmin = int(query_params["pmin"][0])
-            except (ValueError, IndexError):
-                pass
-        if "pmax" in query_params:
-            try:
-                pmax = int(query_params["pmax"][0])
-            except (ValueError, IndexError):
-                pass
+        pmin, pmax = extract_prices_from_query(query_params, clean_url)
 
         # Текст запроса
         q_text = query_params.get("q", [""])[0].strip() or None
@@ -227,7 +310,7 @@ def parse_search_url(raw_url: str) -> Optional[dict[str, Any]]:
         raw_params["sort"] = raw_params.get("s", "104")
 
         # Человекочитаемый заголовок
-        cat_title = cat_slug.replace("_", " ").capitalize() if cat_slug else "Электроника"
+        cat_title = AVITO_CATEGORY_TITLES.get(cat_slug, cat_slug.replace("_", " ").capitalize() if cat_slug else "Электроника")
         price_info = ""
         if pmin and pmax:
             price_info = f" ({pmin:,}–{pmax:,} ₽)".replace(",", " ")
@@ -274,10 +357,21 @@ def parse_search_url(raw_url: str) -> Optional[dict[str, Any]]:
             city_name = found_data["name"]
             youla_id = found_data.get("youla_id", youla_id)
 
+        # Цены
+        pmin, pmax = extract_prices_from_query(query_params, clean_url)
+
         q_text = query_params.get("q", [""])[0].strip() or None
         raw_params = {k: v[0] if len(v) == 1 else v for k, v in query_params.items()}
 
-        title = f"Юла: {q_text or 'Свежие лоты'} в {city_name}"
+        price_info = ""
+        if pmin and pmax:
+            price_info = f" ({pmin:,}–{pmax:,} ₽)".replace(",", " ")
+        elif pmax:
+            price_info = f" (до {pmax:,} ₽)".replace(",", " ")
+        elif pmin:
+            price_info = f" (от {pmin:,} ₽)".replace(",", " ")
+
+        title = f"Юла: {q_text or 'Свежие лоты'} в {city_name}{price_info}"
         return {
             "platform": Platform.YOULA,
             "title": title,
@@ -287,8 +381,8 @@ def parse_search_url(raw_url: str) -> Optional[dict[str, Any]]:
             "location_id": youla_id,
             "category_id": "smartfony",
             "query": q_text,
-            "pmin": None,
-            "pmax": None,
+            "pmin": pmin,
+            "pmax": pmax,
             "raw_params": raw_params,
         }
 
@@ -309,12 +403,24 @@ class StreamManager:
             with open(self.file_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
             self._streams = {}
+            needs_save = False
             for cid_str, sdata in data.items():
                 try:
                     cid = int(cid_str)
-                    self._streams[cid] = SearchStream.from_dict(sdata)
+                    stream = SearchStream.from_dict(sdata)
+                    # Если у сохраненного стрима не были определены цены, пробуем обновить из url
+                    if (stream.pmin is None and stream.pmax is None) and stream.url:
+                        re_parsed = parse_search_url(stream.url)
+                        if re_parsed and (re_parsed.get("pmin") is not None or re_parsed.get("pmax") is not None):
+                            stream.pmin = re_parsed.get("pmin")
+                            stream.pmax = re_parsed.get("pmax")
+                            stream.title = re_parsed.get("title", stream.title)
+                            needs_save = True
+                    self._streams[cid] = stream
                 except Exception as ex:
                     logger.debug("Ошибка разбора стрима %s: %s", cid_str, ex)
+            if needs_save:
+                self.save()
             logger.info("Загружено активных пользовательских стримов: %d", len(self._streams))
         except Exception as e:
             logger.error("Ошибка загрузки search_streams.json: %s", e)

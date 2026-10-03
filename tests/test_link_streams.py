@@ -30,6 +30,15 @@ class TestLinkStreamSystem(unittest.TestCase):
         self.assertEqual(parsed["category_id"], "84")
         self.assertIn("iphone", parsed["title"].lower())
 
+    def test_parse_search_url_avito_f_param_pricing(self):
+        # Реальная ссылка пользователя из мобильного браузера с фильтром цен в f
+        url = "https://www.avito.ru/moskva_i_mo/telefony/mobilnye_telefony/apple-ASgBAgICAkS0wA3OqzmwwQ2I_Dc?f=ASgBAQECAkS0wA3OqzmwwQ2I_DcDQLLADaTGsYwV1qHtEZKf7RGSoO0R2I7lEM6O5RDMjuUQ8r3IAe69yAHsvcgB5uANNPbBXPrBXPjBXOjrDjT~_dsC_P3bAvr92wICRcaaDBl7ImZyb20iOjMwMDAwLCJ0byI6MzMwMDB94pUSFHsiZnJvbSI6NzksInRvIjoxMDB9"
+        parsed = parse_search_url(url)
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed["pmin"], 30000)
+        self.assertEqual(parsed["pmax"], 33000)
+        self.assertIn("30 000–33 000 ₽", parsed["title"])
+
     def test_parse_search_url_ekb_and_categories(self):
         url = "https://www.avito.ru/ekaterinburg/noutbuki?pmax=90000&q=macbook+pro"
         parsed = parse_search_url(url)

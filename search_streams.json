@@ -1,0 +1,49 @@
+{
+  "1212593604": {
+    "stream_id": "cb71c493",
+    "chat_id": 1212593604,
+    "title": "Авито: Телефоны «Apple» в Москва (30 000–33 000 ₽)",
+    "url": "https://www.avito.ru/moskva_i_mo/telefony/mobilnye_telefony/apple-ASgBAgICAkS0wA3OqzmwwQ2I_Dc?context=H4sIAAAAAAAA_0SRXZPaIBiF_0tue1ESdbdmpxeVNAwWsxOiBHIXYM2HJNrNl7HT_97BdadXDPMeOM85b-57_p_Od4HvqPP7-5vqq3PrvHT-cvHkO7jtFW7CWiMzSjNVr2aqVMMmicI6Y1NFwqnKeGnvg-D0Ir2VwvVF4R4mQIxxp9EPQIJ41IjgCP0EpI6HNdoBQWgRIUJgQAsNvwDyTIsezoBwWvRoAwSJux4FQDzTSsMlIIcCkGPcRfArEEE83jW7YvrdXw6oHGXD4TCvFK6uCrebTqSRkSkbdPjBLBrWyYX-mDfUKM-00mRGtdF_5mY1qsYtJXRLidhs39p8EpkhX0RWI9_ce_6rTtnNzl9tP23oZny74hA_cbh98LCH13UUXgjydD0kB6pwffai4LTc7Tdr-7dGbPnJCLb3Dr4BwuPRZhaE1p8MKQM5Wp8eHrcsDWfhlUfVsFPOt0YsqMKtq48J_m6X5_rOfD-ffOdWTHm1_xUk-0OON2HivPz9NwBjrUKt9QEAAA&f=ASgBAQECAkS0wA3OqzmwwQ2I_DcDQLLADaTGsYwV1qHtEZKf7RGSoO0R2I7lEM6O5RDMjuUQ8r3IAe69yAHsvcgB5uANNPbBXPrBXPjBXOjrDjT~_dsC_P3bAvr92wICRcaaDBl7ImZyb20iOjMwMDAwLCJ0byI6MzMwMDB94pUSFHsiZnJvbSI6NzksInRvIjoxMDB9&localPriority=1",
+    "platform": "Авито",
+    "city_slug": "moskva_i_mo",
+    "city_name": "Москва",
+    "location_id": "637640",
+    "category_id": "84",
+    "query": "Apple",
+    "pmin": 30000,
+    "pmax": 33000,
+    "raw_params": {
+      "context": "H4sIAAAAAAAA_0SRXZPaIBiF_0tue1ESdbdmpxeVNAwWsxOiBHIXYM2HJNrNl7HT_97BdadXDPMeOM85b-57_p_Od4HvqPP7-5vqq3PrvHT-cvHkO7jtFW7CWiMzSjNVr2aqVMMmicI6Y1NFwqnKeGnvg-D0Ir2VwvVF4R4mQIxxp9EPQIJ41IjgCP0EpI6HNdoBQWgRIUJgQAsNvwDyTIsezoBwWvRoAwSJux4FQDzTSsMlIIcCkGPcRfArEEE83jW7YvrdXw6oHGXD4TCvFK6uCrebTqSRkSkbdPjBLBrWyYX-mDfUKM-00mRGtdF_5mY1qsYtJXRLidhs39p8EpkhX0RWI9_ce_6rTtnNzl9tP23oZny74hA_cbh98LCH13UUXgjydD0kB6pwffai4LTc7Tdr-7dGbPnJCLb3Dr4BwuPRZhaE1p8MKQM5Wp8eHrcsDWfhlUfVsFPOt0YsqMKtq48J_m6X5_rOfD-ffOdWTHm1_xUk-0OON2HivPz9NwBjrUKt9QEAAA",
+      "f": "ASgBAQECAkS0wA3OqzmwwQ2I_DcDQLLADaTGsYwV1qHtEZKf7RGSoO0R2I7lEM6O5RDMjuUQ8r3IAe69yAHsvcgB5uANNPbBXPrBXPjBXOjrDjT~_dsC_P3bAvr92wICRcaaDBl7ImZyb20iOjMwMDAwLCJ0byI6MzMwMDB94pUSFHsiZnJvbSI6NzksInRvIjoxMDB9",
+      "localPriority": "1",
+      "sort": "104"
+    },
+    "is_active": true,
+    "filter_only_photo": true,
+    "filter_only_desc": false,
+    "filter_exclude_reserved": true,
+    "filter_exclude_promo": true,
+    "blacklist_words": [
+      "копия",
+      "реплика",
+      "донор",
+      "на запчасти",
+      "заблокирован",
+      "icloud",
+      "байпас",
+      "bypass",
+      "пароль",
+      "разбит экран",
+      "витринный",
+      "восстановленный",
+      "не работает",
+      "муляж",
+      "обман"
+    ],
+    "whitelist_words": [],
+    "blocked_sellers": [],
+    "lots_found": 0,
+    "created_at": "2026-10-03T20:08:36.834732+00:00",
+    "last_checked_at": null
+  }
+}
