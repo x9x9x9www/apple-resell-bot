@@ -275,23 +275,18 @@ class TestModernBotFeatures(unittest.TestCase):
         from bot.keyboards import get_reply_keyboard, get_hide_keyboard
         from aiogram.types import ReplyKeyboardMarkup, ReplyKeyboardRemove
 
-        reply_kb = get_reply_keyboard(webapp_url="https://x9x9x9www.github.io/apple-resell-bot/")
+        reply_kb = get_reply_keyboard(current_region="Якутск")
         self.assertIsInstance(reply_kb, ReplyKeyboardMarkup)
         self.assertTrue(reply_kb.resize_keyboard)
         self.assertTrue(reply_kb.is_persistent)
 
         button_texts = [b.text for row in reply_kb.keyboard for b in row]
-        self.assertIn("⚡️ Меню", button_texts)
-        self.assertIn("📱 Матрица цен", button_texts)
-        self.assertIn("📍 Сменить регион", button_texts)
+        self.assertIn("ℹ️ Информация", button_texts)
+        self.assertIn("📍 Регион: Якутск", button_texts)
         self.assertIn("📊 Скачать Excel", button_texts)
         self.assertIn("🔄 Статус воркеров", button_texts)
-        self.assertIn("❌ Скрыть клавиатуру", button_texts)
-
-        # Проверяем наличие WebAppInfo на кнопке матрицы цен
-        webapp_buttons = [b for row in reply_kb.keyboard for b in row if b.web_app is not None]
-        self.assertEqual(len(webapp_buttons), 1)
-        self.assertEqual(webapp_buttons[0].web_app.url, "https://x9x9x9www.github.io/apple-resell-bot/")
+        # Проверяем, что бесполезная кнопка скрытия клавиатуры удалена
+        self.assertNotIn("❌ Скрыть клавиатуру", button_texts)
 
         # Проверяем убирание клавиатуры
         hide_kb = get_hide_keyboard()
@@ -379,8 +374,9 @@ class TestModernBotFeatures(unittest.TestCase):
         asyncio.run(cleanup_user_message(start_msg_mock))
         start_msg_mock.delete.assert_not_awaited()
 
-        # 6. Проверяем, что текст кнопки "📍 Сменить регион" находится в KNOWN_BUTTON_TEXTS
+        # 6. Проверяем, что текст кнопки "📍 Сменить регион" и "ℹ️ Информация" находятся в KNOWN_BUTTON_TEXTS
         self.assertIn("📍 Сменить регион", KNOWN_BUTTON_TEXTS)
+        self.assertIn("ℹ️ Информация", KNOWN_BUTTON_TEXTS)
 
 
 if __name__ == "__main__":

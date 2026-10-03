@@ -120,33 +120,33 @@ def get_main_menu_keyboard(
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
 
-def get_reply_keyboard(webapp_url: Optional[str] = None) -> ReplyKeyboardMarkup:
+def get_reply_keyboard(
+    current_region: str = "Москва",
+    webapp_url: Optional[str] = None,
+) -> ReplyKeyboardMarkup:
     """
     Всплывающая клавиатура быстрого доступа (Reply Keyboard) внизу экрана.
-    Оснащена кнопками быстрого меню, Mini App, смены региона, Excel, статуса
-    и кнопкой «Скрыть клавиатуру».
-    """
-    if webapp_url is None:
-        webapp_url = getattr(settings, "WEBAPP_URL", "")
+    Содержит 4 удобные кнопки:
+    - ℹ️ Информация
+    - 📍 Регион: [Текущий регион]
+    - 📊 Скачать Excel
+    - 🔄 Статус воркеров
 
-    webapp_btn = (
-        KeyboardButton(text="📱 Матрица цен", web_app=WebAppInfo(url=webapp_url))
-        if webapp_url
-        else KeyboardButton(text="📱 Матрица цен")
-    )
+    Mini App перенесен в нативную Menu Button Telegram, а кнопка «Скрыть» убрана.
+    """
+    # Если в качестве первого аргумента передан URL, считаем его legacy webapp_url
+    if current_region.startswith(("http://", "https://")):
+        webapp_url = current_region
+        current_region = "Москва"
 
     keyboard = [
         [
-            KeyboardButton(text="⚡️ Меню"),
-            webapp_btn,
+            KeyboardButton(text="ℹ️ Информация"),
+            KeyboardButton(text=f"📍 Регион: {current_region}"),
         ],
         [
-            KeyboardButton(text="📍 Сменить регион"),
             KeyboardButton(text="📊 Скачать Excel"),
-        ],
-        [
             KeyboardButton(text="🔄 Статус воркеров"),
-            KeyboardButton(text="❌ Скрыть клавиатуру"),
         ],
     ]
 

@@ -8,7 +8,7 @@ from aiogram import Bot, Dispatcher, types, F
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.filters import Command
-from aiogram.types import BufferedInputFile
+from aiogram.types import BufferedInputFile, MenuButtonWebApp, WebAppInfo
 
 from config import settings
 from core.margin_filter import MarginFilter
@@ -30,9 +30,12 @@ logger = logging.getLogger(__name__)
 _last_functional_messages: dict[int, int] = {}
 # Пользователи, явно скрывшие клавиатуру кнопкой или /hide_keyboard
 _keyboard_hidden_users: dict[int, bool] = {}
+# Ссылка на активный экземпляр RegionManager для динамических кнопок
+_active_region_manager: Optional[RegionManager] = None
 
 # Тексты кнопок всплывающей клавиатуры, которые нельзя воспринимать как названия городов
 KNOWN_BUTTON_TEXTS = {
+    "ℹ️ Информация", "ℹ️ Инфо", "Информация", "О боте",
     "⚡️ Меню", "⚡️ Главное меню", "Меню",
     "📍 Сменить регион", "📍 Регион", "Сменить регион",
     "📊 Скачать Excel", "📊 Excel-прайс", "Скачать Excel",
@@ -76,14 +79,13 @@ async def send_or_replace_functional_message(
             logger.debug("Старое функциональное сообщение не удалено или уже отсутствует: %s", e)
 
     # Если reply_markup не передан явно:
-    # всегда прикрепляем всплывающую клавиатуру (если пользователь не нажал "Скрыть"),
-    # чтобы кнопки никогда случайно не пропадали с экрана.
+    # всегда прикрепляем всплывающую клавиатуру с актуальным текущим регионом
     if reply_markup is None:
         if _keyboard_hidden_users.get(chat_id, False):
             reply_markup = get_hide_keyboard()
         else:
-            webapp_url = getattr(settings, "WEBAPP_URL", "")
-            reply_markup = get_reply_keyboard(webapp_url)
+            current_reg_name = _active_region_manager.current["name"] if _active_region_manager else "Москва"
+            reply_markup = get_reply_keyboard(current_region=current_reg_name)
 
     msg = await bot.send_message(
         chat_id=chat_id,
@@ -136,6 +138,9 @@ def create_bot_dispatcher(
     filter_instance = margin_filter if margin_filter is not None else MarginFilter()
     reg_manager = region_manager if region_manager is not None else RegionManager()
 
+    global _active_region_manager
+    _active_region_manager = reg_manager
+
     # ---------------------------------------------------------
     # КОМАНДЫ БОТА
     # ---------------------------------------------------------
@@ -146,26 +151,38 @@ def create_bot_dispatcher(
         _keyboard_hidden_users[chat_id] = False
         webapp_url = getattr(settings, "WEBAPP_URL", "")
         text = _build_dashboard_text(filter_instance, reg_manager, chat_id)
-        # Отправляем ровно ОДНО сервисное сообщение с прикрепленной всплывающей клавиатурой внизу
+        current_reg_name = reg_manager.current["name"]
         bot = message.bot
+
+        # Настраиваем постоянную системную кнопку Telegram Menu Button для Mini App
+        if bot and webapp_url:
+            try:
+                await bot.set_chat_menu_button(
+                    chat_id=chat_id,
+                    menu_button=MenuButtonWebApp(text="📱 Матрица цен", web_app=WebAppInfo(url=webapp_url)),
+                )
+            except Exception as e:
+                logger.debug("Не удалось настроить MenuButtonWebApp для %s: %s", chat_id, e)
+
+        # Отправляем ровно ОДНО сервисное сообщение с прикрепленной клавиатурой внизу
         if bot:
             await send_or_replace_functional_message(
                 chat_id=chat_id,
                 bot=bot,
                 text=text,
-                reply_markup=get_reply_keyboard(webapp_url),
+                reply_markup=get_reply_keyboard(current_region=current_reg_name),
             )
         else:
-            await message.answer(text, reply_markup=get_reply_keyboard(webapp_url))
+            await message.answer(text, reply_markup=get_reply_keyboard(current_region=current_reg_name))
 
     @dp.message(Command("keyboard", "kb", "buttons", "show_keyboard"))
     async def cmd_keyboard(message: types.Message):
         await cleanup_user_message(message)
         _keyboard_hidden_users[message.chat.id] = False
-        webapp_url = getattr(settings, "WEBAPP_URL", "")
+        current_reg_name = reg_manager.current["name"]
         text = (
-            "⌨️ <b>Всплывающая клавиатура активирована!</b>\n\n"
-            "Кнопки быстрого доступа появились внизу экрана. Чтобы убрать их в любой момент, нажмите <b>«❌ Скрыть клавиатуру»</b>."
+            "⌨️ <b>Клавиатура быстрого доступа активирована!</b>\n\n"
+            "Кнопки управления доступны внизу экрана."
         )
         bot = message.bot
         if bot:
@@ -173,10 +190,10 @@ def create_bot_dispatcher(
                 chat_id=message.chat.id,
                 bot=bot,
                 text=text,
-                reply_markup=get_reply_keyboard(webapp_url),
+                reply_markup=get_reply_keyboard(current_region=current_reg_name),
             )
         else:
-            await message.answer(text, reply_markup=get_reply_keyboard(webapp_url))
+            await message.answer(text, reply_markup=get_reply_keyboard(current_region=current_reg_name))
 
     @dp.message(Command("hide_keyboard", "hide", "hide_buttons"))
     async def cmd_hide_keyboard(message: types.Message):
@@ -184,8 +201,8 @@ def create_bot_dispatcher(
         _keyboard_hidden_users[message.chat.id] = True
         text = (
             "📴 <b>Клавиатура скрыта!</b>\n\n"
-            "Чтобы кнопки снова всплыли:\n"
-            "• Напишите команду <code>/keyboard</code> или <code>/menu</code>."
+            "Чтобы кнопки снова появились:\n"
+            "• Напишите команду <code>/keyboard</code> или <code>/info</code>."
         )
         bot = message.bot
         if bot:
@@ -198,20 +215,22 @@ def create_bot_dispatcher(
         else:
             await message.answer(text, reply_markup=get_hide_keyboard())
 
-    @dp.message(Command("menu", "settings"))
+    @dp.message(Command("info", "information", "menu", "settings", "help"))
     async def cmd_menu(message: types.Message):
         await cleanup_user_message(message)
         chat_id = message.chat.id
         text = _build_dashboard_text(filter_instance, reg_manager, chat_id)
+        current_reg_name = reg_manager.current["name"]
         bot = message.bot
         if bot:
             await send_or_replace_functional_message(
                 chat_id=chat_id,
                 bot=bot,
                 text=text,
+                reply_markup=get_reply_keyboard(current_region=current_reg_name),
             )
         else:
-            await message.answer(text)
+            await message.answer(text, reply_markup=get_reply_keyboard(current_region=current_reg_name))
 
     @dp.message(Command("status"))
     async def cmd_status(message: types.Message):
@@ -247,9 +266,14 @@ def create_bot_dispatcher(
                     "Воркеры Авито и Юлы мгновенно переключились на поиск в новом регионе ⚡️"
                 )
                 if bot:
-                    await send_or_replace_functional_message(chat_id=chat_id, bot=bot, text=ans)
+                    await send_or_replace_functional_message(
+                        chat_id=chat_id,
+                        bot=bot,
+                        text=ans,
+                        reply_markup=get_reply_keyboard(current_region=updated["name"]),
+                    )
                 else:
-                    await message.answer(ans)
+                    await message.answer(ans, reply_markup=get_reply_keyboard(current_region=updated["name"]))
                 return
             else:
                 matches = reg_manager.find_cities(city_query)
@@ -481,12 +505,12 @@ def create_bot_dispatcher(
         await cleanup_user_message(message)
         await cmd_hide_keyboard(message)
 
-    @dp.message(F.text.in_({"⚡️ Меню", "⚡️ Главное меню", "Меню"}))
+    @dp.message(F.text.in_({"ℹ️ Информация", "ℹ️ Инфо", "Информация", "О боте", "⚡️ Меню", "⚡️ Главное меню", "Меню"}))
     async def handle_reply_menu_btn(message: types.Message):
         await cleanup_user_message(message)
         await cmd_menu(message)
 
-    @dp.message(F.text.in_({"📍 Сменить регион", "📍 Регион", "Сменить регион"}))
+    @dp.message(F.text.startswith("📍 Регион") | F.text.in_({"📍 Сменить регион", "📍 Регион", "Сменить регион"}))
     async def handle_reply_region_btn(message: types.Message):
         await cleanup_user_message(message)
         await _show_city_selection_guide(message, reg_manager)
@@ -535,7 +559,10 @@ def create_bot_dispatcher(
             return
 
         # Игнорируем нажатия на кнопки всплывающей клавиатуры, если они дошли сюда
-        if query in KNOWN_BUTTON_TEXTS:
+        if (
+            query in KNOWN_BUTTON_TEXTS
+            or query.startswith(("📍", "ℹ️", "📊", "🔄", "⚡️", "❌"))
+        ):
             return
 
         # Удаляем входящее сообщение пользователя, чтобы не спамить в чате
@@ -552,9 +579,14 @@ def create_bot_dispatcher(
                 "Воркеры мгновенно начали мониторинг в новом регионе ⚡️"
             )
             if bot:
-                await send_or_replace_functional_message(chat_id=chat_id, bot=bot, text=ans)
+                await send_or_replace_functional_message(
+                    chat_id=chat_id,
+                    bot=bot,
+                    text=ans,
+                    reply_markup=get_reply_keyboard(current_region=updated["name"]),
+                )
             else:
-                await message.answer(ans)
+                await message.answer(ans, reply_markup=get_reply_keyboard(current_region=updated["name"]))
             return
 
         # Если прямого совпадения нет, ищем подсказки
@@ -789,23 +821,23 @@ def create_bot_dispatcher(
     @dp.callback_query(F.data == "menu:show_keyboard")
     async def cb_show_keyboard(callback: types.CallbackQuery):
         await callback.answer("Клавиатура активирована! ⌨️")
-        webapp_url = getattr(settings, "WEBAPP_URL", "")
         bot = callback.bot or (callback.message.bot if callback.message else None)
+        current_reg_name = reg_manager.current["name"]
+        text = (
+            "⌨️ <b>Клавиатура быстрого доступа активирована!</b>\n\n"
+            "Кнопки управления доступны внизу экрана."
+        )
         if callback.message and bot:
             await send_or_replace_functional_message(
                 chat_id=callback.message.chat.id,
                 bot=bot,
-                text=(
-                    "⌨️ <b>Всплывающая клавиатура активирована!</b>\n\n"
-                    "Кнопки быстрого доступа появились внизу экрана. Чтобы убрать их, нажмите <b>«❌ Скрыть клавиатуру»</b>."
-                ),
-                reply_markup=get_reply_keyboard(webapp_url),
+                text=text,
+                reply_markup=get_reply_keyboard(current_region=current_reg_name),
             )
         elif callback.message:
             await callback.message.answer(
-                "⌨️ <b>Всплывающая клавиатура активирована!</b>\n\n"
-                "Кнопки быстрого доступа появились внизу экрана. Чтобы убрать их, нажмите <b>«❌ Скрыть клавиатуру»</b>.",
-                reply_markup=get_reply_keyboard(webapp_url),
+                text,
+                reply_markup=get_reply_keyboard(current_region=current_reg_name),
             )
 
     @dp.callback_query(F.data == "menu:hide_keyboard")
@@ -848,12 +880,11 @@ def _build_dashboard_text(
         f"📱 <b>Конфигураций гаджетов:</b> {stats['active_configs']} из {stats['total_configs']} активны\n"
         "📡 <b>Мониторинг:</b> Авито + Юла\n\n"
         "🕹 <b>Быстрое управление:</b>\n"
-        "• <b>Кнопки внизу экрана:</b> всплывающая клавиатура быстрого доступа\n"
-        "• <b>Смена региона:</b> напишите город прямо в чат (например: <code>Якутск</code>, <code>Омск</code>, <code>Казань</code>, <code>спб</code>) или команду <code>/city Название</code>\n"
-        "• <b>Матрица цен (Mini App):</b> кнопка внизу «📱 Матрица цен» для изменения порогов выкупа со смартфона\n"
-        "• <b>Excel-прайс:</b> команда <code>/export_prices</code> или пришлите файл <code>.xlsx</code> для мгновенного обновления цен\n"
-        "• <b>Статус воркеров:</b> команда <code>/status</code> или кнопка «🔄 Статус воркеров»\n"
-        "• <b>Клавиатура:</b> <code>/keyboard</code> (показать) или <code>/hide_keyboard</code> (скрыть)\n\n"
+        "• <b>Информация:</b> кнопка «ℹ️ Информация» для вызова актуальной сводки\n"
+        f"• <b>Смена региона:</b> кнопка «📍 Регион: {current_reg['name']}» или напишите город прямо в чат (например: <code>Якутск</code>, <code>Казань</code>, <code>спб</code>)\n"
+        "• <b>Матрица цен (Mini App):</b> постоянная кнопка в левом углу строки ввода Telegram для настройки цен со смартфона\n"
+        "• <b>Excel-прайс:</b> кнопка «📊 Скачать Excel» или пришлите файл <code>.xlsx</code> для мгновенного обновления цен\n"
+        "• <b>Статус воркеров:</b> кнопка «🔄 Статус воркеров» или команда <code>/status</code>\n\n"
         "<i>💡 Все карточки объявлений приходят с кнопками прямого перехода, торга и добавления в избранное.</i>"
     )
 
