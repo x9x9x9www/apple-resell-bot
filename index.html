@@ -709,20 +709,80 @@
       return '⚡️';
     }
 
-    // Загружаем сохраненные данные из localStorage
+    // Определение категории/серии модели
+    function detectSeries(name) {
+      const lower = (name || '').toLowerCase();
+      if (lower.includes('macbook') || lower.includes('mac')) return 'macbook';
+      if (lower.includes('samsung') || lower.includes('galaxy') || lower.includes('ultra')) return 'samsung';
+      if (lower.includes('pixel')) return 'pixel';
+      if (lower.includes('ipad')) return 'ipad';
+      if (lower.includes('playstation') || lower.includes('ps5') || lower.includes('steam deck') || lower.includes('xbox')) return 'consoles';
+      if (lower.includes('iphone')) return 'iphone';
+      return 'custom';
+    }
+
+    let initialCatalog = {};
     let currentMatrix = [];
+
+    // Загружаем сохраненные данные из localStorage
     try {
       const saved = localStorage.getItem('gadget_resell_user_matrix') || localStorage.getItem('apple_resell_user_matrix');
       currentMatrix = saved ? JSON.parse(saved) : DEFAULT_CATALOG;
-      // Приводим старые числовые серии айфонов к серии "iphone" если нужно
       currentMatrix.forEach(item => {
         if (!item.series || ["11", "12", "13", "14", "15", "16"].includes(item.series)) {
-          if (item.model.toLowerCase().includes('iphone')) item.series = 'iphone';
-          else if (item.model.toLowerCase().includes('macbook')) item.series = 'macbook';
+          item.series = detectSeries(item.model);
         }
+        initialCatalog[item.key] = { price: item.price, market: item.market, enabled: item.enabled };
       });
     } catch (e) {
       currentMatrix = DEFAULT_CATALOG;
+      currentMatrix.forEach(item => {
+        initialCatalog[item.key] = { price: item.price, market: item.market, enabled: item.enabled };
+      });
+    }
+
+    // Автоматическая подгрузка актуальной матрицы цен из бота (pricing_matrix.json)
+    async function loadLiveCatalog() {
+      try {
+        const res = await fetch('./pricing_matrix.json?t=' + Date.now());
+        if (!res.ok) return;
+        const data = await res.json();
+        const loaded = [];
+        for (const [model, storages] of Object.entries(data)) {
+          const series = detectSeries(model);
+          for (const [storage, cfg] of Object.entries(storages)) {
+            const key = `${model}_${storage}`;
+            const price = Number(cfg.max_buy || cfg.price || 0);
+            const market = Number(cfg.market || Math.round(price * 1.2 / 500) * 500);
+            const enabled = cfg.enabled !== false;
+            loaded.push({
+              key,
+              model,
+              storage: Number(storage) || storage,
+              series,
+              price,
+              market,
+              enabled,
+              isCustom: series === 'custom'
+            });
+            initialCatalog[key] = { price, market, enabled };
+          }
+        }
+        if (loaded.length > 0) {
+          const fileKeys = new Set(loaded.map(x => x.key));
+          currentMatrix.forEach(m => {
+            if (m.isCustom && !fileKeys.has(m.key)) {
+              loaded.unshift(m);
+            }
+          });
+          currentMatrix = loaded;
+          saveToLocalStorage();
+          renderCards();
+          updateStats();
+        }
+      } catch (err) {
+        console.warn("Could not fetch pricing_matrix.json, using local/default:", err);
+      }
     }
 
     let activeFilter = 'all';
@@ -942,18 +1002,6 @@
       }
     });
 
-    // Определение категории/серии при добавлении модели
-    function detectSeries(name) {
-      const lower = name.toLowerCase();
-      if (lower.includes('macbook') || lower.includes('mac')) return 'macbook';
-      if (lower.includes('samsung') || lower.includes('galaxy') || lower.includes('ultra')) return 'samsung';
-      if (lower.includes('pixel')) return 'pixel';
-      if (lower.includes('ipad')) return 'ipad';
-      if (lower.includes('playstation') || lower.includes('ps5') || lower.includes('steam deck') || lower.includes('xbox')) return 'consoles';
-      if (lower.includes('iphone')) return 'iphone';
-      return 'custom';
-    }
-
     // Добавление новой конфигурации
     document.getElementById('btnSubmitNewModel').addEventListener('click', () => {
       const name = document.getElementById('newModelName').value.trim();
@@ -1003,29 +1051,59 @@
       renderCards();
     });
 
-    // Сохранение и отправка всей матрицы в Telegram бот
+    // Сохранение и отправка изменений матрицы в Telegram бот (Delta Sync < 4KB)
     document.getElementById('btnSave').addEventListener('click', () => {
       if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
 
-      const payload = {
-        action: "sync_matrix",
-        matrix: currentMatrix.map(item => ({
-          model: item.model,
-          storage: item.storage,
-          price: item.price,
-          market: item.market || Math.round(item.price * 1.2),
-          enabled: item.enabled
-        }))
-      };
+      // Вычисляем только измененные или вновь добавленные конфигурации
+      const changedItems = [];
+      for (const item of currentMatrix) {
+        const init = initialCatalog[item.key];
+        if (!init || init.price !== item.price || init.market !== item.market || init.enabled !== item.enabled || item.isCustom) {
+          changedItems.push({
+            model: item.model,
+            storage: item.storage,
+            price: item.price,
+            market: item.market || Math.round(item.price * 1.2),
+            enabled: item.enabled
+          });
+        }
+      }
 
-      if (tg) {
-        tg.sendData(JSON.stringify(payload));
+      if (changedItems.length === 0) {
+        alert("Все цены уже соответствуют боту (изменений не обнаружено). Измените любую цену, чтобы синхронизировать.");
+        return;
+      }
+
+      const payload = {
+        action: "update_matrix",
+        matrix: changedItems
+      };
+      const payloadStr = JSON.stringify(payload);
+
+      if (tg && typeof tg.sendData === 'function') {
+        try {
+          tg.sendData(payloadStr);
+          changedItems.forEach(ci => {
+            const k = `${ci.model}_${ci.storage}`;
+            initialCatalog[k] = { price: ci.price, market: ci.market, enabled: ci.enabled };
+          });
+          tg.close();
+        } catch (err) {
+          console.error("tg.sendData error:", err);
+          alert("Ошибка отправки данных в Telegram: " + (err.message || err));
+        }
       } else {
-        alert(`Синхронизировано ${currentMatrix.length} моделей! В Telegram боте матрица цен обновится мгновенно.`);
+        alert(`Синхронизировано ${changedItems.length} измененных моделей!\nВ Telegram боте матрица цен обновится мгновенно.`);
+        changedItems.forEach(ci => {
+          const k = `${ci.model}_${ci.storage}`;
+          initialCatalog[k] = { price: ci.price, market: ci.market, enabled: ci.enabled };
+        });
       }
     });
 
     renderCards();
+    loadLiveCatalog();
   </script>
 </body>
 </html>
