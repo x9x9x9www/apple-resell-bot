@@ -40,7 +40,7 @@ KNOWN_BUTTON_TEXTS = {
     "📍 Сменить регион", "📍 Регион", "Сменить регион",
     "📊 Скачать Excel", "📊 Excel-прайс", "Скачать Excel",
     "🔄 Статус воркеров", "🔄 Статус", "Статус",
-    "📱 Матрица цен", "Матрица цен",
+    "📱 Матрица цен", "Матрица цен", "😎 Матрица цен",
     "❌ Скрыть клавиатуру", "🙈 Скрыть кнопки", "📴 Скрыть клавиатуру", "Скрыть клавиатуру",
 }
 
@@ -159,7 +159,7 @@ def create_bot_dispatcher(
             try:
                 await bot.set_chat_menu_button(
                     chat_id=chat_id,
-                    menu_button=MenuButtonWebApp(text="📱 Матрица цен", web_app=WebAppInfo(url=webapp_url)),
+                    menu_button=MenuButtonWebApp(text="😎 Матрица цен", web_app=WebAppInfo(url=webapp_url)),
                 )
             except Exception as e:
                 logger.debug("Не удалось настроить MenuButtonWebApp для %s: %s", chat_id, e)
@@ -525,7 +525,7 @@ def create_bot_dispatcher(
         await cleanup_user_message(message)
         await cmd_status(message)
 
-    @dp.message(F.text.in_({"📱 Матрица цен", "Матрица цен"}))
+    @dp.message(F.text.in_({"📱 Матрица цен", "Матрица цен", "😎 Матрица цен"}))
     async def handle_reply_webapp_btn(message: types.Message):
         await cleanup_user_message(message)
         webapp_url = getattr(settings, "WEBAPP_URL", "")

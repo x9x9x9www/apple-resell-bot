@@ -41,6 +41,7 @@ class AvitoWorker(BaseWorker):
             max_item_age_seconds=max_item_age_seconds or settings.MAX_ITEM_AGE_SECONDS,
         )
         self.location_id = location_id or settings.AVITO_LOCATION_ID
+        self.city_name: str = "Москва"
         # Внутренний эндпоинт выдачи Авито
         self.api_url = "https://www.avito.ru/api/9/items"
         self.queries = [
@@ -53,10 +54,12 @@ class AvitoWorker(BaseWorker):
         ]
         self._query_idx = 0
 
-    def set_location(self, location_id: str) -> None:
+    def set_location(self, location_id: str, city_name: Optional[str] = None) -> None:
         """Динамическое переключение региона поиска Авито."""
         self.location_id = location_id
-        logger.info("[Авито] Регион поиска переключен на locationId: %s", location_id)
+        if city_name:
+            self.city_name = city_name
+        logger.info("[Авито] Регион поиска переключен на locationId: %s (%s)", location_id, self.city_name)
 
     def _parse_time(self, raw_time: Any) -> Optional[datetime]:
         """
@@ -129,9 +132,9 @@ class AvitoWorker(BaseWorker):
 
                 # Локация
                 geo = it.get("geo", {})
-                location = "Москва"
+                location = self.city_name
                 if isinstance(geo, dict):
-                    location = geo.get("formattedAddress") or geo.get("geoReferences", [{}])[0].get("content") or "Москва"
+                    location = geo.get("formattedAddress") or geo.get("geoReferences", [{}])[0].get("content") or self.city_name
 
                 # Фотография
                 image_url = None

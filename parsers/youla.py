@@ -44,16 +44,19 @@ class YoulaWorker(BaseWorker):
         )
         self.city_id = city_id or settings.YOULA_CITY_ID
         self.city_slug = "moskva"
+        self.city_name = "Москва"
         self.graphql_url = "https://api-gw.youla.io/federation/graphql"
         self.rest_url = "https://api.youla.io/api/v1/products"
         self.queries = ["iPhone", "MacBook", "Samsung Galaxy", "Google Pixel", "iPad", "PlayStation"]
         self._query_idx = 0
 
-    def set_location(self, city_id: str, city_slug: str = "moskva") -> None:
+    def set_location(self, city_id: str, city_slug: str = "moskva", city_name: Optional[str] = None) -> None:
         """Динамическое переключение региона поиска Юлы."""
         self.city_id = city_id
         self.city_slug = city_slug
-        logger.info("[Юла] Регион поиска переключен на city_id: %s, slug: %s", city_id, city_slug)
+        if city_name:
+            self.city_name = city_name
+        logger.info("[Юла] Регион поиска переключен на city_id: %s, slug: %s, city: %s", city_id, city_slug, self.city_name)
 
     async def _fetch_via_graphql(self) -> List[RawItem]:
         """Запрос через GraphQL эндпоинт federation API по ротируемым запросам гаджетов."""
@@ -177,11 +180,11 @@ class YoulaWorker(BaseWorker):
 
                 # Локация
                 loc_obj = it.get("location") or {}
-                location = "Москва"
+                location = self.city_name
                 if isinstance(loc_obj, dict):
-                    location = loc_obj.get("description") or loc_obj.get("city_name") or "Москва"
-                elif isinstance(loc_obj, str):
-                    location = loc_obj
+                    location = loc_obj.get("description") or loc_obj.get("city_name") or self.city_name
+                elif isinstance(loc_obj, str) and loc_obj.strip():
+                    location = loc_obj.strip()
 
                 # Фотография
                 image_url = None
@@ -280,6 +283,25 @@ class YoulaWorker(BaseWorker):
                 url_path = link_match.group("url")
                 url = f"https://youla.ru{url_path}" if not url_path.startswith("http") else url_path
 
+                # Проверка и отсев чужих регионов по slug из URL (например, /moskva/... при активном ekaterinburg)
+                item_city_slug = ""
+                slug_match = re.match(r"^/([^/]+)/", url_path)
+                if slug_match:
+                    item_city_slug = slug_match.group(1).lower()
+
+                if self.city_slug not in ("rossiya", "all_russia"):
+                    if item_city_slug and item_city_slug != self.city_slug:
+                        continue
+
+                # Извлечение города: из заголовка ("в Екатеринбурге") или slug
+                loc_match = re.search(r'\s+в\s+([А-Яа-яЁёA-Za-z\s-]+)$', title)
+                if loc_match:
+                    location = loc_match.group(1).strip()
+                elif item_city_slug:
+                    location = item_city_slug
+                else:
+                    location = self.city_name
+
                 # 3. Извлечение цены из data-discount
                 price_match = re.search(r'data-discount=\"([^\"]+)\"', header)
                 price = 0
@@ -320,7 +342,7 @@ class YoulaWorker(BaseWorker):
                         description="",
                         price=price,
                         url=url,
-                        location="Москва",
+                        location=location,
                         published_at=published_at,
                         image_url=image_url,
                     )

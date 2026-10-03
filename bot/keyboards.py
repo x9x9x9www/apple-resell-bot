@@ -139,10 +139,22 @@ def get_reply_keyboard(
         webapp_url = current_region
         current_region = "Москва"
 
+    if webapp_url is None:
+        webapp_url = getattr(settings, "WEBAPP_URL", "")
+
+    app_btn = (
+        KeyboardButton(text="😎 Матрица цен", web_app=WebAppInfo(url=webapp_url))
+        if webapp_url
+        else KeyboardButton(text="😎 Матрица цен")
+    )
+
     keyboard = [
         [
             KeyboardButton(text="ℹ️ Информация"),
             KeyboardButton(text=f"📍 Регион: {current_region}"),
+        ],
+        [
+            app_btn,
         ],
         [
             KeyboardButton(text="📊 Скачать Excel"),

@@ -421,3 +421,62 @@ class RegionManager:
                 results.append((key, data))
 
         return results
+
+    def is_item_matching_current_region(self, location: str, url: str = "") -> bool:
+        """
+        Строгий валидатор региона для входящих лотов (Gatekeeper).
+        Гарантирует, что при выбранном немосковском регионе (например, Екатеринбург)
+        объявления из Москвы или других сторонних городов не просочатся пользователю.
+        """
+        curr = self.current
+        key = curr.get("key", "moskva")
+        if key == "all_russia":
+            return True
+
+        loc_lower = (location or "").lower()
+        url_lower = (url or "").lower()
+        combined = f"{loc_lower} {url_lower}"
+
+        # 1. Если выбран НЕ регион Москвы, но в локации или ссылке явно Москва/МО — СТРОГО отсекаем
+        if key != "moskva":
+            moscow_markers = (
+                "москв", "moskva", "зеленоград", "щербинк", "люберц", "балаших",
+                "одинцов", "королев", "королёв", "мытищ", "химки", "подольск",
+                "домодедово", "красногорск", "раменск", "серпухов", "коломн",
+                "пушкин", "долгопрудн", "реутов", "жуковск", "щелков", "ногинск",
+                "орехово-зуев", "видн", "чехов", "сергиев посад", "mytischi",
+                "podolsk", "domodedovo", "himki", "balashiha", "lyubertsy"
+            )
+            for m in moscow_markers:
+                if m in combined:
+                    return False
+
+        # 2. Проверяем совпадение с текущим регионом
+        city_name = curr.get("name", "").lower()
+        city_slug = curr.get("youla_slug", "").lower()
+
+        target_aliases = [city_name, city_slug]
+        if key:
+            target_aliases.append(key)
+        for alias, alias_key in CITY_ALIASES.items():
+            if alias_key == key:
+                target_aliases.append(alias)
+
+        for alias in target_aliases:
+            if not alias:
+                continue
+            stem = alias[:len(alias) - 1] if len(alias) > 4 else alias
+            if stem in combined or alias in combined:
+                return True
+
+        # 3. Отсекаем явное упоминание других городов из базы
+        for other_key, other_data in CITY_DATABASE.items():
+            if other_key != key and other_key != "all_russia":
+                other_name = other_data.get("name", "").lower()
+                other_slug = other_data.get("youla_slug", "").lower()
+                other_stem = other_name[:len(other_name) - 1] if len(other_name) > 4 else other_name
+                if (other_stem and other_stem in loc_lower) or (other_slug and f"/{other_slug}/" in url_lower):
+                    return False
+
+        # По умолчанию (если город нейтральный или совпадает) разрешаем
+        return True

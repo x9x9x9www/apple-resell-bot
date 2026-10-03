@@ -285,6 +285,7 @@ class TestModernBotFeatures(unittest.TestCase):
         self.assertIn("📍 Регион: Якутск", button_texts)
         self.assertIn("📊 Скачать Excel", button_texts)
         self.assertIn("🔄 Статус воркеров", button_texts)
+        self.assertIn("😎 Матрица цен", button_texts)
         # Проверяем, что бесполезная кнопка скрытия клавиатуры удалена
         self.assertNotIn("❌ Скрыть клавиатуру", button_texts)
 
@@ -374,9 +375,78 @@ class TestModernBotFeatures(unittest.TestCase):
         asyncio.run(cleanup_user_message(start_msg_mock))
         start_msg_mock.delete.assert_not_awaited()
 
-        # 6. Проверяем, что текст кнопки "📍 Сменить регион" и "ℹ️ Информация" находятся в KNOWN_BUTTON_TEXTS
+        # 6. Проверяем, что текст кнопки "📍 Сменить регион", "ℹ️ Информация", "😎 Матрица цен" находятся в KNOWN_BUTTON_TEXTS
         self.assertIn("📍 Сменить регион", KNOWN_BUTTON_TEXTS)
         self.assertIn("ℹ️ Информация", KNOWN_BUTTON_TEXTS)
+        self.assertIn("😎 Матрица цен", KNOWN_BUTTON_TEXTS)
+
+    def test_region_gatekeeper_blocks_moscow_when_ekb_selected(self):
+        """Проверяет, что при активном Екатеринбурге лоты из Москвы и МО гарантированно отсекаются."""
+        from core.regions import RegionManager
+        from core.models import RawItem, Platform
+        from bot.dispatcher import ItemDispatcher
+        import asyncio
+        from unittest.mock import AsyncMock, MagicMock
+
+        rm = RegionManager()
+        rm.set_region("ekaterinburg")
+        self.assertEqual(rm.current["name"], "Екатеринбург")
+
+        # 1. Проверяем метод валидатора RegionManager
+        self.assertFalse(rm.is_item_matching_current_region("Москва", "https://youla.ru/moskva/item1"))
+        self.assertFalse(rm.is_item_matching_current_region("Домодедово", "https://youla.ru/domodedovo/item2"))
+        self.assertFalse(rm.is_item_matching_current_region("Подольск", "https://avito.ru/podolsk/item3"))
+        self.assertFalse(rm.is_item_matching_current_region("Казань", "https://avito.ru/kazan/item4"))
+        self.assertTrue(rm.is_item_matching_current_region("Екатеринбург", "https://youla.ru/ekaterinburg/item5"))
+        self.assertTrue(rm.is_item_matching_current_region("в Екатеринбурге", "https://youla.ru/p/item6"))
+        self.assertTrue(rm.is_item_matching_current_region("Екатеринбург, ул. Ленина", "https://avito.ru/ekaterinburg/item7"))
+
+        # 2. Проверяем работу диспетчера
+        bot_mock = AsyncMock()
+        bot_mock.send_message = AsyncMock()
+        bot_mock.send_photo = AsyncMock()
+        queue = asyncio.Queue()
+
+        dispatcher = ItemDispatcher(
+            bot=bot_mock,
+            queue=queue,
+            region_manager=rm,
+            target_chat_id=12345,
+        )
+
+        moscow_item = RawItem(
+            platform=Platform.YOULA,
+            item_id="msk_item_1",
+            title="Apple iPhone 13 128 ГБ в Москве",
+            description="",
+            price=30000,
+            url="https://youla.ru/moskva/smartfony-planshety/smartfony/apple-iphone-13-128-gb-6aa170a9",
+            location="Москва",
+            published_at=datetime.now(timezone.utc),
+        )
+
+        # Обрабатываем московский лот в диспетчере
+        asyncio.run(dispatcher._process_single_item(moscow_item))
+
+        # Бот НЕ должен отправить сообщение
+        bot_mock.send_message.assert_not_awaited()
+        bot_mock.send_photo.assert_not_awaited()
+
+        # Екатеринбургский лот должен успешно пройти фильтры и отправиться
+        ekb_item = RawItem(
+            platform=Platform.YOULA,
+            item_id="ekb_item_1",
+            title="Apple iPhone 13 128 ГБ в Екатеринбурге",
+            description="",
+            price=25000,
+            url="https://youla.ru/ekaterinburg/smartfony-planshety/smartfony/apple-iphone-13-128-gb-6aa170a9",
+            location="в Екатеринбурге",
+            published_at=datetime.now(timezone.utc),
+        )
+
+        asyncio.run(dispatcher._process_single_item(ekb_item))
+        # Одно из отправлений (фото или текст) должно быть вызвано
+        self.assertTrue(bot_mock.send_message.called or bot_mock.send_photo.called)
 
 
 if __name__ == "__main__":

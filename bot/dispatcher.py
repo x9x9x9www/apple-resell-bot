@@ -11,6 +11,7 @@ from core.models import RawItem, ParsedIPhone
 from core.parser import IPhoneNLPParser
 from core.margin_filter import MarginFilter
 from core.deduplicator import RedisDeduplicator
+from core.regions import RegionManager
 from bot.keyboards import get_item_keyboard
 
 from aiogram.types import LinkPreviewOptions
@@ -108,12 +109,14 @@ class ItemDispatcher:
         margin_filter: Optional[MarginFilter] = None,
         target_chat_id: Optional[int] = None,
         deduplicator: Optional[RedisDeduplicator] = None,
+        region_manager: Optional[RegionManager] = None,
     ):
         self.bot = bot
         self.queue = queue
         self.margin_filter = margin_filter or MarginFilter()
         self.target_chat_id = target_chat_id or settings.TARGET_CHAT_ID
         self.deduplicator = deduplicator
+        self.region_manager = region_manager
         self.is_running = False
 
     async def start(self) -> None:
@@ -136,6 +139,20 @@ class ItemDispatcher:
 
     async def _process_single_item(self, raw_item: RawItem) -> None:
         """Обрабатывает одну карточку через конвейер фильтрации и отправляет в чат."""
+        # 0. Строгий региональный фильтр (Gatekeeper)
+        if self.region_manager and not self.region_manager.is_item_matching_current_region(
+            location=raw_item.location,
+            url=raw_item.url,
+        ):
+            logger.info(
+                "[%s] 🚫 ЛОТ ОТКЛОНЕН ПО РЕГИОНУ #%s: '%s' (активен: '%s')",
+                raw_item.platform.value,
+                raw_item.item_id,
+                raw_item.location,
+                self.region_manager.current.get("name"),
+            )
+            return
+
         # 1. NLP & Regex извлечение параметров и отсев мусора/копий
         custom_models = self.margin_filter.matrix.keys() if self.margin_filter else None
         parsed_item = IPhoneNLPParser.parse_raw_item(raw_item, custom_models=custom_models)

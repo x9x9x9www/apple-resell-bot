@@ -61,6 +61,7 @@ async def main() -> None:
         queue=queue,
         margin_filter=margin_filter,
         deduplicator=deduplicator,
+        region_manager=region_manager,
     )
 
     # 7. Независимые параллельные воркеры мониторинга
@@ -70,6 +71,7 @@ async def main() -> None:
         http_client=http_client,
         location_id=curr_reg["avito_id"],
     )
+    avito_worker.city_name = curr_reg.get("name", "Москва")
     youla_worker = YoulaWorker(
         queue=queue,
         deduplicator=deduplicator,
@@ -77,10 +79,11 @@ async def main() -> None:
         city_id=curr_reg["youla_id"],
     )
     youla_worker.city_slug = curr_reg.get("youla_slug", "moskva")
+    youla_worker.city_name = curr_reg.get("name", "Москва")
 
     # При смене региона в Telegram боте — мгновенно переключаем воркеры
-    region_manager.add_listener(lambda reg: avito_worker.set_location(reg["avito_id"]))
-    region_manager.add_listener(lambda reg: youla_worker.set_location(reg["youla_id"], reg.get("youla_slug", "moskva")))
+    region_manager.add_listener(lambda reg: avito_worker.set_location(reg["avito_id"], reg.get("name", "Москва")))
+    region_manager.add_listener(lambda reg: youla_worker.set_location(reg["youla_id"], reg.get("youla_slug", "moskva"), reg.get("name", "Москва")))
 
     # Собираем фоновые задачи
     tasks = [

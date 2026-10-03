@@ -42,12 +42,21 @@ class MarginFilter:
         logger.info("Матрица цен успешно обновлена.")
 
     def save_matrix(self, path: Optional[Path | str] = None) -> None:
-        """Сохраняет текущую матрицу цен в JSON файл."""
+        """Сохраняет текущую матрицу цен в JSON файл и синхронизирует с webapp."""
         target = Path(path) if path else (settings.BASE_DIR / "pricing_matrix.json")
         try:
             with open(target, "w", encoding="utf-8") as f:
                 json.dump(self.matrix, f, ensure_ascii=False, indent=2)
             logger.info("Матрица цен сохранена в %s", target)
+
+            # Синхронизация с webapp для мгновенного отображения актуальных цен в Mini App
+            webapp_target = settings.BASE_DIR / "webapp" / "pricing_matrix.json"
+            if webapp_target.parent.exists():
+                try:
+                    with open(webapp_target, "w", encoding="utf-8") as wf:
+                        json.dump(self.matrix, wf, ensure_ascii=False, indent=2)
+                except Exception as we:
+                    logger.debug("Не удалось обновить webapp/pricing_matrix.json: %s", we)
         except Exception as e:
             logger.error("Ошибка при сохранении матрицы цен: %s", e)
 
