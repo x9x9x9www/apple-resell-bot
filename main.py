@@ -10,7 +10,6 @@ from core.models import RawItem
 from core.deduplicator import RedisDeduplicator
 from core.margin_filter import MarginFilter
 from core.regions import RegionManager
-from core.vip import VIPManager
 from parsers.network import StealthHttpClient, ProxyPool
 from parsers.avito import AvitoWorker
 from parsers.youla import YoulaWorker
@@ -51,15 +50,11 @@ async def main() -> None:
     curr_reg = region_manager.current
     logger.info("Активный регион поиска: %s (Авито: %s, Юла: %s)", curr_reg["name"], curr_reg["avito_id"], curr_reg["youla_id"])
 
-    # 6. Менеджер VIP подписок (Telegram Stars)
-    vip_manager = VIPManager()
-
-    # 7. Telegram Bot & Диспетчер мгновенных оповещений
+    # 6. Telegram Bot & Диспетчер мгновенных оповещений
     bot = create_bot()
     bot_dp = create_bot_dispatcher(
         margin_filter=margin_filter,
         region_manager=region_manager,
-        vip_manager=vip_manager,
     )
     dispatcher = ItemDispatcher(
         bot=bot,

@@ -84,12 +84,6 @@ def get_main_menu_keyboard(
         ],
         [
             InlineKeyboardButton(
-                text="⭐️ VIP Статус & Stars",
-                callback_data="menu:vip",
-            ),
-        ],
-        [
-            InlineKeyboardButton(
                 text="🔋 Политика скидок на АКБ",
                 callback_data="menu:battery",
             ),
@@ -103,26 +97,6 @@ def get_main_menu_keyboard(
     ])
 
     return InlineKeyboardMarkup(inline_keyboard=rows)
-
-
-def get_vip_keyboard() -> InlineKeyboardMarkup:
-    """Клавиатура управления VIP-подпиской через Telegram Stars."""
-    return InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
-                InlineKeyboardButton(
-                    text="⭐️ Купить VIP (250 Stars / 30 дней)",
-                    callback_data="buy:vip_stars",
-                )
-            ],
-            [
-                InlineKeyboardButton(
-                    text="⬅️ Назад в главное меню",
-                    callback_data="menu:main",
-                )
-            ],
-        ]
-    )
 
 
 def get_regions_keyboard(current_key: str = "moskva") -> InlineKeyboardMarkup:
