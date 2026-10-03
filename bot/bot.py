@@ -25,6 +25,39 @@ from bot.keyboards import (
 
 logger = logging.getLogger(__name__)
 
+# Хранилище ID последнего сервисного/функционального сообщения в чате
+# chat_id -> message_id для предотвращения спама в чате между объявлениями
+_last_functional_messages: dict[int, int] = {}
+
+
+async def send_or_replace_functional_message(
+    chat_id: int,
+    bot: Bot,
+    text: str,
+    reply_markup: Optional[types.ReplyKeyboardMarkup | types.ReplyKeyboardRemove] = None,
+) -> types.Message:
+    """
+    Отправляет сервисное/функциональное сообщение бота, предварительно
+    удаляя предыдущее функциональное сообщение в этом чате.
+    Благодаря этому чат не захламляется дублирующимися меню и статусами
+    (функционал всегда представлен ровно одним актуальным сообщением, без спама).
+    """
+    old_msg_id = _last_functional_messages.get(chat_id)
+    if old_msg_id:
+        try:
+            await bot.delete_message(chat_id=chat_id, message_id=old_msg_id)
+        except Exception as e:
+            logger.debug("Старое функциональное сообщение не удалено или уже отсутствует: %s", e)
+
+    msg = await bot.send_message(
+        chat_id=chat_id,
+        text=text,
+        parse_mode="HTML",
+        reply_markup=reply_markup,
+    )
+    _last_functional_messages[chat_id] = msg.message_id
+    return msg
+
 
 def create_bot() -> Bot:
     """Создает и настраивает экземпляр aiogram 3 Bot."""
@@ -50,71 +83,88 @@ def create_bot_dispatcher(
     @dp.message(Command("start"))
     async def cmd_start(message: types.Message):
         chat_id = message.chat.id
-        current_reg_name = reg_manager.current["name"]
         webapp_url = getattr(settings, "WEBAPP_URL", "")
-        text = (
-            "👋 <b>Добро пожаловать в Gadget Resell Radar!</b>\n\n"
-            "Высокоскоростной поисковый робот для перекупов электроники и гаджетов (iPhone, MacBook, Samsung, Pixel, iPad, консоли на Авито & Юла).\n\n"
-            "⚡️ <b>Ключевые возможности:</b>\n"
-            "• Мгновенный перехват новых лотов (&lt; 2 сек)\n"
-            f"• 📍 Регион поиска: <b>{current_reg_name}</b> (смена через кнопку или /city)\n"
-            "• 💻 Мульти-категорийный мониторинг: Mac, iPhone, Samsung, Pixel, iPad, PS5/Steam Deck\n"
-            "• 📉 Детекция <b>снижения цен</b> продавцами\n"
-            "• 📸 <b>Фотокарточки</b> лотов прямо в ленте\n"
-            "• 🔋 <b>Умный учет АКБ</b> (автоматическая скидка на замену)\n"
-            "• 📱 <b>Telegram Mini App 2.0</b> + управление прайсом через <b>Excel (.xlsx)</b>\n"
-            "• ⌨️ <b>Всплывающие кнопки</b> быстрого доступа внизу экрана\n\n"
-            f"🔑 <b>Ваш Chat ID:</b> <code>{chat_id}</code>\n\n"
-            "📌 <b>Команды:</b>\n"
-            "• /menu — Главное меню настроек и фильтров\n"
-            "• /keyboard — Включить всплывающие кнопки внизу\n"
-            "• /hide_keyboard — Скрыть всплывающие кнопки\n"
-            "• /city — Смена региона поиска (или напишите название города)\n"
-            "• /export_prices — Скачать текущий прайс-лист в Excel\n"
-            "• /status — Статус воркеров и мониторинга\n\n"
-            "<i>💡 Чтобы обновить цены выкупа, просто отправьте отредактированный файл .xlsx в этот чат или настройте цены в Mini App!</i>"
-        )
-        # Отправляем сообщение с всплывающей клавиатурой быстрого доступа
-        await message.answer(
-            "⌨️ <b>Клавиатура быстрого доступа активирована!</b>\n"
-            "Кнопки доступны внизу экрана. Чтобы убрать их в любой момент, нажмите «❌ Скрыть клавиатуру».",
-            reply_markup=get_reply_keyboard(webapp_url),
-        )
-        await message.answer(text, reply_markup=get_main_menu_keyboard(current_reg_name, webapp_url))
+        text = _build_dashboard_text(filter_instance, reg_manager, chat_id)
+        # Отправляем ровно ОДНО сервисное сообщение с прикрепленной всплывающей клавиатурой внизу
+        bot = message.bot
+        if bot:
+            await send_or_replace_functional_message(
+                chat_id=chat_id,
+                bot=bot,
+                text=text,
+                reply_markup=get_reply_keyboard(webapp_url),
+            )
+        else:
+            await message.answer(text, reply_markup=get_reply_keyboard(webapp_url))
 
     @dp.message(Command("keyboard", "kb", "buttons", "show_keyboard"))
     async def cmd_keyboard(message: types.Message):
         webapp_url = getattr(settings, "WEBAPP_URL", "")
-        await message.answer(
+        text = (
             "⌨️ <b>Всплывающая клавиатура активирована!</b>\n\n"
-            "Кнопки быстрого доступа появились внизу экрана. Чтобы убрать их, нажмите <b>«❌ Скрыть клавиатуру»</b>.",
-            reply_markup=get_reply_keyboard(webapp_url),
+            "Кнопки быстрого доступа появились внизу экрана. Чтобы убрать их в любой момент, нажмите <b>«❌ Скрыть клавиатуру»</b>."
         )
+        bot = message.bot
+        if bot:
+            await send_or_replace_functional_message(
+                chat_id=message.chat.id,
+                bot=bot,
+                text=text,
+                reply_markup=get_reply_keyboard(webapp_url),
+            )
+        else:
+            await message.answer(text, reply_markup=get_reply_keyboard(webapp_url))
 
     @dp.message(Command("hide_keyboard", "hide", "hide_buttons"))
     async def cmd_hide_keyboard(message: types.Message):
-        await message.answer(
+        text = (
             "📴 <b>Клавиатура скрыта!</b>\n\n"
             "Чтобы кнопки снова всплыли:\n"
-            "• Напишите команду <code>/keyboard</code>\n"
-            "• Или нажмите кнопку «⌨️ Показать кнопки» в меню /menu.",
-            reply_markup=get_hide_keyboard(),
+            "• Напишите команду <code>/keyboard</code> или <code>/menu</code>."
         )
+        bot = message.bot
+        if bot:
+            await send_or_replace_functional_message(
+                chat_id=message.chat.id,
+                bot=bot,
+                text=text,
+                reply_markup=get_hide_keyboard(),
+            )
+        else:
+            await message.answer(text, reply_markup=get_hide_keyboard())
 
     @dp.message(Command("menu", "settings"))
     async def cmd_menu(message: types.Message):
-        stats = filter_instance.get_stats()
-        current_reg_name = reg_manager.current["name"]
-        text = (
-            "⚙️ <b>Панель управления Gadget Resell Radar</b>\n\n"
-            f"📍 Текущий регион: <b>{current_reg_name}</b>\n"
-            f"📱 Активных конфигураций гаджетов: <b>{stats['active_configs']} из {stats['total_configs']}</b>\n\n"
-            "Выберите нужный раздел в меню ниже:"
-        )
-        await message.answer(text, reply_markup=get_main_menu_keyboard(current_reg_name))
+        chat_id = message.chat.id
+        text = _build_dashboard_text(filter_instance, reg_manager, chat_id)
+        bot = message.bot
+        if bot:
+            await send_or_replace_functional_message(
+                chat_id=chat_id,
+                bot=bot,
+                text=text,
+            )
+        else:
+            await message.answer(text)
+
+    @dp.message(Command("status"))
+    async def cmd_status(message: types.Message):
+        chat_id = message.chat.id
+        text = _build_status_text(filter_instance, reg_manager)
+        bot = message.bot
+        if bot:
+            await send_or_replace_functional_message(
+                chat_id=chat_id,
+                bot=bot,
+                text=text,
+            )
+        else:
+            await message.answer(text)
 
     @dp.message(Command("city", "region"))
     async def cmd_city(message: types.Message):
+        chat_id = message.chat.id
+        bot = message.bot
         text_parts = (message.text or "").strip().split(maxsplit=1)
         if len(text_parts) > 1:
             city_query = text_parts[1].strip()
@@ -122,12 +172,15 @@ def create_bot_dispatcher(
             if updated:
                 ans = (
                     f"✅ <b>Регион поиска успешно изменен!</b>\n\n"
-                    f"📍 Новый регион: <b>{updated['name']}</b>\n"
+                    f"📍 Новый активный регион: <b>{updated['name']}</b>\n"
                     f"• Авито locationId: <code>{updated['avito_id']}</code>\n"
                     f"• Юла: <code>{updated['youla_id'] or 'Вся Россия'}</code>\n\n"
                     "Воркеры Авито и Юлы мгновенно переключились на поиск в новом регионе ⚡️"
                 )
-                await message.answer(ans, reply_markup=get_main_menu_keyboard(updated["name"]))
+                if bot:
+                    await send_or_replace_functional_message(chat_id=chat_id, bot=bot, text=ans)
+                else:
+                    await message.answer(ans)
                 return
             else:
                 matches = reg_manager.find_cities(city_query)
@@ -136,23 +189,38 @@ def create_bot_dispatcher(
                     ans = (
                         f"🔍 Город «{city_query}» не найден точно. Возможно, вы имели в виду:\n\n"
                         f"{hints}\n\n"
-                        "Или выберите город из списка ниже:"
+                        "<i>Отправьте команду <code>/city Название</code> или напишите город в чат.</i>"
                     )
                 else:
                     ans = (
                         f"❌ Город «{city_query}» не найден в базе.\n\n"
-                        "Пожалуйста, выберите город из списка популярных ниже:"
+                        "<i>Напишите точное название города (например: <code>/city Якутск</code>, <code>/city Казань</code>, <code>/city Омск</code>).</i>"
                     )
-                await message.answer(ans, reply_markup=get_regions_keyboard(reg_manager.current["key"]))
+                if bot:
+                    await send_or_replace_functional_message(chat_id=chat_id, bot=bot, text=ans)
+                else:
+                    await message.answer(ans)
                 return
 
         current_reg = reg_manager.current
         text = (
             "📍 <b>Настройка региона поиска (Авито & Юла):</b>\n\n"
-            f"Текущий регион: <b>{current_reg['name']}</b>\n\n"
-            "Выберите город кнопкой ниже или напишите <code>/city Название</code> (например: <code>/city Самара</code>, <code>/city Екатеринбург</code> или <code>/city спб</code>):"
+            f"Текущий активный регион: <b>{current_reg['name']}</b>\n\n"
+            "Чтобы изменить регион, просто <b>напишите название города прямо в этот чат</b> (или отправьте команду <code>/city Название</code>):\n"
+            "• <code>Якутск</code> (или <code>якт</code>, <code>саха</code>)\n"
+            "• <code>Санкт-Петербург</code> (или <code>спб</code>, <code>питер</code>)\n"
+            "• <code>Екатеринбург</code> (или <code>екб</code>)\n"
+            "• <code>Новосибирск</code>\n"
+            "• <code>Казань</code>\n"
+            "• <code>Омск</code>\n"
+            "• <code>Краснодар</code>\n"
+            "• <code>Россия</code> (поиск по всей РФ)\n\n"
+            "<i>⚡️ База содержит более 100 городов и моментально переключает мониторинг без перезапуска.</i>"
         )
-        await message.answer(text, reply_markup=get_regions_keyboard(current_reg["key"]))
+        if bot:
+            await send_or_replace_functional_message(chat_id=chat_id, bot=bot, text=text)
+        else:
+            await message.answer(text)
 
     @dp.message(Command("export_prices"))
     async def cmd_export_prices(message: types.Message):
@@ -242,7 +310,11 @@ def create_bot_dispatcher(
                     f"🔋 Активных конфигураций: <b>{stats['active_configs']} из {stats['total_configs']}</b>\n\n"
                     "Воркеры Авито и Юлы мгновенно переключились на обновленные лимиты цен ⚡️"
                 )
-                await message.answer(text, reply_markup=get_main_menu_keyboard(reg_manager.current["name"]))
+                bot = message.bot
+                if bot:
+                    await send_or_replace_functional_message(chat_id=message.chat.id, bot=bot, text=text)
+                else:
+                    await message.answer(text)
 
             elif action == "add_model":
                 model = str(raw_payload.get("model", "")).strip()
@@ -268,7 +340,11 @@ def create_bot_dispatcher(
                         f"🔋 Всего конфигураций: <b>{stats['total_configs']}</b> (активных: {stats['active_configs']})\n\n"
                         "Воркеры мгновенно начали отслеживать лоты по этой модели ⚡️"
                     )
-                    await message.answer(text, reply_markup=get_main_menu_keyboard(reg_manager.current["name"]))
+                    bot = message.bot
+                    if bot:
+                        await send_or_replace_functional_message(chat_id=message.chat.id, bot=bot, text=text)
+                    else:
+                        await message.answer(text)
         except Exception as e:
             logger.error("Ошибка при синхронизации Mini App: %s", e, exc_info=True)
             await message.answer(f"❌ Ошибка применения данных Mini App: {e}")
@@ -336,6 +412,8 @@ def create_bot_dispatcher(
                 f"📊 Загружено конфигураций: <b>{count}</b>\n"
                 f"Воркеры Авито и Юлы мгновенно переключились на обновленные лимиты цен.{err_warning}"
             )
+            if message.chat:
+                _last_functional_messages[message.chat.id] = status_msg.message_id
             logger.info("Пользователь обновил матрицу цен через Excel: %d строк", count)
 
         except Exception as e:
@@ -348,13 +426,7 @@ def create_bot_dispatcher(
 
     @dp.message(F.text.in_({"❌ Скрыть клавиатуру", "🙈 Скрыть кнопки", "📴 Скрыть клавиатуру", "Скрыть клавиатуру"}))
     async def handle_hide_keyboard_btn(message: types.Message):
-        await message.answer(
-            "📴 <b>Клавиатура скрыта!</b>\n\n"
-            "Чтобы кнопки снова всплыли в любой момент:\n"
-            "• Напишите команду <code>/keyboard</code> или <code>/menu</code>\n"
-            "• Или нажмите кнопку «⌨️ Показать кнопки» в меню /menu.",
-            reply_markup=get_hide_keyboard(),
-        )
+        await cmd_hide_keyboard(message)
 
     @dp.message(F.text.in_({"⚡️ Меню", "⚡️ Главное меню", "Меню"}))
     async def handle_reply_menu_btn(message: types.Message):
@@ -370,20 +442,29 @@ def create_bot_dispatcher(
 
     @dp.message(F.text.in_({"🔄 Статус воркеров", "🔄 Статус", "Статус"}))
     async def handle_reply_status_btn(message: types.Message):
-        text = _build_status_text(filter_instance, reg_manager)
-        await message.answer(text, reply_markup=get_back_to_menu_keyboard())
+        await cmd_status(message)
 
     @dp.message(F.text.in_({"📱 Матрица цен", "Матрица цен"}))
     async def handle_reply_webapp_btn(message: types.Message):
         webapp_url = getattr(settings, "WEBAPP_URL", "")
         if webapp_url:
-            from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
-            kb = InlineKeyboardMarkup(inline_keyboard=[[
-                InlineKeyboardButton(text="📱 Открыть матрицу цен", web_app=WebAppInfo(url=webapp_url))
-            ]])
-            await message.answer("📱 Нажмите кнопку ниже, чтобы открыть Mini App:", reply_markup=kb)
+            text = (
+                "📱 <b>Telegram Mini App 2.0 (Матрица цен)</b>\n\n"
+                "Вы можете управлять порогами цен, добавлять новые модели и менять статусы выкупа со смартфона.\n\n"
+                f"🔗 <b>Открыть в браузере или Telegram:</b>\n{webapp_url}\n\n"
+                "<i>💡 Кнопка «📱 Матрица цен» также доступна на нижней клавиатуре.</i>"
+            )
         else:
-            await message.answer("📱 Mini App URL пока не настроен.")
+            text = (
+                "📱 <b>Матрица цен (Mini App):</b>\n\n"
+                "URL веб-приложения не задан в конфигурации (.env WEBAPP_URL).\n"
+                "Вы можете выгрузить прайс-лист в Excel командой <code>/export_prices</code>."
+            )
+        bot = message.bot
+        if bot:
+            await send_or_replace_functional_message(chat_id=message.chat.id, bot=bot, text=text)
+        else:
+            await message.answer(text)
 
     # ---------------------------------------------------------
     # ВВОД ГОРОДА ТЕКСТОМ
@@ -395,6 +476,9 @@ def create_bot_dispatcher(
         if not query or len(query) > 40:
             return
 
+        chat_id = message.chat.id
+        bot = message.bot
+
         # Пробуем распознать город или алиас
         updated = reg_manager.set_region(query)
         if updated:
@@ -404,7 +488,10 @@ def create_bot_dispatcher(
                 f"• Юла: <code>{updated['youla_id'] or 'Вся Россия'}</code>\n\n"
                 "Воркеры мгновенно начали мониторинг в новом регионе ⚡️"
             )
-            await message.answer(ans, reply_markup=get_main_menu_keyboard(updated["name"]))
+            if bot:
+                await send_or_replace_functional_message(chat_id=chat_id, bot=bot, text=ans)
+            else:
+                await message.answer(ans)
             return
 
         # Если прямого совпадения нет, ищем подсказки
@@ -413,9 +500,12 @@ def create_bot_dispatcher(
             hints = "\n".join(f"• <code>/city {m[1]['name']}</code>" for m in matches[:5])
             ans = (
                 f"🔍 По запросу «{query}» найдены города:\n\n{hints}\n\n"
-                "Или выберите город из списка:"
+                "<i>Напишите точный город из списка выше.</i>"
             )
-            await message.answer(ans, reply_markup=get_regions_keyboard(reg_manager.current["key"]))
+            if bot:
+                await send_or_replace_functional_message(chat_id=chat_id, bot=bot, text=ans)
+            else:
+                await message.answer(ans)
 
     # ---------------------------------------------------------
     # ИНЛАЙН-КОЛЛБЭКИ МЕНЮ
@@ -601,9 +691,16 @@ def create_bot_dispatcher(
             "💬 <b>Готовый скрипт для быстрого торга:</b>\n\n"
             "Нажмите на текст ниже, чтобы скопировать его в буфер обмена и отправить продавцу на Авито/Юле:\n\n"
             f"<code>{script_text}</code>\n\n"
-            "<i>💡 Скрипт составлен с упором на срочный самовывоз за наличные, что дает максимальный шанс согласия продавца.</i>"
+            "<i>💡 Скрипт составлен с упором на срочный самовывоз за наличные.</i>"
         )
-        if callback.message:
+        bot = callback.bot or (callback.message.bot if callback.message else None)
+        if callback.message and bot:
+            await send_or_replace_functional_message(
+                chat_id=callback.message.chat.id,
+                bot=bot,
+                text=text,
+            )
+        elif callback.message:
             await callback.message.answer(text)
 
     @dp.callback_query(F.data.startswith("fav:"))
@@ -620,30 +717,78 @@ def create_bot_dispatcher(
                 await callback.message.edit_text(text, reply_markup=get_back_to_menu_keyboard())
             except Exception as e:
                 logger.error("Ошибка при открытии статуса: %s", e)
+
     @dp.callback_query(F.data == "menu:show_keyboard")
     async def cb_show_keyboard(callback: types.CallbackQuery):
         await callback.answer("Клавиатура активирована! ⌨️")
         webapp_url = getattr(settings, "WEBAPP_URL", "")
-        if callback.message:
+        bot = callback.bot or (callback.message.bot if callback.message else None)
+        if callback.message and bot:
+            await send_or_replace_functional_message(
+                chat_id=callback.message.chat.id,
+                bot=bot,
+                text=(
+                    "⌨️ <b>Всплывающая клавиатура активирована!</b>\n\n"
+                    "Кнопки быстрого доступа появились внизу экрана. Чтобы убрать их, нажмите <b>«❌ Скрыть клавиатуру»</b>."
+                ),
+                reply_markup=get_reply_keyboard(webapp_url),
+            )
+        elif callback.message:
             await callback.message.answer(
                 "⌨️ <b>Всплывающая клавиатура активирована!</b>\n\n"
-                "Кнопки быстрого доступа появились внизу экрана. Чтобы убрать их в любой момент, нажмите <b>«❌ Скрыть клавиатуру»</b>.",
+                "Кнопки быстрого доступа появились внизу экрана. Чтобы убрать их, нажмите <b>«❌ Скрыть клавиатуру»</b>.",
                 reply_markup=get_reply_keyboard(webapp_url),
             )
 
     @dp.callback_query(F.data == "menu:hide_keyboard")
     async def cb_hide_keyboard(callback: types.CallbackQuery):
         await callback.answer("Клавиатура скрыта 📴")
-        if callback.message:
+        bot = callback.bot or (callback.message.bot if callback.message else None)
+        if callback.message and bot:
+            await send_or_replace_functional_message(
+                chat_id=callback.message.chat.id,
+                bot=bot,
+                text=(
+                    "📴 <b>Клавиатура скрыта!</b>\n\n"
+                    "Чтобы кнопки снова всплыли:\n"
+                    "• Напишите команду <code>/keyboard</code> или <code>/menu</code>."
+                ),
+                reply_markup=get_hide_keyboard(),
+            )
+        elif callback.message:
             await callback.message.answer(
                 "📴 <b>Клавиатура скрыта!</b>\n\n"
                 "Чтобы кнопки снова всплыли:\n"
-                "• Напишите команду <code>/keyboard</code>\n"
-                "• Или нажмите кнопку «⌨️ Показать кнопки» в меню /menu.",
+                "• Напишите команду <code>/keyboard</code> или <code>/menu</code>.",
                 reply_markup=get_hide_keyboard(),
             )
 
     return dp
+
+
+def _build_dashboard_text(
+    filter_instance: MarginFilter,
+    reg_manager: RegionManager,
+    chat_id: int | str,
+) -> str:
+    """Единое информативное сообщение панели управления (дашборд без спама)."""
+    stats = filter_instance.get_stats()
+    current_reg = reg_manager.current
+    return (
+        "⚡️ <b>Панель управления Gadget Resell Radar</b>\n\n"
+        f"📍 <b>Текущий регион:</b> {current_reg['name']} (Авито: <code>{current_reg['avito_id']}</code>, Юла: <code>{current_reg['youla_id'] or 'Вся Россия'}</code>)\n"
+        f"📱 <b>Конфигураций гаджетов:</b> {stats['active_configs']} из {stats['total_configs']} активны\n"
+        "📡 <b>Мониторинг:</b> Авито + Юла ⚡️ (Redis/SQLite, детекция дропов цен)\n"
+        f"🔑 <b>Chat ID:</b> <code>{chat_id}</code>\n\n"
+        "🕹 <b>Быстрое управление:</b>\n"
+        "• <b>Кнопки внизу экрана:</b> всплывающая клавиатура быстрого доступа\n"
+        "• <b>Смена региона:</b> напишите город прямо в чат (например: <code>Якутск</code>, <code>Омск</code>, <code>Казань</code>, <code>спб</code>) или команду <code>/city Название</code>\n"
+        "• <b>Матрица цен (Mini App):</b> кнопка внизу «📱 Матрица цен» для изменения порогов выкупа со смартфона\n"
+        "• <b>Excel-прайс:</b> команда <code>/export_prices</code> или пришлите файл <code>.xlsx</code> для мгновенного обновления цен\n"
+        "• <b>Статус воркеров:</b> команда <code>/status</code> или кнопка «🔄 Статус воркеров»\n"
+        "• <b>Клавиатура:</b> <code>/keyboard</code> (показать) или <code>/hide_keyboard</code> (скрыть)\n\n"
+        "<i>💡 Все карточки объявлений приходят с кнопками прямого перехода, торга и добавления в избранное.</i>"
+    )
 
 
 def _build_status_text(
@@ -664,13 +809,23 @@ def _build_status_text(
         "• Детекция снижения цен: <b>АКТИВНА 📉</b>\n"
         "• Фотокарточки объявлений: <b>АКТИВНЫ 📸</b>\n"
         f"• Активных конфигураций гаджетов: <b>{stats['active_configs']} из {stats['total_configs']}</b>\n"
-        "• Скорость реакции: <b>до 2.5 сек</b>\n"
+        "• Скорость реакции: <b>до 2.5 сек</b>\n\n"
+        "<i>💡 Чтобы сменить регион, просто напишите название города в чат или используйте кнопку «📍 Сменить регион».</i>"
     )
 
 
 async def _send_excel_file(message: types.Message, filter_instance: MarginFilter) -> None:
     """Генерирует и отправляет Excel-таблицу прайс-листа пользователю."""
     try:
+        chat_id = message.chat.id
+        bot = message.bot
+        old_msg_id = _last_functional_messages.get(chat_id)
+        if old_msg_id and bot:
+            try:
+                await bot.delete_message(chat_id=chat_id, message_id=old_msg_id)
+            except Exception as e:
+                logger.debug("Старое функциональное сообщение не удалено: %s", e)
+
         excel_bytes = ExcelPricingManager.export_matrix_to_bytes(filter_instance.matrix)
         file = BufferedInputFile(excel_bytes, filename="gadget_resell_prices.xlsx")
         caption = (
@@ -681,7 +836,8 @@ async def _send_excel_file(message: types.Message, filter_instance: MarginFilter
             "3. Отправьте сохраненный файл обратно в этот чат.\n\n"
             "<i>Бот мгновенно применит новые цены без перезагрузки!</i>"
         )
-        await message.answer_document(document=file, caption=caption)
+        doc_msg = await message.answer_document(document=file, caption=caption)
+        _last_functional_messages[chat_id] = doc_msg.message_id
     except Exception as e:
         logger.error("Ошибка при генерации Excel прайса: %s", e, exc_info=True)
         await message.answer(f"❌ <b>Ошибка при экспорте Excel:</b> {e}")

@@ -303,6 +303,65 @@ class TestModernBotFeatures(unittest.TestCase):
         self.assertTrue(any("Показать кнопки" in t for t in main_texts))
         self.assertTrue(any("Скрыть кнопки" in t for t in main_texts))
 
+    def test_single_functional_message_without_spam(self):
+        import asyncio
+        from unittest.mock import AsyncMock, MagicMock
+        from bot.bot import (
+            _build_dashboard_text,
+            _build_status_text,
+            _last_functional_messages,
+            send_or_replace_functional_message,
+        )
+        from core.margin_filter import MarginFilter
+        from core.regions import RegionManager
+
+        mf = MarginFilter(matrix={"iPhone 16": {"128": {"max_buy": 60000, "market": 75000, "enabled": True}}})
+        rm = RegionManager()
+        rm.set_region("yakutsk")
+
+        # 1. Проверяем информативность единого дашборда
+        dash_text = _build_dashboard_text(mf, rm, chat_id=123456)
+        self.assertIn("Панель управления Gadget Resell Radar", dash_text)
+        self.assertIn("Якутск", dash_text)
+        self.assertIn("123456", dash_text)
+        self.assertIn("Все карточки объявлений приходят с кнопками прямого перехода, торга и добавления в избранное", dash_text)
+
+        # 2. Проверяем логику отсутствия спама (удаление старого сообщения перед отправкой нового)
+        bot_mock = MagicMock()
+        bot_mock.delete_message = AsyncMock(return_value=True)
+
+        new_msg_mock = MagicMock()
+        new_msg_mock.message_id = 999
+        bot_mock.send_message = AsyncMock(return_value=new_msg_mock)
+
+        # Симулируем наличие старого сообщения с ID 888
+        _last_functional_messages[123456] = 888
+
+        # Запускаем send_or_replace_functional_message
+        res = asyncio.run(
+            send_or_replace_functional_message(
+                chat_id=123456,
+                bot=bot_mock,
+                text="Тестовый дашборд",
+            )
+        )
+
+        # Проверяем, что старое сообщение было удалено
+        bot_mock.delete_message.assert_awaited_once_with(chat_id=123456, message_id=888)
+        # Проверяем, что новое сообщение отправлено
+        bot_mock.send_message.assert_awaited_once()
+        # Проверяем, что сохранен новый ID
+        self.assertEqual(_last_functional_messages[123456], 999)
+        self.assertEqual(res.message_id, 999)
+
+        # 3. Проверяем, что кнопки действий присутствуют на объявлениях
+        item_kb = get_item_keyboard("https://avito.ru/item/123", item_id="123", model="iPhone 16", price=55000)
+        item_buttons = [b.text for row in item_kb.inline_keyboard for b in row]
+        self.assertTrue(any("Перейти к объявлению" in t for t in item_buttons))
+        self.assertTrue(any("Шаблон торга" in t for t in item_buttons))
+        self.assertTrue(any("В избранное" in t for t in item_buttons))
+
 
 if __name__ == "__main__":
     unittest.main()
+
