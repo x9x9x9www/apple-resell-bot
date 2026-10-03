@@ -30,9 +30,12 @@ class Settings(BaseSettings):
         except (ValueError, TypeError):
             return 0
 
-    # Redis
+    # Redis & Deduplication
     REDIS_URL: str = Field(default="redis://localhost:6379/0")
     REDIS_TTL_HOURS: int = Field(default=48)
+    DEDUP_DB_FILE: str = Field(default="dedup_cache.db")
+    MIN_PRICE_DROP_RUB: int = Field(default=500)  # Минимальная скидка для алерта (отсекает колебания)
+    SEMANTIC_DEDUP_WINDOW_HOURS: int = Field(default=12)  # Окно отсева семантических дублей (часов)
 
     # Latency & Monitoring Settings
     MAX_ITEM_AGE_SECONDS: int = Field(default=300)  # 5 min freshness window

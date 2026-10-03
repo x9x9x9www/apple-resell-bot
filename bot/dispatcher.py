@@ -10,6 +10,7 @@ from config import settings
 from core.models import RawItem, ParsedIPhone
 from core.parser import IPhoneNLPParser
 from core.margin_filter import MarginFilter
+from core.deduplicator import RedisDeduplicator
 from bot.keyboards import get_item_keyboard
 
 logger = logging.getLogger(__name__)
@@ -74,7 +75,7 @@ class ItemDispatcher:
     """
     Асинхронный диспетчер обработки очереди лотов.
     Обеспечивает сквозной конвейер:
-    Очередь -> NLP/Regex парсер -> Фильтр маржинальности -> Мгновенная отправка в Telegram.
+    Очередь -> NLP/Regex парсер -> Фильтр маржинальности -> Семантическая дедупликация -> Мгновенная отправка в Telegram.
     """
 
     def __init__(
@@ -83,11 +84,13 @@ class ItemDispatcher:
         queue: asyncio.Queue[RawItem],
         margin_filter: Optional[MarginFilter] = None,
         target_chat_id: Optional[int] = None,
+        deduplicator: Optional[RedisDeduplicator] = None,
     ):
         self.bot = bot
         self.queue = queue
         self.margin_filter = margin_filter or MarginFilter()
         self.target_chat_id = target_chat_id or settings.TARGET_CHAT_ID
+        self.deduplicator = deduplicator
         self.is_running = False
 
     async def start(self) -> None:
@@ -137,11 +140,26 @@ class ItemDispatcher:
             )
             return
 
-        # 3. Форматирование текста
+        # 3. Интеллектуальная семантическая дедупликация (кросспостинг, перевыкладка, дубликаты фото)
+        if self.deduplicator:
+            is_dup, dup_reason = await self.deduplicator.check_and_mark_semantic_duplicate(parsed_item)
+            if is_dup:
+                logger.info(
+                    "[%s] 🛡 ОТСЕЯН ДУБЛИКАТ #%s '%s %dGB' за %d ₽: %s",
+                    parsed_item.platform.value,
+                    parsed_item.item_id,
+                    parsed_item.model,
+                    parsed_item.storage_gb,
+                    parsed_item.price,
+                    dup_reason,
+                )
+                return
+
+        # 4. Форматирование текста
         text = format_lot_message(parsed_item)
         keyboard = get_item_keyboard(parsed_item.url)
 
-        # 4. Моментальная отправка в Telegram
+        # 5. Моментальная отправка в Telegram
         if not self.target_chat_id:
             logger.warning(
                 "TARGET_CHAT_ID не настроен в .env! Сформированное сообщение:\n%s\nURL: %s",

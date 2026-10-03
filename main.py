@@ -51,6 +51,7 @@ async def main() -> None:
         bot=bot,
         queue=queue,
         margin_filter=margin_filter,
+        deduplicator=deduplicator,
     )
 
     # 6. Независимые параллельные воркеры мониторинга

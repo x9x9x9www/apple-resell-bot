@@ -27,3 +27,7 @@ proxies.txt
 logs/
 ~$*.xlsx
 *.tmp
+*.db
+*.db-wal
+*.db-shm
+*.sqlite*
