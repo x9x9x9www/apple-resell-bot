@@ -31,3 +31,5 @@ logs/
 *.db-wal
 *.db-shm
 *.sqlite*
+region_settings.json
+vip_users.json

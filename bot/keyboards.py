@@ -1,59 +1,125 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 
 if TYPE_CHECKING:
     from core.margin_filter import MarginFilter
 
 
-def get_item_keyboard(url: str) -> InlineKeyboardMarkup:
-    """Генерирует инлайн-кнопку для моментального перехода к объявлению."""
-    return InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
-                InlineKeyboardButton(
-                    text="🔗 Перейти к объявлению",
-                    url=url,
-                )
-            ]
+def get_item_keyboard(
+    url: str,
+    item_id: str = "",
+    model: str = "",
+    price: int = 0,
+) -> InlineKeyboardMarkup:
+    """Генерирует инлайн-кнопки для лота: быстрый переход, торг и избранное."""
+    rows = [
+        [
+            InlineKeyboardButton(
+                text="⚡️ Перейти к объявлению",
+                url=url,
+            )
         ]
-    )
+    ]
+
+    # Интерактивные кнопки действий
+    if item_id:
+        rows.append([
+            InlineKeyboardButton(
+                text="💬 Шаблон торга",
+                callback_data=f"bargain:{item_id}:{price}",
+            ),
+            InlineKeyboardButton(
+                text="⭐️ В избранное",
+                callback_data=f"fav:{item_id}",
+            ),
+        ])
+
+    return InlineKeyboardMarkup(inline_keyboard=rows)
 
 
-def get_main_menu_keyboard(current_region: str = "Москва") -> InlineKeyboardMarkup:
+def get_main_menu_keyboard(
+    current_region: str = "Москва",
+    webapp_url: str = "",
+) -> InlineKeyboardMarkup:
     """Главное интерактивное меню настроек бота."""
+    rows = [
+        [
+            InlineKeyboardButton(
+                text=f"📍 Регион поиска: {current_region}",
+                callback_data="menu:region",
+            ),
+        ],
+    ]
+
+    # Если задан URL Web App — добавляем кнопку прямого открытия Mini App
+    if webapp_url:
+        rows.append([
+            InlineKeyboardButton(
+                text="📱 Матрица цен (Mini App)",
+                web_app=WebAppInfo(url=webapp_url),
+            )
+        ])
+    else:
+        rows.append([
+            InlineKeyboardButton(
+                text="📱 Матрица цен (Web App)",
+                callback_data="menu:webapp_info",
+            )
+        ])
+
+    rows.extend([
+        [
+            InlineKeyboardButton(
+                text="📊 Выгрузить Excel-прайс",
+                callback_data="menu:export_excel",
+            ),
+        ],
+        [
+            InlineKeyboardButton(
+                text="📱 Фильтр моделей iPhone",
+                callback_data="menu:models",
+            ),
+        ],
+        [
+            InlineKeyboardButton(
+                text="⭐️ VIP Статус & Stars",
+                callback_data="menu:vip",
+            ),
+        ],
+        [
+            InlineKeyboardButton(
+                text="🔋 Политика скидок на АКБ",
+                callback_data="menu:battery",
+            ),
+        ],
+        [
+            InlineKeyboardButton(
+                text="🔄 Статус воркеров и очередей",
+                callback_data="menu:status",
+            ),
+        ],
+    ])
+
+    return InlineKeyboardMarkup(inline_keyboard=rows)
+
+
+def get_vip_keyboard() -> InlineKeyboardMarkup:
+    """Клавиатура управления VIP-подпиской через Telegram Stars."""
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    text=f"📍 Регион поиска: {current_region}",
-                    callback_data="menu:region",
-                ),
+                    text="⭐️ Купить VIP (250 Stars / 30 дней)",
+                    callback_data="buy:vip_stars",
+                )
             ],
             [
                 InlineKeyboardButton(
-                    text="📊 Выгрузить Excel-прайс",
-                    callback_data="menu:export_excel",
-                ),
-            ],
-            [
-                InlineKeyboardButton(
-                    text="📱 Фильтр моделей iPhone",
-                    callback_data="menu:models",
-                ),
-            ],
-            [
-                InlineKeyboardButton(
-                    text="🔋 Политика скидок на АКБ",
-                    callback_data="menu:battery",
-                ),
-            ],
-            [
-                InlineKeyboardButton(
-                    text="🔄 Статус воркеров и очередей",
-                    callback_data="menu:status",
-                ),
+                    text="⬅️ Назад в главное меню",
+                    callback_data="menu:main",
+                )
             ],
         ]
     )

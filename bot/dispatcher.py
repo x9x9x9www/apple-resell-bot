@@ -13,7 +13,13 @@ from core.margin_filter import MarginFilter
 from core.deduplicator import RedisDeduplicator
 from bot.keyboards import get_item_keyboard
 
+from aiogram.types import LinkPreviewOptions
+
 logger = logging.getLogger(__name__)
+
+# Официальные ID анимационных эффектов сообщений Telegram
+FIRE_EFFECT_ID = "5104841245755180586"    # 🔥 Огонь / Пламя
+PARTY_EFFECT_ID = "5046509860389126442"   # 🎉 Конфетти
 
 
 def format_lot_message(item: ParsedIPhone) -> str:
@@ -29,6 +35,8 @@ def format_lot_message(item: ParsedIPhone) -> str:
     🔋 <b>АКБ:</b> 91%
     💰 <b>Цена:</b> 51 000 ₽ <i>(Ниже рынка на ~14 000 ₽)</i>
     📍 <b>Локация:</b> Москва, метро Сокол
+
+    <blockquote expandable>📝 <b>Описание продавца:</b> ...</blockquote>
     """
     # Память
     storage_display = f"{item.storage_gb} GB" if item.storage_gb < 1024 else "1 TB"
@@ -68,6 +76,14 @@ def format_lot_message(item: ParsedIPhone) -> str:
         f"{price_line}\n"
         f"📍 <b>Локация:</b> {item.location}"
     )
+
+    # Современная сворачиваемая цитата Telegram для описания продавца
+    if item.description and item.description.strip():
+        desc_clean = item.description.strip().replace("<", "&lt;").replace(">", "&gt;")
+        if len(desc_clean) > 400:
+            desc_clean = desc_clean[:400] + "..."
+        message += f"\n\n<blockquote expandable>📝 <b>Описание продавца:</b>\n{desc_clean}</blockquote>"
+
     return message
 
 
@@ -100,14 +116,11 @@ class ItemDispatcher:
 
         while self.is_running:
             try:
-                # Извлекаем свежий лот из очереди без блокировки потоков
                 raw_item = await self.queue.get()
-
                 try:
                     await self._process_single_item(raw_item)
                 finally:
                     self.queue.task_done()
-
             except asyncio.CancelledError:
                 logger.info("Диспетчер очереди остановлен.")
                 break
@@ -155,11 +168,23 @@ class ItemDispatcher:
                 )
                 return
 
-        # 4. Форматирование текста
+        # 4. Форматирование текста и клавиатуры с быстрыми действиями
         text = format_lot_message(parsed_item)
-        keyboard = get_item_keyboard(parsed_item.url)
+        keyboard = get_item_keyboard(
+            url=parsed_item.url,
+            item_id=parsed_item.item_id,
+            model=parsed_item.model,
+            price=parsed_item.price,
+        )
 
-        # 5. Моментальная отправка в Telegram
+        # 5. Определение визуального эффекта сообщения (Message Effect)
+        effect_id: Optional[str] = None
+        if parsed_item.profit and parsed_item.profit >= 8000:
+            effect_id = FIRE_EFFECT_ID
+        elif parsed_item.is_price_drop and parsed_item.old_price and (parsed_item.old_price - parsed_item.price >= 4000):
+            effect_id = PARTY_EFFECT_ID
+
+        # 6. Моментальная отправка в Telegram
         if not self.target_chat_id:
             logger.warning(
                 "TARGET_CHAT_ID не настроен в .env! Сформированное сообщение:\n%s\nURL: %s",
@@ -168,18 +193,35 @@ class ItemDispatcher:
             )
             return
 
+        preview_opts = LinkPreviewOptions(
+            is_disabled=False,
+            url=parsed_item.url,
+            prefer_large_media=True,
+            show_above_text=True,
+        )
+
         for attempt in range(1, 4):
             try:
                 # Если у лота есть фотография — отправляем фотокарточку с описанием
                 if parsed_item.image_url:
                     try:
-                        await self.bot.send_photo(
-                            chat_id=self.target_chat_id,
-                            photo=parsed_item.image_url,
-                            caption=text,
-                            parse_mode="HTML",
-                            reply_markup=keyboard,
-                        )
+                        send_kwargs = {
+                            "chat_id": self.target_chat_id,
+                            "photo": parsed_item.image_url,
+                            "caption": text,
+                            "parse_mode": "HTML",
+                            "reply_markup": keyboard,
+                        }
+                        if effect_id:
+                            send_kwargs["message_effect_id"] = effect_id
+
+                        try:
+                            await self.bot.send_photo(**send_kwargs)
+                        except TelegramAPIError:
+                            # Fallback без эффекта, если чат не поддерживает эффекты
+                            send_kwargs.pop("message_effect_id", None)
+                            await self.bot.send_photo(**send_kwargs)
+
                         logger.info(
                             "🔥 ФОТО-УВЕДОМЛЕНИЕ ОТПРАВЛЕНО: [%s] %s %dGB за %d ₽ (Выгода: %s ₽)",
                             parsed_item.platform.value,
@@ -195,15 +237,24 @@ class ItemDispatcher:
                             parsed_item.image_url,
                             photo_err,
                         )
-                        # Переходим к отправке обычным текстом
 
-                await self.bot.send_message(
-                    chat_id=self.target_chat_id,
-                    text=text,
-                    parse_mode="HTML",
-                    reply_markup=keyboard,
-                    disable_web_page_preview=False,
-                )
+                # Отправка текстовым сообщением с LinkPreviewOptions и эффектом
+                msg_kwargs = {
+                    "chat_id": self.target_chat_id,
+                    "text": text,
+                    "parse_mode": "HTML",
+                    "reply_markup": keyboard,
+                    "link_preview_options": preview_opts,
+                }
+                if effect_id:
+                    msg_kwargs["message_effect_id"] = effect_id
+
+                try:
+                    await self.bot.send_message(**msg_kwargs)
+                except TelegramAPIError:
+                    msg_kwargs.pop("message_effect_id", None)
+                    await self.bot.send_message(**msg_kwargs)
+
                 logger.info(
                     "🔥 УВЕДОМЛЕНИЕ ОТПРАВЛЕНО: [%s] %s %dGB за %d ₽ (Выгода: %s ₽)",
                     parsed_item.platform.value,
