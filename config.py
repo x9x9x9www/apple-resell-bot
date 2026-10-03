@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     # Telegram
     BOT_TOKEN: str = Field(default="YOUR_BOT_TOKEN_HERE")
     TARGET_CHAT_ID: int = Field(default=0)
+    WEBAPP_URL: str = Field(default="")
 
     @field_validator("TARGET_CHAT_ID", mode="before")
     @classmethod

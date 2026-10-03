@@ -25,6 +25,7 @@ class MarginFilter:
         ("12", "iPhone 12 / 12 Pro"),
         ("11", "iPhone 11 / 11 Pro"),
         ("X_SE", "iPhone X / XS / SE"),
+        ("custom", "Свои модели ⭐"),
     ]
 
     def __init__(self, matrix: Optional[dict[str, dict[str, dict[str, Any]]]] = None):
@@ -69,6 +70,9 @@ class MarginFilter:
     def _matches_series(self, model_name: str, series_key: str) -> bool:
         if series_key == "X_SE":
             return any(k in model_name for k in ["XS", "XR", "iPhone X", "SE"])
+        if series_key == "custom":
+            standard = ["16", "15", "14", "13", "12", "11", "XS", "XR", "iPhone X", "SE"]
+            return not any(s in model_name for s in standard)
         return f"iPhone {series_key}" in model_name
 
     def get_stats(self) -> dict[str, int]:

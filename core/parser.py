@@ -142,14 +142,28 @@ class IPhoneNLPParser:
         return None
 
     @classmethod
-    def extract_model(cls, title: str, description: str) -> Optional[str]:
-        """Определяет модель iPhone по нормализованному шаблону."""
-        # Сначала ищем в заголовке
+    def extract_model(
+        cls,
+        title: str,
+        description: str,
+        custom_models: Optional[Any] = None,
+    ) -> Optional[str]:
+        """Определяет модель iPhone или кастомную модель по нормализованному шаблону."""
+        # 0. Проверяем пользовательские модели из матрицы
+        if custom_models:
+            for custom_m in sorted(custom_models, key=len, reverse=True):
+                if not custom_m or not isinstance(custom_m, str):
+                    continue
+                esc = re.escape(custom_m)
+                if re.search(rf"\b{esc}\b", title, re.IGNORECASE) or re.search(rf"\b{esc}\b", description[:200], re.IGNORECASE):
+                    return custom_m
+
+        # 1. Сначала ищем в заголовке
         for pattern, model_name in MODEL_PATTERNS:
             if pattern.search(title):
                 return model_name
 
-        # Если в заголовке нет, ищем в первых 200 символах описания
+        # 2. Если в заголовке нет, ищем в первых 200 символах описания
         desc_start = description[:200]
         for pattern, model_name in MODEL_PATTERNS:
             if pattern.search(desc_start):
@@ -205,7 +219,11 @@ class IPhoneNLPParser:
         return None
 
     @classmethod
-    def parse_raw_item(cls, raw: RawItem) -> Optional[ParsedIPhone]:
+    def parse_raw_item(
+        cls,
+        raw: RawItem,
+        custom_models: Optional[Any] = None,
+    ) -> Optional[ParsedIPhone]:
         """
         Полный конвейер извлечения:
         1. Проверка черного списка (копии, запчасти, блокировки).
@@ -219,7 +237,7 @@ class IPhoneNLPParser:
             return None
 
         # Модель
-        model = cls.extract_model(raw.title, raw.description)
+        model = cls.extract_model(raw.title, raw.description, custom_models=custom_models)
         if not model:
             return None
 

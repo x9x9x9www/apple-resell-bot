@@ -132,32 +132,113 @@ def create_bot_dispatcher(
 
     @dp.message(F.web_app_data)
     async def handle_webapp_data(message: types.Message):
-        """Принимает измененные настройки матрицы цен из Telegram Mini App."""
+        """Принимает измененные настройки матрицы цен и новые модели из Telegram Mini App."""
         try:
             raw_payload = json.loads(message.web_app_data.data)
             action = raw_payload.get("action")
-            if action == "update_matrix":
+
+            if action in ("update_matrix", "sync_matrix"):
                 updated_models = raw_payload.get("matrix", [])
                 updated_count = 0
+                new_count = 0
+                new_models = set()
+
                 for item in updated_models:
-                    key = item.get("key")
-                    price = item.get("price")
-                    enabled = item.get("enabled", True)
-                    if key in filter_instance.matrix:
-                        filter_instance.matrix[key]["max_price"] = price
-                        filter_instance.matrix[key]["enabled"] = enabled
+                    model = item.get("model")
+                    storage = str(item.get("storage", "128")).strip()
+
+                    # Поддержка альтернативного формата key: "iPhone 16_128"
+                    if not model and item.get("key"):
+                        parts = item.get("key").rsplit("_", 1)
+                        if len(parts) == 2:
+                            model, storage = parts[0], parts[1]
+                        else:
+                            model = item.get("key")
+
+                    if not model:
+                        continue
+
+                    model = model.strip()
+                    try:
+                        price = int(item.get("price", 0))
+                    except (ValueError, TypeError):
+                        price = 0
+
+                    if price <= 0:
+                        continue
+
+                    try:
+                        market = int(item.get("market", int(price * 1.2)))
+                    except (ValueError, TypeError):
+                        market = int(price * 1.2)
+
+                    enabled = bool(item.get("enabled", True))
+
+                    is_new = False
+                    if model not in filter_instance.matrix:
+                        filter_instance.matrix[model] = {}
+                        is_new = True
+                        new_models.add(model)
+                    elif storage not in filter_instance.matrix[model]:
+                        is_new = True
+
+                    filter_instance.matrix[model][storage] = {
+                        "max_buy": price,
+                        "market": market,
+                        "enabled": enabled,
+                    }
+
+                    if is_new:
+                        new_count += 1
+                    else:
                         updated_count += 1
+
                 filter_instance.save_matrix()
+                filter_instance.reload_matrix()
                 stats = filter_instance.get_stats()
+
+                new_info = ""
+                if new_models:
+                    added_preview = ", ".join(sorted(list(new_models))[:5])
+                    if len(new_models) > 5:
+                        added_preview += f" и ещё {len(new_models) - 5}"
+                    new_info = f"\n✨ <b>Добавлены новые модели:</b> <code>{added_preview}</code> (+{new_count} конф.)"
+
                 text = (
-                    "✅ <b>Матрица цен успешно обновлена через Mini App!</b>\n\n"
-                    f"📱 Синхронизировано моделей: <b>{updated_count}</b>\n"
+                    "✅ <b>Матрица цен успешно синхронизирована с Mini App!</b>\n\n"
+                    f"📱 Обновлено конфигураций: <b>{updated_count}</b>{new_info}\n"
                     f"🔋 Активных конфигураций: <b>{stats['active_configs']} из {stats['total_configs']}</b>\n\n"
-                    "Воркеры мгновенно переключились на обновленные цены."
+                    "Воркеры Авито и Юлы мгновенно переключились на обновленные лимиты цен ⚡️"
                 )
                 await message.answer(text, reply_markup=get_main_menu_keyboard(reg_manager.current["name"]))
+
+            elif action == "add_model":
+                model = str(raw_payload.get("model", "")).strip()
+                storage = str(raw_payload.get("storage", "128")).strip()
+                price = int(raw_payload.get("price", 0))
+                market = int(raw_payload.get("market", int(price * 1.2)))
+                enabled = bool(raw_payload.get("enabled", True))
+
+                if model and price > 0:
+                    if model not in filter_instance.matrix:
+                        filter_instance.matrix[model] = {}
+                    filter_instance.matrix[model][storage] = {
+                        "max_buy": price,
+                        "market": market,
+                        "enabled": enabled,
+                    }
+                    filter_instance.save_matrix()
+                    filter_instance.reload_matrix()
+                    stats = filter_instance.get_stats()
+                    text = (
+                        f"✅ <b>Модель «{model} {storage}GB» успешно добавлена в матрицу!</b>\n\n"
+                        f"💰 Порог выкупа: <b>{price:,} ₽</b> (рынок: {market:,} ₽)\n"
+                        f"🔋 Всего конфигураций: <b>{stats['total_configs']}</b> (активных: {stats['active_configs']})\n\n"
+                        "Воркеры мгновенно начали отслеживать лоты по этой модели ⚡️"
+                    )
+                    await message.answer(text, reply_markup=get_main_menu_keyboard(reg_manager.current["name"]))
         except Exception as e:
-            logger.error("Ошибка при синхронизации Mini App: %s", e)
+            logger.error("Ошибка при синхронизации Mini App: %s", e, exc_info=True)
             await message.answer(f"❌ Ошибка применения данных Mini App: {e}")
 
     # ---------------------------------------------------------
@@ -385,14 +466,17 @@ def create_bot_dispatcher(
     async def cb_webapp_info(callback: types.CallbackQuery):
         await callback.answer()
         text = (
-            "📱 <b>Telegram Mini App (Web App) 2.0:</b>\n\n"
-            "Интерактивное веб-приложение для мгновенной настройки матрицы цен пальцем на смартфоне:\n\n"
-            "• Визуальные переключатели моделей и поколений (11–16 Pro Max)\n"
-            "• Плавные ползунки цен и тактильный виброотклик (Haptic Feedback)\n"
-            "• Мгновенная синхронизация с ботом в 1 клик\n\n"
+            "📱 <b>Telegram Mini App 2.0 (Управление матрицей цен):</b>\n\n"
+            "Интерактивное веб-приложение для гибкого управления моделями и ценами со смартфона:\n\n"
+            "• ➕ <b>Добавление собственных моделей</b> (быстрые шаблоны или свой ввод)\n"
+            "• 💾 <b>Выбор любых объемов накопителя</b> (64 GB – 2 TB)\n"
+            "• ✏️ <b>Быстрое изменение цен выкупа</b> (кнопки +/- 1 000 ₽ или прямой ввод)\n"
+            "• 📈 Автоматическая оценка рыночной стоимости и расчет маржи\n"
+            "• 🔍 <b>Живой поиск</b> и умные фильтры по сериям («Свои ⭐»)\n"
+            "• ⚡️ Мгновенная синхронизация матрицы цен с ботом в 1 клик\n\n"
             "<i>💡 Файл приложения находится в проекте: <code>webapp/index.html</code>. "
-            "Вы можете открыть его в браузере или развернуть на любом хостинге (например, GitHub Pages), "
-            "указав WEBAPP_URL в .env!</i>"
+            "Вы можете открыть его прямо сейчас в браузере или развернуть на любом хостинге (например, GitHub Pages), "
+            "указав <code>WEBAPP_URL</code> в .env!</i>"
         )
         if callback.message:
             await callback.message.edit_text(text, reply_markup=get_back_to_menu_keyboard())

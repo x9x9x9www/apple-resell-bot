@@ -1,7 +1,9 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
+
+from config import settings
 
 if TYPE_CHECKING:
     from core.margin_filter import MarginFilter
@@ -41,9 +43,11 @@ def get_item_keyboard(
 
 def get_main_menu_keyboard(
     current_region: str = "Москва",
-    webapp_url: str = "",
+    webapp_url: Optional[str] = None,
 ) -> InlineKeyboardMarkup:
     """Главное интерактивное меню настроек бота."""
+    if webapp_url is None:
+        webapp_url = getattr(settings, "WEBAPP_URL", "")
     rows = [
         [
             InlineKeyboardButton(

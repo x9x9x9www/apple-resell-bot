@@ -130,7 +130,8 @@ class ItemDispatcher:
     async def _process_single_item(self, raw_item: RawItem) -> None:
         """Обрабатывает одну карточку через конвейер фильтрации и отправляет в чат."""
         # 1. NLP & Regex извлечение параметров и отсев мусора/копий
-        parsed_item = IPhoneNLPParser.parse_raw_item(raw_item)
+        custom_models = self.margin_filter.matrix.keys() if self.margin_filter else None
+        parsed_item = IPhoneNLPParser.parse_raw_item(raw_item, custom_models=custom_models)
         if not parsed_item:
             logger.debug(
                 "[%s] Пропуск лота #%s: не прошел фильтр характеристик / мусор",
