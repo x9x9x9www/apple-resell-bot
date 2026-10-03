@@ -19,6 +19,8 @@ from bot.keyboards import (
     get_regions_keyboard,
     get_models_menu_keyboard,
     get_back_to_menu_keyboard,
+    get_reply_keyboard,
+    get_hide_keyboard,
 )
 
 logger = logging.getLogger(__name__)
@@ -49,6 +51,7 @@ def create_bot_dispatcher(
     async def cmd_start(message: types.Message):
         chat_id = message.chat.id
         current_reg_name = reg_manager.current["name"]
+        webapp_url = getattr(settings, "WEBAPP_URL", "")
         text = (
             "👋 <b>Добро пожаловать в Gadget Resell Radar!</b>\n\n"
             "Высокоскоростной поисковый робот для перекупов электроники и гаджетов (iPhone, MacBook, Samsung, Pixel, iPad, консоли на Авито & Юла).\n\n"
@@ -59,16 +62,44 @@ def create_bot_dispatcher(
             "• 📉 Детекция <b>снижения цен</b> продавцами\n"
             "• 📸 <b>Фотокарточки</b> лотов прямо в ленте\n"
             "• 🔋 <b>Умный учет АКБ</b> (автоматическая скидка на замену)\n"
-            "• 📱 <b>Telegram Mini App 2.0</b> + управление прайсом через <b>Excel (.xlsx)</b>\n\n"
+            "• 📱 <b>Telegram Mini App 2.0</b> + управление прайсом через <b>Excel (.xlsx)</b>\n"
+            "• ⌨️ <b>Всплывающие кнопки</b> быстрого доступа внизу экрана\n\n"
             f"🔑 <b>Ваш Chat ID:</b> <code>{chat_id}</code>\n\n"
             "📌 <b>Команды:</b>\n"
             "• /menu — Главное меню настроек и фильтров\n"
+            "• /keyboard — Включить всплывающие кнопки внизу\n"
+            "• /hide_keyboard — Скрыть всплывающие кнопки\n"
             "• /city — Смена региона поиска (или напишите название города)\n"
             "• /export_prices — Скачать текущий прайс-лист в Excel\n"
             "• /status — Статус воркеров и мониторинга\n\n"
             "<i>💡 Чтобы обновить цены выкупа, просто отправьте отредактированный файл .xlsx в этот чат или настройте цены в Mini App!</i>"
         )
-        await message.answer(text, reply_markup=get_main_menu_keyboard(current_reg_name))
+        # Отправляем сообщение с всплывающей клавиатурой быстрого доступа
+        await message.answer(
+            "⌨️ <b>Клавиатура быстрого доступа активирована!</b>\n"
+            "Кнопки доступны внизу экрана. Чтобы убрать их в любой момент, нажмите «❌ Скрыть клавиатуру».",
+            reply_markup=get_reply_keyboard(webapp_url),
+        )
+        await message.answer(text, reply_markup=get_main_menu_keyboard(current_reg_name, webapp_url))
+
+    @dp.message(Command("keyboard", "kb", "buttons", "show_keyboard"))
+    async def cmd_keyboard(message: types.Message):
+        webapp_url = getattr(settings, "WEBAPP_URL", "")
+        await message.answer(
+            "⌨️ <b>Всплывающая клавиатура активирована!</b>\n\n"
+            "Кнопки быстрого доступа появились внизу экрана. Чтобы убрать их, нажмите <b>«❌ Скрыть клавиатуру»</b>.",
+            reply_markup=get_reply_keyboard(webapp_url),
+        )
+
+    @dp.message(Command("hide_keyboard", "hide", "hide_buttons"))
+    async def cmd_hide_keyboard(message: types.Message):
+        await message.answer(
+            "📴 <b>Клавиатура скрыта!</b>\n\n"
+            "Чтобы кнопки снова всплыли:\n"
+            "• Напишите команду <code>/keyboard</code>\n"
+            "• Или нажмите кнопку «⌨️ Показать кнопки» в меню /menu.",
+            reply_markup=get_hide_keyboard(),
+        )
 
     @dp.message(Command("menu", "settings"))
     async def cmd_menu(message: types.Message):
@@ -312,6 +343,49 @@ def create_bot_dispatcher(
             await status_msg.edit_text(f"❌ <b>Сбой обработки файла:</b> {e}")
 
     # ---------------------------------------------------------
+    # ОБРАБОТЧИКИ НАЖАТИЙ НА КНОПКИ ВСПЛЫВАЮЩЕЙ КЛАВИАТУРЫ
+    # ---------------------------------------------------------
+
+    @dp.message(F.text.in_({"❌ Скрыть клавиатуру", "🙈 Скрыть кнопки", "📴 Скрыть клавиатуру", "Скрыть клавиатуру"}))
+    async def handle_hide_keyboard_btn(message: types.Message):
+        await message.answer(
+            "📴 <b>Клавиатура скрыта!</b>\n\n"
+            "Чтобы кнопки снова всплыли в любой момент:\n"
+            "• Напишите команду <code>/keyboard</code> или <code>/menu</code>\n"
+            "• Или нажмите кнопку «⌨️ Показать кнопки» в меню /menu.",
+            reply_markup=get_hide_keyboard(),
+        )
+
+    @dp.message(F.text.in_({"⚡️ Меню", "⚡️ Главное меню", "Меню"}))
+    async def handle_reply_menu_btn(message: types.Message):
+        await cmd_menu(message)
+
+    @dp.message(F.text.in_({"📍 Сменить регион", "📍 Регион", "Сменить регион"}))
+    async def handle_reply_region_btn(message: types.Message):
+        await cmd_city(message)
+
+    @dp.message(F.text.in_({"📊 Скачать Excel", "📊 Excel-прайс", "Скачать Excel"}))
+    async def handle_reply_export_btn(message: types.Message):
+        await _send_excel_file(message, filter_instance)
+
+    @dp.message(F.text.in_({"🔄 Статус воркеров", "🔄 Статус", "Статус"}))
+    async def handle_reply_status_btn(message: types.Message):
+        text = _build_status_text(filter_instance, reg_manager)
+        await message.answer(text, reply_markup=get_back_to_menu_keyboard())
+
+    @dp.message(F.text.in_({"📱 Матрица цен", "Матрица цен"}))
+    async def handle_reply_webapp_btn(message: types.Message):
+        webapp_url = getattr(settings, "WEBAPP_URL", "")
+        if webapp_url:
+            from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
+            kb = InlineKeyboardMarkup(inline_keyboard=[[
+                InlineKeyboardButton(text="📱 Открыть матрицу цен", web_app=WebAppInfo(url=webapp_url))
+            ]])
+            await message.answer("📱 Нажмите кнопку ниже, чтобы открыть Mini App:", reply_markup=kb)
+        else:
+            await message.answer("📱 Mini App URL пока не настроен.")
+
+    # ---------------------------------------------------------
     # ВВОД ГОРОДА ТЕКСТОМ
     # ---------------------------------------------------------
 
@@ -530,6 +604,28 @@ def create_bot_dispatcher(
                 await callback.message.edit_text(text, reply_markup=get_back_to_menu_keyboard())
             except Exception as e:
                 logger.error("Ошибка при открытии статуса: %s", e)
+    @dp.callback_query(F.data == "menu:show_keyboard")
+    async def cb_show_keyboard(callback: types.CallbackQuery):
+        await callback.answer("Клавиатура активирована! ⌨️")
+        webapp_url = getattr(settings, "WEBAPP_URL", "")
+        if callback.message:
+            await callback.message.answer(
+                "⌨️ <b>Всплывающая клавиатура активирована!</b>\n\n"
+                "Кнопки быстрого доступа появились внизу экрана. Чтобы убрать их в любой момент, нажмите <b>«❌ Скрыть клавиатуру»</b>.",
+                reply_markup=get_reply_keyboard(webapp_url),
+            )
+
+    @dp.callback_query(F.data == "menu:hide_keyboard")
+    async def cb_hide_keyboard(callback: types.CallbackQuery):
+        await callback.answer("Клавиатура скрыта 📴")
+        if callback.message:
+            await callback.message.answer(
+                "📴 <b>Клавиатура скрыта!</b>\n\n"
+                "Чтобы кнопки снова всплыли:\n"
+                "• Напишите команду <code>/keyboard</code>\n"
+                "• Или нажмите кнопку «⌨️ Показать кнопки» в меню /menu.",
+                reply_markup=get_hide_keyboard(),
+            )
 
     return dp
 

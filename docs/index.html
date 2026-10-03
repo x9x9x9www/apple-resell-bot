@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Матрица цен гаджетов — Gadget Resell Radar</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --bg-color: #080C14;
+      --card-bg: rgba(20, 27, 45, 0.72);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-border-hover: rgba(10, 132, 255, 0.4);
+      --accent-color: #0A84FF;
+      --accent-glow: rgba(10, 132, 255, 0.4);
+      --accent-gradient: linear-gradient(135deg, #0A84FF 0%, #0056B3 100%);
+      --add-btn-gradient: linear-gradient(135deg, #30D158 0%, #248A3D 100%);
+      --text-main: #FFFFFF;
+      --text-muted: #8E8E93;
+      --success-color: #30D158;
+      --danger-color: #FF453A;
+      --tag-bg: rgba(255, 255, 255, 0.08);
+      --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      padding: 16px;
+      padding-bottom: 96px;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Верхняя шапка */
+    .header {
+      margin-bottom: 16px;
+    }
+
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-add-model {
+      background: var(--add-btn-gradient);
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(48, 209, 88, 0.3);
+      transition: transform 0.15s ease, filter 0.2s;
+      white-space: nowrap;
+    }
+    .btn-add-model:active {
+      transform: scale(0.95);
+      filter: brightness(0.9);
+    }
+
+    .stats-bar {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .stats-pill {
+      background: var(--tag-bg);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    /* Поле поиска */
+    .search-wrapper {
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .search-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 14px 10px 36px;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    .search-input:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 10px var(--accent-glow);
+      background: rgba(255, 255, 255, 0.09);
+    }
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    /* Селектор категорий */
+    .series-bar {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 14px;
+      scrollbar-width: none;
+    }
+    .series-bar::-webkit-scrollbar { display: none; }
+
+    .series-pill {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+    .series-pill.active {
+      background: var(--accent-color);
+      color: #fff;
+      box-shadow: 0 0 12px var(--accent-glow);
+      border-color: var(--accent-color);
+    }
+
+    /* Список карточек */
+    .models-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .model-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .model-card.custom-card {
+      border-color: rgba(48, 209, 88, 0.25);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .device-icon {
+      font-size: 16px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .badge-storage {
+      background: rgba(10, 132, 255, 0.18);
+      color: #5AC8FA;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+    }
+
+    .badge-custom {
+      background: rgba(48, 209, 88, 0.18);
+      color: var(--success-color);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    .card-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-delete {
+      background: rgba(255, 69, 58, 0.15);
+      border: 1px solid rgba(255, 69, 58, 0.3);
+      color: var(--danger-color);
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .btn-delete:active {
+      transform: scale(0.9);
+      background: rgba(255, 69, 58, 0.3);
+    }
+
+    /* Переключатель вкл/выкл модели */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 26px;
+      flex-shrink: 0;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(255, 255, 255, 0.16);
+      transition: .25s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 26px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .25s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: var(--accent-color);
+    }
+    input:checked + .slider:before {
+      transform: translateX(18px);
+    }
+
+    /* Блок редактирования цены */
+    .card-bottom {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .price-input-wrapper {
+      flex: 1;
+      position: relative;
+    }
+    .price-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 8px 30px 8px 12px;
+      color: #fff;
+      font-size: 17px;
+      font-weight: 700;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .price-input:focus {
+      border-color: var(--accent-color);
+    }
+    .price-currency {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    /* Кнопки быстрой корректировки цены (+/-) */
+    .quick-step-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .quick-step-btn:active {
+      transform: scale(0.92);
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Плавающая панель сохранения внизу */
+    .save-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(8, 12, 20, 0.92);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-top: 1px solid var(--card-border);
+      padding: 12px 16px;
+      display: flex;
+      gap: 10px;
+      z-index: 100;
+    }
+
+    .btn-save {
+      flex: 1;
+      background: var(--accent-gradient);
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 18px var(--accent-glow);
+      transition: transform 0.1s ease, filter 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-save:active {
+      transform: scale(0.98);
+      filter: brightness(0.9);
+    }
+
+    /* Модальное окно добавления модели */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: none;
+      justify-content: center;
+      align-items: flex-end;
+      z-index: 1000;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-sheet {
+      background: #111726;
+      border: 1px solid var(--card-border);
+      border-radius: 20px 20px 0 0;
+      width: 100%;
+      max-width: 500px;
+      padding: 20px 18px 30px;
+      box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.6);
+      animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-title {
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .btn-close-modal {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: var(--text-muted);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .form-input {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: #fff;
+      font-size: 15px;
+      outline: none;
+    }
+    .form-input:focus {
+      border-color: var(--accent-color);
+    }
+
+    /* Селектор памяти в модалке */
+    .storage-options {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .storage-chip {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .storage-chip.active {
+      background: var(--accent-color);
+      color: #fff;
+      border-color: var(--accent-color);
+    }
+
+    /* Быстрые шаблоны моделей */
+    .preset-chips {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+    .preset-chips::-webkit-scrollbar { display: none; }
+    .preset-chip {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .modal-btn-submit {
+      background: var(--add-btn-gradient);
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 6px;
+      box-shadow: 0 4px 14px rgba(48, 209, 88, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Заголовок страницы -->
+  <div class="header">
+    <div class="header-row">
+      <h1>⚡️ Матрица цен гаджетов</h1>
+      <button class="btn-add-model" id="btnOpenAddModal">
+        <span>➕ Добавить модель</span>
+      </button>
+    </div>
+    <div class="stats-bar">
+      <span>Всего: <b class="stats-pill" id="statTotal">0</b></span>
+      <span>Активных: <b class="stats-pill" id="statActive">0</b></span>
+      <span>Фильтр: <span id="statFilter" style="color:var(--accent-color)">Все</span></span>
+    </div>
+  </div>
+
+  <!-- Поиск по названию / памяти -->
+  <div class="search-wrapper">
+    <span class="search-icon">🔍</span>
+    <input type="text" class="search-input" id="searchInput" placeholder="Поиск (MacBook, S24, Pixel, iPad, iPhone...)">
+  </div>
+
+  <!-- Фильтр по категориям -->
+  <div class="series-bar" id="seriesBar">
+    <div class="series-pill active" data-series="all">Все</div>
+    <div class="series-pill" data-series="macbook">💻 Mac</div>
+    <div class="series-pill" data-series="iphone">📱 iPhone</div>
+    <div class="series-pill" data-series="samsung">📱 Samsung</div>
+    <div class="series-pill" data-series="pixel">📱 Pixel</div>
+    <div class="series-pill" data-series="ipad">📟 iPad</div>
+    <div class="series-pill" data-series="consoles">🎮 Консоли</div>
+    <div class="series-pill" data-series="custom">⭐ Свои</div>
+  </div>
+
+  <!-- Список моделей -->
+  <div class="models-list" id="modelsList">
+    <!-- Генерируется динамически через JS -->
+  </div>
+
+  <!-- Плавающая кнопка сохранения внизу -->
+  <div class="save-bar">
+    <button class="btn-save" id="btnSave">
+      <span>💾 Применить цены в бота</span>
+    </button>
+  </div>
+
+  <!-- Модальное окно "Добавить модель" -->
+  <div class="modal-overlay" id="addModal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title">➕ Новая конфигурация</h3>
+        <button class="btn-close-modal" id="btnCloseModal">✕</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Быстрый выбор модели:</label>
+        <div class="preset-chips" id="presetChips">
+          <span class="preset-chip" data-name="MacBook Air M1">MacBook Air M1</span>
+          <span class="preset-chip" data-name="MacBook Air M2 13">MacBook Air M2</span>
+          <span class="preset-chip" data-name="MacBook Pro 14 M1 Pro">MacBook Pro 14</span>
+          <span class="preset-chip" data-name="iPhone 16 Pro Max">16 Pro Max</span>
+          <span class="preset-chip" data-name="iPhone 16 Pro">16 Pro</span>
+          <span class="preset-chip" data-name="iPhone 15 Pro">15 Pro</span>
+          <span class="preset-chip" data-name="Samsung Galaxy S24 Ultra">S24 Ultra</span>
+          <span class="preset-chip" data-name="Samsung Galaxy S23 Ultra">S23 Ultra</span>
+          <span class="preset-chip" data-name="Google Pixel 9 Pro">Pixel 9 Pro</span>
+          <span class="preset-chip" data-name="Google Pixel 8 Pro">Pixel 8 Pro</span>
+          <span class="preset-chip" data-name="iPad Pro 11">iPad Pro 11</span>
+          <span class="preset-chip" data-name="PlayStation 5">PlayStation 5</span>
+          <span class="preset-chip" data-name="Steam Deck OLED">Steam Deck</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Название модели:</label>
+        <input type="text" class="form-input" id="newModelName" placeholder="например: MacBook Air M2 или S24 Ultra">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Объем памяти (GB / SSD):</label>
+        <div class="storage-options" id="storageOptions">
+          <span class="storage-chip" data-storage="64">64 GB</span>
+          <span class="storage-chip" data-storage="128">128 GB</span>
+          <span class="storage-chip active" data-storage="256">256 GB</span>
+          <span class="storage-chip" data-storage="512">512 GB</span>
+          <span class="storage-chip" data-storage="825">825 GB</span>
+          <span class="storage-chip" data-storage="1024">1 TB</span>
+          <span class="storage-chip" data-storage="2048">2 TB</span>
+        </div>
+        <input type="hidden" id="newModelStorage" value="256">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Макс. выкуп перекупа (₽):</label>
+        <input type="number" step="500" class="form-input" id="newModelPrice" placeholder="50000">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Оценка рынка (₽):</label>
+        <input type="number" step="500" class="form-input" id="newModelMarket" placeholder="Автоматически (+20%)">
+      </div>
+
+      <button class="modal-btn-submit" id="btnSubmitNewModel">
+        ✅ Добавить конфигурацию
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const tg = window.Telegram?.WebApp;
+    if (tg) {
+      tg.ready();
+      tg.expand();
+      if (tg.setHeaderColor) tg.setHeaderColor('#080C14');
+      if (tg.setBackgroundColor) tg.setBackgroundColor('#080C14');
+    }
+
+    // Базовый мульти-гаджет каталог моделей
+    const DEFAULT_CATALOG = [
+      // MacBooks
+      { key: "MacBook Air M1_256", model: "MacBook Air M1", storage: 256, series: "macbook", price: 42000, market: 52000, enabled: true },
+      { key: "MacBook Air M2 13_256", model: "MacBook Air M2 13", storage: 256, series: "macbook", price: 62000, market: 74000, enabled: true },
+      { key: "MacBook Pro 14 M1 Pro_512", model: "MacBook Pro 14 M1 Pro", storage: 512, series: "macbook", price: 85000, market: 102000, enabled: true },
+      { key: "MacBook Pro 16 M1 Pro_512", model: "MacBook Pro 16 M1 Pro", storage: 512, series: "macbook", price: 98000, market: 118000, enabled: true },
+      // iPhones
+      { key: "iPhone 16 Pro Max_256", model: "iPhone 16 Pro Max", storage: 256, series: "iphone", price: 105000, market: 125000, enabled: true },
+      { key: "iPhone 16 Pro Max_512", model: "iPhone 16 Pro Max", storage: 512, series: "iphone", price: 118000, market: 140000, enabled: true },
+      { key: "iPhone 16 Pro_128", model: "iPhone 16 Pro", storage: 128, series: "iphone", price: 88000, market: 104000, enabled: true },
+      { key: "iPhone 16 Pro_256", model: "iPhone 16 Pro", storage: 256, series: "iphone", price: 96000, market: 114000, enabled: true },
+      { key: "iPhone 16 Plus_128", model: "iPhone 16 Plus", storage: 128, series: "iphone", price: 72000, market: 85000, enabled: true },
+      { key: "iPhone 16_128", model: "iPhone 16", storage: 128, series: "iphone", price: 68000, market: 80000, enabled: true },
+      { key: "iPhone 15 Pro Max_256", model: "iPhone 15 Pro Max", storage: 256, series: "iphone", price: 82000, market: 97000, enabled: true },
+      { key: "iPhone 15 Pro_128", model: "iPhone 15 Pro", storage: 128, series: "iphone", price: 65000, market: 78000, enabled: true },
+      { key: "iPhone 15 Pro_256", model: "iPhone 15 Pro", storage: 256, series: "iphone", price: 72000, market: 85000, enabled: true },
+      { key: "iPhone 15_128", model: "iPhone 15", storage: 128, series: "iphone", price: 50000, market: 60000, enabled: true },
+      { key: "iPhone 14 Pro Max_128", model: "iPhone 14 Pro Max", storage: 128, series: "iphone", price: 58000, market: 70000, enabled: true },
+      { key: "iPhone 14 Pro_128", model: "iPhone 14 Pro", storage: 128, series: "iphone", price: 50000, market: 60000, enabled: true },
+      { key: "iPhone 14_128", model: "iPhone 14", storage: 128, series: "iphone", price: 40000, market: 48000, enabled: true },
+      { key: "iPhone 13 Pro Max_128", model: "iPhone 13 Pro Max", storage: 128, series: "iphone", price: 46000, market: 55000, enabled: true },
+      { key: "iPhone 13 Pro_128", model: "iPhone 13 Pro", storage: 128, series: "iphone", price: 38000, market: 46000, enabled: true },
+      { key: "iPhone 13_128", model: "iPhone 13", storage: 128, series: "iphone", price: 32000, market: 39000, enabled: true },
+      { key: "iPhone 12_128", model: "iPhone 12", storage: 128, series: "iphone", price: 23000, market: 28000, enabled: true },
+      { key: "iPhone 11_128", model: "iPhone 11", storage: 128, series: "iphone", price: 16000, market: 20000, enabled: true },
+      // Samsung
+      { key: "Samsung Galaxy S24 Ultra_256", model: "Samsung Galaxy S24 Ultra", storage: 256, series: "samsung", price: 65000, market: 78000, enabled: true },
+      { key: "Samsung Galaxy S24 Ultra_512", model: "Samsung Galaxy S24 Ultra", storage: 512, series: "samsung", price: 74000, market: 88000, enabled: true },
+      { key: "Samsung Galaxy S24+_256", model: "Samsung Galaxy S24+", storage: 256, series: "samsung", price: 50000, market: 60000, enabled: true },
+      { key: "Samsung Galaxy S24_128", model: "Samsung Galaxy S24", storage: 128, series: "samsung", price: 42000, market: 51000, enabled: true },
+      { key: "Samsung Galaxy S23 Ultra_256", model: "Samsung Galaxy S23 Ultra", storage: 256, series: "samsung", price: 48000, market: 58000, enabled: true },
+      { key: "Samsung Galaxy Z Fold 5_256", model: "Samsung Galaxy Z Fold 5", storage: 256, series: "samsung", price: 58000, market: 70000, enabled: true },
+      // Pixel
+      { key: "Google Pixel 9 Pro_128", model: "Google Pixel 9 Pro", storage: 128, series: "pixel", price: 58000, market: 70000, enabled: true },
+      { key: "Google Pixel 8 Pro_128", model: "Google Pixel 8 Pro", storage: 128, series: "pixel", price: 42000, market: 50000, enabled: true },
+      { key: "Google Pixel 8_128", model: "Google Pixel 8", storage: 128, series: "pixel", price: 30000, market: 37000, enabled: true },
+      { key: "Google Pixel 7 Pro_128", model: "Google Pixel 7 Pro", storage: 128, series: "pixel", price: 27000, market: 33000, enabled: true },
+      // iPad
+      { key: "iPad Pro 11 M2_128", model: "iPad Pro 11 M2", storage: 128, series: "ipad", price: 52000, market: 63000, enabled: true },
+      { key: "iPad Pro 12.9 M2_128", model: "iPad Pro 12.9 M2", storage: 128, series: "ipad", price: 65000, market: 78000, enabled: true },
+      { key: "iPad Air 5 M1_64", model: "iPad Air 5 M1", storage: 64, series: "ipad", price: 34000, market: 41000, enabled: true },
+      { key: "iPad 10_64", model: "iPad 10", storage: 64, series: "ipad", price: 24000, market: 29000, enabled: true },
+      // Consoles
+      { key: "PlayStation 5_825", model: "PlayStation 5", storage: 825, series: "consoles", price: 32000, market: 39000, enabled: true },
+      { key: "PlayStation 5 Slim_1024", model: "PlayStation 5 Slim", storage: 1024, series: "consoles", price: 36000, market: 43000, enabled: true },
+      { key: "Steam Deck OLED_512", model: "Steam Deck OLED", storage: 512, series: "consoles", price: 38000, market: 46000, enabled: true },
+    ];
+
+    // Определение иконки девайса
+    function getDeviceIcon(name, series) {
+      const lower = (name + ' ' + (series || '')).toLowerCase();
+      if (lower.includes('macbook') || lower.includes('mac') || series === 'macbook') return '💻';
+      if (lower.includes('ipad') || series === 'ipad') return '📟';
+      if (lower.includes('playstation') || lower.includes('ps5') || lower.includes('steam deck') || lower.includes('xbox') || series === 'consoles') return '🎮';
+      if (lower.includes('samsung') || series === 'samsung') return '📱';
+      if (lower.includes('pixel') || series === 'pixel') return '📱';
+      if (lower.includes('iphone') || series === 'iphone') return '📱';
+      return '⚡️';
+    }
+
+    // Загружаем сохраненные данные из localStorage
+    let currentMatrix = [];
+    try {
+      const saved = localStorage.getItem('gadget_resell_user_matrix') || localStorage.getItem('apple_resell_user_matrix');
+      currentMatrix = saved ? JSON.parse(saved) : DEFAULT_CATALOG;
+      // Приводим старые числовые серии айфонов к серии "iphone" если нужно
+      currentMatrix.forEach(item => {
+        if (!item.series || ["11", "12", "13", "14", "15", "16"].includes(item.series)) {
+          if (item.model.toLowerCase().includes('iphone')) item.series = 'iphone';
+          else if (item.model.toLowerCase().includes('macbook')) item.series = 'macbook';
+        }
+      });
+    } catch (e) {
+      currentMatrix = DEFAULT_CATALOG;
+    }
+
+    let activeFilter = 'all';
+    let searchQuery = '';
+
+    function updateStats() {
+      document.getElementById('statTotal').textContent = currentMatrix.length;
+      document.getElementById('statActive').textContent = currentMatrix.filter(m => m.enabled).length;
+      const filterPill = document.querySelector('.series-pill.active');
+      document.getElementById('statFilter').textContent = filterPill ? filterPill.textContent : 'Все';
+    }
+
+    function renderCards() {
+      const container = document.getElementById('modelsList');
+      container.innerHTML = '';
+
+      const query = searchQuery.toLowerCase().trim();
+
+      const filtered = currentMatrix.filter(item => {
+        // Фильтр по категории/серии
+        if (activeFilter === 'custom' && !item.isCustom) return false;
+        if (activeFilter !== 'all' && activeFilter !== 'custom') {
+          if (item.series !== activeFilter) {
+            // Мягкая проверка по вхождению в название
+            const lowerModel = item.model.toLowerCase();
+            if (activeFilter === 'iphone' && !lowerModel.includes('iphone')) return false;
+            else if (activeFilter === 'macbook' && !lowerModel.includes('mac')) return false;
+            else if (activeFilter === 'samsung' && !lowerModel.includes('samsung') && !lowerModel.includes('galaxy')) return false;
+            else if (activeFilter === 'pixel' && !lowerModel.includes('pixel')) return false;
+            else if (activeFilter === 'ipad' && !lowerModel.includes('ipad')) return false;
+            else if (activeFilter === 'consoles' && !lowerModel.includes('playstation') && !lowerModel.includes('steam deck') && !lowerModel.includes('ps5')) return false;
+          }
+        }
+
+        // Поиск по тексту
+        if (query) {
+          const matchTitle = item.model.toLowerCase().includes(query);
+          const matchStorage = (item.storage + '').includes(query);
+          return matchTitle || matchStorage;
+        }
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center; padding: 40px 10px; color: var(--text-muted)">
+            <p style="font-size: 28px; margin-bottom: 8px">🔍</p>
+            <p style="font-size: 15px; font-weight: 600">Гаджеты не найдены</p>
+            <p style="font-size: 13px; margin-top: 4px">Измените фильтр или добавьте свою модель кнопкой выше.</p>
+          </div>
+        `;
+        updateStats();
+        return;
+      }
+
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = `model-card ${item.isCustom ? 'custom-card' : ''}`;
+
+        const storageText = item.storage >= 1024 ? `${item.storage / 1024} TB` : `${item.storage} GB`;
+        const profitEst = Math.max(0, (item.market || Math.round(item.price * 1.2)) - item.price);
+        const icon = getDeviceIcon(item.model, item.series);
+
+        card.innerHTML = `
+          <div class="card-top">
+            <div class="card-title-group">
+              <span class="device-icon">${icon}</span>
+              <span class="card-title">${item.model}</span>
+              <span class="badge-storage">${storageText}</span>
+              ${item.isCustom ? '<span class="badge-custom">⭐ Своя</span>' : ''}
+            </div>
+            <div class="card-actions">
+              ${item.isCustom ? `<button class="btn-delete" data-key="${item.key}" title="Удалить">✕</button>` : ''}
+              <label class="switch">
+                <input type="checkbox" ${item.enabled ? 'checked' : ''} data-key="${item.key}">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="card-bottom">
+            <button class="quick-step-btn" data-step="-1000" data-key="${item.key}">-1k</button>
+            <div class="price-input-wrapper">
+              <input type="number" step="500" class="price-input" value="${item.price}" data-key="${item.key}">
+              <span class="price-currency">₽</span>
+            </div>
+            <button class="quick-step-btn" data-step="1000" data-key="${item.key}">+1k</button>
+          </div>
+
+          <div class="card-meta">
+            <span>Рынок: <b>${(item.market || Math.round(item.price * 1.2)).toLocaleString('ru-RU')} ₽</b></span>
+            <span>Маржа: <b style="color:var(--success-color)">~${profitEst.toLocaleString('ru-RU')} ₽</b></span>
+          </div>
+        `;
+
+        // Слушатель чекбокса активности
+        card.querySelector('input[type="checkbox"]').addEventListener('change', (e) => {
+          if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+          item.enabled = e.target.checked;
+          saveToLocalStorage();
+          updateStats();
+        });
+
+        // Слушатель ручного ввода цены и динамическое обновление маржи
+        const priceInput = card.querySelector('input.price-input');
+        const metaEl = card.querySelector('.card-meta');
+
+        function updateCardMeta() {
+          const currentMarket = item.market || Math.round(item.price * 1.2);
+          const profitEst = Math.max(0, currentMarket - item.price);
+          metaEl.innerHTML = `
+            <span>Рынок: <b>${currentMarket.toLocaleString('ru-RU')} ₽</b></span>
+            <span>Маржа: <b style="color:var(--success-color)">~${profitEst.toLocaleString('ru-RU')} ₽</b></span>
+          `;
+        }
+
+        priceInput.addEventListener('input', (e) => {
+          const val = parseInt(e.target.value, 10) || 0;
+          item.price = val;
+          if (!item.market || item.market < val) {
+            item.market = Math.round(val * 1.2 / 500) * 500;
+          }
+          updateCardMeta();
+          saveToLocalStorage();
+        });
+
+        // Быстрые кнопки +/- 1000 руб
+        card.querySelectorAll('.quick-step-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+            const step = parseInt(btn.dataset.step, 10);
+            item.price = Math.max(0, item.price + step);
+            priceInput.value = item.price;
+            if (!item.market || item.market < item.price) {
+              item.market = Math.round(item.price * 1.2 / 500) * 500;
+            }
+            updateCardMeta();
+            saveToLocalStorage();
+          });
+        });
+
+        // Кнопка удаления (для пользовательских)
+        const delBtn = card.querySelector('.btn-delete');
+        if (delBtn) {
+          delBtn.addEventListener('click', () => {
+            if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
+            currentMatrix = currentMatrix.filter(m => m.key !== item.key);
+            saveToLocalStorage();
+            renderCards();
+          });
+        }
+
+        container.appendChild(card);
+      });
+
+      updateStats();
+    }
+
+    function saveToLocalStorage() {
+      try {
+        localStorage.setItem('gadget_resell_user_matrix', JSON.stringify(currentMatrix));
+      } catch (e) {}
+    }
+
+    // Слушатели фильтров по сериям/категориям
+    document.querySelectorAll('.series-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+        document.querySelectorAll('.series-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        activeFilter = pill.dataset.series;
+        renderCards();
+      });
+    });
+
+    // Живой поиск
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      searchQuery = e.target.value;
+      renderCards();
+    });
+
+    // Модальное окно добавления
+    const modal = document.getElementById('addModal');
+    document.getElementById('btnOpenAddModal').addEventListener('click', () => {
+      if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+      modal.classList.add('active');
+      document.getElementById('newModelName').focus();
+    });
+
+    document.getElementById('btnCloseModal').addEventListener('click', () => {
+      modal.classList.remove('active');
+    });
+
+    // Пресеты моделей в модалке
+    document.querySelectorAll('.preset-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+        document.getElementById('newModelName').value = chip.dataset.name;
+      });
+    });
+
+    // Выбор памяти в модалке
+    document.querySelectorAll('.storage-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+        document.querySelectorAll('.storage-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        document.getElementById('newModelStorage').value = chip.dataset.storage;
+      });
+    });
+
+    // Авто-расчет рынка при вводе выкупной цены
+    document.getElementById('newModelPrice').addEventListener('input', (e) => {
+      const buyPrice = parseInt(e.target.value, 10);
+      if (buyPrice && buyPrice > 0) {
+        document.getElementById('newModelMarket').placeholder = Math.round(buyPrice * 1.2 / 500) * 500;
+      }
+    });
+
+    // Определение категории/серии при добавлении модели
+    function detectSeries(name) {
+      const lower = name.toLowerCase();
+      if (lower.includes('macbook') || lower.includes('mac')) return 'macbook';
+      if (lower.includes('samsung') || lower.includes('galaxy') || lower.includes('ultra')) return 'samsung';
+      if (lower.includes('pixel')) return 'pixel';
+      if (lower.includes('ipad')) return 'ipad';
+      if (lower.includes('playstation') || lower.includes('ps5') || lower.includes('steam deck') || lower.includes('xbox')) return 'consoles';
+      if (lower.includes('iphone')) return 'iphone';
+      return 'custom';
+    }
+
+    // Добавление новой конфигурации
+    document.getElementById('btnSubmitNewModel').addEventListener('click', () => {
+      const name = document.getElementById('newModelName').value.trim();
+      const storage = parseInt(document.getElementById('newModelStorage').value, 10) || 128;
+      const price = parseInt(document.getElementById('newModelPrice').value, 10);
+      const marketInput = parseInt(document.getElementById('newModelMarket').value, 10);
+
+      if (!name) {
+        alert("Пожалуйста, введите название модели!");
+        return;
+      }
+      if (!price || price <= 0) {
+        alert("Укажите корректную максимальную цену выкупа!");
+        return;
+      }
+
+      const market = marketInput && marketInput > price ? marketInput : Math.round(price * 1.2 / 500) * 500;
+      const series = detectSeries(name);
+      const key = `${name}_${storage}`;
+
+      // Проверка на существующую запись
+      const existingIdx = currentMatrix.findIndex(m => m.key === key);
+      if (existingIdx >= 0) {
+        currentMatrix[existingIdx].price = price;
+        currentMatrix[existingIdx].market = market;
+        currentMatrix[existingIdx].enabled = true;
+      } else {
+        currentMatrix.unshift({
+          key: key,
+          model: name,
+          storage: storage,
+          series: series,
+          price: price,
+          market: market,
+          enabled: true,
+          isCustom: true
+        });
+      }
+
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+
+      saveToLocalStorage();
+      modal.classList.remove('active');
+      document.getElementById('newModelName').value = '';
+      document.getElementById('newModelPrice').value = '';
+      document.getElementById('newModelMarket').value = '';
+      renderCards();
+    });
+
+    // Сохранение и отправка всей матрицы в Telegram бот
+    document.getElementById('btnSave').addEventListener('click', () => {
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+
+      const payload = {
+        action: "sync_matrix",
+        matrix: currentMatrix.map(item => ({
+          model: item.model,
+          storage: item.storage,
+          price: item.price,
+          market: item.market || Math.round(item.price * 1.2),
+          enabled: item.enabled
+        }))
+      };
+
+      if (tg) {
+        tg.sendData(JSON.stringify(payload));
+      } else {
+        alert(`Синхронизировано ${currentMatrix.length} моделей! В Telegram боте матрица цен обновится мгновенно.`);
+      }
+    });
+
+    renderCards();
+  </script>
+</body>
+</html>

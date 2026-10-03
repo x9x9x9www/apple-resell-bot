@@ -1,7 +1,14 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Optional
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
+from aiogram.types import (
+    InlineKeyboardMarkup,
+    InlineKeyboardButton,
+    ReplyKeyboardMarkup,
+    KeyboardButton,
+    ReplyKeyboardRemove,
+    WebAppInfo,
+)
 
 from config import settings
 
@@ -98,9 +105,62 @@ def get_main_menu_keyboard(
                 callback_data="menu:status",
             ),
         ],
+        [
+            InlineKeyboardButton(
+                text="⌨️ Показать кнопки",
+                callback_data="menu:show_keyboard",
+            ),
+            InlineKeyboardButton(
+                text="📴 Скрыть кнопки",
+                callback_data="menu:hide_keyboard",
+            ),
+        ],
     ])
 
     return InlineKeyboardMarkup(inline_keyboard=rows)
+
+
+def get_reply_keyboard(webapp_url: Optional[str] = None) -> ReplyKeyboardMarkup:
+    """
+    Всплывающая клавиатура быстрого доступа (Reply Keyboard) внизу экрана.
+    Оснащена кнопками быстрого меню, Mini App, смены региона, Excel, статуса
+    и кнопкой «Скрыть клавиатуру».
+    """
+    if webapp_url is None:
+        webapp_url = getattr(settings, "WEBAPP_URL", "")
+
+    webapp_btn = (
+        KeyboardButton(text="📱 Матрица цен", web_app=WebAppInfo(url=webapp_url))
+        if webapp_url
+        else KeyboardButton(text="📱 Матрица цен")
+    )
+
+    keyboard = [
+        [
+            KeyboardButton(text="⚡️ Меню"),
+            webapp_btn,
+        ],
+        [
+            KeyboardButton(text="📍 Сменить регион"),
+            KeyboardButton(text="📊 Скачать Excel"),
+        ],
+        [
+            KeyboardButton(text="🔄 Статус воркеров"),
+            KeyboardButton(text="❌ Скрыть клавиатуру"),
+        ],
+    ]
+
+    return ReplyKeyboardMarkup(
+        keyboard=keyboard,
+        resize_keyboard=True,
+        is_persistent=False,
+    )
+
+
+def get_hide_keyboard() -> ReplyKeyboardRemove:
+    """Убирает всплывающую нижнюю клавиатуру."""
+    return ReplyKeyboardRemove()
+
 
 
 def get_regions_keyboard(current_key: str = "moskva") -> InlineKeyboardMarkup:

@@ -271,6 +271,38 @@ class TestModernBotFeatures(unittest.TestCase):
         self.assertEqual(mf.matrix["AirPods Max"]["64"]["max_buy"], 38000)
         self.assertEqual(mf.matrix["iPhone 16 Plus"]["128"]["market"], 88000)
 
+    def test_reply_keyboard_and_hide_keyboard(self):
+        from bot.keyboards import get_reply_keyboard, get_hide_keyboard
+        from aiogram.types import ReplyKeyboardMarkup, ReplyKeyboardRemove
+
+        reply_kb = get_reply_keyboard(webapp_url="https://x9x9x9www.github.io/apple-resell-bot/")
+        self.assertIsInstance(reply_kb, ReplyKeyboardMarkup)
+        self.assertTrue(reply_kb.resize_keyboard)
+        self.assertFalse(reply_kb.is_persistent)
+
+        button_texts = [b.text for row in reply_kb.keyboard for b in row]
+        self.assertIn("⚡️ Меню", button_texts)
+        self.assertIn("📱 Матрица цен", button_texts)
+        self.assertIn("📍 Сменить регион", button_texts)
+        self.assertIn("📊 Скачать Excel", button_texts)
+        self.assertIn("🔄 Статус воркеров", button_texts)
+        self.assertIn("❌ Скрыть клавиатуру", button_texts)
+
+        # Проверяем наличие WebAppInfo на кнопке матрицы цен
+        webapp_buttons = [b for row in reply_kb.keyboard for b in row if b.web_app is not None]
+        self.assertEqual(len(webapp_buttons), 1)
+        self.assertEqual(webapp_buttons[0].web_app.url, "https://x9x9x9www.github.io/apple-resell-bot/")
+
+        # Проверяем убирание клавиатуры
+        hide_kb = get_hide_keyboard()
+        self.assertIsInstance(hide_kb, ReplyKeyboardRemove)
+
+        # Проверяем кнопки показа/скрытия в инлайн меню
+        main_kb = get_main_menu_keyboard("Москва")
+        main_texts = [b.text for row in main_kb.inline_keyboard for b in row]
+        self.assertTrue(any("Показать кнопки" in t for t in main_texts))
+        self.assertTrue(any("Скрыть кнопки" in t for t in main_texts))
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     # Telegram
     BOT_TOKEN: str = Field(default="YOUR_BOT_TOKEN_HERE")
     TARGET_CHAT_ID: int = Field(default=0)
-    WEBAPP_URL: str = Field(default="")
+    WEBAPP_URL: str = Field(default="https://x9x9x9www.github.io/apple-resell-bot/")
 
     @field_validator("TARGET_CHAT_ID", mode="before")
     @classmethod
