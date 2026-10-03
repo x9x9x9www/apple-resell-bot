@@ -40,32 +40,119 @@ class TestModernBotFeatures(unittest.TestCase):
 
     def test_custom_model_extraction(self):
         from core.parser import IPhoneNLPParser, RawItem
-        title = "Продам iPad Pro 11 256GB Space Gray в идеале"
-        desc = "Полный комплект, куплен год назад."
+        title = "Продам Nothing Phone 2 256GB White в идеале"
+        desc = "Полный комплект, куплен месяц назад."
 
-        # Без кастомных моделей iPad не распознается как iPhone
+        # Без кастомных моделей редкий гаджет не распознается
         self.assertIsNone(IPhoneNLPParser.extract_model(title, desc))
 
         # С кастомными моделями из матрицы распознается четко
-        custom_models = {"iPad Pro 11", "AirPods Max"}
+        custom_models = {"Nothing Phone 2", "Dyson Airwrap"}
         extracted = IPhoneNLPParser.extract_model(title, desc, custom_models=custom_models)
-        self.assertEqual(extracted, "iPad Pro 11")
+        self.assertEqual(extracted, "Nothing Phone 2")
 
         # Проверяем полный parse_raw_item
         raw = RawItem(
             platform=Platform.AVITO,
-            item_id="ipad_123",
+            item_id="nothing_123",
             title=title,
             description=desc,
-            price=59000,
+            price=39000,
             location="Москва",
-            url="https://avito.ru/ipad",
+            url="https://avito.ru/nothing",
             published_at=datetime.now(timezone.utc),
         )
         parsed = IPhoneNLPParser.parse_raw_item(raw, custom_models=custom_models)
         self.assertIsNotNone(parsed)
-        self.assertEqual(parsed.model, "iPad Pro 11")
+        self.assertEqual(parsed.model, "Nothing Phone 2")
         self.assertEqual(parsed.storage_gb, 256)
+        self.assertEqual(parsed.category, "other")
+
+    def test_macbook_multi_spec_parsing(self):
+        from core.parser import IPhoneNLPParser, RawItem
+        raw = RawItem(
+            platform=Platform.AVITO,
+            item_id="mb_1",
+            title="MacBook Air M1 16/512 Space Gray",
+            description="Состояние отличное, 16gb оперативки, 512 ssd, акб 94%",
+            price=48000,
+            location="Москва",
+            url="https://avito.ru/mb1",
+            published_at=datetime.now(timezone.utc),
+        )
+        parsed = IPhoneNLPParser.parse_raw_item(raw)
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed.model, "MacBook Air M1")
+        self.assertEqual(parsed.category, "macbook")
+        self.assertEqual(parsed.ram_gb, 16)
+        self.assertEqual(parsed.storage_gb, 512)
+        self.assertEqual(parsed.battery_health, 94)
+
+        msg = format_lot_message(parsed)
+        self.assertIn("💻", msg)
+        self.assertIn("16 GB", msg)
+        self.assertIn("512 GB SSD", msg)
+
+    def test_samsung_galaxy_parsing(self):
+        from core.parser import IPhoneNLPParser, RawItem
+        raw = RawItem(
+            platform=Platform.AVITO,
+            item_id="sam_1",
+            title="Samsung Galaxy S24 Ultra 256GB Black",
+            description="Полный комплект, идеал, не вскрывался",
+            price=68000,
+            location="Москва",
+            url="https://avito.ru/sam1",
+            published_at=datetime.now(timezone.utc),
+        )
+        parsed = IPhoneNLPParser.parse_raw_item(raw)
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed.model, "Samsung Galaxy S24 Ultra")
+        self.assertEqual(parsed.category, "samsung")
+        self.assertEqual(parsed.storage_gb, 256)
+
+        msg = format_lot_message(parsed)
+        self.assertIn("📱", msg)
+        self.assertIn("Samsung Galaxy S24 Ultra", msg)
+
+    def test_google_pixel_parsing(self):
+        from core.parser import IPhoneNLPParser, RawItem
+        raw = RawItem(
+            platform=Platform.AVITO,
+            item_id="pix_1",
+            title="Google Pixel 8 Pro 128GB Hazel",
+            description="Европеец, чистый андроид, в чехле",
+            price=44000,
+            location="Москва",
+            url="https://avito.ru/pix1",
+            published_at=datetime.now(timezone.utc),
+        )
+        parsed = IPhoneNLPParser.parse_raw_item(raw)
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed.model, "Google Pixel 8 Pro")
+        self.assertEqual(parsed.category, "pixel")
+        self.assertEqual(parsed.storage_gb, 128)
+
+    def test_playstation_console_parsing(self):
+        from core.parser import IPhoneNLPParser, RawItem
+        raw = RawItem(
+            platform=Platform.AVITO,
+            item_id="ps_1",
+            title="Sony PlayStation 5 с дисководом 825GB",
+            description="2 ревизия, 2 геймпада в комплекте",
+            price=35000,
+            location="Москва",
+            url="https://avito.ru/ps1",
+            published_at=datetime.now(timezone.utc),
+        )
+        parsed = IPhoneNLPParser.parse_raw_item(raw)
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed.model, "PlayStation 5")
+        self.assertEqual(parsed.category, "consoles")
+        self.assertEqual(parsed.storage_gb, 825)
+
+        msg = format_lot_message(parsed)
+        self.assertIn("🎮", msg)
 
     def test_custom_model_matrix_evaluation(self):
         from core.margin_filter import MarginFilter

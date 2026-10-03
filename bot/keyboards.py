@@ -82,7 +82,7 @@ def get_main_menu_keyboard(
         ],
         [
             InlineKeyboardButton(
-                text="📱 Фильтр моделей iPhone",
+                text="⚡️ Фильтр гаджетов и моделей",
                 callback_data="menu:models",
             ),
         ],

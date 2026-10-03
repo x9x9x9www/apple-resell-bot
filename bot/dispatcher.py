@@ -24,22 +24,29 @@ PARTY_EFFECT_ID = "5046509860389126442"   # 🎉 Конфетти
 
 def format_lot_message(item: ParsedIPhone) -> str:
     """
-    Форматирует уведомление в строгом HTML-стиле согласно ТЗ перекупа:
-
-    ⚡️ <b>СВЕЖИЙ ЛОТ | {Авито / Юла}</b> <i>(Только что)</i>
-    или
-    📉 <b>СНИЖЕНИЕ ЦЕНЫ | {Авито / Юла}</b> <i>(Продавец снизил цену!)</i>
-
-    📱 <b>Модель:</b> iPhone 15 Pro
-    💾 <b>Память:</b> 128 GB
-    🔋 <b>АКБ:</b> 91%
-    💰 <b>Цена:</b> 51 000 ₽ <i>(Ниже рынка на ~14 000 ₽)</i>
-    📍 <b>Локация:</b> Москва, метро Сокол
-
-    <blockquote expandable>📝 <b>Описание продавца:</b> ...</blockquote>
+    Форматирует уведомление о выгодном гаджете в строгом HTML-стиле:
     """
-    # Память
-    storage_display = f"{item.storage_gb} GB" if item.storage_gb < 1024 else "1 TB"
+    cat_icons = {
+        "macbook": "💻",
+        "iphone": "📱",
+        "samsung": "📱",
+        "pixel": "📱",
+        "ipad": "📟",
+        "consoles": "🎮",
+        "watch": "⌚️",
+    }
+    model_icon = cat_icons.get(getattr(item, "category", ""), "📱")
+
+    # Память и ОЗУ
+    if getattr(item, "ram_gb", None):
+        ssd_str = f"{item.storage_gb // 1024} TB" if item.storage_gb >= 1024 else f"{item.storage_gb} GB"
+        storage_display = f"{item.ram_gb} GB RAM / {ssd_str} SSD"
+    else:
+        if item.storage_gb >= 1024:
+            tb_val = item.storage_gb // 1024
+            storage_display = f"{tb_val} TB"
+        else:
+            storage_display = f"{item.storage_gb} GB"
 
     # АКБ и скидка на замену
     battery_display = f"{item.battery_health}%" if item.battery_health is not None else "Не указан"
@@ -70,7 +77,7 @@ def format_lot_message(item: ParsedIPhone) -> str:
 
     message = (
         f"{header}\n\n"
-        f"📱 <b>Модель:</b> {item.model}\n"
+        f"{model_icon} <b>Модель:</b> {item.model}\n"
         f"💾 <b>Память:</b> {storage_display}\n"
         f"🔋 <b>АКБ:</b> {battery_display}{battery_penalty_text}\n"
         f"{price_line}\n"

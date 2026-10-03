@@ -1,4 +1,189 @@
 {
+  "MacBook Air M1": {
+    "256": {
+      "max_buy": 45000,
+      "market": 58000,
+      "enabled": true
+    },
+    "512": {
+      "max_buy": 55000,
+      "market": 70000,
+      "enabled": true
+    }
+  },
+  "MacBook Air M2 13": {
+    "256": {
+      "max_buy": 62000,
+      "market": 78000,
+      "enabled": true
+    },
+    "512": {
+      "max_buy": 75000,
+      "market": 92000,
+      "enabled": true
+    }
+  },
+  "MacBook Pro 14 M1 Pro": {
+    "512": {
+      "max_buy": 85000,
+      "market": 105000,
+      "enabled": true
+    },
+    "1024": {
+      "max_buy": 100000,
+      "market": 122000,
+      "enabled": true
+    }
+  },
+  "Samsung Galaxy S24 Ultra": {
+    "256": {
+      "max_buy": 68000,
+      "market": 84000,
+      "enabled": true
+    },
+    "512": {
+      "max_buy": 78000,
+      "market": 95000,
+      "enabled": true
+    },
+    "1024": {
+      "max_buy": 90000,
+      "market": 110000,
+      "enabled": true
+    }
+  },
+  "Samsung Galaxy S24": {
+    "128": {
+      "max_buy": 42000,
+      "market": 52000,
+      "enabled": true
+    },
+    "256": {
+      "max_buy": 47000,
+      "market": 58000,
+      "enabled": true
+    }
+  },
+  "Samsung Galaxy S23 Ultra": {
+    "256": {
+      "max_buy": 52000,
+      "market": 64000,
+      "enabled": true
+    },
+    "512": {
+      "max_buy": 59000,
+      "market": 72000,
+      "enabled": true
+    }
+  },
+  "Samsung Galaxy S23": {
+    "128": {
+      "max_buy": 33000,
+      "market": 42000,
+      "enabled": true
+    },
+    "256": {
+      "max_buy": 37000,
+      "market": 47000,
+      "enabled": true
+    }
+  },
+  "Google Pixel 9 Pro": {
+    "128": {
+      "max_buy": 62000,
+      "market": 76000,
+      "enabled": true
+    },
+    "256": {
+      "max_buy": 70000,
+      "market": 85000,
+      "enabled": true
+    }
+  },
+  "Google Pixel 9": {
+    "128": {
+      "max_buy": 45000,
+      "market": 56000,
+      "enabled": true
+    },
+    "256": {
+      "max_buy": 51000,
+      "market": 63000,
+      "enabled": true
+    }
+  },
+  "Google Pixel 8 Pro": {
+    "128": {
+      "max_buy": 42000,
+      "market": 53000,
+      "enabled": true
+    },
+    "256": {
+      "max_buy": 48000,
+      "market": 60000,
+      "enabled": true
+    }
+  },
+  "Google Pixel 8": {
+    "128": {
+      "max_buy": 30000,
+      "market": 39000,
+      "enabled": true
+    },
+    "256": {
+      "max_buy": 35000,
+      "market": 45000,
+      "enabled": true
+    }
+  },
+  "iPad Pro 11": {
+    "128": {
+      "max_buy": 52000,
+      "market": 65000,
+      "enabled": true
+    },
+    "256": {
+      "max_buy": 59000,
+      "market": 73000,
+      "enabled": true
+    }
+  },
+  "iPad Air 5": {
+    "64": {
+      "max_buy": 36000,
+      "market": 46000,
+      "enabled": true
+    },
+    "256": {
+      "max_buy": 46000,
+      "market": 58000,
+      "enabled": true
+    }
+  },
+  "PlayStation 5": {
+    "825": {
+      "max_buy": 32000,
+      "market": 40000,
+      "enabled": true
+    },
+    "1024": {
+      "max_buy": 37000,
+      "market": 46000,
+      "enabled": true
+    }
+  },
+  "Steam Deck OLED": {
+    "512": {
+      "max_buy": 38000,
+      "market": 48000,
+      "enabled": true
+    },
+    "1024": {
+      "max_buy": 45000,
+      "market": 56000,
+      "enabled": true
+    }
+  },
   "iPhone 16 Pro Max": {
     "256": {
       "max_buy": 105000,

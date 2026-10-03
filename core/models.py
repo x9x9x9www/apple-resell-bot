@@ -28,15 +28,17 @@ class RawItem(BaseModel):
     is_price_drop: bool = False
 
 
-class ParsedIPhone(BaseModel):
-    """Нормализованный лот iPhone с вычлененными характеристиками и оценкой маржинальности."""
+class ParsedGadget(BaseModel):
+    """Нормализованный лот гаджета с вычлененными характеристиками и оценкой маржинальности."""
     platform: Platform
     item_id: str
     title: str
     description: str
-    model: str  # Например, "iPhone 15 Pro"
-    storage_gb: int  # Например, 128
-    battery_health: Optional[int] = None  # Например, 91 (%) или None
+    category: str = "other"  # iphone, macbook, samsung, pixel, ipad, consoles, watch, other
+    model: str  # Например, "MacBook Air M2", "Samsung Galaxy S24 Ultra", "iPhone 15 Pro", "Pixel 8 Pro"
+    storage_gb: int = 128  # Для телефонов ROM, для ноутбуков SSD (например, 256, 512, 1024)
+    ram_gb: Optional[int] = None  # Оперативная память для ноутбуков/ПК (8, 16, 24, 32, 64)
+    battery_health: Optional[int] = None  # АКБ (%)
     price: int  # Текущая цена продавца в рублях
     old_price: Optional[int] = None  # Предыдущая цена при снижении
     is_price_drop: bool = False  # Флаг снижения цены
@@ -50,3 +52,7 @@ class ParsedIPhone(BaseModel):
     published_at: datetime
     is_profitable: bool = False
     rejection_reason: Optional[str] = None
+
+
+# Псевдоним для обратной совместимости
+ParsedIPhone = ParsedGadget

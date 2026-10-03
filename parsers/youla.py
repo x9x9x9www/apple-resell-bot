@@ -46,6 +46,8 @@ class YoulaWorker(BaseWorker):
         self.city_slug = "moskva"
         self.graphql_url = "https://api-gw.youla.io/federation/graphql"
         self.rest_url = "https://api.youla.io/api/v1/products"
+        self.queries = ["iPhone", "MacBook", "Samsung Galaxy", "Google Pixel", "iPad", "PlayStation"]
+        self._query_idx = 0
 
     def set_location(self, city_id: str, city_slug: str = "moskva") -> None:
         """Динамическое переключение региона поиска Юлы."""
@@ -54,12 +56,15 @@ class YoulaWorker(BaseWorker):
         logger.info("[Юла] Регион поиска переключен на city_id: %s, slug: %s", city_id, city_slug)
 
     async def _fetch_via_graphql(self) -> List[RawItem]:
-        """Запрос через GraphQL эндпоинт federation API."""
+        """Запрос через GraphQL эндпоинт federation API по ротируемым запросам гаджетов."""
+        q_text = self.queries[self._query_idx % len(self.queries)]
+        self._query_idx += 1
+
         query_payload = {
             "operationName": "feedProducts",
             "variables": {
                 "sort": "DATE_PUBLISHED_DESC",
-                "query": "iPhone",
+                "query": q_text,
                 "city": self.city_id,
                 "limit": 20,
             },
@@ -106,15 +111,16 @@ class YoulaWorker(BaseWorker):
 
     async def _fetch_via_rest(self) -> List[RawItem]:
         """Резервный запрос через REST API выдачи."""
+        q_text = self.queries[self._query_idx % len(self.queries)]
         params = {
             "sort_field": "date",
             "sort_order": "desc",
-            "q": "iPhone",
+            "q": q_text,
             "city": self.city_id,
             "limit": "20",
         }
         headers = {
-            "Referer": f"https://youla.ru/{self.city_slug}?q=iPhone&sort_field=date",
+            "Referer": f"https://youla.ru/{self.city_slug}?q={q_text}&sort_field=date",
         }
 
         data = await self.http_client.get(

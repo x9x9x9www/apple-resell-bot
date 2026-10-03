@@ -43,6 +43,15 @@ class AvitoWorker(BaseWorker):
         self.location_id = location_id or settings.AVITO_LOCATION_ID
         # Внутренний эндпоинт выдачи Авито
         self.api_url = "https://www.avito.ru/api/9/items"
+        self.queries = [
+            ("84", "iPhone"),
+            ("99", "MacBook"),
+            ("84", "Samsung Galaxy"),
+            ("84", "Google Pixel"),
+            ("96", "iPad"),
+            ("97", "PlayStation"),
+        ]
+        self._query_idx = 0
 
     def set_location(self, location_id: str) -> None:
         """Динамическое переключение региона поиска Авито."""
@@ -57,12 +66,15 @@ class AvitoWorker(BaseWorker):
         return parse_marketplace_datetime(raw_time)
 
     async def fetch_fresh_items(self) -> List[RawItem]:
-        """Запрашивает первую страницу выдачи Авито по категории iPhone."""
+        """Запрашивает первую страницу выдачи Авито по ротируемым категориям гаджетов."""
+        cat_id, q_text = self.queries[self._query_idx % len(self.queries)]
+        self._query_idx += 1
+
         params = {
-            "categoryId": "84",  # Мобильные телефоны
-            "sort": "104",        # 104 = Сортировка по дате (самые свежие)
+            "categoryId": cat_id,
+            "sort": "104",  # 104 = Сортировка по дате (самые свежие)
             "locationId": self.location_id,
-            "q": "iPhone",
+            "q": q_text,
             "page": "1",
             "perPage": "20",
         }

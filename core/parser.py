@@ -12,7 +12,7 @@ from core.models import RawItem, ParsedIPhone, Platform
 
 RE_REPLICAS = re.compile(
     r"\b(копи[яиеюей]|реплик[аеуои]|дубликат|1\s*:\s*1|lux|люкс|как оригинал|под оригинал|"
-    r"аналог|тайвань|android|андроид|копия iphone)\b",
+    r"аналог|тайвань|копия iphone|копия samsung|фейк|fake)\b",
     re.IGNORECASE,
 )
 
@@ -27,15 +27,81 @@ RE_ACCESSORIES_AND_PARTS = re.compile(
 
 RE_LOCKS = re.compile(
     r"\b(icloud|айклауд|заблокирован|парол[ьяе]|mdm|мдм|демо|demo|байпас|bypass|"
-    r"r-?sim|р-?сим|не звонит|lost|кирпич|на замке)\b",
+    r"r-?sim|р-?сим|не звонит|lost|кирпич|на замке|frp|frp lock|google lock)\b",
     re.IGNORECASE,
 )
 
 # =====================================================================
-# Таблица нормализации моделей iPhone (порядок важен: от сложных к простым)
+# Таблица нормализации моделей гаджетов (MacBook, Samsung, Pixel, iPad, iPhone, Consoles)
 # =====================================================================
 
 MODEL_PATTERNS: list[tuple[re.Pattern, str]] = [
+    # MacBook Pro
+    (re.compile(r"\b(?:macbook|макбук)\s*pro\s*16\b", re.IGNORECASE), "MacBook Pro 16"),
+    (re.compile(r"\b(?:macbook|макбук)\s*pro\s*14\b", re.IGNORECASE), "MacBook Pro 14"),
+    (re.compile(r"\b(?:macbook|макбук)\s*pro\s*13\b", re.IGNORECASE), "MacBook Pro 13"),
+    (re.compile(r"\b(?:macbook|макбук)\s*pro\b", re.IGNORECASE), "MacBook Pro 14"),
+
+    # MacBook Air
+    (re.compile(r"\b(?:macbook|макбук)\s*air\s*15\b", re.IGNORECASE), "MacBook Air 15"),
+    (re.compile(r"\b(?:macbook|макбук)\s*air\s*(?:13\s*)?(?:m3|м3)\b", re.IGNORECASE), "MacBook Air M3 13"),
+    (re.compile(r"\b(?:macbook|макбук)\s*air\s*(?:13\s*)?(?:m2|м2)\b", re.IGNORECASE), "MacBook Air M2 13"),
+    (re.compile(r"\b(?:macbook|макбук)\s*air\s*(?:13\s*)?(?:m1|м1)\b", re.IGNORECASE), "MacBook Air M1"),
+    (re.compile(r"\b(?:macbook|макбук)\s*air\b", re.IGNORECASE), "MacBook Air M1"),
+
+    # Samsung Galaxy S24
+    (re.compile(r"\b(?:samsung|galaxy|самсунг)?\s*(?:s|с)\s*24\s*ultra\b", re.IGNORECASE), "Samsung Galaxy S24 Ultra"),
+    (re.compile(r"\b(?:samsung|galaxy|самсунг)?\s*(?:s|с)\s*24\s*(?:\+|plus|плюс)\b", re.IGNORECASE), "Samsung Galaxy S24+"),
+    (re.compile(r"\b(?:samsung|galaxy|самсунг)\s*(?:s|с)\s*24\b", re.IGNORECASE), "Samsung Galaxy S24"),
+
+    # Samsung Galaxy S23
+    (re.compile(r"\b(?:samsung|galaxy|самсунг)?\s*(?:s|с)\s*23\s*ultra\b", re.IGNORECASE), "Samsung Galaxy S23 Ultra"),
+    (re.compile(r"\b(?:samsung|galaxy|самсунг)?\s*(?:s|с)\s*23\s*(?:\+|plus|плюс)\b", re.IGNORECASE), "Samsung Galaxy S23+"),
+    (re.compile(r"\b(?:samsung|galaxy|самсунг)\s*(?:s|с)\s*23\b", re.IGNORECASE), "Samsung Galaxy S23"),
+
+    # Samsung Galaxy S22
+    (re.compile(r"\b(?:samsung|galaxy|самсунг)?\s*(?:s|с)\s*22\s*ultra\b", re.IGNORECASE), "Samsung Galaxy S22 Ultra"),
+    (re.compile(r"\b(?:samsung|galaxy|самсунг)\s*(?:s|с)\s*22\b", re.IGNORECASE), "Samsung Galaxy S22"),
+
+    # Samsung Galaxy Fold / Flip
+    (re.compile(r"\b(?:galaxy|samsung|самсунг)?\s*z\s*fold\s*6\b", re.IGNORECASE), "Samsung Galaxy Z Fold 6"),
+    (re.compile(r"\b(?:galaxy|samsung|самсунг)?\s*z\s*fold\s*5\b", re.IGNORECASE), "Samsung Galaxy Z Fold 5"),
+    (re.compile(r"\b(?:galaxy|samsung|самсунг)?\s*z\s*flip\s*6\b", re.IGNORECASE), "Samsung Galaxy Z Flip 6"),
+    (re.compile(r"\b(?:galaxy|samsung|самсунг)?\s*z\s*flip\s*5\b", re.IGNORECASE), "Samsung Galaxy Z Flip 5"),
+
+    # Google Pixel 9
+    (re.compile(r"\b(?:google|гугл)?\s*pixel\s*9\s*pro\s*xl\b", re.IGNORECASE), "Google Pixel 9 Pro XL"),
+    (re.compile(r"\b(?:google|гугл)?\s*pixel\s*9\s*pro\b", re.IGNORECASE), "Google Pixel 9 Pro"),
+    (re.compile(r"\b(?:google|гугл)?\s*pixel\s*9\b", re.IGNORECASE), "Google Pixel 9"),
+
+    # Google Pixel 8
+    (re.compile(r"\b(?:google|гугл)?\s*pixel\s*8\s*pro\b", re.IGNORECASE), "Google Pixel 8 Pro"),
+    (re.compile(r"\b(?:google|гугл)?\s*pixel\s*8a\b", re.IGNORECASE), "Google Pixel 8a"),
+    (re.compile(r"\b(?:google|гугл)?\s*pixel\s*8\b", re.IGNORECASE), "Google Pixel 8"),
+
+    # Google Pixel 7
+    (re.compile(r"\b(?:google|гугл)?\s*pixel\s*7\s*pro\b", re.IGNORECASE), "Google Pixel 7 Pro"),
+    (re.compile(r"\b(?:google|гугл)?\s*pixel\s*7a\b", re.IGNORECASE), "Google Pixel 7a"),
+    (re.compile(r"\b(?:google|гугл)?\s*pixel\s*7\b", re.IGNORECASE), "Google Pixel 7"),
+
+    # iPad
+    (re.compile(r"\b(?:ipad|айпад)\s*pro\s*13\b", re.IGNORECASE), "iPad Pro 13"),
+    (re.compile(r"\b(?:ipad|айпад)\s*pro\s*12\.?9\b", re.IGNORECASE), "iPad Pro 12.9"),
+    (re.compile(r"\b(?:ipad|айпад)\s*pro\s*11\b", re.IGNORECASE), "iPad Pro 11"),
+    (re.compile(r"\b(?:ipad|айпад)\s*air\s*5\b", re.IGNORECASE), "iPad Air 5"),
+    (re.compile(r"\b(?:ipad|айпад)\s*air\s*4\b", re.IGNORECASE), "iPad Air 4"),
+    (re.compile(r"\b(?:ipad|айпад)\s*air\b", re.IGNORECASE), "iPad Air 5"),
+    (re.compile(r"\b(?:ipad|айпад)\s*mini\s*6\b", re.IGNORECASE), "iPad mini 6"),
+    (re.compile(r"\b(?:ipad|айпад)\s*10\b", re.IGNORECASE), "iPad 10"),
+    (re.compile(r"\b(?:ipad|айпад)\s*9\b", re.IGNORECASE), "iPad 9"),
+
+    # Consoles & Headphones
+    (re.compile(r"\b(?:playstation|плейстейшен|сони\s*пл[еэ]йстейшн)?\s*5\s*slim\b", re.IGNORECASE), "PlayStation 5 Slim"),
+    (re.compile(r"\b(?:ps5|playstation\s*5|сони\s*пс5)\b", re.IGNORECASE), "PlayStation 5"),
+    (re.compile(r"\bsteam\s*deck\s*oled\b", re.IGNORECASE), "Steam Deck OLED"),
+    (re.compile(r"\bsteam\s*deck\b", re.IGNORECASE), "Steam Deck"),
+    (re.compile(r"\bairpods\s*max\b", re.IGNORECASE), "AirPods Max"),
+
     # iPhone 16
     (re.compile(r"\b(?:iphone|айфон)?\s*16\s*(?:pro\s*max|про\s*макс|промакс)\b", re.IGNORECASE), "iPhone 16 Pro Max"),
     (re.compile(r"\b(?:iphone|айфон)?\s*16\s*(?:pro|про)\b", re.IGNORECASE), "iPhone 16 Pro"),
@@ -79,7 +145,6 @@ MODEL_PATTERNS: list[tuple[re.Pattern, str]] = [
 
     # iPhone SE
     (re.compile(r"\b(?:iphone|айфон)?\s*se\s*(?:2022|3|3-го|3го)\b", re.IGNORECASE), "iPhone SE 2022"),
-    (re.compile(r"\b(?:iphone|айфон)?\s*se\s*(?:2020|2|2-го|2го)\b", re.IGNORECASE), "iPhone SE 2020"),
     (re.compile(r"\b(?:iphone|айфон)\s*se\b", re.IGNORECASE), "iPhone SE"),
 ]
 
@@ -101,6 +166,16 @@ RE_STANDALONE_STORAGE = re.compile(
     r"\b(?:128|256|512)\b"
 )
 
+# RAM и SSD форматы (например: 16/512, 8/256, 16gb ram)
+RE_RAM_SSD_SLASH = re.compile(
+    r"\b(8|16|18|24|32|36|48|64)\s*/\s*(128|256|512|1024|1|2)\s*(?:gb|tb|гб|тб)?\b",
+    re.IGNORECASE,
+)
+RE_RAM_EXPLICIT = re.compile(
+    r"\b(8|16|18|24|32|36|48|64)\s*(?:gb|гб|g|г)?\s*(?:ram|озу|оперативк[аи]|памят[ьи])\b",
+    re.IGNORECASE,
+)
+
 # АКБ: 50% - 100%
 RE_BATTERY_1 = re.compile(
     r"(?:акб|аккум(?:улятор)?|батаре[яеию]|состояние\s*(?:акб|батареи|аккумулятора)?|емкост[ьи]|health|battery)\s*(?:аккумулятора|батареи)?\s*[:=-]?\s*([5-9][0-9]|100)\s*%?",
@@ -116,8 +191,29 @@ RE_BATTERY_SIMPLE = re.compile(
 )
 
 
+
+def detect_category(model_name: str) -> str:
+    """Определяет категорию устройства по его названию."""
+    ml = model_name.lower()
+    if "macbook" in ml or "mac" in ml:
+        return "macbook"
+    elif "samsung" in ml or "galaxy" in ml:
+        return "samsung"
+    elif "pixel" in ml:
+        return "pixel"
+    elif "ipad" in ml:
+        return "ipad"
+    elif any(k in ml for k in ["playstation", "ps5", "steam deck", "xbox"]):
+        return "consoles"
+    elif "watch" in ml:
+        return "watch"
+    elif "iphone" in ml:
+        return "iphone"
+    return "other"
+
+
 class IPhoneNLPParser:
-    """Быстрый regex-парсер характеристик iPhone для нулевой задержки."""
+    """Быстрый regex-парсер характеристик гаджетов для нулевой задержки."""
 
     @classmethod
     def check_blacklist(cls, title: str, description: str) -> Optional[str]:
@@ -173,8 +269,18 @@ class IPhoneNLPParser:
 
     @classmethod
     def extract_storage(cls, title: str, description: str) -> Optional[int]:
-        """Извлекает объем накопителя в GB (64, 128, 256, 512, 1024)."""
+        """Извлекает объем накопителя в GB (64, 128, 256, 512, 1024, 2048)."""
         combined = f"{title} {description[:300]}"
+
+        # 0. RAM/SSD slash формат (например, 16/512, 8/256, 16/1TB)
+        slash_ssd = RE_RAM_SSD_SLASH.search(combined)
+        if slash_ssd:
+            val_str = slash_ssd.group(2)
+            if val_str in ("1", "1024"):
+                return 1024
+            elif val_str in ("2", "2048"):
+                return 2048
+            return int(val_str)
 
         # 1. 1TB / 2TB
         tb_match = RE_STORAGE_TB.search(combined)
@@ -196,6 +302,20 @@ class IPhoneNLPParser:
         standalone_matches = RE_STANDALONE_STORAGE.findall(title)
         if standalone_matches:
             return int(standalone_matches[0])
+
+        return None
+
+    @classmethod
+    def extract_ram(cls, title: str, description: str) -> Optional[int]:
+        """Извлекает объем RAM (ОЗУ) в GB (8, 16, 18, 24, 32, 64) для ноутбуков и ПК."""
+        combined = f"{title} {description[:300]}"
+        slash_m = RE_RAM_SSD_SLASH.search(combined)
+        if slash_m:
+            return int(slash_m.group(1))
+
+        ram_m = RE_RAM_EXPLICIT.search(combined)
+        if ram_m:
+            return int(ram_m.group(1))
 
         return None
 
@@ -228,8 +348,9 @@ class IPhoneNLPParser:
         Полный конвейер извлечения:
         1. Проверка черного списка (копии, запчасти, блокировки).
         2. Извлечение модели.
-        3. Извлечение объема памяти.
-        4. Извлечение АКБ.
+        3. Определение категории устройства.
+        4. Извлечение объема памяти (ROM/SSD) и оперативной памяти (RAM).
+        5. Извлечение АКБ.
         """
         # Фильтр мусора
         reject_reason = cls.check_blacklist(raw.title, raw.description)
@@ -241,12 +362,26 @@ class IPhoneNLPParser:
         if not model:
             return None
 
-        # Память
+        # Категория устройства
+        category = detect_category(model)
+
+        # RAM (для ноутбуков)
+        ram = cls.extract_ram(raw.title, raw.description)
+
+        # Память (ROM/SSD)
         storage = cls.extract_storage(raw.title, raw.description)
         if not storage:
-            # Для некоторых моделей (например iPhone 11 Pro) дефолтная минималка 64 или 128,
-            # но для безопасности перекупа отсекаем или ставим базовую
-            storage = 128 if "13" in model or "14" in model or "15" in model or "16" in model else 64
+            ml = model.lower()
+            if "macbook" in ml:
+                storage = 256
+            elif "playstation" in ml or "ps5" in ml:
+                storage = 825
+            elif "steam deck" in ml:
+                storage = 512
+            elif any(s in model for s in ["13", "14", "15", "16", "23", "24", "8", "9"]):
+                storage = 128
+            else:
+                storage = 64
 
         # Батарея
         battery = cls.extract_battery(raw.description, raw.title)
@@ -256,8 +391,10 @@ class IPhoneNLPParser:
             item_id=raw.item_id,
             title=raw.title,
             description=raw.description,
+            category=category,
             model=model,
             storage_gb=storage,
+            ram_gb=ram,
             battery_health=battery,
             price=raw.price,
             old_price=raw.old_price,
@@ -364,3 +501,8 @@ def parse_marketplace_datetime(raw_val: Any) -> Optional[datetime]:
             return dt.astimezone(timezone.utc)
 
     return None
+
+
+# Алиас для нового мульти-категорийного контекста
+GadgetNLPParser = IPhoneNLPParser
+

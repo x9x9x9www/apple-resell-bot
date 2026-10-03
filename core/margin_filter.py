@@ -18,6 +18,11 @@ class MarginFilter:
     """
 
     SERIES_LIST = [
+        ("macbook", "💻 MacBook (Air / Pro)"),
+        ("samsung", "📱 Samsung Galaxy"),
+        ("pixel", "📱 Google Pixel"),
+        ("ipad", "📟 iPad (Pro / Air / 10)"),
+        ("consoles", "🎮 Консоли (PS5 / Steam Deck)"),
         ("16", "iPhone 16 / 16 Pro"),
         ("15", "iPhone 15 / 15 Pro"),
         ("14", "iPhone 14 / 14 Pro"),
@@ -25,7 +30,7 @@ class MarginFilter:
         ("12", "iPhone 12 / 12 Pro"),
         ("11", "iPhone 11 / 11 Pro"),
         ("X_SE", "iPhone X / XS / SE"),
-        ("custom", "Свои модели ⭐"),
+        ("custom", "⭐ Свои гаджеты"),
     ]
 
     def __init__(self, matrix: Optional[dict[str, dict[str, dict[str, Any]]]] = None):
@@ -68,11 +73,25 @@ class MarginFilter:
         return new_state
 
     def _matches_series(self, model_name: str, series_key: str) -> bool:
-        if series_key == "X_SE":
+        nl = model_name.lower()
+        if series_key == "macbook":
+            return "macbook" in nl or "mac" in nl
+        elif series_key == "samsung":
+            return "samsung" in nl or "galaxy" in nl
+        elif series_key == "pixel":
+            return "pixel" in nl
+        elif series_key == "ipad":
+            return "ipad" in nl
+        elif series_key == "consoles":
+            return any(k in nl for k in ["playstation", "ps5", "steam deck", "xbox"])
+        elif series_key == "X_SE":
             return any(k in model_name for k in ["XS", "XR", "iPhone X", "SE"])
-        if series_key == "custom":
-            standard = ["16", "15", "14", "13", "12", "11", "XS", "XR", "iPhone X", "SE"]
-            return not any(s in model_name for s in standard)
+        elif series_key == "custom":
+            standard = [
+                "16", "15", "14", "13", "12", "11", "xs", "xr", "iphone x", "se",
+                "macbook", "samsung", "galaxy", "pixel", "ipad", "playstation", "ps5", "steam deck", "xbox"
+            ]
+            return not any(s in nl for s in standard)
         return f"iPhone {series_key}" in model_name
 
     def get_stats(self) -> dict[str, int]:

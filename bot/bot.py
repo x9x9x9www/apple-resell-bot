@@ -50,22 +50,23 @@ def create_bot_dispatcher(
         chat_id = message.chat.id
         current_reg_name = reg_manager.current["name"]
         text = (
-            "👋 <b>Добро пожаловать в Apple Resell Radar!</b>\n\n"
-            "Высокоскоростной поисковый робот для перекупов Apple (Авито & Юла).\n\n"
+            "👋 <b>Добро пожаловать в Gadget Resell Radar!</b>\n\n"
+            "Высокоскоростной поисковый робот для перекупов электроники и гаджетов (iPhone, MacBook, Samsung, Pixel, iPad, консоли на Авито & Юла).\n\n"
             "⚡️ <b>Ключевые возможности:</b>\n"
             "• Мгновенный перехват новых лотов (&lt; 2 сек)\n"
             f"• 📍 Регион поиска: <b>{current_reg_name}</b> (смена через кнопку или /city)\n"
+            "• 💻 Мульти-категорийный мониторинг: Mac, iPhone, Samsung, Pixel, iPad, PS5/Steam Deck\n"
             "• 📉 Детекция <b>снижения цен</b> продавцами\n"
             "• 📸 <b>Фотокарточки</b> лотов прямо в ленте\n"
             "• 🔋 <b>Умный учет АКБ</b> (автоматическая скидка на замену)\n"
-            "• 📊 Управление ценами выкупа через <b>Excel (.xlsx)</b>\n\n"
+            "• 📱 <b>Telegram Mini App 2.0</b> + управление прайсом через <b>Excel (.xlsx)</b>\n\n"
             f"🔑 <b>Ваш Chat ID:</b> <code>{chat_id}</code>\n\n"
             "📌 <b>Команды:</b>\n"
             "• /menu — Главное меню настроек и фильтров\n"
             "• /city — Смена региона поиска (или напишите название города)\n"
             "• /export_prices — Скачать текущий прайс-лист в Excel\n"
             "• /status — Статус воркеров и мониторинга\n\n"
-            "<i>💡 Чтобы обновить цены выкупа, просто отправьте отредактированный файл .xlsx в этот чат!</i>"
+            "<i>💡 Чтобы обновить цены выкупа, просто отправьте отредактированный файл .xlsx в этот чат или настройте цены в Mini App!</i>"
         )
         await message.answer(text, reply_markup=get_main_menu_keyboard(current_reg_name))
 
@@ -74,9 +75,9 @@ def create_bot_dispatcher(
         stats = filter_instance.get_stats()
         current_reg_name = reg_manager.current["name"]
         text = (
-            "⚙️ <b>Панель управления Apple Resell Radar</b>\n\n"
+            "⚙️ <b>Панель управления Gadget Resell Radar</b>\n\n"
             f"📍 Текущий регион: <b>{current_reg_name}</b>\n"
-            f"📱 Активных конфигураций: <b>{stats['active_configs']} из {stats['total_configs']}</b>\n\n"
+            f"📱 Активных конфигураций гаджетов: <b>{stats['active_configs']} из {stats['total_configs']}</b>\n\n"
             "Выберите нужный раздел в меню ниже:"
         )
         await message.answer(text, reply_markup=get_main_menu_keyboard(current_reg_name))
@@ -417,8 +418,8 @@ def create_bot_dispatcher(
     @dp.callback_query(F.data == "menu:models")
     async def cb_models_menu(callback: types.CallbackQuery):
         text = (
-            "📱 <b>Фильтр поколений iPhone:</b>\n\n"
-            "Нажимайте на кнопки, чтобы включать или отключать мониторинг серий.\n"
+            "⚡️ <b>Фильтр категорий и моделей гаджетов:</b>\n\n"
+            "Нажимайте на кнопки, чтобы включать или отключать мониторинг (MacBook, Samsung, Pixel, iPad, консоли, iPhone).\n"
             "🟢 <b>Включено</b> | 🔴 <b>Отключено</b>"
         )
         if callback.message:
@@ -434,16 +435,18 @@ def create_bot_dispatcher(
         new_state = filter_instance.toggle_series(series_key)
         state_str = "включена ✅" if new_state else "отключена ❌"
 
+        series_label = dict(filter_instance.SERIES_LIST).get(series_key, f"Серия {series_key}")
+
         if callback.message:
             text = (
-                f"Серия <b>iPhone {series_key}</b> {state_str}!\n\n"
+                f"Категория <b>{series_label}</b> {state_str}!\n\n"
                 "Нажимайте на кнопки для изменения:"
             )
             await callback.message.edit_text(
                 text,
                 reply_markup=get_models_menu_keyboard(filter_instance),
             )
-        await callback.answer(f"Серия {state_str}")
+        await callback.answer(f"{series_label}: {state_str}")
 
     @dp.callback_query(F.data == "menu:battery")
     async def cb_battery_info(callback: types.CallbackQuery):
@@ -548,7 +551,7 @@ def _build_status_text(
         "• Дедупликация: <b>Redis + SQLite Local Fallback (48h)</b>\n"
         "• Детекция снижения цен: <b>АКТИВНА 📉</b>\n"
         "• Фотокарточки объявлений: <b>АКТИВНЫ 📸</b>\n"
-        f"• Активных iPhone конфигураций: <b>{stats['active_configs']} из {stats['total_configs']}</b>\n"
+        f"• Активных конфигураций гаджетов: <b>{stats['active_configs']} из {stats['total_configs']}</b>\n"
         "• Скорость реакции: <b>до 2.5 сек</b>\n"
     )
 
@@ -557,9 +560,9 @@ async def _send_excel_file(message: types.Message, filter_instance: MarginFilter
     """Генерирует и отправляет Excel-таблицу прайс-листа пользователю."""
     try:
         excel_bytes = ExcelPricingManager.export_matrix_to_bytes(filter_instance.matrix)
-        file = BufferedInputFile(excel_bytes, filename="apple_resell_prices.xlsx")
+        file = BufferedInputFile(excel_bytes, filename="gadget_resell_prices.xlsx")
         caption = (
-            "📊 <b>Матрица цен выкупа Apple Resell</b>\n\n"
+            "📊 <b>Матрица цен выкупа гаджетов (Resell Radar)</b>\n\n"
             "Инструкция по настройке:\n"
             "1. Откройте таблицу в Excel, Google Таблицах или на телефоне.\n"
             "2. Измените <b>Макс. выкуп (₽)</b> или <b>Статус (ВКЛ / ВЫКЛ)</b>.\n"
