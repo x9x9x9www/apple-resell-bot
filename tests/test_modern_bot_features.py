@@ -363,12 +363,20 @@ class TestModernBotFeatures(unittest.TestCase):
 
         # 4. Проверяем удаление сообщений пользователя (отсутствие спама от пользователя)
         user_msg_mock = MagicMock()
+        user_msg_mock.text = "Казань"
         user_msg_mock.delete = AsyncMock(return_value=True)
         from bot.bot import cleanup_user_message, KNOWN_BUTTON_TEXTS
         asyncio.run(cleanup_user_message(user_msg_mock))
         user_msg_mock.delete.assert_awaited_once()
 
-        # 5. Проверяем, что текст кнопки "📍 Сменить регион" находится в KNOWN_BUTTON_TEXTS
+        # 5. Проверяем, что /start никогда не удаляется (чтобы Telegram не сбрасывал сессию в «Начать»)
+        start_msg_mock = MagicMock()
+        start_msg_mock.text = "/start"
+        start_msg_mock.delete = AsyncMock(return_value=True)
+        asyncio.run(cleanup_user_message(start_msg_mock))
+        start_msg_mock.delete.assert_not_awaited()
+
+        # 6. Проверяем, что текст кнопки "📍 Сменить регион" находится в KNOWN_BUTTON_TEXTS
         self.assertIn("📍 Сменить регион", KNOWN_BUTTON_TEXTS)
 
 

@@ -44,6 +44,12 @@ KNOWN_BUTTON_TEXTS = {
 
 async def cleanup_user_message(message: types.Message) -> None:
     """Удаляет входящее служебное сообщение пользователя, чтобы не спамить в чате."""
+    # НИКОГДА не удаляем команду /start! В клиентах Telegram удаление /start
+    # сбрасывает сессию чата и возвращает гигантскую кнопку «Начать» вместо клавиатуры.
+    raw_text = (message.text or "").strip().lower()
+    if raw_text.startswith("/start"):
+        return
+
     try:
         await message.delete()
     except Exception as e:
@@ -136,7 +142,6 @@ def create_bot_dispatcher(
 
     @dp.message(Command("start"))
     async def cmd_start(message: types.Message):
-        await cleanup_user_message(message)
         chat_id = message.chat.id
         _keyboard_hidden_users[chat_id] = False
         webapp_url = getattr(settings, "WEBAPP_URL", "")
