@@ -45,7 +45,7 @@ def create_bot_dispatcher(margin_filter: Optional[MarginFilter] = None) -> Dispa
             "👋 <b>Добро пожаловать в Apple Resell Radar!</b>\n\n"
             "Высокоскоростной поисковый робот для перекупов Apple (Авито & Юла).\n\n"
             "⚡️ <b>Ключевые возможности:</b>\n"
-            "• Мгновенный перехват новых лотов (< 2 сек)\n"
+            "• Мгновенный перехват новых лотов (&lt; 2 сек)\n"
             "• 📉 Детекция <b>снижения цен</b> продавцами\n"
             "• 📸 <b>Фотокарточки</b> лотов прямо в ленте\n"
             "• 🔋 <b>Умный учет АКБ</b> (автоматическая скидка на замену)\n"
@@ -132,6 +132,7 @@ def create_bot_dispatcher(margin_filter: Optional[MarginFilter] = None) -> Dispa
 
     @dp.callback_query(F.data == "menu:main")
     async def cb_main_menu(callback: types.CallbackQuery):
+        await callback.answer()
         stats = filter_instance.get_stats()
         text = (
             "⚙️ <b>Панель управления Apple Resell Radar</b>\n\n"
@@ -139,8 +140,10 @@ def create_bot_dispatcher(margin_filter: Optional[MarginFilter] = None) -> Dispa
             "Выберите нужный раздел в меню ниже:"
         )
         if callback.message:
-            await callback.message.edit_text(text, reply_markup=get_main_menu_keyboard())
-        await callback.answer()
+            try:
+                await callback.message.edit_text(text, reply_markup=get_main_menu_keyboard())
+            except Exception as e:
+                logger.debug("Сообщение главного меню не изменилось: %s", e)
 
     @dp.callback_query(F.data == "menu:export_excel")
     async def cb_export_excel(callback: types.CallbackQuery):
@@ -181,24 +184,30 @@ def create_bot_dispatcher(margin_filter: Optional[MarginFilter] = None) -> Dispa
 
     @dp.callback_query(F.data == "menu:battery")
     async def cb_battery_info(callback: types.CallbackQuery):
+        await callback.answer()
         text = (
             "🔋 <b>Политика автоматической уценки на АКБ:</b>\n\n"
             "Бот автоматически считывает процент износа аккумулятора из описания и названия лота:\n\n"
             "• <b>АКБ ≥ 80%:</b> Выкуп по полной цене из матрицы.\n"
             "• <b>АКБ 75% – 79%:</b> Скидка <b>-2 500 ₽</b> (затраты на замену).\n"
-            "• <b>АКБ < 75%:</b> Скидка <b>-4 000 ₽</b> (премиум-замена банки с перепайкой BMS).\n\n"
+            "• <b>АКБ менее 75%:</b> Скидка <b>-4 000 ₽</b> (премиум-замена банки с перепайкой BMS).\n\n"
             "<i>💡 Таким образом бот защищает вас от неликвидных покупок с убитым аккумулятором!</i>"
         )
         if callback.message:
-            await callback.message.edit_text(text, reply_markup=get_back_to_menu_keyboard())
-        await callback.answer()
+            try:
+                await callback.message.edit_text(text, reply_markup=get_back_to_menu_keyboard())
+            except Exception as e:
+                logger.error("Ошибка при открытии политики АКБ: %s", e)
 
     @dp.callback_query(F.data == "menu:status")
     async def cb_status_menu(callback: types.CallbackQuery):
+        await callback.answer()
         text = _build_status_text(filter_instance)
         if callback.message:
-            await callback.message.edit_text(text, reply_markup=get_back_to_menu_keyboard())
-        await callback.answer()
+            try:
+                await callback.message.edit_text(text, reply_markup=get_back_to_menu_keyboard())
+            except Exception as e:
+                logger.error("Ошибка при открытии статуса: %s", e)
 
     return dp
 
@@ -214,7 +223,7 @@ def _build_status_text(filter_instance: MarginFilter) -> str:
         "• Детекция снижения цен: <b>АКТИВНА 📉</b>\n"
         "• Фотокарточки объявлений: <b>АКТИВНЫ 📸</b>\n"
         f"• Активных iPhone конфигураций: <b>{stats['active_configs']} из {stats['total_configs']}</b>\n"
-        "• Скорость реакции: <b>< 2.5 сек</b>\n"
+        "• Скорость реакции: <b>до 2.5 сек</b>\n"
     )
 
 
