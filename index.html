@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Матрица цен Apple Resell</title>
+  <title>Матрица цен гаджетов — Gadget Resell Radar</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
@@ -53,7 +53,7 @@
     }
 
     .header h1 {
-      font-size: 21px;
+      font-size: 20px;
       font-weight: 700;
       letter-spacing: -0.4px;
       display: flex;
@@ -128,7 +128,7 @@
       color: var(--text-muted);
     }
 
-    /* Селектор серий */
+    /* Селектор категорий */
     .series-bar {
       display: flex;
       gap: 8px;
@@ -196,8 +196,12 @@
       flex-wrap: wrap;
     }
 
-    .card-title {
+    .device-icon {
       font-size: 16px;
+    }
+
+    .card-title {
+      font-size: 15px;
       font-weight: 700;
       color: var(--text-main);
     }
@@ -213,7 +217,7 @@
 
     .badge-custom {
       background: rgba(48, 209, 88, 0.18);
-      color: #30D158;
+      color: var(--success-color);
       font-size: 11px;
       font-weight: 700;
       padding: 2px 6px;
@@ -223,7 +227,7 @@
     .card-actions {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
     .btn-delete {
@@ -233,80 +237,83 @@
       width: 28px;
       height: 28px;
       border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      font-size: 12px;
-      transition: all 0.15s ease;
+      transition: all 0.15s;
     }
     .btn-delete:active {
       transform: scale(0.9);
-      background: var(--danger-color);
-      color: #fff;
+      background: rgba(255, 69, 58, 0.3);
     }
 
-    /* iOS-Style Toggle Switch */
+    /* Переключатель вкл/выкл модели */
     .switch {
       position: relative;
       display: inline-block;
       width: 44px;
-      height: 24px;
+      height: 26px;
+      flex-shrink: 0;
     }
-    .switch input { opacity: 0; width: 0; height: 0; }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
     .slider {
       position: absolute;
       cursor: pointer;
       top: 0; left: 0; right: 0; bottom: 0;
       background-color: rgba(255, 255, 255, 0.16);
-      transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
-      border-radius: 24px;
+      transition: .25s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 26px;
     }
     .slider:before {
       position: absolute;
       content: "";
-      height: 18px;
-      width: 18px;
+      height: 20px;
+      width: 20px;
       left: 3px;
       bottom: 3px;
       background-color: white;
-      transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: .25s cubic-bezier(0.16, 1, 0.3, 1);
       border-radius: 50%;
     }
     input:checked + .slider {
-      background-color: var(--success-color);
+      background-color: var(--accent-color);
     }
     input:checked + .slider:before {
-      transform: translateX(20px);
+      transform: translateX(18px);
     }
 
-    /* Блок ввода цены */
+    /* Блок редактирования цены */
     .card-bottom {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
     .price-input-wrapper {
-      position: relative;
       flex: 1;
+      position: relative;
     }
-
     .price-input {
       width: 100%;
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--card-border);
       border-radius: 10px;
-      padding: 9px 34px 9px 12px;
+      padding: 8px 30px 8px 12px;
       color: #fff;
-      font-size: 16px;
+      font-size: 17px;
       font-weight: 700;
       outline: none;
-      transition: all 0.2s;
+      transition: border-color 0.2s;
     }
     .price-input:focus {
       border-color: var(--accent-color);
-      box-shadow: 0 0 10px var(--accent-glow);
     }
     .price-currency {
       position: absolute;
@@ -528,7 +535,7 @@
   <!-- Заголовок страницы -->
   <div class="header">
     <div class="header-row">
-      <h1>📱 Матрица цен</h1>
+      <h1>⚡️ Матрица цен гаджетов</h1>
       <button class="btn-add-model" id="btnOpenAddModal">
         <span>➕ Добавить модель</span>
       </button>
@@ -543,19 +550,19 @@
   <!-- Поиск по названию / памяти -->
   <div class="search-wrapper">
     <span class="search-icon">🔍</span>
-    <input type="text" class="search-input" id="searchInput" placeholder="Поиск по названию модели или памяти...">
+    <input type="text" class="search-input" id="searchInput" placeholder="Поиск (MacBook, S24, Pixel, iPad, iPhone...)">
   </div>
 
-  <!-- Фильтр по сериям -->
+  <!-- Фильтр по категориям -->
   <div class="series-bar" id="seriesBar">
     <div class="series-pill active" data-series="all">Все</div>
-    <div class="series-pill" data-series="16">iPhone 16</div>
-    <div class="series-pill" data-series="15">iPhone 15</div>
-    <div class="series-pill" data-series="14">iPhone 14</div>
-    <div class="series-pill" data-series="13">iPhone 13</div>
-    <div class="series-pill" data-series="12">iPhone 12</div>
-    <div class="series-pill" data-series="11">iPhone 11</div>
-    <div class="series-pill" data-series="custom">Свои ⭐</div>
+    <div class="series-pill" data-series="macbook">💻 Mac</div>
+    <div class="series-pill" data-series="iphone">📱 iPhone</div>
+    <div class="series-pill" data-series="samsung">📱 Samsung</div>
+    <div class="series-pill" data-series="pixel">📱 Pixel</div>
+    <div class="series-pill" data-series="ipad">📟 iPad</div>
+    <div class="series-pill" data-series="consoles">🎮 Консоли</div>
+    <div class="series-pill" data-series="custom">⭐ Свои</div>
   </div>
 
   <!-- Список моделей -->
@@ -581,38 +588,39 @@
       <div class="form-group">
         <label class="form-label">Быстрый выбор модели:</label>
         <div class="preset-chips" id="presetChips">
+          <span class="preset-chip" data-name="MacBook Air M1">MacBook Air M1</span>
+          <span class="preset-chip" data-name="MacBook Air M2 13">MacBook Air M2</span>
+          <span class="preset-chip" data-name="MacBook Pro 14 M1 Pro">MacBook Pro 14</span>
           <span class="preset-chip" data-name="iPhone 16 Pro Max">16 Pro Max</span>
           <span class="preset-chip" data-name="iPhone 16 Pro">16 Pro</span>
-          <span class="preset-chip" data-name="iPhone 16 Plus">16 Plus</span>
-          <span class="preset-chip" data-name="iPhone 16">16</span>
-          <span class="preset-chip" data-name="iPhone 15 Pro Max">15 Pro Max</span>
           <span class="preset-chip" data-name="iPhone 15 Pro">15 Pro</span>
-          <span class="preset-chip" data-name="iPhone 15">15</span>
-          <span class="preset-chip" data-name="iPhone 14 Pro Max">14 Pro Max</span>
-          <span class="preset-chip" data-name="iPhone 14 Pro">14 Pro</span>
-          <span class="preset-chip" data-name="iPhone 13 mini">13 mini</span>
-          <span class="preset-chip" data-name="iPhone SE 2022">SE 2022</span>
-          <span class="preset-chip" data-name="iPad Pro 11">iPad Pro</span>
-          <span class="preset-chip" data-name="AirPods Max">AirPods Max</span>
+          <span class="preset-chip" data-name="Samsung Galaxy S24 Ultra">S24 Ultra</span>
+          <span class="preset-chip" data-name="Samsung Galaxy S23 Ultra">S23 Ultra</span>
+          <span class="preset-chip" data-name="Google Pixel 9 Pro">Pixel 9 Pro</span>
+          <span class="preset-chip" data-name="Google Pixel 8 Pro">Pixel 8 Pro</span>
+          <span class="preset-chip" data-name="iPad Pro 11">iPad Pro 11</span>
+          <span class="preset-chip" data-name="PlayStation 5">PlayStation 5</span>
+          <span class="preset-chip" data-name="Steam Deck OLED">Steam Deck</span>
         </div>
       </div>
 
       <div class="form-group">
         <label class="form-label">Название модели:</label>
-        <input type="text" class="form-input" id="newModelName" placeholder="например: iPhone 16 Pro или iPad Pro">
+        <input type="text" class="form-input" id="newModelName" placeholder="например: MacBook Air M2 или S24 Ultra">
       </div>
 
       <div class="form-group">
-        <label class="form-label">Объем памяти (GB):</label>
+        <label class="form-label">Объем памяти (GB / SSD):</label>
         <div class="storage-options" id="storageOptions">
           <span class="storage-chip" data-storage="64">64 GB</span>
-          <span class="storage-chip active" data-storage="128">128 GB</span>
-          <span class="storage-chip" data-storage="256">256 GB</span>
+          <span class="storage-chip" data-storage="128">128 GB</span>
+          <span class="storage-chip active" data-storage="256">256 GB</span>
           <span class="storage-chip" data-storage="512">512 GB</span>
+          <span class="storage-chip" data-storage="825">825 GB</span>
           <span class="storage-chip" data-storage="1024">1 TB</span>
           <span class="storage-chip" data-storage="2048">2 TB</span>
         </div>
-        <input type="hidden" id="newModelStorage" value="128">
+        <input type="hidden" id="newModelStorage" value="256">
       </div>
 
       <div class="form-group">
@@ -640,39 +648,79 @@
       if (tg.setBackgroundColor) tg.setBackgroundColor('#080C14');
     }
 
-    // Базовый каталог моделей
+    // Базовый мульти-гаджет каталог моделей
     const DEFAULT_CATALOG = [
-      { key: "iPhone 16 Pro Max_256", model: "iPhone 16 Pro Max", storage: 256, series: "16", price: 105000, market: 125000, enabled: true },
-      { key: "iPhone 16 Pro Max_512", model: "iPhone 16 Pro Max", storage: 512, series: "16", price: 118000, market: 140000, enabled: true },
-      { key: "iPhone 16 Pro_128", model: "iPhone 16 Pro", storage: 128, series: "16", price: 88000, market: 104000, enabled: true },
-      { key: "iPhone 16 Pro_256", model: "iPhone 16 Pro", storage: 256, series: "16", price: 96000, market: 114000, enabled: true },
-      { key: "iPhone 16 Plus_128", model: "iPhone 16 Plus", storage: 128, series: "16", price: 72000, market: 85000, enabled: true },
-      { key: "iPhone 16_128", model: "iPhone 16", storage: 128, series: "16", price: 68000, market: 80000, enabled: true },
-      { key: "iPhone 15 Pro Max_256", model: "iPhone 15 Pro Max", storage: 256, series: "15", price: 82000, market: 97000, enabled: true },
-      { key: "iPhone 15 Pro_128", model: "iPhone 15 Pro", storage: 128, series: "15", price: 65000, market: 78000, enabled: true },
-      { key: "iPhone 15 Pro_256", model: "iPhone 15 Pro", storage: 256, series: "15", price: 72000, market: 85000, enabled: true },
-      { key: "iPhone 15 Plus_128", model: "iPhone 15 Plus", storage: 128, series: "15", price: 54000, market: 65000, enabled: true },
-      { key: "iPhone 15_128", model: "iPhone 15", storage: 128, series: "15", price: 50000, market: 60000, enabled: true },
-      { key: "iPhone 14 Pro Max_128", model: "iPhone 14 Pro Max", storage: 128, series: "14", price: 58000, market: 70000, enabled: true },
-      { key: "iPhone 14 Pro_128", model: "iPhone 14 Pro", storage: 128, series: "14", price: 50000, market: 60000, enabled: true },
-      { key: "iPhone 14 Plus_128", model: "iPhone 14 Plus", storage: 128, series: "14", price: 43000, market: 52000, enabled: true },
-      { key: "iPhone 14_128", model: "iPhone 14", storage: 128, series: "14", price: 40000, market: 48000, enabled: true },
-      { key: "iPhone 13 Pro Max_128", model: "iPhone 13 Pro Max", storage: 128, series: "13", price: 46000, market: 55000, enabled: true },
-      { key: "iPhone 13 Pro_128", model: "iPhone 13 Pro", storage: 128, series: "13", price: 38000, market: 46000, enabled: true },
-      { key: "iPhone 13 mini_128", model: "iPhone 13 mini", storage: 128, series: "13", price: 30000, market: 37000, enabled: true },
-      { key: "iPhone 13_128", model: "iPhone 13", storage: 128, series: "13", price: 32000, market: 39000, enabled: true },
-      { key: "iPhone 12 Pro Max_128", model: "iPhone 12 Pro Max", storage: 128, series: "12", price: 35000, market: 42000, enabled: true },
-      { key: "iPhone 12 Pro_128", model: "iPhone 12 Pro", storage: 128, series: "12", price: 28000, market: 34000, enabled: true },
-      { key: "iPhone 12_128", model: "iPhone 12", storage: 128, series: "12", price: 23000, market: 28000, enabled: true },
-      { key: "iPhone 11 Pro_64", model: "iPhone 11 Pro", storage: 64, series: "11", price: 18000, market: 22000, enabled: true },
-      { key: "iPhone 11_128", model: "iPhone 11", storage: 128, series: "11", price: 16000, market: 20000, enabled: true },
+      // MacBooks
+      { key: "MacBook Air M1_256", model: "MacBook Air M1", storage: 256, series: "macbook", price: 42000, market: 52000, enabled: true },
+      { key: "MacBook Air M2 13_256", model: "MacBook Air M2 13", storage: 256, series: "macbook", price: 62000, market: 74000, enabled: true },
+      { key: "MacBook Pro 14 M1 Pro_512", model: "MacBook Pro 14 M1 Pro", storage: 512, series: "macbook", price: 85000, market: 102000, enabled: true },
+      { key: "MacBook Pro 16 M1 Pro_512", model: "MacBook Pro 16 M1 Pro", storage: 512, series: "macbook", price: 98000, market: 118000, enabled: true },
+      // iPhones
+      { key: "iPhone 16 Pro Max_256", model: "iPhone 16 Pro Max", storage: 256, series: "iphone", price: 105000, market: 125000, enabled: true },
+      { key: "iPhone 16 Pro Max_512", model: "iPhone 16 Pro Max", storage: 512, series: "iphone", price: 118000, market: 140000, enabled: true },
+      { key: "iPhone 16 Pro_128", model: "iPhone 16 Pro", storage: 128, series: "iphone", price: 88000, market: 104000, enabled: true },
+      { key: "iPhone 16 Pro_256", model: "iPhone 16 Pro", storage: 256, series: "iphone", price: 96000, market: 114000, enabled: true },
+      { key: "iPhone 16 Plus_128", model: "iPhone 16 Plus", storage: 128, series: "iphone", price: 72000, market: 85000, enabled: true },
+      { key: "iPhone 16_128", model: "iPhone 16", storage: 128, series: "iphone", price: 68000, market: 80000, enabled: true },
+      { key: "iPhone 15 Pro Max_256", model: "iPhone 15 Pro Max", storage: 256, series: "iphone", price: 82000, market: 97000, enabled: true },
+      { key: "iPhone 15 Pro_128", model: "iPhone 15 Pro", storage: 128, series: "iphone", price: 65000, market: 78000, enabled: true },
+      { key: "iPhone 15 Pro_256", model: "iPhone 15 Pro", storage: 256, series: "iphone", price: 72000, market: 85000, enabled: true },
+      { key: "iPhone 15_128", model: "iPhone 15", storage: 128, series: "iphone", price: 50000, market: 60000, enabled: true },
+      { key: "iPhone 14 Pro Max_128", model: "iPhone 14 Pro Max", storage: 128, series: "iphone", price: 58000, market: 70000, enabled: true },
+      { key: "iPhone 14 Pro_128", model: "iPhone 14 Pro", storage: 128, series: "iphone", price: 50000, market: 60000, enabled: true },
+      { key: "iPhone 14_128", model: "iPhone 14", storage: 128, series: "iphone", price: 40000, market: 48000, enabled: true },
+      { key: "iPhone 13 Pro Max_128", model: "iPhone 13 Pro Max", storage: 128, series: "iphone", price: 46000, market: 55000, enabled: true },
+      { key: "iPhone 13 Pro_128", model: "iPhone 13 Pro", storage: 128, series: "iphone", price: 38000, market: 46000, enabled: true },
+      { key: "iPhone 13_128", model: "iPhone 13", storage: 128, series: "iphone", price: 32000, market: 39000, enabled: true },
+      { key: "iPhone 12_128", model: "iPhone 12", storage: 128, series: "iphone", price: 23000, market: 28000, enabled: true },
+      { key: "iPhone 11_128", model: "iPhone 11", storage: 128, series: "iphone", price: 16000, market: 20000, enabled: true },
+      // Samsung
+      { key: "Samsung Galaxy S24 Ultra_256", model: "Samsung Galaxy S24 Ultra", storage: 256, series: "samsung", price: 65000, market: 78000, enabled: true },
+      { key: "Samsung Galaxy S24 Ultra_512", model: "Samsung Galaxy S24 Ultra", storage: 512, series: "samsung", price: 74000, market: 88000, enabled: true },
+      { key: "Samsung Galaxy S24+_256", model: "Samsung Galaxy S24+", storage: 256, series: "samsung", price: 50000, market: 60000, enabled: true },
+      { key: "Samsung Galaxy S24_128", model: "Samsung Galaxy S24", storage: 128, series: "samsung", price: 42000, market: 51000, enabled: true },
+      { key: "Samsung Galaxy S23 Ultra_256", model: "Samsung Galaxy S23 Ultra", storage: 256, series: "samsung", price: 48000, market: 58000, enabled: true },
+      { key: "Samsung Galaxy Z Fold 5_256", model: "Samsung Galaxy Z Fold 5", storage: 256, series: "samsung", price: 58000, market: 70000, enabled: true },
+      // Pixel
+      { key: "Google Pixel 9 Pro_128", model: "Google Pixel 9 Pro", storage: 128, series: "pixel", price: 58000, market: 70000, enabled: true },
+      { key: "Google Pixel 8 Pro_128", model: "Google Pixel 8 Pro", storage: 128, series: "pixel", price: 42000, market: 50000, enabled: true },
+      { key: "Google Pixel 8_128", model: "Google Pixel 8", storage: 128, series: "pixel", price: 30000, market: 37000, enabled: true },
+      { key: "Google Pixel 7 Pro_128", model: "Google Pixel 7 Pro", storage: 128, series: "pixel", price: 27000, market: 33000, enabled: true },
+      // iPad
+      { key: "iPad Pro 11 M2_128", model: "iPad Pro 11 M2", storage: 128, series: "ipad", price: 52000, market: 63000, enabled: true },
+      { key: "iPad Pro 12.9 M2_128", model: "iPad Pro 12.9 M2", storage: 128, series: "ipad", price: 65000, market: 78000, enabled: true },
+      { key: "iPad Air 5 M1_64", model: "iPad Air 5 M1", storage: 64, series: "ipad", price: 34000, market: 41000, enabled: true },
+      { key: "iPad 10_64", model: "iPad 10", storage: 64, series: "ipad", price: 24000, market: 29000, enabled: true },
+      // Consoles
+      { key: "PlayStation 5_825", model: "PlayStation 5", storage: 825, series: "consoles", price: 32000, market: 39000, enabled: true },
+      { key: "PlayStation 5 Slim_1024", model: "PlayStation 5 Slim", storage: 1024, series: "consoles", price: 36000, market: 43000, enabled: true },
+      { key: "Steam Deck OLED_512", model: "Steam Deck OLED", storage: 512, series: "consoles", price: 38000, market: 46000, enabled: true },
     ];
+
+    // Определение иконки девайса
+    function getDeviceIcon(name, series) {
+      const lower = (name + ' ' + (series || '')).toLowerCase();
+      if (lower.includes('macbook') || lower.includes('mac') || series === 'macbook') return '💻';
+      if (lower.includes('ipad') || series === 'ipad') return '📟';
+      if (lower.includes('playstation') || lower.includes('ps5') || lower.includes('steam deck') || lower.includes('xbox') || series === 'consoles') return '🎮';
+      if (lower.includes('samsung') || series === 'samsung') return '📱';
+      if (lower.includes('pixel') || series === 'pixel') return '📱';
+      if (lower.includes('iphone') || series === 'iphone') return '📱';
+      return '⚡️';
+    }
 
     // Загружаем сохраненные данные из localStorage
     let currentMatrix = [];
     try {
-      const saved = localStorage.getItem('apple_resell_user_matrix');
+      const saved = localStorage.getItem('gadget_resell_user_matrix') || localStorage.getItem('apple_resell_user_matrix');
       currentMatrix = saved ? JSON.parse(saved) : DEFAULT_CATALOG;
+      // Приводим старые числовые серии айфонов к серии "iphone" если нужно
+      currentMatrix.forEach(item => {
+        if (!item.series || ["11", "12", "13", "14", "15", "16"].includes(item.series)) {
+          if (item.model.toLowerCase().includes('iphone')) item.series = 'iphone';
+          else if (item.model.toLowerCase().includes('macbook')) item.series = 'macbook';
+        }
+      });
     } catch (e) {
       currentMatrix = DEFAULT_CATALOG;
     }
@@ -694,9 +742,20 @@
       const query = searchQuery.toLowerCase().trim();
 
       const filtered = currentMatrix.filter(item => {
-        // Фильтр по серии
+        // Фильтр по категории/серии
         if (activeFilter === 'custom' && !item.isCustom) return false;
-        if (activeFilter !== 'all' && activeFilter !== 'custom' && item.series !== activeFilter) return false;
+        if (activeFilter !== 'all' && activeFilter !== 'custom') {
+          if (item.series !== activeFilter) {
+            // Мягкая проверка по вхождению в название
+            const lowerModel = item.model.toLowerCase();
+            if (activeFilter === 'iphone' && !lowerModel.includes('iphone')) return false;
+            else if (activeFilter === 'macbook' && !lowerModel.includes('mac')) return false;
+            else if (activeFilter === 'samsung' && !lowerModel.includes('samsung') && !lowerModel.includes('galaxy')) return false;
+            else if (activeFilter === 'pixel' && !lowerModel.includes('pixel')) return false;
+            else if (activeFilter === 'ipad' && !lowerModel.includes('ipad')) return false;
+            else if (activeFilter === 'consoles' && !lowerModel.includes('playstation') && !lowerModel.includes('steam deck') && !lowerModel.includes('ps5')) return false;
+          }
+        }
 
         // Поиск по тексту
         if (query) {
@@ -710,9 +769,9 @@
       if (filtered.length === 0) {
         container.innerHTML = `
           <div style="text-align:center; padding: 40px 10px; color: var(--text-muted)">
-            <p style="font-size: 24px; margin-bottom: 8px">🔍</p>
-            <p style="font-size: 15px; font-weight: 600">Конфигурации не найдены</p>
-            <p style="font-size: 13px; margin-top: 4px">Попробуйте изменить поисковый запрос или добавьте модель кнопкой выше.</p>
+            <p style="font-size: 28px; margin-bottom: 8px">🔍</p>
+            <p style="font-size: 15px; font-weight: 600">Гаджеты не найдены</p>
+            <p style="font-size: 13px; margin-top: 4px">Измените фильтр или добавьте свою модель кнопкой выше.</p>
           </div>
         `;
         updateStats();
@@ -725,10 +784,12 @@
 
         const storageText = item.storage >= 1024 ? `${item.storage / 1024} TB` : `${item.storage} GB`;
         const profitEst = Math.max(0, (item.market || Math.round(item.price * 1.2)) - item.price);
+        const icon = getDeviceIcon(item.model, item.series);
 
         card.innerHTML = `
           <div class="card-top">
             <div class="card-title-group">
+              <span class="device-icon">${icon}</span>
               <span class="card-title">${item.model}</span>
               <span class="badge-storage">${storageText}</span>
               ${item.isCustom ? '<span class="badge-custom">⭐ Своя</span>' : ''}
@@ -822,11 +883,11 @@
 
     function saveToLocalStorage() {
       try {
-        localStorage.setItem('apple_resell_user_matrix', JSON.stringify(currentMatrix));
+        localStorage.setItem('gadget_resell_user_matrix', JSON.stringify(currentMatrix));
       } catch (e) {}
     }
 
-    // Слушатели фильтров по сериям
+    // Слушатели фильтров по сериям/категориям
     document.querySelectorAll('.series-pill').forEach(pill => {
       pill.addEventListener('click', () => {
         if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
@@ -881,6 +942,18 @@
       }
     });
 
+    // Определение категории/серии при добавлении модели
+    function detectSeries(name) {
+      const lower = name.toLowerCase();
+      if (lower.includes('macbook') || lower.includes('mac')) return 'macbook';
+      if (lower.includes('samsung') || lower.includes('galaxy') || lower.includes('ultra')) return 'samsung';
+      if (lower.includes('pixel')) return 'pixel';
+      if (lower.includes('ipad')) return 'ipad';
+      if (lower.includes('playstation') || lower.includes('ps5') || lower.includes('steam deck') || lower.includes('xbox')) return 'consoles';
+      if (lower.includes('iphone')) return 'iphone';
+      return 'custom';
+    }
+
     // Добавление новой конфигурации
     document.getElementById('btnSubmitNewModel').addEventListener('click', () => {
       const name = document.getElementById('newModelName').value.trim();
@@ -898,13 +971,7 @@
       }
 
       const market = marketInput && marketInput > price ? marketInput : Math.round(price * 1.2 / 500) * 500;
-
-      // Авто-определение серии
-      let series = "custom";
-      for (const s of ["16", "15", "14", "13", "12", "11"]) {
-        if (name.includes(s)) { series = s; break; }
-      }
-
+      const series = detectSeries(name);
       const key = `${name}_${storage}`;
 
       // Проверка на существующую запись
