@@ -243,9 +243,7 @@ def create_bot_dispatcher(
             if updated:
                 ans = (
                     f"✅ <b>Регион поиска успешно изменен!</b>\n\n"
-                    f"📍 Новый активный регион: <b>{updated['name']}</b>\n"
-                    f"• Авито locationId: <code>{updated['avito_id']}</code>\n"
-                    f"• Юла: <code>{updated['youla_id'] or 'Вся Россия'}</code>\n\n"
+                    f"📍 Новый активный регион: <b>{updated['name']}</b>\n\n"
                     "Воркеры Авито и Юлы мгновенно переключились на поиск в новом регионе ⚡️"
                 )
                 if bot:
@@ -551,8 +549,6 @@ def create_bot_dispatcher(
         if updated:
             ans = (
                 f"✅ <b>Регион поиска успешно переключен на: {updated['name']}!</b>\n\n"
-                f"• Авито locationId: <code>{updated['avito_id']}</code>\n"
-                f"• Юла: <code>{updated['youla_id'] or 'Вся Россия'}</code>\n\n"
                 "Воркеры мгновенно начали мониторинг в новом регионе ⚡️"
             )
             if bot:
@@ -841,17 +837,16 @@ def create_bot_dispatcher(
 def _build_dashboard_text(
     filter_instance: MarginFilter,
     reg_manager: RegionManager,
-    chat_id: int | str,
+    chat_id: int | str = "",
 ) -> str:
     """Единое информативное сообщение панели управления (дашборд без спама)."""
     stats = filter_instance.get_stats()
     current_reg = reg_manager.current
     return (
         "⚡️ <b>Панель управления Gadget Resell Radar</b>\n\n"
-        f"📍 <b>Текущий регион:</b> {current_reg['name']} (Авито: <code>{current_reg['avito_id']}</code>, Юла: <code>{current_reg['youla_id'] or 'Вся Россия'}</code>)\n"
+        f"📍 <b>Текущий регион:</b> {current_reg['name']}\n"
         f"📱 <b>Конфигураций гаджетов:</b> {stats['active_configs']} из {stats['total_configs']} активны\n"
-        "📡 <b>Мониторинг:</b> Авито + Юла ⚡️ (Redis/SQLite, детекция дропов цен)\n"
-        f"🔑 <b>Chat ID:</b> <code>{chat_id}</code>\n\n"
+        "📡 <b>Мониторинг:</b> Авито + Юла ⚡️ (Redis/SQLite, детекция дропов цен)\n\n"
         "🕹 <b>Быстрое управление:</b>\n"
         "• <b>Кнопки внизу экрана:</b> всплывающая клавиатура быстрого доступа\n"
         "• <b>Смена региона:</b> напишите город прямо в чат (например: <code>Якутск</code>, <code>Омск</code>, <code>Казань</code>, <code>спб</code>) или команду <code>/city Название</code>\n"
@@ -870,11 +865,9 @@ def _build_status_text(
     """Генерирует форматированный статус работы мониторинга."""
     stats = filter_instance.get_stats()
     region_name = region_manager.current["name"] if region_manager else "Москва"
-    avito_loc = region_manager.current["avito_id"] if region_manager else settings.AVITO_LOCATION_ID
-    youla_loc = (region_manager.current["youla_id"] if region_manager else settings.YOULA_CITY_ID) or "Вся Россия"
     return (
         "🟢 <b>Статус мониторинга лотов:</b>\n\n"
-        f"• Текущий регион: <b>{region_name}</b> (Avito: {avito_loc}, Youla: {youla_loc})\n"
+        f"• Текущий регион: <b>{region_name}</b>\n"
         "• Воркер Авито: <b>АКТИВЕН ⚡️</b> (sort=104, первые 20 позиций)\n"
         "• Воркер Юла: <b>АКТИВЕН ⚡️</b> (web-api & REST выдача)\n"
         "• Дедупликация: <b>Redis + SQLite Local Fallback (48h)</b>\n"
