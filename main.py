@@ -9,6 +9,7 @@ from config import settings
 from core.models import RawItem
 from core.deduplicator import RedisDeduplicator
 from core.margin_filter import MarginFilter
+from core.regions import RegionManager
 from parsers.network import StealthHttpClient, ProxyPool
 from parsers.avito import AvitoWorker
 from parsers.youla import YoulaWorker
@@ -44,9 +45,14 @@ async def main() -> None:
     # 4. Фильтр маржинальности (матрица пороговых цен)
     margin_filter = MarginFilter()
 
-    # 5. Telegram Bot & Диспетчер мгновенных оповещений
+    # 5. Менеджер регионов поиска (Авито + Юла)
+    region_manager = RegionManager()
+    curr_reg = region_manager.current
+    logger.info("Активный регион поиска: %s (Авито: %s, Юла: %s)", curr_reg["name"], curr_reg["avito_id"], curr_reg["youla_id"])
+
+    # 6. Telegram Bot & Диспетчер мгновенных оповещений
     bot = create_bot()
-    bot_dp = create_bot_dispatcher(margin_filter=margin_filter)
+    bot_dp = create_bot_dispatcher(margin_filter=margin_filter, region_manager=region_manager)
     dispatcher = ItemDispatcher(
         bot=bot,
         queue=queue,
@@ -54,17 +60,24 @@ async def main() -> None:
         deduplicator=deduplicator,
     )
 
-    # 6. Независимые параллельные воркеры мониторинга
+    # 7. Независимые параллельные воркеры мониторинга
     avito_worker = AvitoWorker(
         queue=queue,
         deduplicator=deduplicator,
         http_client=http_client,
+        location_id=curr_reg["avito_id"],
     )
     youla_worker = YoulaWorker(
         queue=queue,
         deduplicator=deduplicator,
         http_client=http_client,
+        city_id=curr_reg["youla_id"],
     )
+    youla_worker.city_slug = curr_reg.get("youla_slug", "moskva")
+
+    # При смене региона в Telegram боте — мгновенно переключаем воркеры
+    region_manager.add_listener(lambda reg: avito_worker.set_location(reg["avito_id"]))
+    region_manager.add_listener(lambda reg: youla_worker.set_location(reg["youla_id"], reg.get("youla_slug", "moskva")))
 
     # Собираем фоновые задачи
     tasks = [

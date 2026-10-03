@@ -44,6 +44,11 @@ class AvitoWorker(BaseWorker):
         # Внутренний эндпоинт выдачи Авито
         self.api_url = "https://www.avito.ru/api/9/items"
 
+    def set_location(self, location_id: str) -> None:
+        """Динамическое переключение региона поиска Авито."""
+        self.location_id = location_id
+        logger.info("[Авито] Регион поиска переключен на locationId: %s", location_id)
+
     def _parse_time(self, raw_time: Any) -> Optional[datetime]:
         """
         Нормализует временную метку публикации в UTC datetime.

@@ -8,7 +8,7 @@ from core.deduplicator import RedisDeduplicator
 class TestRedisDeduplicator(unittest.IsolatedAsyncioTestCase):
     async def test_in_memory_deduplication(self):
         # Тестируем логику дедупликации (с Fallback на in-memory)
-        dedup = RedisDeduplicator(redis_url="redis://invalid-host:9999/0", ttl_hours=1)
+        dedup = RedisDeduplicator(redis_url="redis://invalid-host:9999/0", ttl_hours=1, db_path=":memory:")
         await dedup.connect()
 
         # Первый раз лот с ID 12345 должен быть новым
@@ -26,7 +26,7 @@ class TestRedisDeduplicator(unittest.IsolatedAsyncioTestCase):
         await dedup.close()
 
     async def test_price_drop_detection(self):
-        dedup = RedisDeduplicator(redis_url="redis://invalid-host:9999/0", ttl_hours=1)
+        dedup = RedisDeduplicator(redis_url="redis://invalid-host:9999/0", ttl_hours=1, db_path=":memory:")
         await dedup.connect()
 
         # 1. Первый раз: новый лот по цене 60 000 ₽

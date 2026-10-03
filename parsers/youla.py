@@ -43,8 +43,15 @@ class YoulaWorker(BaseWorker):
             max_item_age_seconds=max_item_age_seconds or settings.MAX_ITEM_AGE_SECONDS,
         )
         self.city_id = city_id or settings.YOULA_CITY_ID
+        self.city_slug = "moskva"
         self.graphql_url = "https://api-gw.youla.io/federation/graphql"
         self.rest_url = "https://api.youla.io/api/v1/products"
+
+    def set_location(self, city_id: str, city_slug: str = "moskva") -> None:
+        """Динамическое переключение региона поиска Юлы."""
+        self.city_id = city_id
+        self.city_slug = city_slug
+        logger.info("[Юла] Регион поиска переключен на city_id: %s, slug: %s", city_id, city_slug)
 
     async def _fetch_via_graphql(self) -> List[RawItem]:
         """Запрос через GraphQL эндпоинт federation API."""
@@ -107,7 +114,7 @@ class YoulaWorker(BaseWorker):
             "limit": "20",
         }
         headers = {
-            "Referer": "https://youla.ru/moskva?q=iPhone&sort_field=date",
+            "Referer": f"https://youla.ru/{self.city_slug}?q=iPhone&sort_field=date",
         }
 
         data = await self.http_client.get(
@@ -211,8 +218,11 @@ class YoulaWorker(BaseWorker):
             "sort_field": "date",
             "sort_order": "desc",
         }
+        if self.city_id:
+            params["city"] = self.city_id
+
         headers = {
-            "Referer": "https://youla.ru/moskva?q=iPhone&sort_field=date",
+            "Referer": f"https://youla.ru/{self.city_slug}?q=iPhone&sort_field=date",
         }
         data = await self.http_client.get(
             url="https://youla.ru/web-api/products",

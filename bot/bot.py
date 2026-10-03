@@ -12,8 +12,10 @@ from aiogram.types import BufferedInputFile
 from config import settings
 from core.margin_filter import MarginFilter
 from core.excel_manager import ExcelPricingManager
+from core.regions import RegionManager
 from bot.keyboards import (
     get_main_menu_keyboard,
+    get_regions_keyboard,
     get_models_menu_keyboard,
     get_back_to_menu_keyboard,
 )
@@ -29,10 +31,14 @@ def create_bot() -> Bot:
     )
 
 
-def create_bot_dispatcher(margin_filter: Optional[MarginFilter] = None) -> Dispatcher:
+def create_bot_dispatcher(
+    margin_filter: Optional[MarginFilter] = None,
+    region_manager: Optional[RegionManager] = None,
+) -> Dispatcher:
     """Создает Dispatcher команд и инлайн-обработчиков для управления ботом."""
     dp = Dispatcher()
     filter_instance = margin_filter if margin_filter is not None else MarginFilter()
+    reg_manager = region_manager if region_manager is not None else RegionManager()
 
     # ---------------------------------------------------------
     # КОМАНДЫ БОТА
@@ -41,11 +47,13 @@ def create_bot_dispatcher(margin_filter: Optional[MarginFilter] = None) -> Dispa
     @dp.message(Command("start"))
     async def cmd_start(message: types.Message):
         chat_id = message.chat.id
+        current_reg_name = reg_manager.current["name"]
         text = (
             "👋 <b>Добро пожаловать в Apple Resell Radar!</b>\n\n"
             "Высокоскоростной поисковый робот для перекупов Apple (Авито & Юла).\n\n"
             "⚡️ <b>Ключевые возможности:</b>\n"
             "• Мгновенный перехват новых лотов (&lt; 2 сек)\n"
+            f"• 📍 Регион поиска: <b>{current_reg_name}</b> (смена через кнопку или /city)\n"
             "• 📉 Детекция <b>снижения цен</b> продавцами\n"
             "• 📸 <b>Фотокарточки</b> лотов прямо в ленте\n"
             "• 🔋 <b>Умный учет АКБ</b> (автоматическая скидка на замену)\n"
@@ -53,21 +61,65 @@ def create_bot_dispatcher(margin_filter: Optional[MarginFilter] = None) -> Dispa
             f"🔑 <b>Ваш Chat ID:</b> <code>{chat_id}</code>\n\n"
             "📌 <b>Команды:</b>\n"
             "• /menu — Главное меню настроек и фильтров\n"
+            "• /city — Смена региона поиска (или напишите название города)\n"
             "• /export_prices — Скачать текущий прайс-лист в Excel\n"
             "• /status — Статус воркеров и мониторинга\n\n"
             "<i>💡 Чтобы обновить цены выкупа, просто отправьте отредактированный файл .xlsx в этот чат!</i>"
         )
-        await message.answer(text, reply_markup=get_main_menu_keyboard())
+        await message.answer(text, reply_markup=get_main_menu_keyboard(current_reg_name))
 
     @dp.message(Command("menu", "settings"))
     async def cmd_menu(message: types.Message):
         stats = filter_instance.get_stats()
+        current_reg_name = reg_manager.current["name"]
         text = (
             "⚙️ <b>Панель управления Apple Resell Radar</b>\n\n"
-            f"📱 Активных конфигураций: <b>{stats['active_configs']} из {stats['total_configs']}</b>\n"
+            f"📍 Текущий регион: <b>{current_reg_name}</b>\n"
+            f"📱 Активных конфигураций: <b>{stats['active_configs']} из {stats['total_configs']}</b>\n\n"
             "Выберите нужный раздел в меню ниже:"
         )
-        await message.answer(text, reply_markup=get_main_menu_keyboard())
+        await message.answer(text, reply_markup=get_main_menu_keyboard(current_reg_name))
+
+    @dp.message(Command("city", "region"))
+    async def cmd_city(message: types.Message):
+        text_parts = (message.text or "").strip().split(maxsplit=1)
+        if len(text_parts) > 1:
+            city_query = text_parts[1].strip()
+            updated = reg_manager.set_region(city_query)
+            if updated:
+                ans = (
+                    f"✅ <b>Регион поиска успешно изменен!</b>\n\n"
+                    f"📍 Новый регион: <b>{updated['name']}</b>\n"
+                    f"• Авито locationId: <code>{updated['avito_id']}</code>\n"
+                    f"• Юла: <code>{updated['youla_id'] or 'Вся Россия'}</code>\n\n"
+                    "Воркеры Авито и Юлы мгновенно переключились на поиск в новом регионе ⚡️"
+                )
+                await message.answer(ans, reply_markup=get_main_menu_keyboard(updated["name"]))
+                return
+            else:
+                matches = reg_manager.find_cities(city_query)
+                if matches:
+                    hints = "\n".join(f"• <code>/city {m[1]['name']}</code>" for m in matches[:5])
+                    ans = (
+                        f"🔍 Город «{city_query}» не найден точно. Возможно, вы имели в виду:\n\n"
+                        f"{hints}\n\n"
+                        "Или выберите город из списка ниже:"
+                    )
+                else:
+                    ans = (
+                        f"❌ Город «{city_query}» не найден в базе.\n\n"
+                        "Пожалуйста, выберите город из списка популярных ниже:"
+                    )
+                await message.answer(ans, reply_markup=get_regions_keyboard(reg_manager.current["key"]))
+                return
+
+        current_reg = reg_manager.current
+        text = (
+            "📍 <b>Настройка региона поиска (Авито & Юла):</b>\n\n"
+            f"Текущий регион: <b>{current_reg['name']}</b>\n\n"
+            "Выберите город кнопкой ниже или напишите <code>/city Название</code> (например: <code>/city Самара</code>, <code>/city Екатеринбург</code> или <code>/city спб</code>):"
+        )
+        await message.answer(text, reply_markup=get_regions_keyboard(current_reg["key"]))
 
     @dp.message(Command("export_prices"))
     async def cmd_export_prices(message: types.Message):
@@ -75,8 +127,8 @@ def create_bot_dispatcher(margin_filter: Optional[MarginFilter] = None) -> Dispa
 
     @dp.message(Command("status"))
     async def cmd_status(message: types.Message):
-        text = _build_status_text(filter_instance)
-        await message.answer(text, reply_markup=get_main_menu_keyboard())
+        text = _build_status_text(filter_instance, reg_manager)
+        await message.answer(text, reply_markup=get_main_menu_keyboard(reg_manager.current["name"]))
 
     # ---------------------------------------------------------
     # ЗАГРУЗКА EXCEL ПРАЙС-ЛИСТА (.XLSX)
@@ -127,6 +179,38 @@ def create_bot_dispatcher(margin_filter: Optional[MarginFilter] = None) -> Dispa
             await status_msg.edit_text(f"❌ <b>Сбой обработки файла:</b> {e}")
 
     # ---------------------------------------------------------
+    # ВВОД ГОРОДА ТЕКСТОМ
+    # ---------------------------------------------------------
+
+    @dp.message(F.text & ~F.text.startswith("/"))
+    async def handle_city_text_search(message: types.Message):
+        query = (message.text or "").strip()
+        if not query or len(query) > 40:
+            return
+
+        # Пробуем распознать город или алиас
+        updated = reg_manager.set_region(query)
+        if updated:
+            ans = (
+                f"✅ <b>Регион поиска успешно переключен на: {updated['name']}!</b>\n\n"
+                f"• Авито locationId: <code>{updated['avito_id']}</code>\n"
+                f"• Юла: <code>{updated['youla_id'] or 'Вся Россия'}</code>\n\n"
+                "Воркеры мгновенно начали мониторинг в новом регионе ⚡️"
+            )
+            await message.answer(ans, reply_markup=get_main_menu_keyboard(updated["name"]))
+            return
+
+        # Если прямого совпадения нет, ищем подсказки
+        matches = reg_manager.find_cities(query)
+        if matches:
+            hints = "\n".join(f"• <code>/city {m[1]['name']}</code>" for m in matches[:5])
+            ans = (
+                f"🔍 По запросу «{query}» найдены города:\n\n{hints}\n\n"
+                "Или выберите город из списка:"
+            )
+            await message.answer(ans, reply_markup=get_regions_keyboard(reg_manager.current["key"]))
+
+    # ---------------------------------------------------------
     # ИНЛАЙН-КОЛЛБЭКИ МЕНЮ
     # ---------------------------------------------------------
 
@@ -134,16 +218,63 @@ def create_bot_dispatcher(margin_filter: Optional[MarginFilter] = None) -> Dispa
     async def cb_main_menu(callback: types.CallbackQuery):
         await callback.answer()
         stats = filter_instance.get_stats()
+        current_reg_name = reg_manager.current["name"]
         text = (
             "⚙️ <b>Панель управления Apple Resell Radar</b>\n\n"
-            f"📱 Активных конфигураций: <b>{stats['active_configs']} из {stats['total_configs']}</b>\n"
+            f"📍 Текущий регион: <b>{current_reg_name}</b>\n"
+            f"📱 Активных конфигураций: <b>{stats['active_configs']} из {stats['total_configs']}</b>\n\n"
             "Выберите нужный раздел в меню ниже:"
         )
         if callback.message:
             try:
-                await callback.message.edit_text(text, reply_markup=get_main_menu_keyboard())
+                await callback.message.edit_text(text, reply_markup=get_main_menu_keyboard(current_reg_name))
             except Exception as e:
                 logger.debug("Сообщение главного меню не изменилось: %s", e)
+
+    @dp.callback_query(F.data == "menu:region")
+    async def cb_regions_menu(callback: types.CallbackQuery):
+        await callback.answer()
+        current_reg = reg_manager.current
+        text = (
+            "📍 <b>Выбор региона поиска (Авито & Юла):</b>\n\n"
+            f"Текущий активный регион: <b>{current_reg['name']}</b>\n\n"
+            "Выберите город из популярных ниже или отправьте команду <code>/city Название</code> (например, <code>/city Казань</code> или <code>/city спб</code>):"
+        )
+        if callback.message:
+            try:
+                await callback.message.edit_text(text, reply_markup=get_regions_keyboard(current_reg["key"]))
+            except Exception as e:
+                logger.debug("Ошибка обновления меню регионов: %s", e)
+
+    @dp.callback_query(F.data.startswith("set_region:"))
+    async def cb_set_region(callback: types.CallbackQuery):
+        region_key = callback.data.split(":")[1]
+        updated = reg_manager.set_region(region_key)
+        if updated:
+            await callback.answer(f"Регион изменен на {updated['name']} ✅")
+            stats = filter_instance.get_stats()
+            text = (
+                f"✅ <b>Регион поиска успешно изменен на: {updated['name']}</b>\n\n"
+                "⚙️ <b>Панель управления Apple Resell Radar</b>\n\n"
+                f"📍 Текущий регион: <b>{updated['name']}</b>\n"
+                f"📱 Активных конфигураций: <b>{stats['active_configs']} из {stats['total_configs']}</b>\n\n"
+                "Выберите нужный раздел в меню ниже:"
+            )
+            if callback.message:
+                await callback.message.edit_text(text, reply_markup=get_main_menu_keyboard(updated["name"]))
+        else:
+            await callback.answer("Ошибка: регион не найден", show_alert=True)
+
+    @dp.callback_query(F.data == "region:custom")
+    async def cb_region_custom(callback: types.CallbackQuery):
+        await callback.answer()
+        text = (
+            "🔍 <b>Поиск города по названию:</b>\n\n"
+            "Напишите в чат команду <code>/city Название</code> (например: <code>/city Самара</code>, <code>/city Тюмень</code>, <code>/city спб</code>).\n\n"
+            "Или выберите один из популярных городов ниже:"
+        )
+        if callback.message:
+            await callback.message.edit_text(text, reply_markup=get_regions_keyboard(reg_manager.current["key"]))
 
     @dp.callback_query(F.data == "menu:export_excel")
     async def cb_export_excel(callback: types.CallbackQuery):
@@ -202,7 +333,7 @@ def create_bot_dispatcher(margin_filter: Optional[MarginFilter] = None) -> Dispa
     @dp.callback_query(F.data == "menu:status")
     async def cb_status_menu(callback: types.CallbackQuery):
         await callback.answer()
-        text = _build_status_text(filter_instance)
+        text = _build_status_text(filter_instance, reg_manager)
         if callback.message:
             try:
                 await callback.message.edit_text(text, reply_markup=get_back_to_menu_keyboard())
@@ -212,14 +343,21 @@ def create_bot_dispatcher(margin_filter: Optional[MarginFilter] = None) -> Dispa
     return dp
 
 
-def _build_status_text(filter_instance: MarginFilter) -> str:
+def _build_status_text(
+    filter_instance: MarginFilter,
+    region_manager: Optional[RegionManager] = None,
+) -> str:
     """Генерирует форматированный статус работы мониторинга."""
     stats = filter_instance.get_stats()
+    region_name = region_manager.current["name"] if region_manager else "Москва"
+    avito_loc = region_manager.current["avito_id"] if region_manager else settings.AVITO_LOCATION_ID
+    youla_loc = (region_manager.current["youla_id"] if region_manager else settings.YOULA_CITY_ID) or "Вся Россия"
     return (
         "🟢 <b>Статус мониторинга лотов:</b>\n\n"
+        f"• Текущий регион: <b>{region_name}</b> (Avito: {avito_loc}, Youla: {youla_loc})\n"
         "• Воркер Авито: <b>АКТИВЕН ⚡️</b> (sort=104, первые 20 позиций)\n"
         "• Воркер Юла: <b>АКТИВЕН ⚡️</b> (web-api & REST выдача)\n"
-        "• Дедупликация: <b>Redis + Memory Fallback (48h)</b>\n"
+        "• Дедупликация: <b>Redis + SQLite Local Fallback (48h)</b>\n"
         "• Детекция снижения цен: <b>АКТИВНА 📉</b>\n"
         "• Фотокарточки объявлений: <b>АКТИВНЫ 📸</b>\n"
         f"• Активных iPhone конфигураций: <b>{stats['active_configs']} из {stats['total_configs']}</b>\n"
