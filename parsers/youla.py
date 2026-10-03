@@ -219,17 +219,23 @@ class YoulaWorker(BaseWorker):
 
     async def _fetch_via_web_api(self) -> List[RawItem]:
         """Парсинг выдачи через web-api Юлы со строгой валидацией времени публикации."""
+        q_text = self.queries[self._query_idx % len(self.queries)]
+        self._query_idx += 1
+
         params = {
-            "q": "iPhone",
+            "q": q_text,
             "sort_field": "date",
             "sort_order": "desc",
         }
-        if self.city_id:
-            params["city"] = self.city_id
 
         headers = {
-            "Referer": f"https://youla.ru/{self.city_slug}?q=iPhone&sort_field=date",
+            "Referer": f"https://youla.ru/{self.city_slug}?q={q_text}&sort_field=date",
         }
+        if self.city_slug and self.city_slug != "rossiya":
+            import urllib.parse
+            loc_cookie = urllib.parse.quote(json.dumps({"citySlug": self.city_slug}))
+            headers["Cookie"] = f"location={loc_cookie}"
+
         data = await self.http_client.get(
             url="https://youla.ru/web-api/products",
             params=params,
