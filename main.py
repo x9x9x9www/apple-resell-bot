@@ -11,6 +11,7 @@ from core.deduplicator import RedisDeduplicator
 from core.margin_filter import MarginFilter
 from core.regions import RegionManager
 from core.link_stream import StreamManager
+from core.user_profile import UserProfileManager
 from parsers.network import StealthHttpClient, ProxyPool
 from parsers.avito import AvitoWorker
 from parsers.youla import YoulaWorker
@@ -51,9 +52,11 @@ async def main() -> None:
     curr_reg = region_manager.current
     logger.info("Активный регион поиска: %s (Авито: %s, Юла: %s)", curr_reg["name"], curr_reg["avito_id"], curr_reg["youla_id"])
 
-    # 6. Менеджер потоков мониторинга по ссылкам (Multi-Stream)
+    # 6. Менеджер потоков мониторинга по ссылкам (Multi-Stream) и профилей перекупщиков
     stream_manager = StreamManager()
     logger.info("Загружено активных пользовательских стримов: %d", len(stream_manager.get_all_active_streams()))
+    user_profile_manager = UserProfileManager()
+    logger.info("Менеджер профилей перекупщиков инициализирован.")
 
     # 7. Telegram Bot & Диспетчер мгновенных оповещений
     bot = create_bot()
@@ -61,6 +64,7 @@ async def main() -> None:
         margin_filter=margin_filter,
         region_manager=region_manager,
         stream_manager=stream_manager,
+        user_profile_manager=user_profile_manager,
     )
     dispatcher = ItemDispatcher(
         bot=bot,
@@ -69,6 +73,7 @@ async def main() -> None:
         deduplicator=deduplicator,
         region_manager=region_manager,
         stream_manager=stream_manager,
+        user_profile_manager=user_profile_manager,
     )
 
     # 8. Независимые параллельные воркеры мониторинга
@@ -85,6 +90,7 @@ async def main() -> None:
         deduplicator=deduplicator,
         http_client=http_client,
         city_id=curr_reg["youla_id"],
+        stream_manager=stream_manager,
     )
     youla_worker.city_slug = curr_reg.get("youla_slug", "moskva")
     youla_worker.city_name = curr_reg.get("name", "Москва")

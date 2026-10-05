@@ -12,6 +12,7 @@ from core.parser import IPhoneNLPParser
 from core.margin_filter import MarginFilter
 from core.deduplicator import RedisDeduplicator
 from core.regions import RegionManager
+from core.user_profile import UserProfileManager
 from bot.keyboards import get_item_keyboard
 
 from aiogram.types import LinkPreviewOptions
@@ -56,6 +57,27 @@ def format_lot_message(item: ParsedIPhone) -> str:
         penalty_fmt = f"{item.battery_penalty:,}".replace(",", " ")
         battery_penalty_text = f" <i>(Уценка на замену: -{penalty_fmt} ₽)</i>"
 
+    # Дефекты и уценка
+    condition_notes = []
+    if getattr(item, "has_no_face_id", False):
+        condition_notes.append("Без Face ID")
+    if getattr(item, "is_mdm_rsim", False):
+        condition_notes.append("MDM/R-Sim")
+    if getattr(item, "has_defects", False):
+        if getattr(item, "defect_reasons", None):
+            condition_notes.append(", ".join(item.defect_reasons))
+        else:
+            condition_notes.append("дефект")
+
+    defect_line = ""
+    if condition_notes or getattr(item, "defect_penalty", 0) > 0:
+        penalty_text = ""
+        if getattr(item, "defect_penalty", 0) > 0:
+            p_fmt = f"{item.defect_penalty:,}".replace(",", " ")
+            penalty_text = f" <i>(Уценка: -{p_fmt} ₽)</i>"
+        notes_str = "; ".join(condition_notes) if condition_notes else "Зафиксирован дефект"
+        defect_line = f"\n🛠 <b>Дефекты:</b> {notes_str}{penalty_text}"
+
     # Разделитель тысяч в цене
     price_formatted = f"{item.price:,}".replace(",", " ")
 
@@ -64,6 +86,13 @@ def format_lot_message(item: ParsedIPhone) -> str:
     if item.profit and item.profit > 0:
         profit_formatted = f"{item.profit:,}".replace(",", " ")
         profit_text = f" <i>(Ниже рынка на ~{profit_formatted} ₽)</i>"
+
+    # Расчет профита и лимита
+    calc_line = ""
+    if item.max_buy_price and item.market_price:
+        mkt_fmt = f"{item.market_price:,}".replace(",", " ")
+        limit_fmt = f"{item.max_buy_price:,}".replace(",", " ")
+        calc_line = f"\n📊 <b>Расчет:</b> Рынок ~{mkt_fmt} ₽ | Лимит: {limit_fmt} ₽"
 
     # Заголовок и блок цены в зависимости от снижения цены
     if item.is_price_drop and item.old_price:
@@ -93,8 +122,10 @@ def format_lot_message(item: ParsedIPhone) -> str:
         f"{header}\n\n"
         f"{model_icon} <b>Модель:</b> {item.model}\n"
         f"💾 <b>Память:</b> {storage_display}\n"
-        f"🔋 <b>АКБ:</b> {battery_display}{battery_penalty_text}\n"
-        f"{price_line}\n"
+        f"🔋 <b>АКБ:</b> {battery_display}{battery_penalty_text}"
+        f"{defect_line}\n"
+        f"{price_line}"
+        f"{calc_line}\n"
         f"📍 <b>Локация:</b> {item.location}"
         f"{seller_line}"
         f"{reserve_line}"
@@ -126,6 +157,7 @@ class ItemDispatcher:
         deduplicator: Optional[RedisDeduplicator] = None,
         region_manager: Optional[RegionManager] = None,
         stream_manager: Optional[Any] = None,
+        user_profile_manager: Optional[UserProfileManager] = None,
     ):
         self.bot = bot
         self.queue = queue
@@ -134,6 +166,7 @@ class ItemDispatcher:
         self.deduplicator = deduplicator
         self.region_manager = region_manager
         self.stream_manager = stream_manager
+        self.user_profile_manager = user_profile_manager
         self.is_running = False
 
     async def start(self) -> None:
@@ -200,8 +233,16 @@ class ItemDispatcher:
             )
             return
 
-        # 2. Фильтр маржинальности (цена_лота <= лимит_цены)
-        is_profitable = self.margin_filter.evaluate(parsed_item)
+        # 2. Фильтр маржинальности и правил состояния (индивидуальный профиль или общая матрица)
+        is_profitable = False
+        if self.user_profile_manager and target_chat:
+            profile = self.user_profile_manager.get_or_create_profile(target_chat)
+            is_profitable, reason, _ = self.user_profile_manager.evaluate_item(profile, parsed_item)
+            if not is_profitable and reason:
+                parsed_item.rejection_reason = reason
+        else:
+            is_profitable = self.margin_filter.evaluate(parsed_item)
+
         if not is_profitable:
             logger.info(
                 "[%s] Лот #%s '%s %dGB' за %d ₽ отклонен: %s",

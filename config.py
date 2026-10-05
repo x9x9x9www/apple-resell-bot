@@ -33,19 +33,19 @@ class Settings(BaseSettings):
 
     # Redis & Deduplication
     REDIS_URL: str = Field(default="redis://localhost:6379/0")
-    REDIS_TTL_HOURS: int = Field(default=48)
+    REDIS_TTL_HOURS: int = Field(default=24)
     DEDUP_DB_FILE: str = Field(default="dedup_cache.db")
     MIN_PRICE_DROP_RUB: int = Field(default=500)  # Минимальная скидка для алерта (отсекает колебания)
-    SEMANTIC_DEDUP_WINDOW_HOURS: int = Field(default=12)  # Окно отсева семантических дублей (часов)
+    SEMANTIC_DEDUP_WINDOW_HOURS: int = Field(default=6)  # Окно отсева семантических дублей (часов)
 
     # Latency & Monitoring Settings
-    MAX_ITEM_AGE_SECONDS: int = Field(default=300)  # 5 min freshness window
+    MAX_ITEM_AGE_SECONDS: int = Field(default=21600)  # 6 hours freshness window
     AVITO_POLL_INTERVAL_SEC: float = Field(default=3.0)
     YOULA_POLL_INTERVAL_SEC: float = Field(default=3.0)
 
     # Regional search
     AVITO_LOCATION_ID: str = Field(default="637640")  # Москва
-    YOULA_CITY_ID: str = Field(default="576d06124994ee94589d8194")  # Москва
+    YOULA_CITY_ID: str = Field(default="576d0612d53f3d80945f8b5d")  # Москва (новая система geo-ID Юлы, 2026)
 
     # Proxies
     PROXIES_FILE: str = Field(default="proxies.txt")

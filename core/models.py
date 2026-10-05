@@ -50,6 +50,11 @@ class ParsedGadget(BaseModel):
     old_price: Optional[int] = None  # Предыдущая цена при снижении
     is_price_drop: bool = False  # Флаг снижения цены
     battery_penalty: int = 0  # Снижение лимита из-за износа батареи
+    defect_penalty: int = 0  # Снижение лимита из-за дефектов
+    has_defects: bool = False  # Наличие дефектов (трещины, замены, битый)
+    defect_reasons: list[str] = Field(default_factory=list)  # Список обнаруженных дефектов
+    has_no_face_id: bool = False  # Не работает Face ID / Touch ID / True Tone
+    is_mdm_rsim: bool = False  # Блокировка MDM, Demo, R-Sim
     max_buy_price: Optional[int] = None  # Лимит выкупа
     market_price: Optional[int] = None  # Среднерыночная цена
     profit: Optional[int] = None  # market_price - price

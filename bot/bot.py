@@ -22,6 +22,12 @@ from core.margin_filter import MarginFilter
 from core.excel_manager import ExcelPricingManager
 from core.regions import RegionManager
 from core.link_stream import StreamManager, SearchStream, parse_search_url
+from core.user_profile import (
+    UserProfileManager,
+    UserResellProfile,
+    UserConditionRules,
+    UserModelConfig,
+)
 from bot.keyboards import (
     get_main_menu_keyboard,
     get_regions_keyboard,
@@ -144,12 +150,14 @@ def create_bot_dispatcher(
     margin_filter: Optional[MarginFilter] = None,
     region_manager: Optional[RegionManager] = None,
     stream_manager: Optional[StreamManager] = None,
+    user_profile_manager: Optional[UserProfileManager] = None,
 ) -> Dispatcher:
     """Создает Dispatcher команд и инлайн-обработчиков для управления ботом."""
     dp = Dispatcher()
     filter_instance = margin_filter if margin_filter is not None else MarginFilter()
     reg_manager = region_manager if region_manager is not None else RegionManager()
     stream_mgr = stream_manager if stream_manager is not None else StreamManager()
+    user_profile_mgr = user_profile_manager if user_profile_manager is not None else UserProfileManager()
 
     global _active_region_manager
     _active_region_manager = reg_manager
@@ -413,7 +421,83 @@ def create_bot_dispatcher(
             raw_payload = json.loads(message.web_app_data.data)
             action = raw_payload.get("action")
 
-            if action in ("update_matrix", "sync_matrix"):
+            if action == "save_resell_profile":
+                user_id = message.chat.id
+                target_margin = int(raw_payload.get("target_margin", 5000))
+                cond_data = raw_payload.get("condition_rules", {})
+                models_data = raw_payload.get("models", [])
+
+                condition_rules = UserConditionRules(
+                    battery_threshold=int(cond_data.get("battery_threshold", 80)),
+                    battery_discount=int(cond_data.get("battery_discount", 3000)),
+                    allow_defects=bool(cond_data.get("allow_defects", False)),
+                    defect_discount=int(cond_data.get("defect_discount", 8000)),
+                    ignore_no_face_id=bool(cond_data.get("ignore_no_face_id", True)),
+                    ignore_mdm_rsim=bool(cond_data.get("ignore_mdm_rsim", True)),
+                    ignore_replicas=bool(cond_data.get("ignore_replicas", True)),
+                )
+
+                profile = user_profile_mgr.get_or_create_profile(user_id)
+                profile.target_margin = target_margin
+                profile.condition_rules = condition_rules
+
+                active_count = 0
+                for item in models_data:
+                    m_name = str(item.get("model", "")).strip()
+                    s_val = int(item.get("storage", 128)) if str(item.get("storage", "")).isdigit() else 128
+                    if not m_name:
+                        continue
+                    m_buy = int(item.get("price") or item.get("max_buy", 0))
+                    mkt = int(item.get("market", int(m_buy * 1.2) if m_buy > 0 else 0))
+                    en = bool(item.get("enabled", True))
+                    min_p = int(item.get("min_price", 0))
+
+                    if m_name not in profile.models:
+                        profile.models[m_name] = {}
+                    profile.models[m_name][str(s_val)] = UserModelConfig(
+                        model=m_name,
+                        storage=s_val,
+                        enabled=en,
+                        min_price=min_p,
+                        max_buy=m_buy,
+                        market=mkt,
+                    )
+                    if en:
+                        active_count += 1
+
+                    # Синхронизируем также глобальную матрицу
+                    if m_name not in filter_instance.matrix:
+                        filter_instance.matrix[m_name] = {}
+                    filter_instance.matrix[m_name][str(s_val)] = {
+                        "max_buy": m_buy,
+                        "market": mkt,
+                        "enabled": en,
+                    }
+
+                user_profile_mgr.save_profile(profile)
+                filter_instance.save_matrix()
+                filter_instance.reload_matrix()
+
+                defects_status = f"Скидка -{condition_rules.defect_discount:,} ₽" if condition_rules.allow_defects else "🚫 Запрещены"
+                face_status = "❌ Отсекать" if condition_rules.ignore_no_face_id else "Пропускать"
+                mdm_status = "❌ Отсекать" if condition_rules.ignore_mdm_rsim else "Пропускать"
+
+                text = (
+                    "🎯 <b>Персональный профиль перекупщика сохранен!</b>\n\n"
+                    f"💰 <b>Минимальная маржа:</b> от <code>{target_margin:,} ₽</code>\n"
+                    f"🔋 <b>Уценка АКБ &lt;{condition_rules.battery_threshold}%:</b> -<code>{condition_rules.battery_discount:,} ₽</code>\n"
+                    f"🛠 <b>Лоты с дефектами:</b> <b>{defects_status}</b>\n"
+                    f"🛡 <b>Без Face ID:</b> <b>{face_status}</b> | <b>MDM/R-Sim:</b> <b>{mdm_status}</b>\n"
+                    f"📱 <b>Активных конфигураций:</b> <b>{active_count}</b>\n\n"
+                    "⚡️ <i>Все новые объявления с Авито и Юлы мгновенно оцениваются по вашим новым правилам!</i>"
+                )
+                bot = message.bot
+                if bot:
+                    await send_or_replace_functional_message(chat_id=message.chat.id, bot=bot, text=text)
+                else:
+                    await message.answer(text)
+
+            elif action in ("update_matrix", "sync_matrix"):
                 updated_models = raw_payload.get("matrix", [])
                 updated_count = 0
                 new_count = 0

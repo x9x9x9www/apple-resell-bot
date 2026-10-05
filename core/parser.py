@@ -31,6 +31,26 @@ RE_LOCKS = re.compile(
     re.IGNORECASE,
 )
 
+RE_DEFECTS = re.compile(
+    r"\b(трещин[аые]|разбит[оаы]?|треснут[оаы]?|скол[ыа]?|паутинка|битый\s+экран|битое\s+стекло|"
+    r"заменен\s+экран|замена\s+экрана|менялся\s+экран|переклей|менялся\s+дисплей|замена\s+дисплея|"
+    r"замена\s+стекла|ошибка\s+экрана|ошибка\s+дисплея|сообщение\s+о\s+замене|полоса\s+на\s+экране)\b",
+    re.IGNORECASE,
+)
+
+RE_NO_FACE_ID = re.compile(
+    r"\b(без\s+face\s*id|не\s+работает\s+face\s*id|face\s*id\s+не\s+работает|no\s+face\s*id|"
+    r"без\s+фейс\s*айди|фейс\s*айди\s+не\s+работает|не\s+работает\s+отпечаток|без\s+touch\s*id|"
+    r"не\s+работает\s+touch\s*id|без\s+трутона|нет\s+true\s*tone|не\s+работает\s+true\s*tone)\b",
+    re.IGNORECASE,
+)
+
+RE_MDM_RSIM = re.compile(
+    r"\b(mdm|мдм|r-?sim|р-?сим|демо|demo|байпас|bypass|залочен|sim\s*lock)\b",
+    re.IGNORECASE,
+)
+
+
 # =====================================================================
 # Таблица нормализации моделей гаджетов (MacBook, Samsung, Pixel, iPad, iPhone, Consoles)
 # =====================================================================
@@ -386,6 +406,18 @@ class IPhoneNLPParser:
         # Батарея
         battery = cls.extract_battery(raw.description, raw.title)
 
+        # Анализ состояния и дефектов
+        full_text = f"{raw.title} {raw.description}"
+        has_defects = bool(RE_DEFECTS.search(full_text))
+        defect_reasons: list[str] = []
+        if has_defects:
+            for match in RE_DEFECTS.finditer(full_text):
+                defect_reasons.append(match.group(0).lower().strip())
+            defect_reasons = list(dict.fromkeys(defect_reasons))[:3]
+
+        has_no_face_id = bool(RE_NO_FACE_ID.search(full_text))
+        is_mdm_rsim = bool(RE_MDM_RSIM.search(full_text))
+
         return ParsedIPhone(
             platform=raw.platform,
             item_id=raw.item_id,
@@ -399,6 +431,10 @@ class IPhoneNLPParser:
             price=raw.price,
             old_price=raw.old_price,
             is_price_drop=raw.is_price_drop,
+            has_defects=has_defects,
+            defect_reasons=defect_reasons,
+            has_no_face_id=has_no_face_id,
+            is_mdm_rsim=is_mdm_rsim,
             location=raw.location,
             url=raw.url,
             image_url=raw.image_url,

@@ -33,6 +33,7 @@ class YoulaWorker(BaseWorker):
         city_id: Optional[str] = None,
         poll_interval: Optional[float] = None,
         max_item_age_seconds: Optional[int] = None,
+        stream_manager: Optional[Any] = None,
     ):
         super().__init__(
             platform=Platform.YOULA,
@@ -42,6 +43,7 @@ class YoulaWorker(BaseWorker):
             poll_interval=poll_interval or settings.YOULA_POLL_INTERVAL_SEC,
             max_item_age_seconds=max_item_age_seconds or settings.MAX_ITEM_AGE_SECONDS,
         )
+        self.stream_manager = stream_manager
         self.city_id = city_id or settings.YOULA_CITY_ID
         self.city_slug = "moskva"
         self.city_name = "Москва"
@@ -59,34 +61,34 @@ class YoulaWorker(BaseWorker):
         logger.info("[Юла] Регион поиска переключен на city_id: %s, slug: %s, city: %s", city_id, city_slug, self.city_name)
 
     async def _fetch_via_graphql(self) -> List[RawItem]:
-        """Запрос через GraphQL эндпоинт federation API по ротируемым запросам гаджетов."""
+        """Запрос через GraphQL эндпоинт federation API (схема 2026: feed(input: SearchFilter!, after: Cursor!))."""
         q_text = self.queries[self._query_idx % len(self.queries)]
         self._query_idx += 1
 
         query_payload = {
             "operationName": "feedProducts",
             "variables": {
-                "sort": "DATE_PUBLISHED_DESC",
-                "query": q_text,
-                "city": self.city_id,
-                "limit": 20,
+                "input": {
+                    "search": q_text,
+                    "sort": "DATE_PUBLISHED_DESC",
+                    "location": {"city": self.city_id},
+                },
+                "after": "",
             },
             "query": """
-            query feedProducts($sort: String, $query: String, $city: ID, $limit: Int) {
-              feed(sort: $sort, query: $query, city: $city, limit: $limit) {
+            query feedProducts($input: SearchFilter!, $after: Cursor!) {
+              feed(input: $input, after: $after) {
                 items {
-                  id
-                  name
-                  description
-                  price {
-                    realPrice
-                    price
-                  }
-                  dateCreated
-                  datePublished
-                  url
-                  location {
-                    description
+                  ... on ProductItem {
+                    product {
+                      id
+                      name
+                      description
+                      url
+                      datePublished
+                      images { url }
+                      price { realPrice { price } }
+                    }
                   }
                 }
               }
@@ -96,7 +98,7 @@ class YoulaWorker(BaseWorker):
 
         headers = {
             "Origin": "https://youla.ru",
-            "Referer": "https://youla.ru/",
+            "Referer": f"https://youla.ru/{self.city_slug}",
             "X-App-Id": "web/3",
         }
 
@@ -109,8 +111,72 @@ class YoulaWorker(BaseWorker):
         if not data or not isinstance(data, dict):
             return []
 
-        feed_items = data.get("data", {}).get("feed", {}).get("items", [])
-        return self._parse_items_list(feed_items)
+        errors = data.get("errors")
+        if errors:
+            logger.warning("[Юла] GraphQL вернул ошибки: %s", str(errors[0].get("message", ""))[:200])
+
+        feed_items = data.get("data", {}).get("feed", {}).get("items", []) or []
+        raw_items: List[RawItem] = []
+        for it in feed_items:
+            try:
+                # Рекламные/промо карточки не содержат product — пропускаем
+                product = (it or {}).get("product") or {}
+                item_id = str(product.get("id") or "")
+                if not item_id:
+                    continue
+
+                title = product.get("name") or ""
+                if not title:
+                    continue
+
+                description = product.get("description") or ""
+
+                # Цена в GraphQL всегда приходит в копейках (x100)
+                price_val = ((product.get("price") or {}).get("realPrice") or {}).get("price") or 0
+                price = int(price_val) // 100 if price_val else 0
+
+                # datePublished — Unix-секунды (int или строка цифр)
+                ts = product.get("datePublished")
+                if isinstance(ts, str) and ts.isdigit():
+                    ts = int(ts)
+                if not isinstance(ts, (int, float)) or ts <= 0:
+                    continue
+                published_at = datetime.fromtimestamp(ts, tz=timezone.utc)
+
+                url_path = product.get("url") or f"/p/{item_id}"
+                url = url_path if url_path.startswith("http") else f"https://youla.ru{url_path}"
+
+                # Строгий региональный фильтр по slug из URL (защита от устаревших city_id)
+                if self.city_slug not in ("rossiya", "all_russia"):
+                    slug_match = re.match(r"^/([^/]+)/", url_path)
+                    if slug_match and slug_match.group(1).lower() != self.city_slug:
+                        logger.debug("[Юла] GraphQL: отсев чужого региона %s (активен %s)", slug_match.group(1), self.city_slug)
+                        continue
+
+                image_url = None
+                images = product.get("images") or []
+                if images and isinstance(images[0], dict):
+                    image_url = images[0].get("url")
+
+                raw_items.append(
+                    RawItem(
+                        platform=Platform.YOULA,
+                        item_id=item_id,
+                        title=title,
+                        description=description,
+                        price=price,
+                        url=url,
+                        location=self.city_name,
+                        published_at=published_at,
+                        image_url=image_url,
+                        raw_payload=product,
+                    )
+                )
+            except Exception as e:
+                logger.debug("Ошибка разбора GraphQL карточки Юлы: %s", e)
+                continue
+
+        return raw_items
 
     async def _fetch_via_rest(self) -> List[RawItem]:
         """Резервный запрос через REST API выдачи."""
