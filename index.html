@@ -103,8 +103,67 @@
       transition: transform 0.15s ease;
       white-space: nowrap;
     }
-    .btn-add-model:active {
+    .btn-region-badge {
+      background: rgba(10, 132, 255, 0.14);
+      border: 1px solid rgba(10, 132, 255, 0.35);
+      color: #5ac8fa;
+      padding: 5px 11px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .btn-region-badge:active {
+      background: rgba(10, 132, 255, 0.28);
       transform: scale(0.95);
+    }
+    .region-item-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: 12px;
+      margin-bottom: 5px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-size: 14px;
+    }
+    .region-item-row:active {
+      background: rgba(10, 132, 255, 0.18);
+      border-color: rgba(10, 132, 255, 0.5);
+    }
+    .region-item-row.active {
+      background: rgba(10, 132, 255, 0.2);
+      border-color: var(--accent-color);
+      color: #fff;
+      font-weight: 700;
+    }
+    .popular-chip {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .popular-chip:active {
+      transform: scale(0.94);
+    }
+    .popular-chip.active {
+      background: var(--accent-color);
+      color: #fff;
+      border-color: var(--accent-color);
     }
 
     .stats-bar {
@@ -809,7 +868,12 @@
   <!-- Шапка -->
   <div class="header">
     <div class="header-row">
-      <h1>⚡️ Матрица цен</h1>
+      <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+        <h1 style="margin: 0;">⚡️ ПЕРЕКУПЕР</h1>
+        <button class="btn-region-badge" id="btnOpenRegionModal" title="Выбрать регион поиска">
+          📍 <span id="currentRegionLabel">Якутск</span> ▾
+        </button>
+      </div>
       <div class="header-actions">
         <button class="btn-condition" id="btnOpenConditionModal">
           <span>⚙️ Состояние</span>
@@ -847,6 +911,41 @@
     <button class="btn-save" id="btnSave">
       <span>💾 Применить цены в бота</span>
     </button>
+  </div>
+
+  <!-- Модалка: Выбор региона поиска -->
+  <div class="modal-overlay" id="regionModal">
+    <div class="modal-sheet" style="max-height: 85vh; display: flex; flex-direction: column;">
+      <div class="modal-header">
+        <h3 class="modal-title">📍 Регион поиска лотов</h3>
+        <button class="btn-close-modal" id="btnCloseRegionModal">✕</button>
+      </div>
+
+      <div style="padding: 10px 0 6px 0;">
+        <div class="search-wrapper" style="margin: 0;">
+          <span class="search-icon">🔍</span>
+          <input type="text" class="search-input" id="regionSearchInput" placeholder="Поиск города (Москва, Якутск, Казань...)">
+        </div>
+      </div>
+
+      <!-- Быстрый выбор популярных городов -->
+      <div style="margin-top: 8px;">
+        <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px;">
+          🔥 Популярные регионы
+        </div>
+        <div class="chips-scroll-bar" id="popularRegionsBar" style="display: flex; gap: 6px; flex-wrap: wrap;"></div>
+      </div>
+
+      <!-- Полный список городов -->
+      <div style="margin-top: 12px; flex: 1; overflow-y: auto; max-height: 280px; padding-right: 4px;" id="regionsListContainer"></div>
+
+      <div style="margin-top: 14px; display: flex; gap: 8px;">
+        <button class="btn-cancel-modal" id="btnCancelRegion" style="flex: 1;">Закрыть</button>
+        <button class="btn-add-submit" id="btnApplyRegionNow" style="flex: 2; background: var(--accent-color);">
+          ⚡️ Применить в боте
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- Модалка: Настройки состояния (АКБ, Дефекты, Риск) -->
@@ -2594,12 +2693,177 @@
       if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
     });
 
+    // -------------------------------------------------------------
+    // ВЫБОР РЕГИОНА ПОИСКА
+    // -------------------------------------------------------------
+    const ALL_CITIES = [
+      { key: "yakutsk", name: "Якутск" },
+      { key: "moskva", name: "Москва и МО" },
+      { key: "spb", name: "Санкт-Петербург и ЛО" },
+      { key: "ekaterinburg", name: "Екатеринбург" },
+      { key: "novosibirsk", name: "Новосибирск" },
+      { key: "kazan", name: "Казань" },
+      { key: "krasnodar", name: "Краснодар" },
+      { key: "rostov", name: "Ростов-на-Дону" },
+      { key: "nn", name: "Нижний Новгород" },
+      { key: "samara", name: "Самара" },
+      { key: "sochi", name: "Сочи" },
+      { key: "ufa", name: "Уфа" },
+      { key: "chelyabinsk", name: "Челябинск" },
+      { key: "krasnoyarsk", name: "Красноярск" },
+      { key: "perm", name: "Пермь" },
+      { key: "volgograd", name: "Волгоград" },
+      { key: "voronezh", name: "Воронеж" },
+      { key: "tyumen", name: "Тюмень" },
+      { key: "vladivostok", name: "Владивосток" },
+      { key: "khabarovsk", name: "Хабаровск" },
+      { key: "irkutsk", name: "Иркутск" },
+      { key: "surgut", name: "Сургут" },
+      { key: "barnaul", name: "Барнаул" },
+      { key: "yaroslavl", name: "Ярославль" },
+      { key: "tomsk", name: "Томск" },
+      { key: "orenburg", name: "Оренбург" },
+      { key: "kemerovo", name: "Кемерово" },
+      { key: "ryazan", name: "Рязань" },
+      { key: "naberezhnye_chelny", name: "Набережные Челны" },
+      { key: "astrakhan", name: "Астрахань" },
+      { key: "penza", name: "Пенза" },
+      { key: "kirov", name: "Киров" },
+      { key: "lipetsk", name: "Липецк" },
+      { key: "tula", name: "Тула" },
+      { key: "kaliningrad", name: "Калининград" },
+      { key: "kursk", name: "Курск" },
+      { key: "ulan_ude", name: "Улан-Удэ" },
+      { key: "chita", name: "Чита" },
+      { key: "all_russia", name: "Вся Россия" }
+    ];
+
+    const POPULAR_KEYS = ["yakutsk", "moskva", "spb", "ekaterinburg", "novosibirsk", "kazan", "krasnodar", "all_russia"];
+
+    function getInitialRegion() {
+      if (window.location.hash) {
+        const m = window.location.hash.match(/region=([^&]+)/);
+        if (m) return decodeURIComponent(m[1]);
+      }
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('region')) return urlParams.get('region');
+      const saved = localStorage.getItem('resell_selected_region');
+      if (saved) return saved;
+      return "Якутск";
+    }
+
+    let currentSelectedRegion = getInitialRegion();
+
+    function updateRegionUI() {
+      const labelEl = document.getElementById('currentRegionLabel');
+      if (labelEl) labelEl.textContent = currentSelectedRegion;
+      localStorage.setItem('resell_selected_region', currentSelectedRegion);
+    }
+
+    const regionModal = document.getElementById('regionModal');
+    const regionSearchInput = document.getElementById('regionSearchInput');
+    const popularRegionsBar = document.getElementById('popularRegionsBar');
+    const regionsListContainer = document.getElementById('regionsListContainer');
+
+    function renderRegionModal() {
+      const query = (regionSearchInput.value || '').trim().toLowerCase();
+
+      // Рендер популярных чипов
+      popularRegionsBar.innerHTML = '';
+      POPULAR_KEYS.forEach(k => {
+        const city = ALL_CITIES.find(c => c.key === k);
+        if (!city) return;
+        const chip = document.createElement('div');
+        chip.className = 'popular-chip' + (city.name.toLowerCase() === currentSelectedRegion.toLowerCase() ? ' active' : '');
+        chip.textContent = city.name;
+        chip.addEventListener('click', () => {
+          selectRegion(city.name);
+        });
+        popularRegionsBar.appendChild(chip);
+      });
+
+      // Рендер списка
+      regionsListContainer.innerHTML = '';
+      const filtered = ALL_CITIES.filter(c => !query || c.name.toLowerCase().includes(query));
+
+      if (filtered.length === 0) {
+        const customRow = document.createElement('div');
+        customRow.className = 'region-item-row';
+        customRow.innerHTML = `<span>Выбрать: <b>${regionSearchInput.value}</b></span> <span>⚡️</span>`;
+        customRow.addEventListener('click', () => {
+          selectRegion(regionSearchInput.value.trim());
+        });
+        regionsListContainer.appendChild(customRow);
+      } else {
+        filtered.forEach(c => {
+          const isAct = c.name.toLowerCase() === currentSelectedRegion.toLowerCase();
+          const row = document.createElement('div');
+          row.className = 'region-item-row' + (isAct ? ' active' : '');
+          row.innerHTML = `
+            <span>${c.name}</span>
+            <span style="font-size: 13px; color: ${isAct ? '#fff' : 'var(--text-muted)'};">${isAct ? '✓ Выбран' : 'Выбрать'}</span>
+          `;
+          row.addEventListener('click', () => {
+            selectRegion(c.name);
+          });
+          regionsListContainer.appendChild(row);
+        });
+      }
+    }
+
+    function selectRegion(name) {
+      if (!name) return;
+      currentSelectedRegion = name;
+      updateRegionUI();
+      renderRegionModal();
+      if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+    }
+
+    document.getElementById('btnOpenRegionModal').addEventListener('click', () => {
+      regionSearchInput.value = '';
+      renderRegionModal();
+      regionModal.classList.add('active');
+    });
+
+    document.getElementById('btnCloseRegionModal').addEventListener('click', () => {
+      regionModal.classList.remove('active');
+    });
+
+    document.getElementById('btnCancelRegion').addEventListener('click', () => {
+      regionModal.classList.remove('active');
+    });
+
+    regionSearchInput.addEventListener('input', () => {
+      renderRegionModal();
+    });
+
+    // Мгновенное переключение региона в боте
+    document.getElementById('btnApplyRegionNow').addEventListener('click', () => {
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      regionModal.classList.remove('active');
+
+      if (tg && typeof tg.sendData === 'function') {
+        try {
+          tg.sendData(JSON.stringify({
+            action: "set_region",
+            region: currentSelectedRegion
+          }));
+          tg.close();
+        } catch (err) {
+          alert("Ошибка отправки: " + err.message);
+        }
+      } else {
+        alert(`✅ Регион «${currentSelectedRegion}» успешно сохранен!\nПри открытии внутри Telegram он мгновенно переключит воркеров.`);
+      }
+    });
+
     // Сохранение и отправка в Telegram бот
     document.getElementById('btnSave').addEventListener('click', () => {
       if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
 
       const payload = {
         action: "save_resell_profile",
+        region: currentSelectedRegion,
         condition_rules: conditionRules,
         categories: categories,
         models: currentMatrix.map(m => ({
@@ -2625,6 +2889,7 @@
       }
     });
 
+    updateRegionUI();
     renderSeriesBar();
     renderCards();
     loadLivePrices();
