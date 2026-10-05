@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Smart Resell Radar — Матрица перекупа 2.0</title>
+  <title>Матрица цен гаджетов — Gadget Resell Radar</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
-      --bg-color: #070B12;
-      --card-bg: rgba(18, 25, 42, 0.78);
-      --card-bg-elevated: rgba(26, 36, 60, 0.9);
+      --bg-color: #080C14;
+      --card-bg: rgba(20, 27, 45, 0.72);
       --card-border: rgba(255, 255, 255, 0.08);
       --card-border-hover: rgba(10, 132, 255, 0.4);
       --accent-color: #0A84FF;
@@ -17,8 +16,8 @@
       --accent-gradient: linear-gradient(135deg, #0A84FF 0%, #0056B3 100%);
       --success-color: #30D158;
       --success-gradient: linear-gradient(135deg, #30D158 0%, #248A3D 100%);
-      --warning-color: #FF9F0A;
       --danger-color: #FF453A;
+      --warning-color: #FF9F0A;
       --text-main: #FFFFFF;
       --text-muted: #8E8E93;
       --tag-bg: rgba(255, 255, 255, 0.08);
@@ -42,7 +41,7 @@
       overflow-x: hidden;
     }
 
-    /* Верхняя шапка */
+    /* Шапка */
     .header {
       margin-bottom: 12px;
     }
@@ -63,11 +62,36 @@
       gap: 8px;
     }
 
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-condition {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
+      color: #fff;
+      padding: 7px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: background 0.15s ease;
+      white-space: nowrap;
+    }
+    .btn-condition:active {
+      background: rgba(255, 255, 255, 0.16);
+    }
+
     .btn-add-model {
       background: var(--success-gradient);
       color: #fff;
       border: none;
-      padding: 8px 13px;
+      padding: 7px 13px;
       border-radius: 20px;
       font-size: 12px;
       font-weight: 700;
@@ -83,116 +107,20 @@
       transform: scale(0.95);
     }
 
-    /* Селектор главных вкладок (iOS Segmented Control) */
-    .tab-bar {
-      display: flex;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 3px;
-      margin-bottom: 14px;
-      gap: 4px;
-    }
-    .tab-btn {
-      flex: 1;
-      padding: 8px 6px;
-      border: none;
-      background: transparent;
+    .stats-bar {
+      margin-top: 8px;
+      font-size: 12px;
       color: var(--text-muted);
-      font-size: 13px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .stats-pill {
+      background: var(--tag-bg);
+      padding: 2px 7px;
+      border-radius: 6px;
       font-weight: 700;
-      border-radius: 9px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .tab-btn.active {
-      background: var(--accent-color);
-      color: #fff;
-      box-shadow: 0 2px 10px var(--accent-glow);
-    }
-
-    .tab-pane {
-      display: none;
-    }
-    .tab-pane.active {
-      display: block;
-      animation: fadeIn 0.2s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Smart Margin Bar (Экспресс-подгонка маржи) */
-    .margin-master-card {
-      background: linear-gradient(135deg, rgba(10, 132, 255, 0.12) 0%, rgba(48, 209, 88, 0.08) 100%);
-      border: 1px solid rgba(10, 132, 255, 0.3);
-      border-radius: 14px;
-      padding: 12px 14px;
-      margin-bottom: 14px;
-    }
-    .margin-master-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-    .margin-master-title {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--accent-color);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .margin-chips {
-      display: flex;
-      gap: 6px;
-      overflow-x: auto;
-      scrollbar-width: none;
-      margin-bottom: 8px;
-    }
-    .margin-chips::-webkit-scrollbar { display: none; }
-    .margin-chip {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid var(--card-border);
       color: var(--text-main);
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.15s ease;
-    }
-    .margin-chip.active {
-      background: var(--accent-color);
-      color: #fff;
-      border-color: var(--accent-color);
-    }
-    .margin-apply-btn {
-      width: 100%;
-      background: rgba(255, 255, 255, 0.09);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #fff;
-      padding: 7px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: background 0.15s;
-    }
-    .margin-apply-btn:active {
-      background: rgba(255, 255, 255, 0.18);
     }
 
     /* Поле поиска */
@@ -239,7 +167,7 @@
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       color: var(--text-muted);
-      padding: 6px 12px;
+      padding: 6px 13px;
       border-radius: 18px;
       font-size: 12px;
       font-weight: 700;
@@ -254,12 +182,13 @@
       border-color: var(--accent-color);
     }
 
-    /* Карточки моделей */
+    /* Список карточек */
     .models-list {
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
+
     .model-card {
       background: var(--card-bg);
       backdrop-filter: blur(20px);
@@ -269,14 +198,14 @@
       padding: 12px 14px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 9px;
       transition: all 0.2s ease;
     }
     .model-card.custom-card {
       border-color: rgba(48, 209, 88, 0.3);
     }
     .model-card.disabled {
-      opacity: 0.55;
+      opacity: 0.52;
     }
 
     .card-top {
@@ -357,27 +286,49 @@
     input:checked + .slider { background-color: var(--accent-color); }
     input:checked + .slider:before { transform: translateX(16px); }
 
-    /* Поля цен в карточке */
-    .card-inputs-row {
-      display: flex;
-      align-items: center;
+    /* Поля цен: Выкуп и Продажа */
+    .card-prices-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
       gap: 8px;
+      align-items: flex-end;
     }
-    .price-box {
-      flex: 1;
+
+    .price-field {
       display: flex;
       flex-direction: column;
       gap: 3px;
     }
-    .price-box-label {
+    .price-field-label {
       font-size: 10px;
       font-weight: 700;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.3px;
     }
-    .price-input-wrapper {
+
+    .price-stepper-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .step-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 7px 8px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .step-btn:active { transform: scale(0.92); }
+
+    .input-wrap {
       position: relative;
+      flex: 1;
       display: flex;
       align-items: center;
     }
@@ -394,7 +345,7 @@
       transition: border-color 0.2s;
     }
     .price-input:focus { border-color: var(--accent-color); }
-    .price-curr {
+    .currency {
       position: absolute;
       right: 7px;
       font-size: 12px;
@@ -402,129 +353,23 @@
       font-weight: 700;
     }
 
-    .quick-step-btn {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid var(--card-border);
-      color: var(--text-main);
-      padding: 6px 9px;
-      border-radius: 8px;
-      font-size: 11px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .quick-step-btn:active { transform: scale(0.92); }
-
-    .card-meta {
+    .card-footer {
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-size: 11px;
-      color: var(--text-muted);
       padding-top: 2px;
     }
     .profit-badge {
       color: var(--success-color);
       font-weight: 700;
       background: rgba(48, 209, 88, 0.12);
-      padding: 2px 6px;
+      padding: 2px 7px;
       border-radius: 6px;
     }
-
-    /* Вкладка 2: Настройки состояния и рисков */
-    .settings-section {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 12px;
-    }
-    .settings-section-title {
-      font-size: 14px;
-      font-weight: 700;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-    .setting-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      gap: 10px;
-    }
-    .setting-item:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-    .setting-info {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      flex: 1;
-    }
-    .setting-title {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text-main);
-    }
-    .setting-desc {
-      font-size: 11px;
-      color: var(--text-muted);
-      line-height: 1.3;
-    }
-    .setting-control {
-      flex-shrink: 0;
-    }
-
-    .stepper-input {
-      display: flex;
-      align-items: center;
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid var(--card-border);
-      border-radius: 8px;
-      padding: 3px 6px;
-      gap: 6px;
-    }
-    .stepper-input input {
-      width: 55px;
-      background: transparent;
-      border: none;
-      color: #fff;
-      font-size: 14px;
-      font-weight: 700;
-      text-align: right;
-      outline: none;
-    }
-
-    /* Вкладка 3: Интерактивный калькулятор */
-    .calc-card {
-      background: var(--card-bg-elevated);
-      border: 1px solid var(--card-border);
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 14px;
-    }
-    .calc-result-box {
-      margin-top: 14px;
-      padding: 12px;
-      border-radius: 10px;
-      display: none;
-      font-size: 13px;
-      line-height: 1.4;
-    }
-    .calc-result-box.profitable {
-      display: block;
-      background: rgba(48, 209, 88, 0.15);
-      border: 1px solid var(--success-color);
-      color: #72f793;
-    }
-    .calc-result-box.rejected {
-      display: block;
-      background: rgba(255, 69, 58, 0.15);
-      border: 1px solid var(--danger-color);
-      color: #ff8580;
+    .profit-badge.negative {
+      color: var(--danger-color);
+      background: rgba(255, 69, 58, 0.12);
     }
 
     /* Нижняя плавающая плашка */
@@ -534,7 +379,7 @@
       left: 0;
       right: 0;
       padding: 12px 16px;
-      background: rgba(7, 11, 18, 0.92);
+      background: rgba(8, 12, 20, 0.94);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-top: 1px solid var(--card-border);
@@ -561,21 +406,7 @@
     }
     .btn-save:active { transform: scale(0.97); }
 
-    .btn-export-excel {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid var(--card-border);
-      color: var(--text-main);
-      padding: 13px 14px;
-      border-radius: 12px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    /* Модалка добавления модели */
+    /* Модальные окна */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -611,10 +442,12 @@
       height: 28px;
       border-radius: 50%;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .form-group {
-      margin-bottom: 12px;
-    }
+
+    .form-group { margin-bottom: 12px; }
     .form-label {
       font-size: 12px;
       color: var(--text-muted);
@@ -632,306 +465,208 @@
       font-size: 14px;
       outline: none;
     }
-    .storage-options {
+
+    .setting-item {
       display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      gap: 10px;
     }
-    .storage-chip {
-      background: rgba(255, 255, 255, 0.06);
+    .setting-item:last-child { border-bottom: none; }
+    .setting-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+    }
+    .setting-title { font-size: 13px; font-weight: 700; color: #fff; }
+    .setting-desc { font-size: 11px; color: var(--text-muted); }
+
+    .stepper-input {
+      display: flex;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.35);
       border: 1px solid var(--card-border);
-      color: var(--text-muted);
-      padding: 5px 10px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
+      border-radius: 8px;
+      padding: 3px 6px;
+      gap: 6px;
     }
-    .storage-chip.active {
-      background: var(--accent-color);
+    .stepper-input input {
+      width: 60px;
+      background: transparent;
+      border: none;
       color: #fff;
-      border-color: var(--accent-color);
+      font-size: 14px;
+      font-weight: 700;
+      text-align: right;
+      outline: none;
     }
   </style>
 </head>
 <body>
 
-  <!-- Заголовок страницы -->
+  <!-- Шапка -->
   <div class="header">
     <div class="header-row">
-      <h1>⚡️ Smart Resell Matrix 2.0</h1>
-      <button class="btn-add-model" id="btnOpenAddModal">
-        <span>➕ Своя модель</span>
-      </button>
+      <h1>⚡️ Матрица цен</h1>
+      <div class="header-actions">
+        <button class="btn-condition" id="btnOpenConditionModal">
+          <span>⚙️ Состояние</span>
+        </button>
+        <button class="btn-add-model" id="btnOpenAddModal">
+          <span>➕ Модель</span>
+        </button>
+      </div>
+    </div>
+    <div class="stats-bar">
+      <span>Всего: <b class="stats-pill" id="statTotal">0</b></span>
+      <span>Активных: <b class="stats-pill" id="statActive">0</b></span>
+      <span>Фильтр: <span id="statFilter" style="color:var(--accent-color)">Все</span></span>
     </div>
   </div>
 
-  <!-- Селектор главных вкладок -->
-  <div class="tab-bar">
-    <button class="tab-btn active" data-tab="catalog">
-      <span>📱 Каталог</span>
-    </button>
-    <button class="tab-btn" data-tab="condition">
-      <span>⚙️ Состояние & Риски</span>
-    </button>
-    <button class="tab-btn" data-tab="calculator">
-      <span>📊 Калькулятор</span>
+  <!-- Поиск -->
+  <div class="search-wrapper">
+    <span class="search-icon">🔍</span>
+    <input type="text" class="search-input" id="searchInput" placeholder="Поиск (MacBook, S24, Pixel, iPad, iPhone...)">
+  </div>
+
+  <!-- Фильтр по сериям -->
+  <div class="series-bar" id="seriesBar">
+    <div class="series-pill active" data-series="all">Все</div>
+    <div class="series-pill" data-series="iphone">📱 iPhone</div>
+    <div class="series-pill" data-series="macbook">💻 Mac</div>
+    <div class="series-pill" data-series="samsung">📱 Samsung</div>
+    <div class="series-pill" data-series="pixel">📱 Pixel</div>
+    <div class="series-pill" data-series="ipad">📟 iPad</div>
+    <div class="series-pill" data-series="consoles">🎮 Консоли</div>
+    <div class="series-pill" data-series="custom">⭐ Свои</div>
+  </div>
+
+  <!-- Список моделей -->
+  <div class="models-list" id="modelsList">
+    <!-- Генерируется через JS -->
+  </div>
+
+  <!-- Нижняя панель сохранения -->
+  <div class="save-bar">
+    <button class="btn-save" id="btnSave">
+      <span>💾 Применить цены в бота</span>
     </button>
   </div>
 
-  <!-- ВКЛАДКА 1: КАТАЛОГ И ЦЕНЫ ВЫКУПА -->
-  <div class="tab-pane active" id="tabCatalog">
-
-    <!-- Экспресс-подгонка маржи -->
-    <div class="margin-master-card">
-      <div class="margin-master-header">
-        <span class="margin-master-title">🎯 Экспресс-подгонка чистой прибыли:</span>
-        <span id="targetMarginBadge" style="font-size:12px; font-weight:800; color:var(--success-color)">5 000 ₽</span>
+  <!-- Модалка: Настройки состояния (АКБ, Дефекты, Риск) -->
+  <div class="modal-overlay" id="conditionModal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title">⚙️ Настройка правил состояния</h3>
+        <button class="btn-close-modal" id="btnCloseConditionModal">✕</button>
       </div>
-      <div class="margin-chips" id="marginChips">
-        <span class="margin-chip" data-margin="3000">+3 000 ₽</span>
-        <span class="margin-chip active" data-margin="5000">+5 000 ₽ (Топ)</span>
-        <span class="margin-chip" data-margin="7000">+7 000 ₽</span>
-        <span class="margin-chip" data-margin="10000">+10 000 ₽</span>
-        <span class="margin-chip" data-margin="15000">+15 000 ₽</span>
-      </div>
-      <button class="margin-apply-btn" id="btnApplyMarginAll">
-        <span>⚡️ Авто-расчет всех лимитов: Рынок минус маржа</span>
-      </button>
-    </div>
 
-    <!-- Поиск по названию / памяти -->
-    <div class="search-wrapper">
-      <span class="search-icon">🔍</span>
-      <input type="text" class="search-input" id="searchInput" placeholder="Поиск (16 Pro, 15, S24, MacBook, 128GB...)">
-    </div>
-
-    <!-- Фильтр по сериям -->
-    <div class="series-bar" id="seriesBar">
-      <div class="series-pill active" data-series="all">Все</div>
-      <div class="series-pill" data-series="iphone">📱 iPhone</div>
-      <div class="series-pill" data-series="macbook">💻 Mac</div>
-      <div class="series-pill" data-series="samsung">📱 Samsung</div>
-      <div class="series-pill" data-series="pixel">📱 Pixel</div>
-      <div class="series-pill" data-series="ipad">📟 iPad</div>
-      <div class="series-pill" data-series="consoles">🎮 Консоли</div>
-      <div class="series-pill" data-series="custom">⭐ Свои</div>
-    </div>
-
-    <!-- Список карточек -->
-    <div class="models-list" id="modelsList">
-      <!-- Генерируется через JS -->
-    </div>
-  </div>
-
-  <!-- ВКЛАДКА 2: ПРАВИЛА СОСТОЯНИЯ И РИСКА -->
-  <div class="tab-pane" id="tabCondition">
-
-    <div class="settings-section">
-      <div class="settings-section-title">
-        <span>🔋 Износ аккумулятора (АКБ)</span>
-      </div>
       <div class="setting-item">
         <div class="setting-info">
-          <div class="setting-title">Порог износа батареи</div>
-          <div class="setting-desc">Если АКБ продавца ниже этого порога, применяется скидка на замену</div>
+          <div class="setting-title">Порог износа АКБ</div>
+          <div class="setting-desc">Если АКБ ниже порога, применяется скидка</div>
         </div>
-        <div class="setting-control">
-          <div class="stepper-input">
-            <input type="number" id="batteryThresholdInput" value="80" min="50" max="95" step="1">
-            <span style="font-size:12px; color:var(--text-muted)">%</span>
-          </div>
+        <div class="stepper-input">
+          <input type="number" id="batteryThresholdInput" value="80" min="50" max="95">
+          <span style="font-size:12px; color:var(--text-muted)">%</span>
         </div>
       </div>
+
       <div class="setting-item">
         <div class="setting-info">
-          <div class="setting-title">Скидка на замену батареи</div>
-          <div class="setting-desc">Автоматически вычитается из порога выкупа при износе АКБ</div>
+          <div class="setting-title">Скидка на замену АКБ</div>
+          <div class="setting-desc">Вычитается из порога выкупа при слабом АКБ</div>
         </div>
-        <div class="setting-control">
-          <div class="stepper-input">
-            <input type="number" id="batteryDiscountInput" value="3000" min="500" max="10000" step="500">
-            <span style="font-size:12px; color:var(--text-muted)">₽</span>
-          </div>
+        <div class="stepper-input">
+          <input type="number" id="batteryDiscountInput" value="3000" min="500" max="10000" step="500">
+          <span style="font-size:12px; color:var(--text-muted)">₽</span>
         </div>
       </div>
-    </div>
 
-    <div class="settings-section">
-      <div class="settings-section-title">
-        <span>🛠 Устройства с дефектами и под ремонт</span>
-      </div>
       <div class="setting-item">
         <div class="setting-info">
           <div class="setting-title">Разрешить лоты с дефектами</div>
-          <div class="setting-desc">Битые экраны, трещины, ошибки после замены. Если выкл — такие лоты отсекаются сразу</div>
+          <div class="setting-desc">Битые экраны, трещины. Если выкл — отсекаются сразу</div>
         </div>
-        <div class="setting-control">
-          <label class="switch">
-            <input type="checkbox" id="allowDefectsToggle">
-            <span class="slider"></span>
-          </label>
-        </div>
+        <label class="switch">
+          <input type="checkbox" id="allowDefectsToggle">
+          <span class="slider"></span>
+        </label>
       </div>
-      <div class="setting-item" id="defectDiscountRow" style="opacity: 0.5;">
-        <div class="setting-info">
-          <div class="setting-title">Дисконт за дефект</div>
-          <div class="setting-desc">Сумма уценки за битый экран/корпус (если лоты под ремонт разрешены)</div>
-        </div>
-        <div class="setting-control">
-          <div class="stepper-input">
-            <input type="number" id="defectDiscountInput" value="8000" min="1000" max="30000" step="1000" disabled>
-            <span style="font-size:12px; color:var(--text-muted)">₽</span>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <div class="settings-section">
-      <div class="settings-section-title">
-        <span>🛡 Фильтры безопасности (Риск-контроль)</span>
+      <div class="setting-item" id="defectDiscountRow" style="opacity:0.5;">
+        <div class="setting-info">
+          <div class="setting-title">Скидка за дефект</div>
+          <div class="setting-desc">Уценка за битое стекло/экран если разрешены</div>
+        </div>
+        <div class="stepper-input">
+          <input type="number" id="defectDiscountInput" value="8000" min="1000" max="30000" step="1000" disabled>
+          <span style="font-size:12px; color:var(--text-muted)">₽</span>
+        </div>
       </div>
+
       <div class="setting-item">
         <div class="setting-info">
           <div class="setting-title">Отсекать без Face ID / Touch ID</div>
-          <div class="setting-desc">Игнорировать лоты с неработающим биометрическим датчиком</div>
+          <div class="setting-desc">Игнорировать лоты без биометрии</div>
         </div>
-        <div class="setting-control">
-          <label class="switch">
-            <input type="checkbox" id="ignoreFaceIdToggle" checked>
-            <span class="slider"></span>
-          </label>
-        </div>
+        <label class="switch">
+          <input type="checkbox" id="ignoreFaceIdToggle" checked>
+          <span class="slider"></span>
+        </label>
       </div>
+
       <div class="setting-item">
         <div class="setting-info">
           <div class="setting-title">Отсекать MDM / Demo / R-Sim</div>
-          <div class="setting-desc">Блокировать корпоративные профили, демо-режимы и sim-lock</div>
+          <div class="setting-desc">Блокировать залоченные устройства</div>
         </div>
-        <div class="setting-control">
-          <label class="switch">
-            <input type="checkbox" id="ignoreMdmToggle" checked>
-            <span class="slider"></span>
-          </label>
-        </div>
+        <label class="switch">
+          <input type="checkbox" id="ignoreMdmToggle" checked>
+          <span class="slider"></span>
+        </label>
       </div>
-      <div class="setting-item">
-        <div class="setting-info">
-          <div class="setting-title">Отсекать копии и реплики</div>
-          <div class="setting-desc">Строгий фильтр 1:1, люкс, китайских подделок</div>
-        </div>
-        <div class="setting-control">
-          <label class="switch">
-            <input type="checkbox" id="ignoreReplicasToggle" checked>
-            <span class="slider"></span>
-          </label>
-        </div>
-      </div>
-    </div>
 
-  </div>
-
-  <!-- ВКЛАДКА 3: КАЛЬКУЛЯТОР ВЫГОДЫ И СВОДКА -->
-  <div class="tab-pane" id="tabCalculator">
-    <div class="calc-card">
-      <h3 style="font-size:15px; font-weight:700; margin-bottom:12px">⚡️ Проверка конкретного объявления</h3>
-      <div class="form-group">
-        <label class="form-label">Модель:</label>
-        <select class="form-input" id="calcModelSelect">
-          <!-- Заполняется из currentMatrix -->
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Цена продавца на Авито/Юле (₽):</label>
-        <input type="number" step="500" class="form-input" id="calcPriceInput" placeholder="например 45000">
-      </div>
-      <div class="form-group">
-        <label class="form-label">АКБ продавца (%):</label>
-        <input type="number" class="form-input" id="calcBatteryInput" placeholder="например 78 (или пусто)">
-      </div>
-      <div class="form-group" style="display:flex; align-items:center; gap:8px;">
-        <input type="checkbox" id="calcHasDefectInput">
-        <label for="calcHasDefectInput" style="font-size:13px; font-weight:600; cursor:pointer">Есть дефекты (трещины / замена экрана)</label>
-      </div>
-      <button class="margin-apply-btn" id="btnRunCalc" style="padding:10px; font-size:14px; background:var(--accent-color)">
-        <span>🔍 Оценить сделку перекупа</span>
+      <button class="btn-save" id="btnSaveConditionModal" style="width:100%; margin-top:14px">
+        <span>✅ Готово</span>
       </button>
-
-      <div class="calc-result-box" id="calcResultBox"></div>
-    </div>
-
-    <!-- Сводка профиля -->
-    <div class="settings-section">
-      <div class="settings-section-title">
-        <span>📈 Сводка вашего профиля</span>
-      </div>
-      <div class="setting-item">
-        <span>Всего моделей в базе:</span>
-        <b id="summaryTotalModels">0</b>
-      </div>
-      <div class="setting-item">
-        <span>Активных конфигураций:</span>
-        <b id="summaryActiveConfigs" style="color:var(--success-color)">0</b>
-      </div>
-      <div class="setting-item">
-        <span>Средний потенциал профита:</span>
-        <b id="summaryAvgProfit" style="color:var(--accent-color)">+0 ₽</b>
-      </div>
     </div>
   </div>
 
-  <!-- Плавающая панель сохранения внизу -->
-  <div class="save-bar">
-    <button class="btn-save" id="btnSave">
-      <span>💾 Применить в бот ⚡️</span>
-    </button>
-    <button class="btn-export-excel" id="btnExportExcel" title="Экспорт в CSV">
-      <span>📥 CSV</span>
-    </button>
-  </div>
-
-  <!-- Модальное окно добавления своей модели -->
+  <!-- Модалка: Добавить модель -->
   <div class="modal-overlay" id="addModal">
     <div class="modal-sheet">
       <div class="modal-header">
         <h3 class="modal-title">➕ Добавить модель</h3>
-        <button class="btn-close-modal" id="btnCloseModal">✕</button>
+        <button class="btn-close-modal" id="btnCloseAddModal">✕</button>
       </div>
 
       <div class="form-group">
-        <label class="form-label">Название устройства:</label>
-        <input type="text" class="form-input" id="newModelName" placeholder="например: iPhone 16 Pro Max или MacBook M3">
+        <label class="form-label">Название модели:</label>
+        <input type="text" class="form-input" id="newModelName" placeholder="например: iPhone 16 Pro или MacBook M3">
       </div>
 
       <div class="form-group">
-        <label class="form-label">Объем памяти (GB / SSD):</label>
-        <div class="storage-options" id="storageOptions">
-          <span class="storage-chip" data-storage="64">64 GB</span>
-          <span class="storage-chip" data-storage="128">128 GB</span>
-          <span class="storage-chip active" data-storage="256">256 GB</span>
-          <span class="storage-chip" data-storage="512">512 GB</span>
-          <span class="storage-chip" data-storage="1024">1 TB</span>
-        </div>
-        <input type="hidden" id="newModelStorage" value="256">
+        <label class="form-label">Память (GB / SSD):</label>
+        <input type="number" class="form-input" id="newModelStorage" value="128" placeholder="128, 256, 512, 1024">
       </div>
 
       <div class="form-group">
-        <label class="form-label">Оценка рынка (₽):</label>
-        <input type="number" step="500" class="form-input" id="newModelMarket" placeholder="например 75000">
+        <label class="form-label">Макс. цена выкупа (₽):</label>
+        <input type="number" step="500" class="form-input" id="newModelPrice" placeholder="например 50000">
       </div>
 
       <div class="form-group">
-        <label class="form-label">Макс. выкуп перекупа (₽):</label>
-        <input type="number" step="500" class="form-input" id="newModelPrice" placeholder="например 65000">
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Мин. порог отсева хлама (₽):</label>
-        <input type="number" step="500" class="form-input" id="newModelMinPrice" placeholder="например 25000">
+        <label class="form-label">Ожидаемая цена продажи (₽):</label>
+        <input type="number" step="500" class="form-input" id="newModelMarket" placeholder="например 60000">
       </div>
 
       <button class="btn-save" id="btnSubmitNewModel" style="width:100%; margin-top:8px">
-        <span>✅ Добавить в каталог</span>
+        <span>✅ Добавить в матрицу</span>
       </button>
     </div>
   </div>
@@ -941,43 +676,42 @@
     if (tg) {
       tg.ready();
       tg.expand();
-      if (tg.setHeaderColor) tg.setHeaderColor('#070B12');
-      if (tg.setBackgroundColor) tg.setBackgroundColor('#070B12');
+      if (tg.setHeaderColor) tg.setHeaderColor('#080C14');
+      if (tg.setBackgroundColor) tg.setBackgroundColor('#080C14');
     }
 
-    // Базовый мульти-гаджет каталог
     const DEFAULT_CATALOG = [
       // MacBooks
-      { key: "MacBook Air M1_256", model: "MacBook Air M1", storage: 256, series: "macbook", min_price: 25000, price: 42000, market: 52000, enabled: true },
-      { key: "MacBook Air M2 13_256", model: "MacBook Air M2 13", storage: 256, series: "macbook", min_price: 35000, price: 62000, market: 74000, enabled: true },
-      { key: "MacBook Pro 14 M1 Pro_512", model: "MacBook Pro 14 M1 Pro", storage: 512, series: "macbook", min_price: 50000, price: 85000, market: 102000, enabled: true },
+      { key: "MacBook Air M1_256", model: "MacBook Air M1", storage: 256, series: "macbook", price: 42000, market: 52000, enabled: true },
+      { key: "MacBook Air M2 13_256", model: "MacBook Air M2 13", storage: 256, series: "macbook", price: 62000, market: 74000, enabled: true },
+      { key: "MacBook Pro 14 M1 Pro_512", model: "MacBook Pro 14 M1 Pro", storage: 512, series: "macbook", price: 85000, market: 102000, enabled: true },
       // iPhones 16
-      { key: "iPhone 16 Pro Max_256", model: "iPhone 16 Pro Max", storage: 256, series: "iphone", min_price: 70000, price: 105000, market: 125000, enabled: true },
-      { key: "iPhone 16 Pro_128", model: "iPhone 16 Pro", storage: 128, series: "iphone", min_price: 60000, price: 88000, market: 104000, enabled: true },
-      { key: "iPhone 16_128", model: "iPhone 16", storage: 128, series: "iphone", min_price: 45000, price: 68000, market: 80000, enabled: true },
+      { key: "iPhone 16 Pro Max_256", model: "iPhone 16 Pro Max", storage: 256, series: "iphone", price: 105000, market: 125000, enabled: true },
+      { key: "iPhone 16 Pro_128", model: "iPhone 16 Pro", storage: 128, series: "iphone", price: 88000, market: 104000, enabled: true },
+      { key: "iPhone 16_128", model: "iPhone 16", storage: 128, series: "iphone", price: 68000, market: 80000, enabled: true },
       // iPhones 15
-      { key: "iPhone 15 Pro Max_256", model: "iPhone 15 Pro Max", storage: 256, series: "iphone", min_price: 55000, price: 82000, market: 97000, enabled: true },
-      { key: "iPhone 15 Pro_128", model: "iPhone 15 Pro", storage: 128, series: "iphone", min_price: 45000, price: 65000, market: 78000, enabled: true },
-      { key: "iPhone 15_128", model: "iPhone 15", storage: 128, series: "iphone", min_price: 35000, price: 50000, market: 60000, enabled: true },
+      { key: "iPhone 15 Pro Max_256", model: "iPhone 15 Pro Max", storage: 256, series: "iphone", price: 82000, market: 97000, enabled: true },
+      { key: "iPhone 15 Pro_128", model: "iPhone 15 Pro", storage: 128, series: "iphone", price: 65000, market: 78000, enabled: true },
+      { key: "iPhone 15_128", model: "iPhone 15", storage: 128, series: "iphone", price: 50000, market: 60000, enabled: true },
       // iPhones 14
-      { key: "iPhone 14 Pro Max_128", model: "iPhone 14 Pro Max", storage: 128, series: "iphone", min_price: 40000, price: 58000, market: 70000, enabled: true },
-      { key: "iPhone 14 Pro_128", model: "iPhone 14 Pro", storage: 128, series: "iphone", min_price: 35000, price: 50000, market: 60000, enabled: true },
-      { key: "iPhone 14_128", model: "iPhone 14", storage: 128, series: "iphone", min_price: 28000, price: 40000, market: 48000, enabled: true },
+      { key: "iPhone 14 Pro Max_128", model: "iPhone 14 Pro Max", storage: 128, series: "iphone", price: 58000, market: 70000, enabled: true },
+      { key: "iPhone 14 Pro_128", model: "iPhone 14 Pro", storage: 128, series: "iphone", price: 50000, market: 60000, enabled: true },
+      { key: "iPhone 14_128", model: "iPhone 14", storage: 128, series: "iphone", price: 40000, market: 48000, enabled: true },
       // iPhones 13
-      { key: "iPhone 13 Pro_128", model: "iPhone 13 Pro", storage: 128, series: "iphone", min_price: 26000, price: 38000, market: 46000, enabled: true },
-      { key: "iPhone 13_128", model: "iPhone 13", storage: 128, series: "iphone", min_price: 20000, price: 32000, market: 39000, enabled: true },
+      { key: "iPhone 13 Pro_128", model: "iPhone 13 Pro", storage: 128, series: "iphone", price: 38000, market: 46000, enabled: true },
+      { key: "iPhone 13_128", model: "iPhone 13", storage: 128, series: "iphone", price: 32000, market: 39000, enabled: true },
       // iPhones 12 / 11
-      { key: "iPhone 12_128", model: "iPhone 12", storage: 128, series: "iphone", min_price: 15000, price: 23000, market: 28000, enabled: true },
-      { key: "iPhone 11_128", model: "iPhone 11", storage: 128, series: "iphone", min_price: 10000, price: 16000, market: 20000, enabled: true },
+      { key: "iPhone 12_128", model: "iPhone 12", storage: 128, series: "iphone", price: 23000, market: 28000, enabled: true },
+      { key: "iPhone 11_128", model: "iPhone 11", storage: 128, series: "iphone", price: 16000, market: 20000, enabled: true },
       // Samsung
-      { key: "Samsung Galaxy S24 Ultra_256", model: "Samsung Galaxy S24 Ultra", storage: 256, series: "samsung", min_price: 45000, price: 65000, market: 78000, enabled: true },
-      { key: "Samsung Galaxy S23 Ultra_256", model: "Samsung Galaxy S23 Ultra", storage: 256, series: "samsung", min_price: 32000, price: 48000, market: 58000, enabled: true },
+      { key: "Samsung Galaxy S24 Ultra_256", model: "Samsung Galaxy S24 Ultra", storage: 256, series: "samsung", price: 65000, market: 78000, enabled: true },
+      { key: "Samsung Galaxy S23 Ultra_256", model: "Samsung Galaxy S23 Ultra", storage: 256, series: "samsung", price: 48000, market: 58000, enabled: true },
       // Pixel
-      { key: "Google Pixel 9 Pro_128", model: "Google Pixel 9 Pro", storage: 128, series: "pixel", min_price: 40000, price: 58000, market: 70000, enabled: true },
-      { key: "Google Pixel 8 Pro_128", model: "Google Pixel 8 Pro", storage: 128, series: "pixel", min_price: 28000, price: 42000, market: 50000, enabled: true },
+      { key: "Google Pixel 9 Pro_128", model: "Google Pixel 9 Pro", storage: 128, series: "pixel", price: 58000, market: 70000, enabled: true },
+      { key: "Google Pixel 8 Pro_128", model: "Google Pixel 8 Pro", storage: 128, series: "pixel", price: 42000, market: 50000, enabled: true },
       // Consoles & iPad
-      { key: "PlayStation 5_825", model: "PlayStation 5", storage: 825, series: "consoles", min_price: 20000, price: 32000, market: 39000, enabled: true },
-      { key: "iPad Pro 11 M2_128", model: "iPad Pro 11 M2", storage: 128, series: "ipad", min_price: 35000, price: 52000, market: 63000, enabled: true }
+      { key: "PlayStation 5_825", model: "PlayStation 5", storage: 825, series: "consoles", price: 32000, market: 39000, enabled: true },
+      { key: "iPad Pro 11 M2_128", model: "iPad Pro 11 M2", storage: 128, series: "ipad", price: 52000, market: 63000, enabled: true }
     ];
 
     function getDeviceIcon(name, series) {
@@ -1003,7 +737,6 @@
     }
 
     let currentMatrix = [];
-    let targetMargin = 5000;
     let conditionRules = {
       battery_threshold: 80,
       battery_discount: 3000,
@@ -1014,13 +747,12 @@
       ignore_replicas: true
     };
 
-    // Загрузка сохраненного состояния
+    // Загрузка сохраненных данных
     try {
-      const saved = localStorage.getItem('smart_resell_matrix_2');
+      const saved = localStorage.getItem('gadget_resell_matrix_clean');
       if (saved) {
         const parsed = JSON.parse(saved);
         currentMatrix = parsed.matrix || DEFAULT_CATALOG;
-        if (parsed.targetMargin) targetMargin = parsed.targetMargin;
         if (parsed.conditionRules) conditionRules = Object.assign(conditionRules, parsed.conditionRules);
       } else {
         currentMatrix = DEFAULT_CATALOG;
@@ -1029,96 +761,99 @@
       currentMatrix = DEFAULT_CATALOG;
     }
 
-    // Подтягиваем значения правил в UI
-    document.getElementById('batteryThresholdInput').value = conditionRules.battery_threshold;
-    document.getElementById('batteryDiscountInput').value = conditionRules.battery_discount;
-    document.getElementById('allowDefectsToggle').checked = conditionRules.allow_defects;
-    document.getElementById('defectDiscountInput').value = conditionRules.defect_discount;
-    document.getElementById('ignoreFaceIdToggle').checked = conditionRules.ignore_no_face_id;
-    document.getElementById('ignoreMdmToggle').checked = conditionRules.ignore_mdm_rsim;
-    document.getElementById('ignoreReplicasToggle').checked = conditionRules.ignore_replicas;
+    // Подгрузка pricing_matrix.json если есть
+    async function loadLivePrices() {
+      try {
+        const res = await fetch('./pricing_matrix.json?t=' + Date.now());
+        if (!res.ok) return;
+        const data = await res.json();
+        const loaded = [];
+        for (const [model, storages] of Object.entries(data)) {
+          const series = detectSeries(model);
+          for (const [storage, cfg] of Object.entries(storages)) {
+            const key = `${model}_${storage}`;
+            const price = Number(cfg.max_buy || cfg.price || 0);
+            const market = Number(cfg.market || Math.round(price * 1.2 / 500) * 500);
+            const enabled = cfg.enabled !== false;
+            loaded.push({
+              key,
+              model,
+              storage: Number(storage) || storage,
+              series,
+              price,
+              market,
+              enabled,
+              isCustom: series === 'custom'
+            });
+          }
+        }
+        if (loaded.length > 0) {
+          const fileKeys = new Set(loaded.map(x => x.key));
+          currentMatrix.forEach(m => {
+            if (m.isCustom && !fileKeys.has(m.key)) loaded.unshift(m);
+          });
+          currentMatrix = loaded;
+          saveLocal();
+          renderCards();
+          updateStats();
+        }
+      } catch (err) {}
+    }
 
-    const defectDiscountRow = document.getElementById('defectDiscountRow');
-    const defectDiscountInput = document.getElementById('defectDiscountInput');
-    defectDiscountRow.style.opacity = conditionRules.allow_defects ? '1' : '0.5';
-    defectDiscountInput.disabled = !conditionRules.allow_defects;
+    // Синхронизация правил состояния в UI
+    const batThresholdEl = document.getElementById('batteryThresholdInput');
+    const batDiscountEl = document.getElementById('batteryDiscountInput');
+    const allowDefectsEl = document.getElementById('allowDefectsToggle');
+    const defectDiscountEl = document.getElementById('defectDiscountInput');
+    const defectRowEl = document.getElementById('defectDiscountRow');
+    const ignoreFaceIdEl = document.getElementById('ignoreFaceIdToggle');
+    const ignoreMdmEl = document.getElementById('ignoreMdmToggle');
 
-    document.getElementById('allowDefectsToggle').addEventListener('change', (e) => {
+    batThresholdEl.value = conditionRules.battery_threshold;
+    batDiscountEl.value = conditionRules.battery_discount;
+    allowDefectsEl.checked = conditionRules.allow_defects;
+    defectDiscountEl.value = conditionRules.defect_discount;
+    defectRowEl.style.opacity = conditionRules.allow_defects ? '1' : '0.5';
+    defectDiscountEl.disabled = !conditionRules.allow_defects;
+    ignoreFaceIdEl.checked = conditionRules.ignore_no_face_id;
+    ignoreMdmEl.checked = conditionRules.ignore_mdm_rsim;
+
+    allowDefectsEl.addEventListener('change', (e) => {
       conditionRules.allow_defects = e.target.checked;
-      defectDiscountRow.style.opacity = conditionRules.allow_defects ? '1' : '0.5';
-      defectDiscountInput.disabled = !conditionRules.allow_defects;
+      defectRowEl.style.opacity = conditionRules.allow_defects ? '1' : '0.5';
+      defectDiscountEl.disabled = !conditionRules.allow_defects;
       saveLocal();
     });
-
-    document.getElementById('batteryThresholdInput').addEventListener('input', (e) => {
+    batThresholdEl.addEventListener('input', (e) => {
       conditionRules.battery_threshold = parseInt(e.target.value, 10) || 80;
       saveLocal();
     });
-    document.getElementById('batteryDiscountInput').addEventListener('input', (e) => {
+    batDiscountEl.addEventListener('input', (e) => {
       conditionRules.battery_discount = parseInt(e.target.value, 10) || 3000;
       saveLocal();
     });
-    document.getElementById('defectDiscountInput').addEventListener('input', (e) => {
+    defectDiscountEl.addEventListener('input', (e) => {
       conditionRules.defect_discount = parseInt(e.target.value, 10) || 8000;
       saveLocal();
     });
-    document.getElementById('ignoreFaceIdToggle').addEventListener('change', (e) => {
+    ignoreFaceIdEl.addEventListener('change', (e) => {
       conditionRules.ignore_no_face_id = e.target.checked;
       saveLocal();
     });
-    document.getElementById('ignoreMdmToggle').addEventListener('change', (e) => {
+    ignoreMdmEl.addEventListener('change', (e) => {
       conditionRules.ignore_mdm_rsim = e.target.checked;
       saveLocal();
-    });
-    document.getElementById('ignoreReplicasToggle').addEventListener('change', (e) => {
-      conditionRules.ignore_replicas = e.target.checked;
-      saveLocal();
-    });
-
-    // Переключение вкладок
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-
-        btn.classList.add('active');
-        const tabId = btn.dataset.tab;
-        if (tabId === 'catalog') document.getElementById('tabCatalog').classList.add('active');
-        else if (tabId === 'condition') document.getElementById('tabCondition').classList.add('active');
-        else if (tabId === 'calculator') {
-          document.getElementById('tabCalculator').classList.add('active');
-          populateCalculatorSelect();
-          updateSummary();
-        }
-      });
-    });
-
-    // Экспресс-подгонка маржи
-    document.querySelectorAll('.margin-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
-        document.querySelectorAll('.margin-chip').forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
-        targetMargin = parseInt(chip.dataset.margin, 10);
-        document.getElementById('targetMarginBadge').textContent = targetMargin.toLocaleString('ru-RU') + ' ₽';
-      });
-    });
-
-    document.getElementById('btnApplyMarginAll').addEventListener('click', () => {
-      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-      currentMatrix.forEach(item => {
-        if (item.market > 0) {
-          item.price = Math.max(0, item.market - targetMargin);
-        }
-      });
-      saveLocal();
-      renderCards();
-      alert(`Все лимиты выкупа пересчитаны с маржой ${targetMargin.toLocaleString('ru-RU')} ₽!`);
     });
 
     let activeFilter = 'all';
     let searchQuery = '';
+
+    function updateStats() {
+      document.getElementById('statTotal').textContent = currentMatrix.length;
+      document.getElementById('statActive').textContent = currentMatrix.filter(m => m.enabled).length;
+      const filterPill = document.querySelector('.series-pill.active');
+      document.getElementById('statFilter').textContent = filterPill ? filterPill.textContent : 'Все';
+    }
 
     function renderCards() {
       const container = document.getElementById('modelsList');
@@ -1148,11 +883,12 @@
 
       if (filtered.length === 0) {
         container.innerHTML = `
-          <div style="text-align:center; padding: 35px 10px; color: var(--text-muted)">
+          <div style="text-align:center; padding: 40px 10px; color: var(--text-muted)">
             <p style="font-size: 26px; margin-bottom: 6px">🔍</p>
             <p style="font-size: 14px; font-weight: 600">Модели не найдены</p>
           </div>
         `;
+        updateStats();
         return;
       }
 
@@ -1160,7 +896,7 @@
         const card = document.createElement('div');
         card.className = `model-card ${item.isCustom ? 'custom-card' : ''} ${item.enabled ? '' : 'disabled'}`;
         const storageText = item.storage >= 1024 ? `${item.storage / 1024} TB` : `${item.storage} GB`;
-        const profitEst = Math.max(0, (item.market || Math.round(item.price * 1.2)) - item.price);
+        const profit = (item.market || 0) - (item.price || 0);
         const icon = getDeviceIcon(item.model, item.series);
 
         card.innerHTML = `
@@ -1180,82 +916,79 @@
             </div>
           </div>
 
-          <div class="card-inputs-row">
-            <div class="price-box" style="flex: 0.85;">
-              <span class="price-box-label">От (хлам):</span>
-              <div class="price-input-wrapper">
-                <input type="number" step="500" class="price-input input-min-price" value="${item.min_price || 0}" data-key="${item.key}">
-                <span class="price-curr">₽</span>
+          <div class="card-prices-grid">
+            <div class="price-field">
+              <label class="price-field-label">Выкуп (до):</label>
+              <div class="price-stepper-row">
+                <button class="step-btn btn-step" data-step="-1000">-1k</button>
+                <div class="input-wrap">
+                  <input type="number" step="500" class="price-input input-buy" value="${item.price}" data-key="${item.key}">
+                  <span class="currency">₽</span>
+                </div>
+                <button class="step-btn btn-step" data-step="1000">+1k</button>
               </div>
             </div>
 
-            <div class="price-box" style="flex: 1.25;">
-              <span class="price-box-label">Лимит выкупа:</span>
-              <div class="price-input-wrapper">
-                <input type="number" step="500" class="price-input input-buy-price" value="${item.price}" data-key="${item.key}">
-                <span class="price-curr">₽</span>
+            <div class="price-field">
+              <label class="price-field-label">Продажа (рынок):</label>
+              <div class="input-wrap">
+                <input type="number" step="500" class="price-input input-market" value="${item.market || Math.round(item.price * 1.2)}" data-key="${item.key}">
+                <span class="currency">₽</span>
               </div>
             </div>
-
-            <button class="quick-step-btn btn-step" data-step="-1000" data-key="${item.key}">-1k</button>
-            <button class="quick-step-btn btn-step" data-step="1000" data-key="${item.key}">+1k</button>
           </div>
 
-          <div class="card-meta">
-            <span>Рынок: <b>${(item.market || Math.round(item.price * 1.2)).toLocaleString('ru-RU')} ₽</b></span>
-            <span class="profit-badge">Профит: ~${profitEst.toLocaleString('ru-RU')} ₽</span>
+          <div class="card-footer">
+            <span class="profit-badge ${profit < 0 ? 'negative' : ''}">Навар: ~${profit.toLocaleString('ru-RU')} ₽</span>
           </div>
         `;
 
-        // Switch
+        // Switch активности
         card.querySelector('input[type="checkbox"]').addEventListener('change', (e) => {
           if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
           item.enabled = e.target.checked;
           card.classList.toggle('disabled', !item.enabled);
           saveLocal();
+          updateStats();
         });
 
-        // Min price
-        const minInput = card.querySelector('.input-min-price');
-        minInput.addEventListener('input', (e) => {
-          item.min_price = parseInt(e.target.value, 10) || 0;
-          saveLocal();
-        });
-
-        // Buy price & meta
-        const buyInput = card.querySelector('.input-buy-price');
+        const buyInput = card.querySelector('.input-buy');
+        const marketInput = card.querySelector('.input-market');
         const profitBadge = card.querySelector('.profit-badge');
-        function updateMeta() {
-          const mkt = item.market || Math.round(item.price * 1.2);
-          const p = Math.max(0, mkt - item.price);
-          profitBadge.textContent = `Профит: ~${p.toLocaleString('ru-RU')} ₽`;
+
+        function updateProfitBadge() {
+          const p = (item.market || 0) - (item.price || 0);
+          profitBadge.textContent = `Навар: ~${p.toLocaleString('ru-RU')} ₽`;
+          profitBadge.classList.toggle('negative', p < 0);
         }
 
+        // Ввод цены выкупа
         buyInput.addEventListener('input', (e) => {
           item.price = parseInt(e.target.value, 10) || 0;
-          if (!item.market || item.market < item.price) {
-            item.market = Math.round(item.price * 1.2 / 500) * 500;
-          }
-          updateMeta();
+          updateProfitBadge();
           saveLocal();
         });
 
-        // Quick +/-
+        // Ввод цены продажи (рынок)
+        marketInput.addEventListener('input', (e) => {
+          item.market = parseInt(e.target.value, 10) || 0;
+          updateProfitBadge();
+          saveLocal();
+        });
+
+        // Кнопки -1k / +1k
         card.querySelectorAll('.btn-step').forEach(btn => {
           btn.addEventListener('click', () => {
             if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
             const step = parseInt(btn.dataset.step, 10);
-            item.price = Math.max(0, item.price + step);
+            item.price = Math.max(0, (item.price || 0) + step);
             buyInput.value = item.price;
-            if (!item.market || item.market < item.price) {
-              item.market = Math.round(item.price * 1.2 / 500) * 500;
-            }
-            updateMeta();
+            updateProfitBadge();
             saveLocal();
           });
         });
 
-        // Delete
+        // Удаление
         const delBtn = card.querySelector('.btn-delete');
         if (delBtn) {
           delBtn.addEventListener('click', () => {
@@ -1267,6 +1000,17 @@
 
         container.appendChild(card);
       });
+
+      updateStats();
+    }
+
+    function saveLocal() {
+      try {
+        localStorage.setItem('gadget_resell_matrix_clean', JSON.stringify({
+          matrix: currentMatrix,
+          conditionRules
+        }));
+      } catch (e) {}
     }
 
     // Слушатели поиска и фильтров
@@ -1285,171 +1029,37 @@
       });
     });
 
-    function saveLocal() {
-      try {
-        localStorage.setItem('smart_resell_matrix_2', JSON.stringify({
-          matrix: currentMatrix,
-          targetMargin,
-          conditionRules
-        }));
-      } catch (e) {}
-    }
-
-    // Калькулятор
-    function populateCalculatorSelect() {
-      const select = document.getElementById('calcModelSelect');
-      select.innerHTML = '';
-      currentMatrix.filter(m => m.enabled).forEach(item => {
-        const opt = document.createElement('option');
-        opt.value = item.key;
-        opt.textContent = `${item.model} (${item.storage} GB) — Рынок: ${item.market.toLocaleString('ru-RU')} ₽`;
-        select.appendChild(opt);
-      });
-    }
-
-    document.getElementById('btnRunCalc').addEventListener('click', () => {
-      const select = document.getElementById('calcModelSelect');
-      const item = currentMatrix.find(m => m.key === select.value);
-      const resBox = document.getElementById('calcResultBox');
-      if (!item) {
-        alert("Выберите модель из списка!");
-        return;
-      }
-
-      const offerPrice = parseInt(document.getElementById('calcPriceInput').value, 10);
-      if (!offerPrice || offerPrice <= 0) {
-        alert("Введите цену продавца!");
-        return;
-      }
-
-      const battery = parseInt(document.getElementById('calcBatteryInput').value, 10);
-      const hasDefect = document.getElementById('calcHasDefectInput').checked;
-
-      // Оценка
-      let effectiveBuy = item.price;
-      const notes = [];
-
-      if (hasDefect) {
-        if (!conditionRules.allow_defects) {
-          resBox.className = 'calc-result-box rejected';
-          resBox.innerHTML = `<b>🚫 ОТКЛОНЕНО:</b> В вашем профиле выключен выкуп лотов с дефектами.`;
-          return;
-        } else {
-          effectiveBuy -= conditionRules.defect_discount;
-          notes.push(`Скидка за дефект: -${conditionRules.defect_discount.toLocaleString('ru-RU')} ₽`);
-        }
-      }
-
-      if (battery && battery < conditionRules.battery_threshold) {
-        effectiveBuy -= conditionRules.battery_discount;
-        notes.push(`Скидка на замену АКБ (${battery}%): -${conditionRules.battery_discount.toLocaleString('ru-RU')} ₽`);
-      }
-
-      effectiveBuy = Math.max(0, effectiveBuy);
-      const calcProfit = item.market - offerPrice;
-
-      if (offerPrice <= effectiveBuy) {
-        resBox.className = 'calc-result-box profitable';
-        resBox.innerHTML = `
-          <b>🟢 ОТЛИЧНАЯ СДЕЛКА! МОЖНО ВЫКУПАТЬ</b><br>
-          💰 Цена продавца: <b>${offerPrice.toLocaleString('ru-RU')} ₽</b><br>
-          🎯 Ваш порог выкупа: <b>${effectiveBuy.toLocaleString('ru-RU')} ₽</b><br>
-          📈 Ожидаемый чистый профит: <b>+${calcProfit.toLocaleString('ru-RU')} ₽</b><br>
-          ${notes.length ? '<small>' + notes.join('<br>') + '</small>' : ''}
-        `;
-      } else {
-        const diff = offerPrice - effectiveBuy;
-        resBox.className = 'calc-result-box rejected';
-        resBox.innerHTML = `
-          <b>🔴 ДОРОГО ДЛЯ ВЫКУПА</b><br>
-          Цена ${offerPrice.toLocaleString('ru-RU')} ₽ превышает порог ${effectiveBuy.toLocaleString('ru-RU')} ₽ на <b>+${diff.toLocaleString('ru-RU')} ₽</b>.<br>
-          ${notes.length ? '<small>' + notes.join('<br>') + '</small>' : ''}
-        `;
-      }
+    // Модалка состояния
+    const condModal = document.getElementById('conditionModal');
+    document.getElementById('btnOpenConditionModal').addEventListener('click', () => {
+      condModal.classList.add('active');
     });
-
-    function updateSummary() {
-      document.getElementById('summaryTotalModels').textContent = currentMatrix.length;
-      const active = currentMatrix.filter(m => m.enabled);
-      document.getElementById('summaryActiveConfigs').textContent = active.length;
-      if (active.length > 0) {
-        const avg = Math.round(active.reduce((acc, m) => acc + (m.market - m.price), 0) / active.length);
-        document.getElementById('summaryAvgProfit').textContent = '+' + avg.toLocaleString('ru-RU') + ' ₽';
-      }
-    }
-
-    // Сохранение в бот
-    document.getElementById('btnSave').addEventListener('click', () => {
+    document.getElementById('btnCloseConditionModal').addEventListener('click', () => {
+      condModal.classList.remove('active');
+    });
+    document.getElementById('btnSaveConditionModal').addEventListener('click', () => {
+      condModal.classList.remove('active');
       if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-
-      const payload = {
-        action: "save_resell_profile",
-        target_margin: targetMargin,
-        condition_rules: conditionRules,
-        models: currentMatrix.map(m => ({
-          model: m.model,
-          storage: m.storage,
-          enabled: m.enabled,
-          min_price: m.min_price || 0,
-          price: m.price,
-          max_buy: m.price,
-          market: m.market
-        }))
-      };
-
-      if (tg && typeof tg.sendData === 'function') {
-        try {
-          tg.sendData(JSON.stringify(payload));
-          tg.close();
-        } catch (err) {
-          alert("Ошибка отправки в Telegram: " + err.message);
-        }
-      } else {
-        alert("✅ Настройки профиля успешно сохранены локально!\n(При открытии внутри Telegram они мгновенно синхронизируются с ботом).");
-      }
     });
 
-    // Экспорт в CSV
-    document.getElementById('btnExportExcel').addEventListener('click', () => {
-      let csv = "Модель,Память (GB),Мин. цена (₽),Лимит выкупа (₽),Рынок (₽),Статус\n";
-      currentMatrix.forEach(m => {
-        csv += `"${m.model}",${m.storage},${m.min_price || 0},${m.price},${m.market},${m.enabled ? 'ВКЛ' : 'ВЫКЛ'}\n`;
-      });
-      const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `resell_matrix_${Date.now()}.csv`;
-      a.click();
-      URL.revokeObjectURL(url);
-    });
-
-    // Модалка
-    const modal = document.getElementById('addModal');
+    // Модалка добавления модели
+    const addModal = document.getElementById('addModal');
     document.getElementById('btnOpenAddModal').addEventListener('click', () => {
-      modal.classList.add('active');
+      addModal.classList.add('active');
+      document.getElementById('newModelName').focus();
     });
-    document.getElementById('btnCloseModal').addEventListener('click', () => {
-      modal.classList.remove('active');
-    });
-
-    document.querySelectorAll('.storage-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        document.querySelectorAll('.storage-chip').forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
-        document.getElementById('newModelStorage').value = chip.dataset.storage;
-      });
+    document.getElementById('btnCloseAddModal').addEventListener('click', () => {
+      addModal.classList.remove('active');
     });
 
     document.getElementById('btnSubmitNewModel').addEventListener('click', () => {
       const name = document.getElementById('newModelName').value.trim();
       const storage = parseInt(document.getElementById('newModelStorage').value, 10) || 128;
       const price = parseInt(document.getElementById('newModelPrice').value, 10);
-      const market = parseInt(document.getElementById('newModelMarket').value, 10) || Math.round(price * 1.2 / 500) * 500;
-      const minPrice = parseInt(document.getElementById('newModelMinPrice').value, 10) || Math.round(market * 0.35);
+      const market = parseInt(document.getElementById('newModelMarket').value, 10) || Math.round((price || 30000) * 1.2 / 500) * 500;
 
       if (!name || !price || price <= 0) {
-        alert("Заполните название и корректную цену выкупа!");
+        alert("Укажите название модели и максимальную цену выкупа!");
         return;
       }
 
@@ -1461,7 +1071,6 @@
         model: name,
         storage,
         series,
-        min_price: minPrice,
         price,
         market,
         enabled: true,
@@ -1469,12 +1078,45 @@
       });
 
       saveLocal();
-      modal.classList.remove('active');
+      addModal.classList.remove('active');
+      document.getElementById('newModelName').value = '';
+      document.getElementById('newModelPrice').value = '';
+      document.getElementById('newModelMarket').value = '';
       renderCards();
-      alert(`Модель «${name}» добавлена!`);
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+    });
+
+    // Сохранение и отправка в Telegram бот
+    document.getElementById('btnSave').addEventListener('click', () => {
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+
+      const payload = {
+        action: "save_resell_profile",
+        condition_rules: conditionRules,
+        models: currentMatrix.map(m => ({
+          model: m.model,
+          storage: m.storage,
+          enabled: m.enabled,
+          price: m.price,
+          max_buy: m.price,
+          market: m.market || Math.round(m.price * 1.2)
+        }))
+      };
+
+      if (tg && typeof tg.sendData === 'function') {
+        try {
+          tg.sendData(JSON.stringify(payload));
+          tg.close();
+        } catch (err) {
+          alert("Ошибка отправки: " + err.message);
+        }
+      } else {
+        alert("✅ Цены выкупа и продажи успешно сохранены!\nПри открытии внутри Telegram они мгновенно синхронизируются с ботом.");
+      }
     });
 
     renderCards();
+    loadLivePrices();
   </script>
 </body>
 </html>
