@@ -444,12 +444,36 @@ def create_bot_dispatcher(
             raw_payload = json.loads(message.web_app_data.data)
             action = raw_payload.get("action")
 
+            if action == "set_region":
+                user_id = message.chat.id
+                region_name = str(raw_payload.get("region", "Москва")).strip()
+                updated = reg_manager.set_region(region_name)
+                if updated:
+                    ans = (
+                        f"✅ <b>Регион поиска успешно переключен: {updated['name']}!</b>\n\n"
+                        "Воркеры Авито и Юлы мгновенно переключились на поиск в новом регионе ⚡️"
+                    )
+                else:
+                    ans = f"⚠️ Не удалось распознать регион: {region_name}"
+                bot = message.bot
+                if bot:
+                    await send_or_replace_functional_message(chat_id=user_id, bot=bot, text=ans, reply_markup=get_reply_keyboard(current_region=reg_manager.current["name"]))
+                else:
+                    await message.answer(ans, reply_markup=get_reply_keyboard(current_region=reg_manager.current["name"]))
+                return
+
             if action == "save_resell_profile":
                 user_id = message.chat.id
                 target_margin = int(raw_payload.get("target_margin", 5000))
                 cond_data = raw_payload.get("condition_rules", {})
                 models_data = raw_payload.get("models", [])
                 categories_data = raw_payload.get("categories", [])
+                selected_region = raw_payload.get("region")
+                reg_info = ""
+                if selected_region:
+                    updated_reg = reg_manager.set_region(str(selected_region).strip())
+                    if updated_reg:
+                        reg_info = f"📍 <b>Активный регион:</b> <b>{updated_reg['name']}</b>\n"
 
                 condition_rules = UserConditionRules(
                     battery_threshold=int(cond_data.get("battery_threshold", 80)),
@@ -529,6 +553,7 @@ def create_bot_dispatcher(
 
                 text = (
                     "🎯 <b>Персональный профиль перекупщика сохранен!</b>\n\n"
+                    f"{reg_info}"
                     f"💰 <b>Минимальная маржа:</b> от <code>{target_margin:,} ₽</code>\n"
                     f"{cats_info}"
                     f"🔋 <b>Уценка АКБ &lt;{condition_rules.battery_threshold}%:</b> -<code>{condition_rules.battery_discount:,} ₽</code>\n"
@@ -539,9 +564,9 @@ def create_bot_dispatcher(
                 )
                 bot = message.bot
                 if bot:
-                    await send_or_replace_functional_message(chat_id=message.chat.id, bot=bot, text=text)
+                    await send_or_replace_functional_message(chat_id=message.chat.id, bot=bot, text=text, reply_markup=get_reply_keyboard(current_region=reg_manager.current["name"]))
                 else:
-                    await message.answer(text)
+                    await message.answer(text, reply_markup=get_reply_keyboard(current_region=reg_manager.current["name"]))
 
             elif action in ("update_matrix", "sync_matrix"):
                 updated_models = raw_payload.get("matrix", [])
