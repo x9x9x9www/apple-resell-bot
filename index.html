@@ -228,6 +228,52 @@
       margin-top: 6px;
       margin-bottom: 10px;
     }
+    .series-pill[draggable="true"] {
+      cursor: grab;
+      touch-action: pan-x;
+    }
+    .series-pill.dragging {
+      opacity: 0.45;
+      transform: scale(0.96);
+      border: 1px dashed var(--accent-color) !important;
+      cursor: grabbing;
+    }
+    .series-pill.drag-over {
+      border: 2px solid var(--accent-color) !important;
+      transform: scale(1.06);
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+    .template-chips-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 6px;
+    }
+    .template-chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      border-radius: 12px;
+      padding: 6px 11px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      user-select: none;
+    }
+    .template-chip:hover {
+      background: rgba(10, 132, 255, 0.18);
+      border-color: var(--accent-color);
+      transform: translateY(-1px);
+    }
+    .template-chip.added {
+      opacity: 0.45;
+      border-style: dashed;
+      pointer-events: none;
+    }
     .emoji-chip {
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid var(--card-border);
@@ -696,12 +742,22 @@
   <div class="modal-overlay" id="createCategoryModal">
     <div class="modal-sheet">
       <div class="modal-header">
-        <h3 class="modal-title">📁 Новая папка / Бренд</h3>
+        <h3 class="modal-title">📁 Добавить папку / Бренд</h3>
         <button class="btn-close-modal" id="btnCloseCreateCategoryModal">✕</button>
       </div>
 
+      <!-- Раздел готовых шаблонов -->
+      <div class="form-group" style="margin-bottom:12px;">
+        <label class="form-label">⚡️ Готовые категории (добавить в 1 клик):</label>
+        <div class="template-chips-grid" id="categoryTemplatesGrid">
+          <!-- Генерируется через JS -->
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid var(--card-border); margin: 14px 0 12px 0;"></div>
+
       <div class="form-group">
-        <label class="form-label">Название папки / бренда:</label>
+        <label class="form-label">Или создайте свою папку:</label>
         <input type="text" class="form-input" id="newCatName" placeholder="например: Xiaomi, Dyson, Sony, Наушники">
       </div>
 
@@ -728,7 +784,7 @@
       </div>
 
       <button class="btn-save" id="btnSubmitCreateCategory" style="width:100%; margin-top:8px">
-        <span>✅ Создать папку</span>
+        <span>✅ Создать свою папку</span>
       </button>
     </div>
   </div>
@@ -746,6 +802,19 @@
       <div class="form-group">
         <label class="form-label">Название папки / бренда:</label>
         <input type="text" class="form-input" id="editCatName">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Порядок в панели вкладок:</label>
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="btn-step" id="btnMoveCatLeft" style="flex:1; height:38px; border-radius:10px; font-weight:700; background:rgba(255,255,255,0.06); font-size:12px;">
+            ◀️ Сдвинуть левее
+          </button>
+          <button type="button" class="btn-step" id="btnMoveCatRight" style="flex:1; height:38px; border-radius:10px; font-weight:700; background:rgba(255,255,255,0.06); font-size:12px;">
+            Сдвинуть правее ▶️
+          </button>
+        </div>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">💡 Также папки можно перетаскивать прямо на панели зажатием пальца</div>
       </div>
 
       <div class="form-group">
@@ -775,7 +844,7 @@
       </button>
 
       <button class="btn-step" id="btnDeleteCategory" style="width:100%; margin-top:12px; height:42px; background:rgba(255,69,58,0.15); border:1px solid rgba(255,69,58,0.3); color:var(--danger-color); font-weight:700">
-        🗑 Удалить эту папку
+        🗑 Удалить / скрыть папку
       </button>
     </div>
   </div>
@@ -880,11 +949,25 @@
       { key: "iPad Pro 11 M2_128", model: "iPad Pro 11 M2", storage: 128, series: "ipad", price: 52000, market: 63000, enabled: true }
     ];
 
-    let customCategories = [];
+    const POPULAR_TEMPLATES = [
+      { id: 'iphone', name: 'iPhone', icon: '📱' },
+      { id: 'macbook', name: 'Mac', icon: '💻' },
+      { id: 'samsung', name: 'Samsung', icon: '📱' },
+      { id: 'pixel', name: 'Pixel', icon: '📱' },
+      { id: 'ipad', name: 'iPad', icon: '📟' },
+      { id: 'consoles', name: 'Консоли', icon: '🎮' },
+      { id: 'dyson', name: 'Dyson', icon: '💨' },
+      { id: 'xiaomi', name: 'Xiaomi', icon: '📱' },
+      { id: 'headphones', name: 'Наушники', icon: '🎧' },
+      { id: 'watch', name: 'Apple Watch', icon: '⌚️' },
+      { id: 'sony', name: 'Sony', icon: '📷' }
+    ];
+
+    let categories = []; // Пользовательские папки в настраиваемом порядке
 
     function getDeviceIcon(name, series) {
-      const customCat = customCategories.find(c => c.id === series || (c.name && c.name.toLowerCase() === (series || '').toLowerCase()));
-      if (customCat && customCat.icon) return customCat.icon;
+      const cat = categories.find(c => c.id === series || (c.name && c.name.toLowerCase() === (series || '').toLowerCase()));
+      if (cat && cat.icon) return cat.icon;
 
       const lower = ((name || '') + ' ' + (series || '')).toLowerCase();
       if (lower.includes('macbook') || lower.includes('mac')) return '💻';
@@ -901,19 +984,17 @@
 
     function detectSeries(name) {
       const lower = (name || '').toLowerCase();
+      for (const cat of categories) {
+        if (cat.name && lower.includes(cat.name.toLowerCase())) {
+          return cat.id;
+        }
+      }
       if (lower.includes('macbook') || lower.includes('mac')) return 'macbook';
       if (lower.includes('samsung') || lower.includes('galaxy')) return 'samsung';
       if (lower.includes('pixel')) return 'pixel';
       if (lower.includes('ipad')) return 'ipad';
       if (lower.includes('playstation') || lower.includes('ps5') || lower.includes('steam deck')) return 'consoles';
       if (lower.includes('iphone')) return 'iphone';
-
-      // Проверяем пользовательские папки по названию бренда
-      for (const cat of customCategories) {
-        if (cat.name && lower.includes(cat.name.toLowerCase())) {
-          return cat.id;
-        }
-      }
       return 'custom';
     }
 
@@ -935,12 +1016,18 @@
         const parsed = JSON.parse(saved);
         currentMatrix = parsed.matrix || DEFAULT_CATALOG;
         if (parsed.conditionRules) conditionRules = Object.assign(conditionRules, parsed.conditionRules);
-        if (Array.isArray(parsed.categories)) customCategories = parsed.categories;
+        if (Array.isArray(parsed.categories)) {
+          categories = parsed.categories;
+        }
       } else {
         currentMatrix = DEFAULT_CATALOG;
+        // По умолчанию изначально чисто: только [ Все ] и [ + Папка ],
+        // а готовые папки добавляются в 1 клик из шаблонов в окне "Создать папку"
+        categories = [];
       }
     } catch (e) {
       currentMatrix = DEFAULT_CATALOG;
+      categories = [];
     }
 
     // Подгрузка pricing_matrix.json если есть
@@ -966,7 +1053,7 @@
               price,
               market,
               enabled,
-              isCustom: series === 'custom' || customCategories.some(c => c.id === series)
+              isCustom: series === 'custom' || categories.some(c => c.id === series)
             });
           }
         }
@@ -1044,37 +1131,44 @@
       }
     }
 
-    // Рендер панели категорий
+    // Перестановка порядка папок
+    function reorderCategories(fromIndex, toIndex) {
+      if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0 || fromIndex >= categories.length || toIndex >= categories.length) return;
+      const [moved] = categories.splice(fromIndex, 1);
+      categories.splice(toIndex, 0, moved);
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      saveLocal();
+      renderSeriesBar();
+      renderCards();
+    }
+
+    // Рендер панели категорий с поддержкой Drag & Drop
+    let dragSrcIndex = null;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let isTouchDragging = false;
+    let longPressTimer = null;
+    let touchIndex = null;
+
     function renderSeriesBar() {
       const bar = document.getElementById('seriesBar');
       bar.innerHTML = '';
 
-      const defaults = [
-        { id: 'all', name: 'Все', icon: '' },
-        { id: 'iphone', name: 'iPhone', icon: '📱' },
-        { id: 'macbook', name: 'Mac', icon: '💻' },
-        { id: 'samsung', name: 'Samsung', icon: '📱' },
-        { id: 'pixel', name: 'Pixel', icon: '📱' },
-        { id: 'ipad', name: 'iPad', icon: '📟' },
-        { id: 'consoles', name: 'Консоли', icon: '🎮' },
-      ];
-
-      defaults.forEach(def => {
-        const pill = document.createElement('div');
-        pill.className = `series-pill ${activeFilter === def.id ? 'active' : ''}`;
-        pill.dataset.series = def.id;
-        pill.textContent = def.icon ? `${def.icon} ${def.name}` : def.name;
-        pill.addEventListener('click', () => {
-          selectFilter(def.id);
-        });
-        bar.appendChild(pill);
-      });
+      // Вкладка "Все" (всегда первая)
+      const allPill = document.createElement('div');
+      allPill.className = `series-pill all-pill ${activeFilter === 'all' ? 'active' : ''}`;
+      allPill.dataset.series = 'all';
+      allPill.textContent = 'Все';
+      allPill.addEventListener('click', () => selectFilter('all'));
+      bar.appendChild(allPill);
 
       // Пользовательские папки
-      customCategories.forEach(cat => {
+      categories.forEach((cat, idx) => {
         const pill = document.createElement('div');
         pill.className = `series-pill ${activeFilter === cat.id ? 'active' : ''}`;
         pill.dataset.series = cat.id;
+        pill.dataset.categoryIndex = idx;
+        pill.draggable = true;
 
         const titleSpan = document.createElement('span');
         titleSpan.textContent = `${cat.icon || '📁'} ${cat.name}`;
@@ -1091,17 +1185,110 @@
         pill.appendChild(editBtn);
 
         pill.addEventListener('click', () => {
-          selectFilter(cat.id);
+          if (!isTouchDragging) {
+            selectFilter(cat.id);
+          }
         });
+
+        // HTML5 Mouse Drag & Drop
+        pill.addEventListener('dragstart', (e) => {
+          dragSrcIndex = idx;
+          pill.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
+          e.dataTransfer.setData('text/plain', idx);
+        });
+
+        pill.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          pill.classList.add('drag-over');
+        });
+
+        pill.addEventListener('dragleave', () => {
+          pill.classList.remove('drag-over');
+        });
+
+        pill.addEventListener('drop', (e) => {
+          e.preventDefault();
+          pill.classList.remove('drag-over');
+          if (dragSrcIndex !== null && dragSrcIndex !== idx) {
+            reorderCategories(dragSrcIndex, idx);
+          }
+        });
+
+        pill.addEventListener('dragend', () => {
+          document.querySelectorAll('.series-pill').forEach(p => p.classList.remove('dragging', 'drag-over'));
+        });
+
+        // Touch Drag & Drop (для мобильного Telegram WebApp)
+        pill.addEventListener('touchstart', (e) => {
+          const touch = e.touches[0];
+          touchStartX = touch.clientX;
+          touchStartY = touch.clientY;
+          touchIndex = idx;
+
+          longPressTimer = setTimeout(() => {
+            isTouchDragging = true;
+            if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+            pill.classList.add('dragging');
+          }, 250);
+        }, { passive: true });
+
+        pill.addEventListener('touchmove', (e) => {
+          const touch = e.touches[0];
+          const dx = Math.abs(touch.clientX - touchStartX);
+          const dy = Math.abs(touch.clientY - touchStartY);
+
+          if (!isTouchDragging) {
+            if (dx > 10 || dy > 10) {
+              clearTimeout(longPressTimer);
+            }
+            return;
+          }
+
+          e.preventDefault();
+          const el = document.elementFromPoint(touch.clientX, touch.clientY);
+          const targetPill = el ? el.closest('.series-pill[data-category-index]') : null;
+          document.querySelectorAll('.series-pill').forEach(p => p.classList.remove('drag-over'));
+          if (targetPill && targetPill !== pill) {
+            targetPill.classList.add('drag-over');
+          }
+        }, { passive: false });
+
+        pill.addEventListener('touchend', (e) => {
+          clearTimeout(longPressTimer);
+          if (isTouchDragging) {
+            isTouchDragging = false;
+            pill.classList.remove('dragging');
+            const touch = e.changedTouches[0];
+            const el = document.elementFromPoint(touch.clientX, touch.clientY);
+            const targetPill = el ? el.closest('.series-pill[data-category-index]') : null;
+            document.querySelectorAll('.series-pill').forEach(p => p.classList.remove('drag-over'));
+            if (targetPill && targetPill !== pill) {
+              const toIndex = parseInt(targetPill.dataset.categoryIndex, 10);
+              if (!isNaN(toIndex)) {
+                reorderCategories(touchIndex, toIndex);
+              }
+            }
+          }
+        });
+
+        pill.addEventListener('touchcancel', () => {
+          clearTimeout(longPressTimer);
+          isTouchDragging = false;
+          pill.classList.remove('dragging');
+          document.querySelectorAll('.series-pill').forEach(p => p.classList.remove('drag-over'));
+        });
+
         bar.appendChild(pill);
       });
 
-      // Кнопка создания новой папки
+      // Кнопка добавления новой папки
       const addBtn = document.createElement('div');
       addBtn.className = 'series-pill btn-add-pill';
       addBtn.id = 'btnAddCategoryBtn';
       addBtn.innerHTML = '<span>➕ Папка</span>';
-      addBtn.title = 'Создать новую папку бренда';
+      addBtn.title = 'Добавить или создать папку';
       addBtn.addEventListener('click', () => {
         openCreateCategoryModal();
       });
@@ -1127,26 +1314,26 @@
 
       const filtered = currentMatrix.filter(item => {
         if (activeFilter !== 'all') {
-          const standardIds = ['iphone', 'macbook', 'samsung', 'pixel', 'ipad', 'consoles'];
-          if (standardIds.includes(activeFilter)) {
-            if (item.series !== activeFilter) {
-              const lowerModel = (item.model || '').toLowerCase();
-              if (activeFilter === 'iphone' && !lowerModel.includes('iphone')) return false;
-              else if (activeFilter === 'macbook' && !lowerModel.includes('mac')) return false;
-              else if (activeFilter === 'samsung' && !lowerModel.includes('samsung') && !lowerModel.includes('galaxy')) return false;
-              else if (activeFilter === 'pixel' && !lowerModel.includes('pixel')) return false;
-              else if (activeFilter === 'ipad' && !lowerModel.includes('ipad')) return false;
-              else if (activeFilter === 'consoles' && !lowerModel.includes('playstation') && !lowerModel.includes('steam deck') && !lowerModel.includes('xbox')) return false;
-            }
-          } else {
-            // Кастомная папка
-            const customCat = customCategories.find(c => c.id === activeFilter);
-            const matchesId = item.series === activeFilter;
-            const matchesName = customCat && (
-              (item.category && item.category.toLowerCase() === customCat.name.toLowerCase()) ||
-              (item.model && item.model.toLowerCase().includes(customCat.name.toLowerCase()))
-            );
-            if (!matchesId && !matchesName) return false;
+          const cat = categories.find(c => c.id === activeFilter);
+          if (!cat) return false;
+
+          const lowerModel = (item.model || '').toLowerCase();
+          const lowerCat = cat.name.toLowerCase();
+
+          const matchesId = item.series === cat.id;
+          const matchesCategoryField = item.category && item.category.toLowerCase() === lowerCat;
+          const matchesModelName = lowerModel.includes(lowerCat);
+          const matchesSpecial = (
+            (cat.id === 'iphone' && lowerModel.includes('iphone')) ||
+            (cat.id === 'macbook' && lowerModel.includes('mac')) ||
+            (cat.id === 'samsung' && (lowerModel.includes('samsung') || lowerModel.includes('galaxy'))) ||
+            (cat.id === 'pixel' && lowerModel.includes('pixel')) ||
+            (cat.id === 'ipad' && lowerModel.includes('ipad')) ||
+            (cat.id === 'consoles' && (lowerModel.includes('playstation') || lowerModel.includes('ps5') || lowerModel.includes('steam deck') || lowerModel.includes('xbox')))
+          );
+
+          if (!matchesId && !matchesCategoryField && !matchesModelName && !matchesSpecial) {
+            return false;
           }
         }
         if (query) {
@@ -1171,14 +1358,14 @@
 
       filtered.forEach(item => {
         const card = document.createElement('div');
-        const customCat = customCategories.find(c => c.id === item.series || (c.name && c.name.toLowerCase() === (item.category || '').toLowerCase()));
+        const catObj = categories.find(c => c.id === item.series || (c.name && c.name.toLowerCase() === (item.category || '').toLowerCase()));
         card.className = `model-card ${item.isCustom ? 'custom-card' : ''} ${item.enabled ? '' : 'disabled'}`;
         const storageText = item.storage >= 1024 ? `${item.storage / 1024} TB` : `${item.storage} GB`;
         const profit = (item.market || 0) - (item.price || 0);
         const icon = getDeviceIcon(item.model, item.series);
 
-        const categoryBadgeHtml = customCat
-          ? `<span class="badge-category">${customCat.icon || '📁'} ${customCat.name}</span>`
+        const categoryBadgeHtml = catObj
+          ? `<span class="badge-category">${catObj.icon || '📁'} ${catObj.name}</span>`
           : (item.isCustom ? '<span style="font-size:10px; background:rgba(48,209,88,0.2); color:var(--success-color); padding:1px 5px; border-radius:5px">Своя</span>' : '');
 
         card.innerHTML = `
@@ -1291,7 +1478,7 @@
         localStorage.setItem('gadget_resell_matrix_clean', JSON.stringify({
           matrix: currentMatrix,
           conditionRules,
-          categories: customCategories
+          categories: categories
         }));
       } catch (e) {}
     }
@@ -1306,7 +1493,35 @@
     const createCatModal = document.getElementById('createCategoryModal');
     const manageCatModal = document.getElementById('manageCategoryModal');
 
+    function renderTemplatesGrid() {
+      const grid = document.getElementById('categoryTemplatesGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      POPULAR_TEMPLATES.forEach(tpl => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        const isAdded = categories.some(c => c.id === tpl.id || (c.name && c.name.toLowerCase() === tpl.name.toLowerCase()));
+        chip.className = `template-chip ${isAdded ? 'added' : ''}`;
+        chip.innerHTML = `${tpl.icon} <span>${tpl.name}</span>${isAdded ? ' ✓' : ' ➕'}`;
+
+        if (!isAdded) {
+          chip.addEventListener('click', () => {
+            categories.push({ id: tpl.id, name: tpl.name, icon: tpl.icon });
+            saveLocal();
+            renderSeriesBar();
+            updateCategoryDropdown();
+            selectFilter(tpl.id);
+            createCatModal.classList.remove('active');
+            if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+          });
+        }
+        grid.appendChild(chip);
+      });
+    }
+
     function openCreateCategoryModal() {
+      renderTemplatesGrid();
       createCatModal.classList.add('active');
       document.getElementById('newCatName').value = '';
       document.getElementById('newCatEmoji').value = '📱';
@@ -1337,7 +1552,7 @@
       }
 
       const id = 'cat_' + Date.now();
-      customCategories.push({ id, name, icon });
+      categories.push({ id, name, icon });
       saveLocal();
       renderSeriesBar();
       updateCategoryDropdown();
@@ -1347,8 +1562,9 @@
     });
 
     function openManageCategoryModal(catId) {
-      const cat = customCategories.find(c => c.id === catId);
-      if (!cat) return;
+      const idx = categories.findIndex(c => c.id === catId);
+      if (idx === -1) return;
+      const cat = categories[idx];
 
       document.getElementById('editCatId').value = cat.id;
       document.getElementById('editCatName').value = cat.name;
@@ -1358,8 +1574,34 @@
         c.classList.toggle('active', c.textContent.trim() === cat.icon);
       });
 
+      // Настройка кнопок сдвига
+      const btnLeft = document.getElementById('btnMoveCatLeft');
+      const btnRight = document.getElementById('btnMoveCatRight');
+      btnLeft.disabled = idx === 0;
+      btnRight.disabled = idx === categories.length - 1;
+      btnLeft.style.opacity = idx === 0 ? '0.35' : '1';
+      btnRight.style.opacity = idx === categories.length - 1 ? '0.35' : '1';
+
       manageCatModal.classList.add('active');
     }
+
+    document.getElementById('btnMoveCatLeft').addEventListener('click', () => {
+      const id = document.getElementById('editCatId').value;
+      const idx = categories.findIndex(c => c.id === id);
+      if (idx > 0) {
+        reorderCategories(idx, idx - 1);
+        openManageCategoryModal(id);
+      }
+    });
+
+    document.getElementById('btnMoveCatRight').addEventListener('click', () => {
+      const id = document.getElementById('editCatId').value;
+      const idx = categories.findIndex(c => c.id === id);
+      if (idx >= 0 && idx < categories.length - 1) {
+        reorderCategories(idx, idx + 1);
+        openManageCategoryModal(id);
+      }
+    });
 
     document.getElementById('btnCloseManageCategoryModal').addEventListener('click', () => {
       manageCatModal.classList.remove('active');
@@ -1382,7 +1624,7 @@
         return;
       }
 
-      const cat = customCategories.find(c => c.id === id);
+      const cat = categories.find(c => c.id === id);
       if (cat) {
         const oldName = cat.name;
         cat.name = name;
@@ -1406,23 +1648,25 @@
 
     document.getElementById('btnDeleteCategory').addEventListener('click', () => {
       const id = document.getElementById('editCatId').value;
-      const cat = customCategories.find(c => c.id === id);
+      const cat = categories.find(c => c.id === id);
       if (!cat) return;
 
-      const deleteModels = confirm(`Удалить папку «${cat.name}»?\n\n• Нажмите «OK», чтобы удалить папку ВМЕСТЕ со всеми моделями внутри неё.\n• Нажмите «Отмена», чтобы оставить модели в общем каталоге.`);
+      const deleteWithModels = confirm(
+        `Удалить папку «${cat.name}»?\n\n` +
+        `• Нажмите «OK», чтобы удалить папку ВМЕСТЕ со всеми моделями внутри неё.\n` +
+        `• Нажмите «Отмена», чтобы только скрыть папку с панели (модели останутся во вкладке «Все»).`
+      );
 
-      if (deleteModels) {
-        currentMatrix = currentMatrix.filter(m => m.series !== id && m.category !== cat.name);
-      } else {
-        currentMatrix.forEach(m => {
-          if (m.series === id || m.category === cat.name) {
-            m.series = 'custom';
-            m.category = '';
-          }
+      if (deleteWithModels) {
+        currentMatrix = currentMatrix.filter(m => {
+          const matchSeries = m.series === id;
+          const matchCat = m.category && m.category.toLowerCase() === cat.name.toLowerCase();
+          const matchModel = m.model && m.model.toLowerCase().includes(cat.name.toLowerCase());
+          return !matchSeries && !matchCat && !matchModel;
         });
       }
 
-      customCategories = customCategories.filter(c => c.id !== id);
+      categories = categories.filter(c => c.id !== id);
       if (activeFilter === id) {
         activeFilter = 'all';
       }
@@ -1437,15 +1681,26 @@
 
     // Обновление списка папок в модалке «Добавить модель»
     function updateCategoryDropdown() {
-      const group = document.getElementById('customCatOptionsGroup');
-      if (!group) return;
-      group.innerHTML = '';
-      customCategories.forEach(cat => {
+      const select = document.getElementById('newModelCategory');
+      if (!select) return;
+      select.innerHTML = '';
+
+      categories.forEach(cat => {
         const opt = document.createElement('option');
         opt.value = cat.id;
         opt.textContent = `${cat.icon || '📁'} ${cat.name}`;
-        group.appendChild(opt);
+        select.appendChild(opt);
       });
+
+      const newOpt = document.createElement('option');
+      newOpt.value = '__new__';
+      newOpt.textContent = '➕ Создать новую папку...';
+      select.appendChild(newOpt);
+
+      if (categories.length === 0) {
+        select.value = '__new__';
+        inlineNewCatBox.style.display = 'block';
+      }
     }
 
     const newModelCatSelect = document.getElementById('newModelCategory');
@@ -1479,13 +1734,14 @@
       updateCategoryDropdown();
       inlineNewCatBox.style.display = 'none';
 
-      // Если сейчас открыта кастомная вкладка, сразу выбираем её в селекте
-      if (customCategories.some(c => c.id === activeFilter)) {
+      // Если сейчас открыта конкретная вкладка, сразу выбираем её в селекте
+      if (categories.some(c => c.id === activeFilter)) {
         newModelCatSelect.value = activeFilter;
-      } else if (['iphone', 'macbook', 'samsung', 'pixel', 'ipad', 'consoles'].includes(activeFilter)) {
-        newModelCatSelect.value = activeFilter;
+      } else if (categories.length > 0) {
+        newModelCatSelect.value = categories[0].id;
       } else {
-        newModelCatSelect.value = 'iphone';
+        newModelCatSelect.value = '__new__';
+        inlineNewCatBox.style.display = 'block';
       }
 
       addModal.classList.add('active');
@@ -1517,13 +1773,13 @@
           return;
         }
         const newCatId = 'cat_' + Date.now();
-        customCategories.push({ id: newCatId, name: inlineName, icon: inlineIcon });
+        categories.push({ id: newCatId, name: inlineName, icon: inlineIcon });
         selectedSeries = newCatId;
         categoryName = inlineName;
         renderSeriesBar();
         updateCategoryDropdown();
       } else {
-        const foundCat = customCategories.find(c => c.id === selectedSeries);
+        const foundCat = categories.find(c => c.id === selectedSeries);
         if (foundCat) {
           categoryName = foundCat.name;
         }
@@ -1551,7 +1807,7 @@
       document.getElementById('inlineNewCatName').value = '';
 
       // Переключаем на созданную категорию, если добавили в неё
-      if (customCategories.some(c => c.id === selectedSeries)) {
+      if (categories.some(c => c.id === selectedSeries)) {
         selectFilter(selectedSeries);
       } else {
         renderCards();
@@ -1567,7 +1823,7 @@
       const payload = {
         action: "save_resell_profile",
         condition_rules: conditionRules,
-        categories: customCategories,
+        categories: categories,
         models: currentMatrix.map(m => ({
           model: m.model,
           storage: m.storage,
@@ -1575,7 +1831,7 @@
           price: m.price,
           max_buy: m.price,
           market: m.market || Math.round(m.price * 1.2),
-          category: m.category || (customCategories.find(c => c.id === m.series)?.name) || m.series || ""
+          category: m.category || (categories.find(c => c.id === m.series)?.name) || m.series || ""
         }))
       };
 
