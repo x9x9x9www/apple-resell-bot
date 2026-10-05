@@ -74,8 +74,10 @@ def broadcast_worker_query(query: str) -> None:
 KNOWN_BUTTON_TEXTS = {
     "ℹ️ Информация", "ℹ️ Инфо", "Информация", "О боте",
     "⚡️ Меню", "⚡️ Главное меню", "Меню",
-    "📍 Сменить регион", "📍 Регион", "Сменить регион",
+    "📥 Скачать/загрузить Excel", "Скачать/загрузить Excel", "📥/📤 Скачать/загрузить Excel",
     "📊 Скачать Excel", "📊 Excel-прайс", "Скачать Excel",
+    "ПЕРЕКУПЕР", "😎 ПЕРЕКУПЕР", "📱 ПЕРЕКУПЕР",
+    "📍 Сменить регион", "📍 Регион", "Сменить регион",
     "🔄 Статус воркеров", "🔄 Статус", "Статус",
     "📱 Матрица цен", "Матрица цен", "😎 Матрица цен",
     "🔗 Мониторинг по ссылке", "🔗 Поиск по ссылке", "Поиск по ссылке",
@@ -201,7 +203,7 @@ def create_bot_dispatcher(
             try:
                 await bot.set_chat_menu_button(
                     chat_id=chat_id,
-                    menu_button=MenuButtonWebApp(text="😎 Матрица цен", web_app=WebAppInfo(url=webapp_url)),
+                    menu_button=MenuButtonWebApp(text="😎", web_app=WebAppInfo(url=webapp_url)),
                 )
             except Exception as e:
                 logger.debug("Не удалось настроить MenuButtonWebApp для %s: %s", chat_id, e)
@@ -743,7 +745,10 @@ def create_bot_dispatcher(
         await cleanup_user_message(message)
         await _show_city_selection_guide(message, reg_manager)
 
-    @dp.message(F.text.in_({"📊 Скачать Excel", "📊 Excel-прайс", "Скачать Excel"}))
+    @dp.message(F.text.in_({
+        "📥 Скачать/загрузить Excel", "Скачать/загрузить Excel", "📥/📤 Скачать/загрузить Excel",
+        "📊 Скачать Excel", "📊 Excel-прайс", "Скачать Excel", "/export_prices"
+    }))
     async def handle_reply_export_btn(message: types.Message):
         await cleanup_user_message(message)
         await _send_excel_file(message, filter_instance)
@@ -753,20 +758,23 @@ def create_bot_dispatcher(
         await cleanup_user_message(message)
         await cmd_status(message)
 
-    @dp.message(F.text.in_({"📱 Матрица цен", "Матрица цен", "😎 Матрица цен"}))
+    @dp.message(F.text.in_({
+        "ПЕРЕКУПЕР", "😎 ПЕРЕКУПЕР", "📱 ПЕРЕКУПЕР",
+        "📱 Матрица цен", "Матрица цен", "😎 Матрица цен"
+    }))
     async def handle_reply_webapp_btn(message: types.Message):
         await cleanup_user_message(message)
         webapp_url = getattr(settings, "WEBAPP_URL", "")
         if webapp_url:
             text = (
-                "📱 <b>Telegram Mini App 2.0 (Матрица цен)</b>\n\n"
-                "Вы можете управлять порогами цен, добавлять новые модели и менять статусы выкупа со смартфона.\n\n"
+                "📱 <b>ПЕРЕКУПЕР (Telegram Mini App)</b>\n\n"
+                "Вы можете управлять порогами цен, добавлять новые модели, папки и менять статусы выкупа со смартфона.\n\n"
                 f"🔗 <b>Открыть в браузере или Telegram:</b>\n{webapp_url}\n\n"
-                "<i>💡 Кнопка «📱 Матрица цен» также доступна на нижней клавиатуре.</i>"
+                "<i>💡 Кнопка «ПЕРЕКУПЕР» доступна на клавиатуре и по иконке «😎» в строке ввода сообщения.</i>"
             )
         else:
             text = (
-                "📱 <b>Матрица цен (Mini App):</b>\n\n"
+                "📱 <b>ПЕРЕКУПЕР (Mini App):</b>\n\n"
                 "URL веб-приложения не задан в конфигурации (.env WEBAPP_URL).\n"
                 "Вы можете выгрузить прайс-лист в Excel командой <code>/export_prices</code>."
             )
@@ -846,7 +854,7 @@ def create_bot_dispatcher(
         # Игнорируем нажатия на кнопки всплывающей клавиатуры, если они дошли сюда
         if (
             query in KNOWN_BUTTON_TEXTS
-            or query.startswith(("📍", "ℹ️", "📊", "🔄", "⚡️", "❌"))
+            or query.startswith(("📍", "ℹ️", "📊", "🔄", "⚡️", "❌", "📥", "😎"))
         ):
             return
 
@@ -1354,10 +1362,10 @@ def _build_dashboard_text(
         "📡 <b>Мониторинг:</b> Авито + Юла\n\n"
         "🕹 <b>Быстрое управление:</b>\n"
         "• <b>Информация:</b> кнопка «ℹ️ Информация» для вызова актуальной сводки\n"
-        f"• <b>Смена региона:</b> кнопка «📍 Регион: {current_reg['name']}» или напишите город прямо в чат (например: <code>Якутск</code>, <code>Казань</code>, <code>спб</code>)\n"
-        "• <b>Матрица цен (Mini App):</b> постоянная кнопка в левом углу строки ввода Telegram для настройки цен со смартфона\n"
-        "• <b>Excel-прайс:</b> кнопка «📊 Скачать Excel» или пришлите файл <code>.xlsx</code> для мгновенного обновления цен\n"
-        "• <b>Статус воркеров:</b> кнопка «🔄 Статус воркеров» или команда <code>/status</code>\n\n"
+        "• <b>ПЕРЕКУПЕР:</b> кнопка «ПЕРЕКУПЕР» или иконка «😎» в строке ввода для настройки матрицы цен со смартфона\n"
+        "• <b>Excel-прайс:</b> кнопка «📥 Скачать/загрузить Excel» (отправьте измененный <code>.xlsx</code> боту для обновления цен)\n"
+        f"• <b>Смена региона:</b> напишите город прямо в чат (например: <code>{current_reg['name']}</code>, <code>Казань</code>, <code>спб</code>) или команда <code>/city</code>\n"
+        "• <b>Статус воркеров:</b> команда <code>/status</code>\n\n"
         "<i>💡 Все карточки объявлений приходят с кнопками прямого перехода, торга и добавления в избранное.</i>"
     )
 
@@ -1379,7 +1387,7 @@ def _build_status_text(
         "• Фотокарточки объявлений: <b>АКТИВНЫ 📸</b>\n"
         f"• Активных конфигураций гаджетов: <b>{stats['active_configs']} из {stats['total_configs']}</b>\n"
         "• Скорость реакции: <b>до 2.5 сек</b>\n\n"
-        "<i>💡 Чтобы сменить регион, просто напишите название города в чат или используйте кнопку «📍 Сменить регион».</i>"
+        "<i>💡 Чтобы сменить регион, просто напишите название города в чат или используйте команду /city.</i>"
     )
 
 
@@ -1398,12 +1406,12 @@ async def _send_excel_file(message: types.Message, filter_instance: MarginFilter
         excel_bytes = ExcelPricingManager.export_matrix_to_bytes(filter_instance.matrix)
         file = BufferedInputFile(excel_bytes, filename="gadget_resell_prices.xlsx")
         caption = (
-            "📊 <b>Матрица цен выкупа гаджетов (Resell Radar)</b>\n\n"
+            "📥 <b>Скачать / Загрузить Excel (Матрица цен)</b>\n\n"
             "Инструкция по настройке:\n"
-            "1. Откройте таблицу в Excel, Google Таблицах или на телефоне.\n"
+            "1. Откройте прикрепленную таблицу в Excel, Google Таблицах или на телефоне.\n"
             "2. Измените <b>Макс. выкуп (₽)</b> или <b>Статус (ВКЛ / ВЫКЛ)</b>.\n"
-            "3. Отправьте сохраненный файл обратно в этот чат.\n\n"
-            "<i>Бот мгновенно применит новые цены без перезагрузки!</i>"
+            "3. <b>Отправьте сохраненный файл обратно в этот чат</b> — бот мгновенно обновит базу!\n\n"
+            "<i>💡 Также вы можете управлять всеми ценами и моделями в Mini App «ПЕРЕКУПЕР» (кнопка 😎).</i>"
         )
         doc_msg = await message.answer_document(document=file, caption=caption)
         _last_functional_messages[chat_id] = doc_msg.message_id

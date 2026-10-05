@@ -131,16 +131,10 @@ def get_reply_keyboard(
     webapp_url: Optional[str] = None,
 ) -> ReplyKeyboardMarkup:
     """
-    Всплывающая клавиатура быстрого доступа (Reply Keyboard) внизу экрана.
-    Содержит 4 удобные кнопки:
-    - ℹ️ Информация
-    - 📍 Регион: [Текущий регион]
-    - 📊 Скачать Excel
-    - 🔄 Статус воркеров
-
-    Mini App перенесен в нативную Menu Button Telegram, а кнопка «Скрыть» убрана.
+    Всплывающая клавиатура быстрого доступа (Reply Keyboard) внизу экрана:
+    - [ ℹ️ Информация ] [ 📥 Скачать/загрузить Excel ]
+    - [ ПЕРЕКУПЕР ] (открывает Mini App)
     """
-    # Если в качестве первого аргумента передан URL, считаем его legacy webapp_url
     if current_region.startswith(("http://", "https://")):
         webapp_url = current_region
         current_region = "Москва"
@@ -149,22 +143,18 @@ def get_reply_keyboard(
         webapp_url = getattr(settings, "WEBAPP_URL", "")
 
     app_btn = (
-        KeyboardButton(text="😎 Матрица цен", web_app=WebAppInfo(url=webapp_url))
+        KeyboardButton(text="ПЕРЕКУПЕР", web_app=WebAppInfo(url=webapp_url))
         if webapp_url
-        else KeyboardButton(text="😎 Матрица цен")
+        else KeyboardButton(text="ПЕРЕКУПЕР")
     )
 
     keyboard = [
         [
             KeyboardButton(text="ℹ️ Информация"),
-            KeyboardButton(text=f"📍 Регион: {current_region}"),
+            KeyboardButton(text="📥 Скачать/загрузить Excel"),
         ],
         [
             app_btn,
-        ],
-        [
-            KeyboardButton(text="📊 Скачать Excel"),
-            KeyboardButton(text="🔄 Статус воркеров"),
         ],
     ]
 

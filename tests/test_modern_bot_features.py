@@ -282,10 +282,8 @@ class TestModernBotFeatures(unittest.TestCase):
 
         button_texts = [b.text for row in reply_kb.keyboard for b in row]
         self.assertIn("ℹ️ Информация", button_texts)
-        self.assertIn("📍 Регион: Якутск", button_texts)
-        self.assertIn("📊 Скачать Excel", button_texts)
-        self.assertIn("🔄 Статус воркеров", button_texts)
-        self.assertIn("😎 Матрица цен", button_texts)
+        self.assertIn("📥 Скачать/загрузить Excel", button_texts)
+        self.assertIn("ПЕРЕКУПЕР", button_texts)
         # Проверяем, что бесполезная кнопка скрытия клавиатуры удалена
         self.assertNotIn("❌ Скрыть клавиатуру", button_texts)
 
