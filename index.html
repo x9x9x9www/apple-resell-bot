@@ -274,6 +274,82 @@
       border-style: dashed;
       pointer-events: none;
     }
+
+    /* Список моделей пресета в модалке */
+    .preset-models-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 330px;
+      overflow-y: auto;
+      margin: 10px 0;
+      padding-right: 4px;
+    }
+    .preset-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 9px 12px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .preset-item:hover {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .preset-item.selected {
+      border-color: var(--accent-color);
+      background: rgba(10, 132, 255, 0.09);
+    }
+    .preset-checkbox {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent-color);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .preset-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .preset-title-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .preset-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .preset-storage {
+      font-size: 10px;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1px 5px;
+      border-radius: 4px;
+      color: var(--text-muted);
+    }
+    .preset-prices {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .preset-prices b {
+      color: #fff;
+    }
+    .preset-profit-tag {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--success-color);
+      margin-left: 4px;
+    }
     .emoji-chip {
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid var(--card-border);
@@ -789,6 +865,40 @@
     </div>
   </div>
 
+  <!-- Модалка: Выбор моделей для папки шаблона -->
+  <div class="modal-overlay" id="selectTemplateModelsModal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title" id="presetModalTitle">⚡️ Добавление папки</h3>
+        <button class="btn-close-modal" id="btnClosePresetModal">✕</button>
+      </div>
+
+      <div style="font-size: 12px; color: var(--text-muted); line-height: 1.4; margin-bottom: 8px;">
+        Выберите популярные модели для отслеживания выкупа или добавьте пустую папку:
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
+        <span style="font-size: 11px; color: var(--text-muted);" id="presetSelectedCounter">Выбрано: 0 моделей</span>
+        <button type="button" id="btnToggleAllPresets" style="background:none; border:none; color:var(--accent-color); font-size:11px; font-weight:700; cursor:pointer; padding:2px 4px;">
+          Снять все
+        </button>
+      </div>
+
+      <div class="preset-models-list" id="presetModelsList">
+        <!-- Список моделей генерируется в JS -->
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:8px; margin-top:10px;">
+        <button class="btn-save" id="btnConfirmAddPresetModels" style="width:100%;">
+          <span id="btnConfirmPresetLabel">✅ Добавить выбранные модели</span>
+        </button>
+        <button type="button" class="btn-step" id="btnAddEmptyCategoryOnly" style="width:100%; height:38px; border-radius:10px; font-size:12px; font-weight:700; background:rgba(255,255,255,0.06);">
+          📁 Создать только пустую папку
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Модалка: Управление категорией / папкой -->
   <div class="modal-overlay" id="manageCategoryModal">
     <div class="modal-sheet">
@@ -839,7 +949,11 @@
         </div>
       </div>
 
-      <button class="btn-save" id="btnSaveCategoryEdit" style="width:100%; margin-top:8px">
+      <button type="button" class="btn-step" id="btnManageAddPresetModels" style="width:100%; margin-top:6px; margin-bottom:8px; height:38px; border-radius:10px; font-weight:700; background:rgba(10, 132, 255, 0.12); border:1px solid rgba(10, 132, 255, 0.35); color:var(--accent-color); font-size:12px; display:none;">
+        ⚡️ Добавить популярные модели бренда...
+      </button>
+
+      <button class="btn-save" id="btnSaveCategoryEdit" style="width:100%; margin-top:4px">
         <span>💾 Сохранить изменения</span>
       </button>
 
@@ -898,6 +1012,9 @@
       <div class="form-group">
         <label class="form-label">Ожидаемая цена продажи (₽):</label>
         <input type="number" step="500" class="form-input" id="newModelMarket" placeholder="например 60000">
+        <div id="newModelMarketHint" style="font-size:11px; color:var(--accent-color); margin-top:5px; cursor:pointer; display:none; background:rgba(10, 132, 255, 0.1); border:1px dashed rgba(10, 132, 255, 0.35); padding:5px 8px; border-radius:6px;">
+          💡 Подставить рекомендуемый рынок: <b id="newModelMarketHintVal"></b> <i>(нажмите сюда)</i>
+        </div>
       </div>
 
       <button class="btn-save" id="btnSubmitNewModel" style="width:100%; margin-top:8px">
@@ -950,17 +1067,137 @@
     ];
 
     const POPULAR_TEMPLATES = [
-      { id: 'iphone', name: 'iPhone', icon: '📱' },
-      { id: 'macbook', name: 'Mac', icon: '💻' },
-      { id: 'samsung', name: 'Samsung', icon: '📱' },
-      { id: 'pixel', name: 'Pixel', icon: '📱' },
-      { id: 'ipad', name: 'iPad', icon: '📟' },
-      { id: 'consoles', name: 'Консоли', icon: '🎮' },
-      { id: 'dyson', name: 'Dyson', icon: '💨' },
-      { id: 'xiaomi', name: 'Xiaomi', icon: '📱' },
-      { id: 'headphones', name: 'Наушники', icon: '🎧' },
-      { id: 'watch', name: 'Apple Watch', icon: '⌚️' },
-      { id: 'sony', name: 'Sony', icon: '📷' }
+      {
+        id: 'iphone',
+        name: 'iPhone',
+        icon: '📱',
+        models: [
+          { model: "iPhone 16 Pro Max", storage: 256, price: 105000, market: 125000 },
+          { model: "iPhone 16 Pro", storage: 128, price: 88000, market: 104000 },
+          { model: "iPhone 16", storage: 128, price: 68000, market: 80000 },
+          { model: "iPhone 15 Pro Max", storage: 256, price: 82000, market: 97000 },
+          { model: "iPhone 15 Pro", storage: 128, price: 65000, market: 78000 },
+          { model: "iPhone 15", storage: 128, price: 50000, market: 60000 },
+          { model: "iPhone 14 Pro", storage: 128, price: 50000, market: 60000 },
+          { model: "iPhone 13", storage: 128, price: 32000, market: 39000 },
+          { model: "iPhone 12", storage: 128, price: 23000, market: 28000 },
+          { model: "iPhone 11", storage: 128, price: 16000, market: 20000 }
+        ]
+      },
+      {
+        id: 'macbook',
+        name: 'Mac',
+        icon: '💻',
+        models: [
+          { model: "MacBook Air M1 13", storage: 256, price: 42000, market: 52000 },
+          { model: "MacBook Air M2 13", storage: 256, price: 62000, market: 74000 },
+          { model: "MacBook Pro 14 M1 Pro", storage: 512, price: 85000, market: 102000 },
+          { model: "MacBook Pro 16 M1 Pro", storage: 512, price: 95000, market: 115000 }
+        ]
+      },
+      {
+        id: 'samsung',
+        name: 'Samsung',
+        icon: '📱',
+        models: [
+          { model: "Samsung Galaxy S24 Ultra", storage: 256, price: 65000, market: 78000 },
+          { model: "Samsung Galaxy S24", storage: 128, price: 45000, market: 55000 },
+          { model: "Samsung Galaxy S23 Ultra", storage: 256, price: 48000, market: 58000 },
+          { model: "Samsung Galaxy S23", storage: 128, price: 35000, market: 43000 },
+          { model: "Samsung Galaxy Z Flip 5", storage: 256, price: 38000, market: 46000 },
+          { model: "Samsung Galaxy Z Fold 5", storage: 256, price: 68000, market: 82000 }
+        ]
+      },
+      {
+        id: 'pixel',
+        name: 'Pixel',
+        icon: '📱',
+        models: [
+          { model: "Google Pixel 9 Pro", storage: 128, price: 58000, market: 70000 },
+          { model: "Google Pixel 8 Pro", storage: 128, price: 42000, market: 50000 },
+          { model: "Google Pixel 8", storage: 128, price: 32000, market: 39000 },
+          { model: "Google Pixel 7 Pro", storage: 128, price: 26000, market: 32000 }
+        ]
+      },
+      {
+        id: 'ipad',
+        name: 'iPad',
+        icon: '📟',
+        models: [
+          { model: "iPad Pro 11 M2", storage: 128, price: 52000, market: 63000 },
+          { model: "iPad Air 5 M1", storage: 64, price: 36000, market: 44000 },
+          { model: "iPad 10 (2022)", storage: 64, price: 24000, market: 30000 },
+          { model: "iPad mini 6", storage: 64, price: 28000, market: 35000 }
+        ]
+      },
+      {
+        id: 'consoles',
+        name: 'Консоли',
+        icon: '🎮',
+        models: [
+          { model: "PlayStation 5", storage: 825, price: 32000, market: 39000 },
+          { model: "PlayStation 5 Slim", storage: 1000, price: 38000, market: 46000 },
+          { model: "Xbox Series X", storage: 1000, price: 33000, market: 40000 },
+          { model: "Xbox Series S", storage: 512, price: 17000, market: 22000 },
+          { model: "Steam Deck OLED", storage: 512, price: 42000, market: 50000 },
+          { model: "Nintendo Switch OLED", storage: 64, price: 18000, market: 23000 }
+        ]
+      },
+      {
+        id: 'dyson',
+        name: 'Dyson',
+        icon: '💨',
+        models: [
+          { model: "Dyson Airwrap Multi-Styler", storage: 0, price: 33000, market: 42000 },
+          { model: "Dyson Supersonic HD08", storage: 0, price: 22000, market: 28000 },
+          { model: "Dyson V15 Detect Absolute", storage: 0, price: 45000, market: 56000 },
+          { model: "Dyson V12 Slim Absolute", storage: 0, price: 34000, market: 42000 }
+        ]
+      },
+      {
+        id: 'xiaomi',
+        name: 'Xiaomi',
+        icon: '📱',
+        models: [
+          { model: "Xiaomi 14", storage: 256, price: 45000, market: 55000 },
+          { model: "Xiaomi 13T Pro", storage: 256, price: 32000, market: 39000 },
+          { model: "POCO F6 Pro", storage: 256, price: 28000, market: 35000 },
+          { model: "Redmi Note 13 Pro+", storage: 256, price: 20000, market: 26000 }
+        ]
+      },
+      {
+        id: 'headphones',
+        name: 'Наушники',
+        icon: '🎧',
+        models: [
+          { model: "AirPods Pro 2 Type-C", storage: 0, price: 14000, market: 18000 },
+          { model: "AirPods Max", storage: 0, price: 34000, market: 43000 },
+          { model: "AirPods 3", storage: 0, price: 8500, market: 11500 },
+          { model: "Sony WH-1000XM5", storage: 0, price: 21000, market: 27000 }
+        ]
+      },
+      {
+        id: 'watch',
+        name: 'Apple Watch',
+        icon: '⌚️',
+        models: [
+          { model: "Apple Watch Ultra 2", storage: 49, price: 52000, market: 63000 },
+          { model: "Apple Watch Series 9 45mm", storage: 45, price: 25000, market: 31000 },
+          { model: "Apple Watch Series 8 45mm", storage: 45, price: 18000, market: 23000 },
+          { model: "Apple Watch SE 2 44mm", storage: 44, price: 14000, market: 18000 }
+        ]
+      },
+      {
+        id: 'sony',
+        name: 'Sony',
+        icon: '📷',
+        models: [
+          { model: "Sony A7 IV Body", storage: 0, price: 145000, market: 175000 },
+          { model: "Sony A7 III Body", storage: 0, price: 80000, market: 98000 },
+          { model: "Sony FX30 Body", storage: 0, price: 110000, market: 135000 },
+          { model: "Sony ZV-E10 Body", storage: 0, price: 40000, market: 50000 }
+        ]
+      }
     ];
 
     let categories = []; // Пользовательские папки в настраиваемом порядке
@@ -1492,6 +1729,9 @@
     // Управление категориями / папками
     const createCatModal = document.getElementById('createCategoryModal');
     const manageCatModal = document.getElementById('manageCategoryModal');
+    const presetModal = document.getElementById('selectTemplateModelsModal');
+    let activePresetTemplate = null;
+    let selectedPresetIndices = new Set();
 
     function renderTemplatesGrid() {
       const grid = document.getElementById('categoryTemplatesGrid');
@@ -1507,18 +1747,169 @@
 
         if (!isAdded) {
           chip.addEventListener('click', () => {
-            categories.push({ id: tpl.id, name: tpl.name, icon: tpl.icon });
-            saveLocal();
-            renderSeriesBar();
-            updateCategoryDropdown();
-            selectFilter(tpl.id);
-            createCatModal.classList.remove('active');
-            if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+            openTemplatePresetModal(tpl);
           });
         }
         grid.appendChild(chip);
       });
     }
+
+    function openTemplatePresetModal(tpl) {
+      activePresetTemplate = tpl;
+      selectedPresetIndices = new Set((tpl.models || []).map((_, idx) => idx));
+
+      document.getElementById('presetModalTitle').textContent = `${tpl.icon} Добавить: ${tpl.name}`;
+      updatePresetModalCounter();
+      renderPresetModelsList();
+
+      presetModal.classList.add('active');
+    }
+
+    function updatePresetModalCounter() {
+      const total = activePresetTemplate?.models?.length || 0;
+      const count = selectedPresetIndices.size;
+      const counterEl = document.getElementById('presetSelectedCounter');
+      const labelEl = document.getElementById('btnConfirmPresetLabel');
+      const toggleBtn = document.getElementById('btnToggleAllPresets');
+
+      if (counterEl) counterEl.textContent = `Выбрано: ${count} из ${total}`;
+      if (labelEl) labelEl.textContent = count > 0 ? `✅ Добавить выбранные (${count})` : `✅ Создать пустую папку`;
+      if (toggleBtn) toggleBtn.textContent = count === total ? 'Снять все' : 'Выбрать все';
+    }
+
+    function renderPresetModelsList() {
+      const listEl = document.getElementById('presetModelsList');
+      if (!listEl || !activePresetTemplate) return;
+      listEl.innerHTML = '';
+
+      const models = activePresetTemplate.models || [];
+      if (models.length === 0) {
+        listEl.innerHTML = '<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:15px;">У этого бренда нет готовых моделей. Можно создать пустую папку и добавить модели вручную.</div>';
+        return;
+      }
+
+      models.forEach((m, idx) => {
+        const isSelected = selectedPresetIndices.has(idx);
+        const item = document.createElement('div');
+        item.className = `preset-item ${isSelected ? 'selected' : ''}`;
+
+        const profit = (m.market || 0) - (m.price || 0);
+        const profitFmt = profit > 0 ? `+${profit.toLocaleString('ru-RU')} ₽ маржа` : '';
+        const storageBadge = m.storage ? `<span class="preset-storage">${m.storage} GB</span>` : '';
+
+        item.innerHTML = `
+          <input type="checkbox" class="preset-checkbox" ${isSelected ? 'checked' : ''}>
+          <div class="preset-info">
+            <div class="preset-title-row">
+              <span class="preset-name">${m.model}</span>
+              ${storageBadge}
+            </div>
+            <div class="preset-prices">
+              Выкуп: <b>${(m.price || 0).toLocaleString('ru-RU')} ₽</b> • Рынок: <b>~${(m.market || 0).toLocaleString('ru-RU')} ₽</b>
+              <span class="preset-profit-tag">${profitFmt}</span>
+            </div>
+          </div>
+        `;
+
+        const cb = item.querySelector('.preset-checkbox');
+        const toggleSelection = (e) => {
+          if (e.target !== cb) cb.checked = !cb.checked;
+          if (cb.checked) {
+            selectedPresetIndices.add(idx);
+            item.classList.add('selected');
+          } else {
+            selectedPresetIndices.delete(idx);
+            item.classList.remove('selected');
+          }
+          updatePresetModalCounter();
+        };
+
+        item.addEventListener('click', toggleSelection);
+        cb.addEventListener('change', (e) => {
+          e.stopPropagation();
+          if (cb.checked) {
+            selectedPresetIndices.add(idx);
+            item.classList.add('selected');
+          } else {
+            selectedPresetIndices.delete(idx);
+            item.classList.remove('selected');
+          }
+          updatePresetModalCounter();
+        });
+
+        listEl.appendChild(item);
+      });
+    }
+
+    document.getElementById('btnClosePresetModal').addEventListener('click', () => {
+      presetModal.classList.remove('active');
+    });
+
+    document.getElementById('btnToggleAllPresets').addEventListener('click', () => {
+      if (!activePresetTemplate) return;
+      const total = activePresetTemplate.models?.length || 0;
+      if (selectedPresetIndices.size === total) {
+        selectedPresetIndices.clear();
+      } else {
+        selectedPresetIndices = new Set(activePresetTemplate.models.map((_, i) => i));
+      }
+      renderPresetModelsList();
+      updatePresetModalCounter();
+    });
+
+    function commitAddPresetCategory(addModels) {
+      if (!activePresetTemplate) return;
+      const tpl = activePresetTemplate;
+
+      // Добавляем категорию, если ещё нет
+      let cat = categories.find(c => c.id === tpl.id || (c.name && c.name.toLowerCase() === tpl.name.toLowerCase()));
+      if (!cat) {
+        cat = { id: tpl.id, name: tpl.name, icon: tpl.icon };
+        categories.push(cat);
+      }
+
+      // Добавляем выбранные модели в каталог
+      if (addModels && tpl.models && selectedPresetIndices.size > 0) {
+        tpl.models.forEach((m, idx) => {
+          if (!selectedPresetIndices.has(idx)) return;
+          const key = `${m.model}_${m.storage || 0}`;
+          const existing = currentMatrix.find(item => item.key === key);
+          if (!existing) {
+            currentMatrix.push({
+              key,
+              model: m.model,
+              storage: m.storage || 0,
+              series: tpl.id,
+              category: tpl.name,
+              price: m.price,
+              market: m.market || Math.round(m.price * 1.2 / 500) * 500,
+              enabled: true
+            });
+          } else {
+            existing.series = tpl.id;
+            existing.category = tpl.name;
+            existing.enabled = true;
+          }
+        });
+      }
+
+      saveLocal();
+      renderSeriesBar();
+      updateCategoryDropdown();
+      selectFilter(tpl.id);
+      presetModal.classList.remove('active');
+      createCatModal.classList.remove('active');
+      manageCatModal.classList.remove('active');
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+    }
+
+    document.getElementById('btnConfirmAddPresetModels').addEventListener('click', () => {
+      commitAddPresetCategory(true);
+    });
+
+    document.getElementById('btnAddEmptyCategoryOnly').addEventListener('click', () => {
+      commitAddPresetCategory(false);
+    });
 
     function openCreateCategoryModal() {
       renderTemplatesGrid();
@@ -1548,6 +1939,14 @@
       const icon = document.getElementById('newCatEmoji').value.trim() || '📁';
       if (!name) {
         alert("Введите название папки / бренда!");
+        return;
+      }
+
+      // Если введено имя одного из готовых шаблонов (например Samsung или Dyson)
+      const matchingTpl = POPULAR_TEMPLATES.find(t => t.name.toLowerCase() === name.toLowerCase() || t.id.toLowerCase() === name.toLowerCase());
+      if (matchingTpl && matchingTpl.models && matchingTpl.models.length > 0) {
+        createCatModal.classList.remove('active');
+        openTemplatePresetModal(matchingTpl);
         return;
       }
 
@@ -1581,6 +1980,21 @@
       btnRight.disabled = idx === categories.length - 1;
       btnLeft.style.opacity = idx === 0 ? '0.35' : '1';
       btnRight.style.opacity = idx === categories.length - 1 ? '0.35' : '1';
+
+      // Проверяем, есть ли готовый пресет моделей для этого бренда
+      const matchingTpl = POPULAR_TEMPLATES.find(t => t.id === cat.id || (t.name && t.name.toLowerCase() === cat.name.toLowerCase()));
+      const btnAddPreset = document.getElementById('btnManageAddPresetModels');
+      if (btnAddPreset) {
+        if (matchingTpl && matchingTpl.models && matchingTpl.models.length > 0) {
+          btnAddPreset.style.display = 'block';
+          btnAddPreset.onclick = () => {
+            manageCatModal.classList.remove('active');
+            openTemplatePresetModal(matchingTpl);
+          };
+        } else {
+          btnAddPreset.style.display = 'none';
+        }
+      }
 
       manageCatModal.classList.add('active');
     }
@@ -1805,6 +2219,7 @@
       document.getElementById('newModelPrice').value = '';
       document.getElementById('newModelMarket').value = '';
       document.getElementById('inlineNewCatName').value = '';
+      if (newModelMarketHint) newModelMarketHint.style.display = 'none';
 
       // Переключаем на созданную категорию, если добавили в неё
       if (categories.some(c => c.id === selectedSeries)) {
@@ -1814,6 +2229,33 @@
       }
 
       if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+    });
+
+    const newModelPriceInput = document.getElementById('newModelPrice');
+    const newModelMarketInput = document.getElementById('newModelMarket');
+    const newModelMarketHint = document.getElementById('newModelMarketHint');
+    const newModelMarketHintVal = document.getElementById('newModelMarketHintVal');
+
+    function updateMarketPriceHint() {
+      const price = parseInt(newModelPriceInput.value, 10);
+      if (price && price > 0) {
+        const estMarket = Math.round((price * 1.2) / 500) * 500;
+        const profit = estMarket - price;
+        newModelMarketHintVal.textContent = `${estMarket.toLocaleString('ru-RU')} ₽ (+${profit.toLocaleString('ru-RU')} ₽ маржа)`;
+        newModelMarketHint.style.display = 'block';
+      } else {
+        newModelMarketHint.style.display = 'none';
+      }
+    }
+
+    newModelPriceInput.addEventListener('input', updateMarketPriceHint);
+    newModelMarketHint.addEventListener('click', () => {
+      const price = parseInt(newModelPriceInput.value, 10);
+      if (price && price > 0) {
+        const estMarket = Math.round((price * 1.2) / 500) * 500;
+        newModelMarketInput.value = estMarket;
+        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+      }
     });
 
     // Сохранение и отправка в Telegram бот
