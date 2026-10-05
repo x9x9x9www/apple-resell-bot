@@ -12,6 +12,7 @@ from aiogram.filters import Command
 from aiogram.types import (
     BufferedInputFile,
     MenuButtonWebApp,
+    MenuButtonDefault,
     WebAppInfo,
     InlineKeyboardMarkup,
     InlineKeyboardButton,
@@ -198,15 +199,15 @@ def create_bot_dispatcher(
         current_reg_name = reg_manager.current["name"]
         bot = message.bot
 
-        # Настраиваем постоянную системную кнопку Telegram Menu Button для Mini App
-        if bot and webapp_url:
+        # Сбрасываем кастомную кнопку меню в строке ввода, возвращая стандартное меню Telegram
+        if bot:
             try:
                 await bot.set_chat_menu_button(
                     chat_id=chat_id,
-                    menu_button=MenuButtonWebApp(text="😎", web_app=WebAppInfo(url=webapp_url)),
+                    menu_button=MenuButtonDefault(),
                 )
             except Exception as e:
-                logger.debug("Не удалось настроить MenuButtonWebApp для %s: %s", chat_id, e)
+                logger.debug("Не удалось сбросить MenuButton для %s: %s", chat_id, e)
 
         # Отправляем ровно ОДНО сервисное сообщение с прикрепленной клавиатурой внизу
         if bot:
@@ -541,6 +542,7 @@ def create_bot_dispatcher(
                 user_profile_mgr.save_profile(profile)
                 filter_instance.save_matrix()
                 filter_instance.reload_matrix()
+                active_count = filter_instance.get_stats().get("active_configs", active_count)
 
                 defects_status = f"Скидка -{condition_rules.defect_discount:,} ₽" if condition_rules.allow_defects else "🚫 Запрещены"
                 face_status = "❌ Отсекать" if condition_rules.ignore_no_face_id else "Пропускать"
