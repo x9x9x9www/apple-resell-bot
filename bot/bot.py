@@ -14,6 +14,7 @@ from aiogram.filters import Command
 from aiogram.types import (
     BufferedInputFile,
     FSInputFile,
+    LinkPreviewOptions,
     MenuButtonWebApp,
     MenuButtonDefault,
     WebAppInfo,
@@ -58,6 +59,8 @@ _keyboard_hidden_users: dict[int, bool] = {}
 _active_region_manager: Optional[RegionManager] = None
 # Время последней выгрузки Excel для защиты от многократных случайных нажатий
 _last_excel_send_time: dict[int, float] = {}
+# Хранилище ID последнего сообщения с избранным в чате
+_last_favorites_messages: dict[int, int] = {}
 
 # Слушатели для динамического добавления поисковых запросов в парсеры Авито/Юлы
 _worker_query_listeners: list[Callable[[str], None]] = []
@@ -118,6 +121,7 @@ async def send_or_replace_functional_message(
     text: str,
     reply_markup: Optional[types.ReplyKeyboardMarkup | types.ReplyKeyboardRemove | types.InlineKeyboardMarkup] = None,
     photo: Optional[str | FSInputFile] = None,
+    link_preview_options: Optional[LinkPreviewOptions] = None,
 ) -> types.Message:
     """
     Отправляет сервисное/функциональное сообщение бота, предварительно
@@ -156,9 +160,44 @@ async def send_or_replace_functional_message(
             text=text,
             parse_mode="HTML",
             reply_markup=reply_markup,
+            link_preview_options=link_preview_options,
         )
     _last_functional_messages[chat_id] = msg.message_id
     return msg
+
+
+async def send_rich_message(
+    chat_id: int,
+    bot: Bot,
+    text: str,
+    reply_markup: Optional[types.ReplyKeyboardMarkup | types.ReplyKeyboardRemove | types.InlineKeyboardMarkup] = None,
+    article_url: Optional[str] = None,
+) -> types.Message:
+    """
+    Отправляет главное меню / сервисное сообщение в формате 'статьи через скрепку' (Rich Message):
+    название сверху, под ним раскрывается большой баннер со специальной OpenGraph разметкой,
+    а под баннером располагаются параметры региона и мониторинга.
+    """
+    if article_url is None:
+        base_url = getattr(settings, "WEBAPP_URL", "https://x9x9x9www.github.io/apple-resell-bot/")
+        if not base_url.endswith("/"):
+            base_url += "/"
+        article_url = f"{base_url}article.html"
+
+    link_opts = LinkPreviewOptions(
+        is_disabled=False,
+        url=article_url,
+        prefer_large_media=True,
+        show_above_text=True,
+    )
+
+    return await send_or_replace_functional_message(
+        chat_id=chat_id,
+        bot=bot,
+        text=text,
+        reply_markup=reply_markup,
+        link_preview_options=link_opts,
+    )
 
 
 async def _show_city_selection_guide(message: types.Message, reg_manager: RegionManager) -> None:
@@ -232,25 +271,29 @@ def create_bot_dispatcher(
             except Exception as e:
                 logger.debug("Не удалось сбросить MenuButton для %s: %s", chat_id, e)
 
-        # Отправляем ровно ОДНО сервисное сообщение с прикрепленной клавиатурой внизу
-        banner_photo = BANNER_FILE_PATH if os.path.exists(BANNER_FILE_PATH) else None
+        # Отправляем главное меню через send_rich_message (формат статьи через скрепку)
         if bot:
-            await send_or_replace_functional_message(
+            await send_rich_message(
                 chat_id=chat_id,
                 bot=bot,
                 text=text,
                 reply_markup=get_reply_keyboard(current_region=current_reg_name),
-                photo=banner_photo,
             )
         else:
-            if banner_photo:
-                await message.answer_photo(
-                    photo=FSInputFile(banner_photo),
-                    caption=text,
-                    reply_markup=get_reply_keyboard(current_region=current_reg_name),
-                )
-            else:
-                await message.answer(text, reply_markup=get_reply_keyboard(current_region=current_reg_name))
+            base_url = getattr(settings, "WEBAPP_URL", "https://x9x9x9www.github.io/apple-resell-bot/")
+            if not base_url.endswith("/"):
+                base_url += "/"
+            link_opts = LinkPreviewOptions(
+                is_disabled=False,
+                url=f"{base_url}article.html",
+                prefer_large_media=True,
+                show_above_text=True,
+            )
+            await message.answer(
+                text,
+                reply_markup=get_reply_keyboard(current_region=current_reg_name),
+                link_preview_options=link_opts,
+            )
 
     @dp.message(Command("keyboard", "kb", "buttons", "show_keyboard"))
     async def cmd_keyboard(message: types.Message):
@@ -299,24 +342,28 @@ def create_bot_dispatcher(
         text = _build_dashboard_text(filter_instance, reg_manager, chat_id)
         current_reg_name = reg_manager.current["name"]
         bot = message.bot
-        banner_photo = BANNER_FILE_PATH if os.path.exists(BANNER_FILE_PATH) else None
         if bot:
-            await send_or_replace_functional_message(
+            await send_rich_message(
                 chat_id=chat_id,
                 bot=bot,
                 text=text,
                 reply_markup=get_reply_keyboard(current_region=current_reg_name),
-                photo=banner_photo,
             )
         else:
-            if banner_photo:
-                await message.answer_photo(
-                    photo=FSInputFile(banner_photo),
-                    caption=text,
-                    reply_markup=get_reply_keyboard(current_region=current_reg_name),
-                )
-            else:
-                await message.answer(text, reply_markup=get_reply_keyboard(current_region=current_reg_name))
+            base_url = getattr(settings, "WEBAPP_URL", "https://x9x9x9www.github.io/apple-resell-bot/")
+            if not base_url.endswith("/"):
+                base_url += "/"
+            link_opts = LinkPreviewOptions(
+                is_disabled=False,
+                url=f"{base_url}article.html",
+                prefer_large_media=True,
+                show_above_text=True,
+            )
+            await message.answer(
+                text,
+                reply_markup=get_reply_keyboard(current_region=current_reg_name),
+                link_preview_options=link_opts,
+            )
 
     @dp.message(Command("status"))
     async def cmd_status(message: types.Message):
@@ -841,7 +888,19 @@ def create_bot_dispatcher(
         text, kb = _build_favorites_view(user_id)
         bot = message.bot
         if bot:
-            await send_or_replace_functional_message(chat_id=chat_id, bot=bot, text=text, reply_markup=kb)
+            old_fav_id = _last_favorites_messages.get(chat_id)
+            if old_fav_id:
+                try:
+                    await bot.delete_message(chat_id=chat_id, message_id=old_fav_id)
+                except Exception:
+                    pass
+            fav_msg = await bot.send_message(
+                chat_id=chat_id,
+                text=text,
+                reply_markup=kb,
+                parse_mode="HTML",
+            )
+            _last_favorites_messages[chat_id] = fav_msg.message_id
         else:
             await message.answer(text, reply_markup=kb)
 
@@ -1582,7 +1641,6 @@ def _build_dashboard_text(
     """Единое информативное сообщение панели управления (дашборд без спама)."""
     current_reg = reg_manager.current
     return (
-        "⚡️ <b>ПЕРЕКУПЕР</b>\n\n"
         f"📍 <b>Текущий регион:</b> {current_reg['name']}\n"
         "📡 <b>Мониторинг:</b> Авито + Юла"
     )

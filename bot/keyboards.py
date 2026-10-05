@@ -96,13 +96,6 @@ def get_favorites_keyboard(
             )
         ])
 
-    rows.append([
-        InlineKeyboardButton(
-            text="⬅️ Назад в главное меню",
-            callback_data="menu:main",
-        )
-    ])
-
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
 

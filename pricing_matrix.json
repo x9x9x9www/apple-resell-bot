@@ -667,5 +667,17 @@
       "market": 43000,
       "enabled": true
     }
+  },
+  "iphone": {
+    "128": {
+      "max_buy": 1,
+      "market": 1,
+      "enabled": true
+    },
+    "0": {
+      "max_buy": 1,
+      "market": 1,
+      "enabled": true
+    }
   }
 }
