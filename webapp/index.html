@@ -915,19 +915,6 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label">Порядок в панели вкладок:</label>
-        <div style="display:flex; gap:8px;">
-          <button type="button" class="btn-step" id="btnMoveCatLeft" style="flex:1; height:38px; border-radius:10px; font-weight:700; background:rgba(255,255,255,0.06); font-size:12px;">
-            ◀️ Сдвинуть левее
-          </button>
-          <button type="button" class="btn-step" id="btnMoveCatRight" style="flex:1; height:38px; border-radius:10px; font-weight:700; background:rgba(255,255,255,0.06); font-size:12px;">
-            Сдвинуть правее ▶️
-          </button>
-        </div>
-        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">💡 Также папки можно перетаскивать прямо на панели зажатием пальца</div>
-      </div>
-
-      <div class="form-group">
         <label class="form-label">Иконка / Эмодзи:</label>
         <div class="emoji-row" id="editEmojiRow">
           <span class="emoji-chip">📱</span>
@@ -1973,14 +1960,6 @@
         c.classList.toggle('active', c.textContent.trim() === cat.icon);
       });
 
-      // Настройка кнопок сдвига
-      const btnLeft = document.getElementById('btnMoveCatLeft');
-      const btnRight = document.getElementById('btnMoveCatRight');
-      btnLeft.disabled = idx === 0;
-      btnRight.disabled = idx === categories.length - 1;
-      btnLeft.style.opacity = idx === 0 ? '0.35' : '1';
-      btnRight.style.opacity = idx === categories.length - 1 ? '0.35' : '1';
-
       // Проверяем, есть ли готовый пресет моделей для этого бренда
       const matchingTpl = POPULAR_TEMPLATES.find(t => t.id === cat.id || (t.name && t.name.toLowerCase() === cat.name.toLowerCase()));
       const btnAddPreset = document.getElementById('btnManageAddPresetModels');
@@ -1998,24 +1977,6 @@
 
       manageCatModal.classList.add('active');
     }
-
-    document.getElementById('btnMoveCatLeft').addEventListener('click', () => {
-      const id = document.getElementById('editCatId').value;
-      const idx = categories.findIndex(c => c.id === id);
-      if (idx > 0) {
-        reorderCategories(idx, idx - 1);
-        openManageCategoryModal(id);
-      }
-    });
-
-    document.getElementById('btnMoveCatRight').addEventListener('click', () => {
-      const id = document.getElementById('editCatId').value;
-      const idx = categories.findIndex(c => c.id === id);
-      if (idx >= 0 && idx < categories.length - 1) {
-        reorderCategories(idx, idx + 1);
-        openManageCategoryModal(id);
-      }
-    });
 
     document.getElementById('btnCloseManageCategoryModal').addEventListener('click', () => {
       manageCatModal.classList.remove('active');
