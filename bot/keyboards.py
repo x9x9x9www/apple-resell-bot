@@ -142,10 +142,13 @@ def get_reply_keyboard(
     if webapp_url is None:
         webapp_url = getattr(settings, "WEBAPP_URL", "")
 
+    import time
+    from urllib.parse import quote
     final_webapp_url = webapp_url
-    if webapp_url and "#" not in webapp_url and current_region:
-        from urllib.parse import quote
-        final_webapp_url = f"{webapp_url}#region={quote(current_region)}"
+    if webapp_url:
+        reg_part = f"#region={quote(current_region)}" if current_region else ""
+        clean_url = webapp_url.split("#")[0].split("?")[0]
+        final_webapp_url = f"{clean_url}?v={int(time.time())}{reg_part}"
 
     app_btn = (
         KeyboardButton(text="ПЕРЕКУПЕР", web_app=WebAppInfo(url=final_webapp_url))

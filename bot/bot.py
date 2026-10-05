@@ -504,15 +504,27 @@ def create_bot_dispatcher(
 
                 active_count = 0
                 for item in models_data:
-                    m_name = str(item.get("model", "")).strip()
-                    s_val = int(item.get("storage", 128)) if str(item.get("storage", "")).isdigit() else 128
+                    if isinstance(item, (list, tuple)) and len(item) >= 3:
+                        m_name = str(item[0]).strip()
+                        s_val = int(item[1]) if str(item[1]).isdigit() else item[1]
+                        m_buy = int(item[2])
+                        en = bool(item[3]) if len(item) > 3 else True
+                        cat = str(item[4]).strip() if len(item) > 4 else ""
+                        mkt = int(m_buy * 1.2) if m_buy > 0 else 0
+                        min_p = 0
+                    elif isinstance(item, dict):
+                        m_name = str(item.get("model", "")).strip()
+                        s_val = int(item.get("storage", 128)) if str(item.get("storage", "")).isdigit() else 128
+                        m_buy = int(item.get("price") or item.get("max_buy", 0))
+                        mkt = int(item.get("market", int(m_buy * 1.2) if m_buy > 0 else 0))
+                        en = bool(item.get("enabled", True))
+                        min_p = int(item.get("min_price", 0))
+                        cat = str(item.get("category", "")).strip()
+                    else:
+                        continue
+
                     if not m_name:
                         continue
-                    m_buy = int(item.get("price") or item.get("max_buy", 0))
-                    mkt = int(item.get("market", int(m_buy * 1.2) if m_buy > 0 else 0))
-                    en = bool(item.get("enabled", True))
-                    min_p = int(item.get("min_price", 0))
-                    cat = str(item.get("category", "")).strip()
 
                     if m_name not in profile.models:
                         profile.models[m_name] = {}
