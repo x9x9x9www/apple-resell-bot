@@ -15,7 +15,7 @@ from core.user_profile import UserProfileManager
 from parsers.network import StealthHttpClient, ProxyPool
 from parsers.avito import AvitoWorker
 from parsers.youla import YoulaWorker
-from bot.bot import create_bot, create_bot_dispatcher
+from bot.bot import create_bot, create_bot_dispatcher, register_worker_query_listener
 from bot.dispatcher import ItemDispatcher
 
 # Конфигурация логирования
@@ -98,6 +98,19 @@ async def main() -> None:
     # При смене региона в Telegram боте — мгновенно переключаем воркеры
     region_manager.add_listener(lambda reg: avito_worker.set_location(reg["avito_id"], reg.get("name", "Москва")))
     region_manager.add_listener(lambda reg: youla_worker.set_location(reg["youla_id"], reg.get("youla_slug", "moskva"), reg.get("name", "Москва")))
+
+    # Динамическая регистрация новых поисковых запросов (пользовательских категорий и моделей)
+    register_worker_query_listener(lambda q: avito_worker.add_custom_query(q))
+    register_worker_query_listener(lambda q: youla_worker.add_custom_query(q))
+
+    # Загружаем существующие пользовательские бренды и модели из профилей в воркеры
+    for prof in user_profile_manager._profiles.values():
+        for cat in prof.categories:
+            avito_worker.add_custom_query(cat.name)
+            youla_worker.add_custom_query(cat.name)
+        for m_name in prof.models.keys():
+            avito_worker.add_custom_query(m_name)
+            youla_worker.add_custom_query(m_name)
 
     # Собираем фоновые задачи
     tasks = [

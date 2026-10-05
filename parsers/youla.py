@@ -52,6 +52,16 @@ class YoulaWorker(BaseWorker):
         self.queries = ["iPhone", "MacBook", "Samsung Galaxy", "Google Pixel", "iPad", "PlayStation"]
         self._query_idx = 0
 
+    def add_custom_query(self, query: str) -> None:
+        """Добавляет новый пользовательский поисковый запрос (бренд или модель)."""
+        q_clean = query.strip()
+        if not q_clean:
+            return
+        if any(q.lower() == q_clean.lower() for q in self.queries):
+            return
+        self.queries.append(q_clean)
+        logger.info("[Юла] Добавлен кастомный поисковый запрос: '%s'", q_clean)
+
     def set_location(self, city_id: str, city_slug: str = "moskva", city_name: Optional[str] = None) -> None:
         """Динамическое переключение региона поиска Юлы."""
         self.city_id = city_id

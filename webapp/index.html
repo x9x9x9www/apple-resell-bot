@@ -174,12 +174,74 @@
       cursor: pointer;
       white-space: nowrap;
       transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      user-select: none;
     }
     .series-pill.active {
       background: var(--accent-color);
       color: #fff;
       box-shadow: 0 0 10px var(--accent-glow);
       border-color: var(--accent-color);
+    }
+    .series-pill .btn-pill-edit {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      opacity: 0.75;
+      padding: 1px 4px;
+      margin-left: 2px;
+      border-radius: 4px;
+      transition: opacity 0.15s ease, background 0.15s ease;
+    }
+    .series-pill .btn-pill-edit:hover {
+      opacity: 1;
+      background: rgba(255, 255, 255, 0.25);
+    }
+    .series-pill.btn-add-pill {
+      background: rgba(10, 132, 255, 0.12);
+      border: 1px dashed rgba(10, 132, 255, 0.45);
+      color: var(--accent-color);
+      padding: 6px 12px;
+    }
+    .series-pill.btn-add-pill:hover {
+      background: rgba(10, 132, 255, 0.22);
+      border-color: var(--accent-color);
+    }
+    .badge-category {
+      background: rgba(48, 209, 88, 0.18);
+      color: var(--success-color);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .emoji-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+      margin-bottom: 10px;
+    }
+    .emoji-chip {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 4px 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .emoji-chip:hover, .emoji-chip.active {
+      background: var(--accent-color);
+      border-color: var(--accent-color);
+      transform: scale(1.08);
     }
 
     /* Список карточек */
@@ -535,14 +597,7 @@
 
   <!-- Фильтр по сериям -->
   <div class="series-bar" id="seriesBar">
-    <div class="series-pill active" data-series="all">Все</div>
-    <div class="series-pill" data-series="iphone">📱 iPhone</div>
-    <div class="series-pill" data-series="macbook">💻 Mac</div>
-    <div class="series-pill" data-series="samsung">📱 Samsung</div>
-    <div class="series-pill" data-series="pixel">📱 Pixel</div>
-    <div class="series-pill" data-series="ipad">📟 iPad</div>
-    <div class="series-pill" data-series="consoles">🎮 Консоли</div>
-    <div class="series-pill" data-series="custom">⭐ Свои</div>
+    <!-- Генерируется динамически через renderSeriesBar() -->
   </div>
 
   <!-- Список моделей -->
@@ -637,6 +692,94 @@
     </div>
   </div>
 
+  <!-- Модалка: Создать категорию / папку -->
+  <div class="modal-overlay" id="createCategoryModal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title">📁 Новая папка / Бренд</h3>
+        <button class="btn-close-modal" id="btnCloseCreateCategoryModal">✕</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Название папки / бренда:</label>
+        <input type="text" class="form-input" id="newCatName" placeholder="например: Xiaomi, Dyson, Sony, Наушники">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Иконка / Эмодзи:</label>
+        <div class="emoji-row" id="createEmojiRow">
+          <span class="emoji-chip active">📱</span>
+          <span class="emoji-chip">💻</span>
+          <span class="emoji-chip">📟</span>
+          <span class="emoji-chip">🎧</span>
+          <span class="emoji-chip">⌚️</span>
+          <span class="emoji-chip">🎮</span>
+          <span class="emoji-chip">💨</span>
+          <span class="emoji-chip">📷</span>
+          <span class="emoji-chip">📺</span>
+          <span class="emoji-chip">⚡️</span>
+          <span class="emoji-chip">📁</span>
+          <span class="emoji-chip">⭐️</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <input type="text" class="form-input" id="newCatEmoji" value="📱" style="width:60px; text-align:center; font-size:18px">
+          <span style="font-size:12px; color:var(--text-muted)">Можно выбрать из списка или ввести свой</span>
+        </div>
+      </div>
+
+      <button class="btn-save" id="btnSubmitCreateCategory" style="width:100%; margin-top:8px">
+        <span>✅ Создать папку</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Модалка: Управление категорией / папкой -->
+  <div class="modal-overlay" id="manageCategoryModal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title">⚙️ Управление папкой</h3>
+        <button class="btn-close-modal" id="btnCloseManageCategoryModal">✕</button>
+      </div>
+
+      <input type="hidden" id="editCatId">
+
+      <div class="form-group">
+        <label class="form-label">Название папки / бренда:</label>
+        <input type="text" class="form-input" id="editCatName">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Иконка / Эмодзи:</label>
+        <div class="emoji-row" id="editEmojiRow">
+          <span class="emoji-chip">📱</span>
+          <span class="emoji-chip">💻</span>
+          <span class="emoji-chip">📟</span>
+          <span class="emoji-chip">🎧</span>
+          <span class="emoji-chip">⌚️</span>
+          <span class="emoji-chip">🎮</span>
+          <span class="emoji-chip">💨</span>
+          <span class="emoji-chip">📷</span>
+          <span class="emoji-chip">📺</span>
+          <span class="emoji-chip">⚡️</span>
+          <span class="emoji-chip">📁</span>
+          <span class="emoji-chip">⭐️</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <input type="text" class="form-input" id="editCatEmoji" style="width:60px; text-align:center; font-size:18px">
+          <span style="font-size:12px; color:var(--text-muted)">Иконка папки</span>
+        </div>
+      </div>
+
+      <button class="btn-save" id="btnSaveCategoryEdit" style="width:100%; margin-top:8px">
+        <span>💾 Сохранить изменения</span>
+      </button>
+
+      <button class="btn-step" id="btnDeleteCategory" style="width:100%; margin-top:12px; height:42px; background:rgba(255,69,58,0.15); border:1px solid rgba(255,69,58,0.3); color:var(--danger-color); font-weight:700">
+        🗑 Удалить эту папку
+      </button>
+    </div>
+  </div>
+
   <!-- Модалка: Добавить модель -->
   <div class="modal-overlay" id="addModal">
     <div class="modal-sheet">
@@ -646,8 +789,31 @@
       </div>
 
       <div class="form-group">
+        <label class="form-label">Папка / Бренд:</label>
+        <select class="form-input" id="newModelCategory">
+          <option value="iphone">📱 iPhone</option>
+          <option value="macbook">💻 Mac</option>
+          <option value="samsung">📱 Samsung</option>
+          <option value="pixel">📱 Pixel</option>
+          <option value="ipad">📟 iPad</option>
+          <option value="consoles">🎮 Консоли</option>
+          <optgroup label="Ваши папки" id="customCatOptionsGroup"></optgroup>
+          <option value="__new__">➕ Создать новую папку...</option>
+        </select>
+      </div>
+
+      <!-- Появляется, если выбрано "➕ Создать новую папку..." -->
+      <div id="inlineNewCategoryBox" style="display:none; background:rgba(255,255,255,0.03); border:1px solid var(--card-border); border-radius:10px; padding:10px; margin-bottom:12px;">
+        <label class="form-label" style="font-size:11px; margin-bottom:4px;">Название новой папки / бренда:</label>
+        <div style="display:flex; gap:8px;">
+          <input type="text" class="form-input" id="inlineNewCatEmoji" value="📱" style="width:50px; text-align:center; font-size:16px;">
+          <input type="text" class="form-input" id="inlineNewCatName" placeholder="например Xiaomi или Dyson">
+        </div>
+      </div>
+
+      <div class="form-group">
         <label class="form-label">Название модели:</label>
-        <input type="text" class="form-input" id="newModelName" placeholder="например: iPhone 16 Pro или MacBook M3">
+        <input type="text" class="form-input" id="newModelName" placeholder="например: Xiaomi 14 Ultra или Dyson Airwrap">
       </div>
 
       <div class="form-group">
@@ -714,15 +880,23 @@
       { key: "iPad Pro 11 M2_128", model: "iPad Pro 11 M2", storage: 128, series: "ipad", price: 52000, market: 63000, enabled: true }
     ];
 
+    let customCategories = [];
+
     function getDeviceIcon(name, series) {
-      const lower = (name + ' ' + (series || '')).toLowerCase();
+      const customCat = customCategories.find(c => c.id === series || (c.name && c.name.toLowerCase() === (series || '').toLowerCase()));
+      if (customCat && customCat.icon) return customCat.icon;
+
+      const lower = ((name || '') + ' ' + (series || '')).toLowerCase();
       if (lower.includes('macbook') || lower.includes('mac')) return '💻';
       if (lower.includes('ipad')) return '📟';
       if (lower.includes('playstation') || lower.includes('ps5') || lower.includes('steam deck') || lower.includes('xbox')) return '🎮';
-      if (lower.includes('samsung')) return '📱';
+      if (lower.includes('samsung') || lower.includes('galaxy')) return '📱';
       if (lower.includes('pixel')) return '📱';
       if (lower.includes('iphone')) return '📱';
-      return '⚡️';
+      if (lower.includes('dyson') || lower.includes('airwrap') || lower.includes('фен')) return '💨';
+      if (lower.includes('наушники') || lower.includes('airpods') || lower.includes('wh-') || lower.includes('sony')) return '🎧';
+      if (lower.includes('watch') || lower.includes('часы')) return '⌚️';
+      return '📱';
     }
 
     function detectSeries(name) {
@@ -733,6 +907,13 @@
       if (lower.includes('ipad')) return 'ipad';
       if (lower.includes('playstation') || lower.includes('ps5') || lower.includes('steam deck')) return 'consoles';
       if (lower.includes('iphone')) return 'iphone';
+
+      // Проверяем пользовательские папки по названию бренда
+      for (const cat of customCategories) {
+        if (cat.name && lower.includes(cat.name.toLowerCase())) {
+          return cat.id;
+        }
+      }
       return 'custom';
     }
 
@@ -754,6 +935,7 @@
         const parsed = JSON.parse(saved);
         currentMatrix = parsed.matrix || DEFAULT_CATALOG;
         if (parsed.conditionRules) conditionRules = Object.assign(conditionRules, parsed.conditionRules);
+        if (Array.isArray(parsed.categories)) customCategories = parsed.categories;
       } else {
         currentMatrix = DEFAULT_CATALOG;
       }
@@ -780,10 +962,11 @@
               model,
               storage: Number(storage) || storage,
               series,
+              category: cfg.category || '',
               price,
               market,
               enabled,
-              isCustom: series === 'custom'
+              isCustom: series === 'custom' || customCategories.some(c => c.id === series)
             });
           }
         }
@@ -794,6 +977,7 @@
           });
           currentMatrix = loaded;
           saveLocal();
+          renderSeriesBar();
           renderCards();
           updateStats();
         }
@@ -851,8 +1035,89 @@
     function updateStats() {
       document.getElementById('statTotal').textContent = currentMatrix.length;
       document.getElementById('statActive').textContent = currentMatrix.filter(m => m.enabled).length;
-      const filterPill = document.querySelector('.series-pill.active');
-      document.getElementById('statFilter').textContent = filterPill ? filterPill.textContent : 'Все';
+      const filterPill = document.querySelector(`.series-pill[data-series="${activeFilter}"]`);
+      if (filterPill) {
+        const textSpan = filterPill.querySelector('span:first-child') || filterPill;
+        document.getElementById('statFilter').textContent = textSpan.textContent.trim();
+      } else {
+        document.getElementById('statFilter').textContent = 'Все';
+      }
+    }
+
+    // Рендер панели категорий
+    function renderSeriesBar() {
+      const bar = document.getElementById('seriesBar');
+      bar.innerHTML = '';
+
+      const defaults = [
+        { id: 'all', name: 'Все', icon: '' },
+        { id: 'iphone', name: 'iPhone', icon: '📱' },
+        { id: 'macbook', name: 'Mac', icon: '💻' },
+        { id: 'samsung', name: 'Samsung', icon: '📱' },
+        { id: 'pixel', name: 'Pixel', icon: '📱' },
+        { id: 'ipad', name: 'iPad', icon: '📟' },
+        { id: 'consoles', name: 'Консоли', icon: '🎮' },
+      ];
+
+      defaults.forEach(def => {
+        const pill = document.createElement('div');
+        pill.className = `series-pill ${activeFilter === def.id ? 'active' : ''}`;
+        pill.dataset.series = def.id;
+        pill.textContent = def.icon ? `${def.icon} ${def.name}` : def.name;
+        pill.addEventListener('click', () => {
+          selectFilter(def.id);
+        });
+        bar.appendChild(pill);
+      });
+
+      // Пользовательские папки
+      customCategories.forEach(cat => {
+        const pill = document.createElement('div');
+        pill.className = `series-pill ${activeFilter === cat.id ? 'active' : ''}`;
+        pill.dataset.series = cat.id;
+
+        const titleSpan = document.createElement('span');
+        titleSpan.textContent = `${cat.icon || '📁'} ${cat.name}`;
+        pill.appendChild(titleSpan);
+
+        const editBtn = document.createElement('span');
+        editBtn.className = 'btn-pill-edit';
+        editBtn.textContent = '✏️';
+        editBtn.title = 'Настроить папку';
+        editBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          openManageCategoryModal(cat.id);
+        });
+        pill.appendChild(editBtn);
+
+        pill.addEventListener('click', () => {
+          selectFilter(cat.id);
+        });
+        bar.appendChild(pill);
+      });
+
+      // Кнопка создания новой папки
+      const addBtn = document.createElement('div');
+      addBtn.className = 'series-pill btn-add-pill';
+      addBtn.id = 'btnAddCategoryBtn';
+      addBtn.innerHTML = '<span>➕ Папка</span>';
+      addBtn.title = 'Создать новую папку бренда';
+      addBtn.addEventListener('click', () => {
+        openCreateCategoryModal();
+      });
+      bar.appendChild(addBtn);
+    }
+
+    function selectFilter(filterId) {
+      if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+      activeFilter = filterId;
+      document.querySelectorAll('.series-pill').forEach(p => {
+        if (p.dataset.series) {
+          p.classList.toggle('active', p.dataset.series === filterId);
+        }
+      });
+      renderCards();
+      updateStats();
     }
 
     function renderCards() {
@@ -861,20 +1126,31 @@
       const query = searchQuery.toLowerCase().trim();
 
       const filtered = currentMatrix.filter(item => {
-        if (activeFilter === 'custom' && !item.isCustom) return false;
-        if (activeFilter !== 'all' && activeFilter !== 'custom') {
-          if (item.series !== activeFilter) {
-            const lowerModel = item.model.toLowerCase();
-            if (activeFilter === 'iphone' && !lowerModel.includes('iphone')) return false;
-            else if (activeFilter === 'macbook' && !lowerModel.includes('mac')) return false;
-            else if (activeFilter === 'samsung' && !lowerModel.includes('samsung') && !lowerModel.includes('galaxy')) return false;
-            else if (activeFilter === 'pixel' && !lowerModel.includes('pixel')) return false;
-            else if (activeFilter === 'ipad' && !lowerModel.includes('ipad')) return false;
-            else if (activeFilter === 'consoles' && !lowerModel.includes('playstation') && !lowerModel.includes('steam deck')) return false;
+        if (activeFilter !== 'all') {
+          const standardIds = ['iphone', 'macbook', 'samsung', 'pixel', 'ipad', 'consoles'];
+          if (standardIds.includes(activeFilter)) {
+            if (item.series !== activeFilter) {
+              const lowerModel = (item.model || '').toLowerCase();
+              if (activeFilter === 'iphone' && !lowerModel.includes('iphone')) return false;
+              else if (activeFilter === 'macbook' && !lowerModel.includes('mac')) return false;
+              else if (activeFilter === 'samsung' && !lowerModel.includes('samsung') && !lowerModel.includes('galaxy')) return false;
+              else if (activeFilter === 'pixel' && !lowerModel.includes('pixel')) return false;
+              else if (activeFilter === 'ipad' && !lowerModel.includes('ipad')) return false;
+              else if (activeFilter === 'consoles' && !lowerModel.includes('playstation') && !lowerModel.includes('steam deck') && !lowerModel.includes('xbox')) return false;
+            }
+          } else {
+            // Кастомная папка
+            const customCat = customCategories.find(c => c.id === activeFilter);
+            const matchesId = item.series === activeFilter;
+            const matchesName = customCat && (
+              (item.category && item.category.toLowerCase() === customCat.name.toLowerCase()) ||
+              (item.model && item.model.toLowerCase().includes(customCat.name.toLowerCase()))
+            );
+            if (!matchesId && !matchesName) return false;
           }
         }
         if (query) {
-          const matchTitle = item.model.toLowerCase().includes(query);
+          const matchTitle = (item.model || '').toLowerCase().includes(query);
           const matchStorage = (item.storage + '').includes(query);
           return matchTitle || matchStorage;
         }
@@ -885,7 +1161,8 @@
         container.innerHTML = `
           <div style="text-align:center; padding: 40px 10px; color: var(--text-muted)">
             <p style="font-size: 26px; margin-bottom: 6px">🔍</p>
-            <p style="font-size: 14px; font-weight: 600">Модели не найдены</p>
+            <p style="font-size: 14px; font-weight: 600">В этой вкладке пока нет моделей</p>
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px">Нажмите «➕ Добавить модель», чтобы добавить сюда гаджет</p>
           </div>
         `;
         updateStats();
@@ -894,10 +1171,15 @@
 
       filtered.forEach(item => {
         const card = document.createElement('div');
+        const customCat = customCategories.find(c => c.id === item.series || (c.name && c.name.toLowerCase() === (item.category || '').toLowerCase()));
         card.className = `model-card ${item.isCustom ? 'custom-card' : ''} ${item.enabled ? '' : 'disabled'}`;
         const storageText = item.storage >= 1024 ? `${item.storage / 1024} TB` : `${item.storage} GB`;
         const profit = (item.market || 0) - (item.price || 0);
         const icon = getDeviceIcon(item.model, item.series);
+
+        const categoryBadgeHtml = customCat
+          ? `<span class="badge-category">${customCat.icon || '📁'} ${customCat.name}</span>`
+          : (item.isCustom ? '<span style="font-size:10px; background:rgba(48,209,88,0.2); color:var(--success-color); padding:1px 5px; border-radius:5px">Своя</span>' : '');
 
         card.innerHTML = `
           <div class="card-top">
@@ -905,10 +1187,10 @@
               <span class="device-icon">${icon}</span>
               <span class="card-title">${item.model}</span>
               <span class="badge-storage">${storageText}</span>
-              ${item.isCustom ? '<span style="font-size:10px; background:rgba(48,209,88,0.2); color:var(--success-color); padding:1px 5px; border-radius:5px">Своя</span>' : ''}
+              ${categoryBadgeHtml}
             </div>
             <div class="card-actions">
-              ${item.isCustom ? `<button class="btn-delete" data-key="${item.key}">✕</button>` : ''}
+              ${item.isCustom ? `<button class="btn-delete" data-key="${item.key}" title="Удалить модель">✕</button>` : ''}
               <label class="switch">
                 <input type="checkbox" ${item.enabled ? 'checked' : ''} data-key="${item.key}">
                 <span class="slider"></span>
@@ -1008,25 +1290,174 @@
       try {
         localStorage.setItem('gadget_resell_matrix_clean', JSON.stringify({
           matrix: currentMatrix,
-          conditionRules
+          conditionRules,
+          categories: customCategories
         }));
       } catch (e) {}
     }
 
-    // Слушатели поиска и фильтров
+    // Слушатель поиска
     document.getElementById('searchInput').addEventListener('input', (e) => {
       searchQuery = e.target.value;
       renderCards();
     });
 
-    document.querySelectorAll('.series-pill').forEach(pill => {
-      pill.addEventListener('click', () => {
-        if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
-        document.querySelectorAll('.series-pill').forEach(p => p.classList.remove('active'));
-        pill.classList.add('active');
-        activeFilter = pill.dataset.series;
-        renderCards();
+    // Управление категориями / папками
+    const createCatModal = document.getElementById('createCategoryModal');
+    const manageCatModal = document.getElementById('manageCategoryModal');
+
+    function openCreateCategoryModal() {
+      createCatModal.classList.add('active');
+      document.getElementById('newCatName').value = '';
+      document.getElementById('newCatEmoji').value = '📱';
+      document.querySelectorAll('#createEmojiRow .emoji-chip').forEach((c, idx) => {
+        c.classList.toggle('active', idx === 0);
       });
+      setTimeout(() => document.getElementById('newCatName').focus(), 100);
+    }
+
+    document.getElementById('btnCloseCreateCategoryModal').addEventListener('click', () => {
+      createCatModal.classList.remove('active');
+    });
+
+    document.querySelectorAll('#createEmojiRow .emoji-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('#createEmojiRow .emoji-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        document.getElementById('newCatEmoji').value = chip.textContent.trim();
+      });
+    });
+
+    document.getElementById('btnSubmitCreateCategory').addEventListener('click', () => {
+      const name = document.getElementById('newCatName').value.trim();
+      const icon = document.getElementById('newCatEmoji').value.trim() || '📁';
+      if (!name) {
+        alert("Введите название папки / бренда!");
+        return;
+      }
+
+      const id = 'cat_' + Date.now();
+      customCategories.push({ id, name, icon });
+      saveLocal();
+      renderSeriesBar();
+      updateCategoryDropdown();
+      selectFilter(id);
+      createCatModal.classList.remove('active');
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+    });
+
+    function openManageCategoryModal(catId) {
+      const cat = customCategories.find(c => c.id === catId);
+      if (!cat) return;
+
+      document.getElementById('editCatId').value = cat.id;
+      document.getElementById('editCatName').value = cat.name;
+      document.getElementById('editCatEmoji').value = cat.icon || '📱';
+
+      document.querySelectorAll('#editEmojiRow .emoji-chip').forEach(c => {
+        c.classList.toggle('active', c.textContent.trim() === cat.icon);
+      });
+
+      manageCatModal.classList.add('active');
+    }
+
+    document.getElementById('btnCloseManageCategoryModal').addEventListener('click', () => {
+      manageCatModal.classList.remove('active');
+    });
+
+    document.querySelectorAll('#editEmojiRow .emoji-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('#editEmojiRow .emoji-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        document.getElementById('editCatEmoji').value = chip.textContent.trim();
+      });
+    });
+
+    document.getElementById('btnSaveCategoryEdit').addEventListener('click', () => {
+      const id = document.getElementById('editCatId').value;
+      const name = document.getElementById('editCatName').value.trim();
+      const icon = document.getElementById('editCatEmoji').value.trim() || '📁';
+      if (!name) {
+        alert("Название папки не может быть пустым!");
+        return;
+      }
+
+      const cat = customCategories.find(c => c.id === id);
+      if (cat) {
+        const oldName = cat.name;
+        cat.name = name;
+        cat.icon = icon;
+
+        // Обновляем модели, привязанные к имени этой категории
+        currentMatrix.forEach(m => {
+          if (m.series === id || (m.category && m.category.toLowerCase() === oldName.toLowerCase())) {
+            m.category = name;
+          }
+        });
+
+        saveLocal();
+        renderSeriesBar();
+        updateCategoryDropdown();
+        renderCards();
+        manageCatModal.classList.remove('active');
+        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      }
+    });
+
+    document.getElementById('btnDeleteCategory').addEventListener('click', () => {
+      const id = document.getElementById('editCatId').value;
+      const cat = customCategories.find(c => c.id === id);
+      if (!cat) return;
+
+      const deleteModels = confirm(`Удалить папку «${cat.name}»?\n\n• Нажмите «OK», чтобы удалить папку ВМЕСТЕ со всеми моделями внутри неё.\n• Нажмите «Отмена», чтобы оставить модели в общем каталоге.`);
+
+      if (deleteModels) {
+        currentMatrix = currentMatrix.filter(m => m.series !== id && m.category !== cat.name);
+      } else {
+        currentMatrix.forEach(m => {
+          if (m.series === id || m.category === cat.name) {
+            m.series = 'custom';
+            m.category = '';
+          }
+        });
+      }
+
+      customCategories = customCategories.filter(c => c.id !== id);
+      if (activeFilter === id) {
+        activeFilter = 'all';
+      }
+
+      saveLocal();
+      renderSeriesBar();
+      updateCategoryDropdown();
+      renderCards();
+      manageCatModal.classList.remove('active');
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+    });
+
+    // Обновление списка папок в модалке «Добавить модель»
+    function updateCategoryDropdown() {
+      const group = document.getElementById('customCatOptionsGroup');
+      if (!group) return;
+      group.innerHTML = '';
+      customCategories.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat.id;
+        opt.textContent = `${cat.icon || '📁'} ${cat.name}`;
+        group.appendChild(opt);
+      });
+    }
+
+    const newModelCatSelect = document.getElementById('newModelCategory');
+    const inlineNewCatBox = document.getElementById('inlineNewCategoryBox');
+
+    newModelCatSelect.addEventListener('change', (e) => {
+      if (e.target.value === '__new__') {
+        inlineNewCatBox.style.display = 'block';
+        document.getElementById('inlineNewCatName').focus();
+      } else {
+        inlineNewCatBox.style.display = 'none';
+      }
     });
 
     // Модалка состояния
@@ -1045,6 +1476,18 @@
     // Модалка добавления модели
     const addModal = document.getElementById('addModal');
     document.getElementById('btnOpenAddModal').addEventListener('click', () => {
+      updateCategoryDropdown();
+      inlineNewCatBox.style.display = 'none';
+
+      // Если сейчас открыта кастомная вкладка, сразу выбираем её в селекте
+      if (customCategories.some(c => c.id === activeFilter)) {
+        newModelCatSelect.value = activeFilter;
+      } else if (['iphone', 'macbook', 'samsung', 'pixel', 'ipad', 'consoles'].includes(activeFilter)) {
+        newModelCatSelect.value = activeFilter;
+      } else {
+        newModelCatSelect.value = 'iphone';
+      }
+
       addModal.classList.add('active');
       document.getElementById('newModelName').focus();
     });
@@ -1063,14 +1506,37 @@
         return;
       }
 
+      let selectedSeries = newModelCatSelect.value;
+      let categoryName = '';
+
+      if (selectedSeries === '__new__') {
+        const inlineName = document.getElementById('inlineNewCatName').value.trim();
+        const inlineIcon = document.getElementById('inlineNewCatEmoji').value.trim() || '📱';
+        if (!inlineName) {
+          alert("Введите название новой папки!");
+          return;
+        }
+        const newCatId = 'cat_' + Date.now();
+        customCategories.push({ id: newCatId, name: inlineName, icon: inlineIcon });
+        selectedSeries = newCatId;
+        categoryName = inlineName;
+        renderSeriesBar();
+        updateCategoryDropdown();
+      } else {
+        const foundCat = customCategories.find(c => c.id === selectedSeries);
+        if (foundCat) {
+          categoryName = foundCat.name;
+        }
+      }
+
       const key = `${name}_${storage}`;
-      const series = detectSeries(name);
 
       currentMatrix.unshift({
         key,
         model: name,
         storage,
-        series,
+        series: selectedSeries,
+        category: categoryName,
         price,
         market,
         enabled: true,
@@ -1082,7 +1548,15 @@
       document.getElementById('newModelName').value = '';
       document.getElementById('newModelPrice').value = '';
       document.getElementById('newModelMarket').value = '';
-      renderCards();
+      document.getElementById('inlineNewCatName').value = '';
+
+      // Переключаем на созданную категорию, если добавили в неё
+      if (customCategories.some(c => c.id === selectedSeries)) {
+        selectFilter(selectedSeries);
+      } else {
+        renderCards();
+      }
+
       if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
     });
 
@@ -1093,13 +1567,15 @@
       const payload = {
         action: "save_resell_profile",
         condition_rules: conditionRules,
+        categories: customCategories,
         models: currentMatrix.map(m => ({
           model: m.model,
           storage: m.storage,
           enabled: m.enabled,
           price: m.price,
           max_buy: m.price,
-          market: m.market || Math.round(m.price * 1.2)
+          market: m.market || Math.round(m.price * 1.2),
+          category: m.category || (customCategories.find(c => c.id === m.series)?.name) || m.series || ""
         }))
       };
 
@@ -1111,10 +1587,11 @@
           alert("Ошибка отправки: " + err.message);
         }
       } else {
-        alert("✅ Цены выкупа и продажи успешно сохранены!\nПри открытии внутри Telegram они мгновенно синхронизируются с ботом.");
+        alert("✅ Цены выкупа, папки и профиль успешно сохранены!\nПри открытии внутри Telegram они мгновенно синхронизируются с ботом.");
       }
     });
 
+    renderSeriesBar();
     renderCards();
     loadLivePrices();
   </script>

@@ -23,6 +23,13 @@ class UserConditionRules(BaseModel):
     ignore_replicas: bool = Field(default=True, description="Игнорировать реплики и копии")
 
 
+class CustomCategory(BaseModel):
+    """Пользовательская вкладка/папка бренда гаджетов."""
+    id: str = Field(description="Уникальный идентификатор категории, e.g. 'xiaomi'")
+    name: str = Field(description="Отображаемое имя категории, e.g. 'Xiaomi'")
+    icon: str = Field(default="📱", description="Иконка/эмодзи категории")
+
+
 class UserModelConfig(BaseModel):
     """Индивидуальные настройки поиска по конкретной конфигурации гаджета."""
     model: str
@@ -31,6 +38,7 @@ class UserModelConfig(BaseModel):
     min_price: int = Field(default=0, description="Нижний порог цены (отсекает запчасти, коробки и хлам)")
     max_buy: int = Field(default=0, description="Максимальная цена выкупа")
     market: int = Field(default=0, description="Среднерыночная стоимость")
+    category: str = Field(default="", description="Категория/бренд гаджета (например: 'xiaomi', 'dyson')")
 
 
 class UserResellProfile(BaseModel):
@@ -39,11 +47,13 @@ class UserResellProfile(BaseModel):
     - Желаемая маржа
     - Правила состояния и фильтры риска
     - Каталог отслеживаемых моделей с персональными лимитами
+    - Пользовательские категории / папки брендов
     """
     user_id: int
     target_margin: int = Field(default=5000, description="Желаемая минимальная чистая прибыль (₽)")
     margin_mode: str = Field(default="rub", description="'rub' или 'percent'")
     condition_rules: UserConditionRules = Field(default_factory=UserConditionRules)
+    categories: list[CustomCategory] = Field(default_factory=list)
     models: dict[str, dict[str, UserModelConfig]] = Field(default_factory=dict)
 
     def get_config(self, model: str, storage: int) -> Optional[UserModelConfig]:

@@ -27,6 +27,7 @@ from core.user_profile import (
     UserResellProfile,
     UserConditionRules,
     UserModelConfig,
+    CustomCategory,
 )
 from bot.keyboards import (
     get_main_menu_keyboard,
@@ -48,6 +49,26 @@ _last_functional_messages: dict[int, int] = {}
 _keyboard_hidden_users: dict[int, bool] = {}
 # Ссылка на активный экземпляр RegionManager для динамических кнопок
 _active_region_manager: Optional[RegionManager] = None
+
+# Слушатели для динамического добавления поисковых запросов в парсеры Авито/Юлы
+_worker_query_listeners: list[Callable[[str], None]] = []
+
+
+def register_worker_query_listener(callback: Callable[[str], None]) -> None:
+    """Регистрирует колбэк для добавления кастомных запросов в воркеры парсинга."""
+    _worker_query_listeners.append(callback)
+
+
+def broadcast_worker_query(query: str) -> None:
+    """Уведомляет воркеры о новом поисковом запросе (модели или бренде)."""
+    clean_q = query.strip()
+    if not clean_q:
+        return
+    for cb in _worker_query_listeners:
+        try:
+            cb(clean_q)
+        except Exception as e:
+            logger.debug("Ошибка в query listener: %s", e)
 
 # Тексты кнопок всплывающей клавиатуры, которые нельзя воспринимать как названия городов
 KNOWN_BUTTON_TEXTS = {
@@ -426,6 +447,7 @@ def create_bot_dispatcher(
                 target_margin = int(raw_payload.get("target_margin", 5000))
                 cond_data = raw_payload.get("condition_rules", {})
                 models_data = raw_payload.get("models", [])
+                categories_data = raw_payload.get("categories", [])
 
                 condition_rules = UserConditionRules(
                     battery_threshold=int(cond_data.get("battery_threshold", 80)),
@@ -441,6 +463,18 @@ def create_bot_dispatcher(
                 profile.target_margin = target_margin
                 profile.condition_rules = condition_rules
 
+                # Сохраняем пользовательские папки/категории
+                parsed_categories = []
+                for c in categories_data:
+                    c_name = str(c.get("name", "")).strip()
+                    c_id = str(c.get("id", "")).strip() or c_name.lower().replace(" ", "_")
+                    c_icon = str(c.get("icon", "📱")).strip()
+                    if c_name:
+                        parsed_categories.append(CustomCategory(id=c_id, name=c_name, icon=c_icon))
+                        # Автоматически регистрируем поисковый запрос бренда на Авито и Юле
+                        broadcast_worker_query(c_name)
+                profile.categories = parsed_categories
+
                 active_count = 0
                 for item in models_data:
                     m_name = str(item.get("model", "")).strip()
@@ -451,6 +485,7 @@ def create_bot_dispatcher(
                     mkt = int(item.get("market", int(m_buy * 1.2) if m_buy > 0 else 0))
                     en = bool(item.get("enabled", True))
                     min_p = int(item.get("min_price", 0))
+                    cat = str(item.get("category", "")).strip()
 
                     if m_name not in profile.models:
                         profile.models[m_name] = {}
@@ -461,9 +496,12 @@ def create_bot_dispatcher(
                         min_price=min_p,
                         max_buy=m_buy,
                         market=mkt,
+                        category=cat,
                     )
                     if en:
                         active_count += 1
+                        # Добавляем в поисковый цикл воркеров
+                        broadcast_worker_query(m_name)
 
                     # Синхронизируем также глобальную матрицу
                     if m_name not in filter_instance.matrix:
@@ -482,14 +520,20 @@ def create_bot_dispatcher(
                 face_status = "❌ Отсекать" if condition_rules.ignore_no_face_id else "Пропускать"
                 mdm_status = "❌ Отсекать" if condition_rules.ignore_mdm_rsim else "Пропускать"
 
+                cats_info = ""
+                if profile.categories:
+                    cats_str = ", ".join(f"{c.icon} {c.name}" for c in profile.categories)
+                    cats_info = f"📁 <b>Ваши папки:</b> {cats_str}\n"
+
                 text = (
                     "🎯 <b>Персональный профиль перекупщика сохранен!</b>\n\n"
                     f"💰 <b>Минимальная маржа:</b> от <code>{target_margin:,} ₽</code>\n"
+                    f"{cats_info}"
                     f"🔋 <b>Уценка АКБ &lt;{condition_rules.battery_threshold}%:</b> -<code>{condition_rules.battery_discount:,} ₽</code>\n"
                     f"🛠 <b>Лоты с дефектами:</b> <b>{defects_status}</b>\n"
                     f"🛡 <b>Без Face ID:</b> <b>{face_status}</b> | <b>MDM/R-Sim:</b> <b>{mdm_status}</b>\n"
                     f"📱 <b>Активных конфигураций:</b> <b>{active_count}</b>\n\n"
-                    "⚡️ <i>Все новые объявления с Авито и Юлы мгновенно оцениваются по вашим новым правилам!</i>"
+                    "⚡️ <i>Воркеры Авито и Юлы автоматически ведут мониторинг по вашим брендам и правилам!</i>"
                 )
                 bot = message.bot
                 if bot:

@@ -59,6 +59,16 @@ class AvitoWorker(BaseWorker):
         ]
         self._query_idx = 0
 
+    def add_custom_query(self, query: str, cat_id: str = "") -> None:
+        """Добавляет новый пользовательский поисковый запрос (бренд или модель)."""
+        q_clean = query.strip()
+        if not q_clean:
+            return
+        if any(q.lower() == q_clean.lower() for _, q in self.queries):
+            return
+        self.queries.append((cat_id, q_clean))
+        logger.info("[Авито] Добавлен кастомный поисковый запрос: '%s'", q_clean)
+
     def set_location(self, location_id: str, city_name: Optional[str] = None) -> None:
         """Динамическое переключение региона поиска Авито."""
         self.location_id = location_id
@@ -269,13 +279,14 @@ class AvitoWorker(BaseWorker):
         self._query_idx += 1
 
         params = {
-            "categoryId": cat_id,
             "sort": "104",
             "locationId": self.location_id,
             "q": q_text,
             "page": "1",
             "perPage": "20",
         }
+        if cat_id:
+            params["categoryId"] = cat_id
 
         headers = {
             "Host": "www.avito.ru",
