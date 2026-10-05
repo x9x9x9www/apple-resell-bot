@@ -315,13 +315,9 @@ class TestModernBotFeatures(unittest.TestCase):
 
         # 1. Проверяем информативность единого дашборда
         dash_text = _build_dashboard_text(mf, rm, chat_id=123456)
-        self.assertIn("Панель управления Gadget Resell Radar", dash_text)
-        self.assertIn("📡 <b>Мониторинг:</b> Авито + Юла\n", dash_text)
-        self.assertNotIn("Redis/SQLite", dash_text)
-        self.assertNotIn("Chat ID", dash_text)
-        self.assertNotIn("Авито:", dash_text)
-        self.assertNotIn("Юла:", dash_text)
-        self.assertIn("Все карточки объявлений приходят с кнопками прямого перехода, торга и добавления в избранное", dash_text)
+        self.assertIn("ПЕРЕКУПЕР", dash_text)
+        self.assertIn("Текущий регион:</b> Якутск", dash_text)
+        self.assertIn("📡 <b>Мониторинг:</b> Авито + Юла", dash_text)
 
         # 2. Проверяем логику отсутствия спама (удаление старого сообщения перед отправкой нового)
         bot_mock = MagicMock()

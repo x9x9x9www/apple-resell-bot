@@ -44,7 +44,7 @@ class TestMarginFilterAndFormatting(unittest.TestCase):
         self.assertIn("128 GB", msg)
         self.assertIn("91%", msg)
         self.assertIn("51 000 ₽", msg)
-        self.assertIn("Ниже рынка на ~20 000 ₽", msg)
+        self.assertNotIn("Ниже рынка", msg)
         self.assertIn("Москва, метро Сокол", msg)
 
     def test_unprofitable_item(self):

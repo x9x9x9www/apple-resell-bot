@@ -32,5 +32,6 @@ logs/
 *.db-shm
 *.sqlite*
 region_settings.json
+user_profiles.json
 *.mp4
 *.MP4

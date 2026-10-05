@@ -3,6 +3,7 @@ from __future__ import annotations
 import io
 import json
 import logging
+import os
 import re
 from typing import Optional
 from aiogram import Bot, Dispatcher, types, F
@@ -11,6 +12,7 @@ from aiogram.enums import ParseMode
 from aiogram.filters import Command
 from aiogram.types import (
     BufferedInputFile,
+    FSInputFile,
     MenuButtonWebApp,
     MenuButtonDefault,
     WebAppInfo,
@@ -100,11 +102,15 @@ async def cleanup_user_message(message: types.Message) -> None:
         logger.debug("Не удалось удалить сообщение пользователя: %s", e)
 
 
+BANNER_FILE_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "assets", "banner.jpg")
+
+
 async def send_or_replace_functional_message(
     chat_id: int,
     bot: Bot,
     text: str,
     reply_markup: Optional[types.ReplyKeyboardMarkup | types.ReplyKeyboardRemove] = None,
+    photo: Optional[str | FSInputFile] = None,
 ) -> types.Message:
     """
     Отправляет сервисное/функциональное сообщение бота, предварительно
@@ -128,12 +134,22 @@ async def send_or_replace_functional_message(
             current_reg_name = _active_region_manager.current["name"] if _active_region_manager else "Москва"
             reply_markup = get_reply_keyboard(current_region=current_reg_name)
 
-    msg = await bot.send_message(
-        chat_id=chat_id,
-        text=text,
-        parse_mode="HTML",
-        reply_markup=reply_markup,
-    )
+    if photo:
+        photo_obj = FSInputFile(photo) if isinstance(photo, str) else photo
+        msg = await bot.send_photo(
+            chat_id=chat_id,
+            photo=photo_obj,
+            caption=text,
+            parse_mode="HTML",
+            reply_markup=reply_markup,
+        )
+    else:
+        msg = await bot.send_message(
+            chat_id=chat_id,
+            text=text,
+            parse_mode="HTML",
+            reply_markup=reply_markup,
+        )
     _last_functional_messages[chat_id] = msg.message_id
     return msg
 
@@ -210,15 +226,24 @@ def create_bot_dispatcher(
                 logger.debug("Не удалось сбросить MenuButton для %s: %s", chat_id, e)
 
         # Отправляем ровно ОДНО сервисное сообщение с прикрепленной клавиатурой внизу
+        banner_photo = BANNER_FILE_PATH if os.path.exists(BANNER_FILE_PATH) else None
         if bot:
             await send_or_replace_functional_message(
                 chat_id=chat_id,
                 bot=bot,
                 text=text,
                 reply_markup=get_reply_keyboard(current_region=current_reg_name),
+                photo=banner_photo,
             )
         else:
-            await message.answer(text, reply_markup=get_reply_keyboard(current_region=current_reg_name))
+            if banner_photo:
+                await message.answer_photo(
+                    photo=FSInputFile(banner_photo),
+                    caption=text,
+                    reply_markup=get_reply_keyboard(current_region=current_reg_name),
+                )
+            else:
+                await message.answer(text, reply_markup=get_reply_keyboard(current_region=current_reg_name))
 
     @dp.message(Command("keyboard", "kb", "buttons", "show_keyboard"))
     async def cmd_keyboard(message: types.Message):
@@ -267,15 +292,24 @@ def create_bot_dispatcher(
         text = _build_dashboard_text(filter_instance, reg_manager, chat_id)
         current_reg_name = reg_manager.current["name"]
         bot = message.bot
+        banner_photo = BANNER_FILE_PATH if os.path.exists(BANNER_FILE_PATH) else None
         if bot:
             await send_or_replace_functional_message(
                 chat_id=chat_id,
                 bot=bot,
                 text=text,
                 reply_markup=get_reply_keyboard(current_region=current_reg_name),
+                photo=banner_photo,
             )
         else:
-            await message.answer(text, reply_markup=get_reply_keyboard(current_region=current_reg_name))
+            if banner_photo:
+                await message.answer_photo(
+                    photo=FSInputFile(banner_photo),
+                    caption=text,
+                    reply_markup=get_reply_keyboard(current_region=current_reg_name),
+                )
+            else:
+                await message.answer(text, reply_markup=get_reply_keyboard(current_region=current_reg_name))
 
     @dp.message(Command("status"))
     async def cmd_status(message: types.Message):
@@ -1392,20 +1426,11 @@ def _build_dashboard_text(
     chat_id: int | str = "",
 ) -> str:
     """Единое информативное сообщение панели управления (дашборд без спама)."""
-    stats = filter_instance.get_stats()
     current_reg = reg_manager.current
     return (
-        "⚡️ <b>Панель управления Gadget Resell Radar</b>\n\n"
+        "⚡️ <b>ПЕРЕКУПЕР</b>\n\n"
         f"📍 <b>Текущий регион:</b> {current_reg['name']}\n"
-        f"📱 <b>Конфигураций гаджетов:</b> {stats['active_configs']} из {stats['total_configs']} активны\n"
-        "📡 <b>Мониторинг:</b> Авито + Юла\n\n"
-        "🕹 <b>Быстрое управление:</b>\n"
-        "• <b>Информация:</b> кнопка «ℹ️ Информация» для вызова актуальной сводки\n"
-        "• <b>ПЕРЕКУПЕР:</b> кнопка «ПЕРЕКУПЕР» или иконка «😎» в строке ввода для настройки матрицы цен со смартфона\n"
-        "• <b>Excel-прайс:</b> кнопка «📥 Скачать/загрузить Excel» (отправьте измененный <code>.xlsx</code> боту для обновления цен)\n"
-        f"• <b>Смена региона:</b> напишите город прямо в чат (например: <code>{current_reg['name']}</code>, <code>Казань</code>, <code>спб</code>) или команда <code>/city</code>\n"
-        "• <b>Статус воркеров:</b> команда <code>/status</code>\n\n"
-        "<i>💡 Все карточки объявлений приходят с кнопками прямого перехода, торга и добавления в избранное.</i>"
+        "📡 <b>Мониторинг:</b> Авито + Юла"
     )
 
 

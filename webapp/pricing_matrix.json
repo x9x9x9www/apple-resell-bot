@@ -7,7 +7,7 @@
     },
     "512": {
       "max_buy": 55000,
-      "market": 70000,
+      "market": 66000,
       "enabled": true
     }
   },
@@ -91,48 +91,48 @@
   "Google Pixel 9 Pro": {
     "128": {
       "max_buy": 58000,
-      "market": 70000,
+      "market": 69600,
       "enabled": true
     },
     "256": {
       "max_buy": 70000,
-      "market": 85000,
+      "market": 84000,
       "enabled": true
     }
   },
   "Google Pixel 9": {
     "128": {
       "max_buy": 45000,
-      "market": 56000,
+      "market": 54000,
       "enabled": true
     },
     "256": {
       "max_buy": 51000,
-      "market": 63000,
+      "market": 61200,
       "enabled": true
     }
   },
   "Google Pixel 8 Pro": {
     "128": {
       "max_buy": 42000,
-      "market": 50000,
+      "market": 50400,
       "enabled": true
     },
     "256": {
       "max_buy": 48000,
-      "market": 60000,
+      "market": 57600,
       "enabled": true
     }
   },
   "Google Pixel 8": {
     "128": {
       "max_buy": 30000,
-      "market": 37000,
+      "market": 36000,
       "enabled": true
     },
     "256": {
       "max_buy": 35000,
-      "market": 45000,
+      "market": 42000,
       "enabled": true
     }
   },
@@ -187,51 +187,51 @@
   "iPhone 16 Pro Max": {
     "256": {
       "max_buy": 105000,
-      "market": 125000,
+      "market": 126000,
       "enabled": true
     },
     "512": {
       "max_buy": 118000,
-      "market": 140000,
+      "market": 141600,
       "enabled": true
     },
     "1024": {
       "max_buy": 132000,
-      "market": 158000,
+      "market": 158400,
       "enabled": true
     }
   },
   "iPhone 16 Pro": {
     "128": {
       "max_buy": 88000,
-      "market": 104000,
+      "market": 105600,
       "enabled": true
     },
     "256": {
       "max_buy": 96000,
-      "market": 114000,
+      "market": 115200,
       "enabled": true
     },
     "512": {
       "max_buy": 108000,
-      "market": 128000,
+      "market": 129600,
       "enabled": true
     },
     "1024": {
       "max_buy": 120000,
-      "market": 145000,
+      "market": 144000,
       "enabled": true
     }
   },
   "iPhone 16 Plus": {
     "128": {
       "max_buy": 72000,
-      "market": 85000,
+      "market": 86400,
       "enabled": true
     },
     "256": {
       "max_buy": 76000,
-      "market": 91000,
+      "market": 91200,
       "enabled": true
     },
     "512": {
@@ -243,34 +243,34 @@
   "iPhone 16": {
     "128": {
       "max_buy": 68000,
-      "market": 80000,
+      "market": 81600,
       "enabled": true
     },
     "256": {
       "max_buy": 68000,
-      "market": 83000,
+      "market": 81600,
       "enabled": true
     },
     "512": {
       "max_buy": 78000,
-      "market": 94000,
+      "market": 93600,
       "enabled": true
     }
   },
   "iPhone 15 Pro Max": {
     "256": {
       "max_buy": 82000,
-      "market": 97000,
+      "market": 98400,
       "enabled": false
     },
     "512": {
       "max_buy": 84000,
-      "market": 101000,
+      "market": 100800,
       "enabled": true
     },
     "1024": {
       "max_buy": 94000,
-      "market": 114000,
+      "market": 112800,
       "enabled": true
     }
   },
@@ -282,34 +282,34 @@
     },
     "256": {
       "max_buy": 72000,
-      "market": 85000,
+      "market": 86400,
       "enabled": true
     },
     "512": {
       "max_buy": 72000,
-      "market": 88000,
+      "market": 86400,
       "enabled": true
     },
     "1024": {
       "max_buy": 80000,
-      "market": 98000,
+      "market": 96000,
       "enabled": true
     }
   },
   "iPhone 15 Plus": {
     "128": {
       "max_buy": 48000,
-      "market": 60000,
+      "market": 57600,
       "enabled": true
     },
     "256": {
       "max_buy": 54000,
-      "market": 67000,
+      "market": 64800,
       "enabled": true
     },
     "512": {
       "max_buy": 62000,
-      "market": 76000,
+      "market": 74400,
       "enabled": true
     }
   },
@@ -321,34 +321,34 @@
     },
     "256": {
       "max_buy": 50000,
-      "market": 63000,
+      "market": 60000,
       "enabled": true
     },
     "512": {
       "max_buy": 58000,
-      "market": 72000,
+      "market": 69600,
       "enabled": true
     }
   },
   "iPhone 14 Pro Max": {
     "128": {
       "max_buy": 58000,
-      "market": 70000,
+      "market": 69600,
       "enabled": true
     },
     "256": {
       "max_buy": 62000,
-      "market": 76000,
+      "market": 74400,
       "enabled": true
     },
     "512": {
       "max_buy": 69000,
-      "market": 84000,
+      "market": 82800,
       "enabled": true
     },
     "1024": {
       "max_buy": 76000,
-      "market": 92000,
+      "market": 91200,
       "enabled": true
     }
   },
@@ -360,34 +360,34 @@
     },
     "256": {
       "max_buy": 53000,
-      "market": 66000,
+      "market": 63600,
       "enabled": true
     },
     "512": {
       "max_buy": 59000,
-      "market": 73000,
+      "market": 70800,
       "enabled": true
     },
     "1024": {
       "max_buy": 65000,
-      "market": 80000,
+      "market": 78000,
       "enabled": true
     }
   },
   "iPhone 14 Plus": {
     "128": {
       "max_buy": 38000,
-      "market": 48000,
+      "market": 45600,
       "enabled": true
     },
     "256": {
       "max_buy": 43000,
-      "market": 54000,
+      "market": 51600,
       "enabled": true
     },
     "512": {
       "max_buy": 49000,
-      "market": 61000,
+      "market": 58800,
       "enabled": true
     }
   },
@@ -399,209 +399,209 @@
     },
     "256": {
       "max_buy": 40000,
-      "market": 51000,
+      "market": 48000,
       "enabled": true
     },
     "512": {
       "max_buy": 46000,
-      "market": 58000,
+      "market": 55200,
       "enabled": true
     }
   },
   "iPhone 13 Pro Max": {
     "128": {
       "max_buy": 46000,
-      "market": 55000,
+      "market": 55200,
       "enabled": true
     },
     "256": {
       "max_buy": 50000,
-      "market": 62000,
+      "market": 60000,
       "enabled": true
     },
     "512": {
       "max_buy": 56000,
-      "market": 69000,
+      "market": 67200,
       "enabled": true
     },
     "1024": {
       "max_buy": 62000,
-      "market": 76000,
+      "market": 74400,
       "enabled": true
     }
   },
   "iPhone 13 Pro": {
     "128": {
       "max_buy": 38000,
-      "market": 46000,
+      "market": 45600,
       "enabled": true
     },
     "256": {
       "max_buy": 43000,
-      "market": 54000,
+      "market": 51600,
       "enabled": true
     },
     "512": {
       "max_buy": 48000,
-      "market": 60000,
+      "market": 57600,
       "enabled": true
     },
     "1024": {
       "max_buy": 53000,
-      "market": 66000,
+      "market": 63600,
       "enabled": true
     }
   },
   "iPhone 13": {
     "128": {
       "max_buy": 32000,
-      "market": 39000,
+      "market": 38400,
       "enabled": true
     },
     "256": {
       "max_buy": 34000,
-      "market": 44000,
+      "market": 40800,
       "enabled": true
     },
     "512": {
       "max_buy": 39000,
-      "market": 50000,
+      "market": 46800,
       "enabled": true
     }
   },
   "iPhone 13 mini": {
     "128": {
       "max_buy": 27000,
-      "market": 35000,
+      "market": 32400,
       "enabled": true
     },
     "256": {
       "max_buy": 31000,
-      "market": 40000,
+      "market": 37200,
       "enabled": true
     },
     "512": {
       "max_buy": 36000,
-      "market": 46000,
+      "market": 43200,
       "enabled": true
     }
   },
   "iPhone 12 Pro Max": {
     "128": {
       "max_buy": 33000,
-      "market": 42000,
+      "market": 39600,
       "enabled": true
     },
     "256": {
       "max_buy": 37000,
-      "market": 47000,
+      "market": 44400,
       "enabled": true
     },
     "512": {
       "max_buy": 42000,
-      "market": 53000,
+      "market": 50400,
       "enabled": true
     }
   },
   "iPhone 12 Pro": {
     "128": {
       "max_buy": 27000,
-      "market": 35000,
+      "market": 32400,
       "enabled": true
     },
     "256": {
       "max_buy": 31000,
-      "market": 40000,
+      "market": 37200,
       "enabled": true
     },
     "512": {
       "max_buy": 35000,
-      "market": 45000,
+      "market": 42000,
       "enabled": true
     }
   },
   "iPhone 12": {
     "64": {
       "max_buy": 18000,
-      "market": 24000,
+      "market": 21600,
       "enabled": true
     },
     "128": {
       "max_buy": 23000,
-      "market": 28000,
+      "market": 27600,
       "enabled": true
     },
     "256": {
       "max_buy": 25000,
-      "market": 33000,
+      "market": 30000,
       "enabled": true
     }
   },
   "iPhone 12 mini": {
     "64": {
       "max_buy": 16000,
-      "market": 22000,
+      "market": 19200,
       "enabled": true
     },
     "128": {
       "max_buy": 19000,
-      "market": 25000,
+      "market": 22800,
       "enabled": true
     },
     "256": {
       "max_buy": 22000,
-      "market": 29000,
+      "market": 26400,
       "enabled": true
     }
   },
   "iPhone 11 Pro Max": {
     "64": {
       "max_buy": 22000,
-      "market": 29000,
+      "market": 26400,
       "enabled": true
     },
     "256": {
       "max_buy": 26000,
-      "market": 34000,
+      "market": 31200,
       "enabled": true
     },
     "512": {
       "max_buy": 29000,
-      "market": 38000,
+      "market": 34800,
       "enabled": true
     }
   },
   "iPhone 11 Pro": {
     "64": {
       "max_buy": 18000,
-      "market": 24000,
+      "market": 21600,
       "enabled": true
     },
     "256": {
       "max_buy": 22000,
-      "market": 29000,
+      "market": 26400,
       "enabled": true
     },
     "512": {
       "max_buy": 25000,
-      "market": 33000,
+      "market": 30000,
       "enabled": true
     }
   },
   "iPhone 11": {
     "64": {
       "max_buy": 13000,
-      "market": 18000,
+      "market": 15600,
       "enabled": true
     },
     "128": {
       "max_buy": 16000,
-      "market": 20000,
+      "market": 19200,
       "enabled": true
     },
     "256": {
       "max_buy": 19000,
-      "market": 25000,
+      "market": 22800,
       "enabled": true
     }
   },
@@ -629,7 +629,7 @@
   "Google Pixel 7 Pro": {
     "128": {
       "max_buy": 27000,
-      "market": 33000,
+      "market": 32400,
       "enabled": true
     }
   },

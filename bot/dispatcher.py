@@ -81,29 +81,16 @@ def format_lot_message(item: ParsedIPhone) -> str:
     # Разделитель тысяч в цене
     price_formatted = f"{item.price:,}".replace(",", " ")
 
-    # Блок выгоды
-    profit_text = ""
-    if item.profit and item.profit > 0:
-        profit_formatted = f"{item.profit:,}".replace(",", " ")
-        profit_text = f" <i>(Ниже рынка на ~{profit_formatted} ₽)</i>"
-
-    # Расчет профита и лимита
-    calc_line = ""
-    if item.max_buy_price and item.market_price:
-        mkt_fmt = f"{item.market_price:,}".replace(",", " ")
-        limit_fmt = f"{item.max_buy_price:,}".replace(",", " ")
-        calc_line = f"\n📊 <b>Расчет:</b> Рынок ~{mkt_fmt} ₽ | Лимит: {limit_fmt} ₽"
-
     # Заголовок и блок цены в зависимости от снижения цены
     if item.is_price_drop and item.old_price:
         old_formatted = f"{item.old_price:,}".replace(",", " ")
         diff = item.old_price - item.price
         diff_formatted = f"{diff:,}".replace(",", " ")
         header = f"📉 <b>СНИЖЕНИЕ ЦЕНЫ | {item.platform.value}</b> <i>(Скидка -{diff_formatted} ₽!)</i>"
-        price_line = f"💰 <b>Цена:</b> <s>{old_formatted} ₽</s> ➔ <b>{price_formatted} ₽</b>{profit_text}"
+        price_line = f"💰 <b>Цена:</b> <s>{old_formatted} ₽</s> ➔ <b>{price_formatted} ₽</b>"
     else:
-        header = f"⚡️ <b>СВЕЖИЙ ЛОТ | {item.platform.value}</b> <i>(Только что)</i>"
-        price_line = f"💰 <b>Цена:</b> {price_formatted} ₽{profit_text}"
+        header = f"⚡️ <b>СВЕЖИЙ ЛОТ | {item.platform.value}</b>"
+        price_line = f"💰 <b>Цена:</b> {price_formatted} ₽"
 
     # Профиль продавца (рейтинг и отзывы)
     seller_line = ""
@@ -124,8 +111,7 @@ def format_lot_message(item: ParsedIPhone) -> str:
         f"💾 <b>Память:</b> {storage_display}\n"
         f"🔋 <b>АКБ:</b> {battery_display}{battery_penalty_text}"
         f"{defect_line}\n"
-        f"{price_line}"
-        f"{calc_line}\n"
+        f"{price_line}\n"
         f"📍 <b>Локация:</b> {item.location}"
         f"{seller_line}"
         f"{reserve_line}"

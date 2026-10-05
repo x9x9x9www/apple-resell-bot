@@ -29,7 +29,7 @@ class TestFormatting(unittest.TestCase):
         self.assertIn("256 GB", msg)
         self.assertIn("94%", msg)
         self.assertIn("60 000 ₽", msg)
-        self.assertIn("Ниже рынка на ~15 000 ₽", msg)
+        self.assertNotIn("Ниже рынка", msg)
         self.assertIn("Москва, метро Тверская", msg)
 
     def test_format_price_drop(self):
@@ -53,7 +53,7 @@ class TestFormatting(unittest.TestCase):
         self.assertIn("📉 <b>СНИЖЕНИЕ ЦЕНЫ | Юла</b>", msg)
         self.assertIn("Скидка -7 000 ₽!", msg)
         self.assertIn("<s>55 000 ₽</s> ➔ <b>48 000 ₽</b>", msg)
-        self.assertIn("Ниже рынка на ~12 000 ₽", msg)
+        self.assertNotIn("Ниже рынка", msg)
 
     def test_format_battery_penalty_notice(self):
         item = ParsedIPhone(
