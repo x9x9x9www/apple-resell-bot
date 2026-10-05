@@ -33,6 +33,7 @@ from core.user_profile import (
     UserModelConfig,
     CustomCategory,
 )
+from core.favorites import favorites_manager
 from bot.keyboards import (
     get_main_menu_keyboard,
     get_regions_keyboard,
@@ -42,6 +43,8 @@ from bot.keyboards import (
     get_hide_keyboard,
     get_stream_control_keyboard,
     get_stream_filters_keyboard,
+    get_item_keyboard,
+    get_favorites_keyboard,
 )
 
 logger = logging.getLogger(__name__)
@@ -79,6 +82,7 @@ def broadcast_worker_query(query: str) -> None:
 # Тексты кнопок всплывающей клавиатуры, которые нельзя воспринимать как названия городов
 KNOWN_BUTTON_TEXTS = {
     "ℹ️ Информация", "ℹ️ Инфо", "Информация", "О боте",
+    "⭐️ Избранное", "Избранное",
     "⚡️ Меню", "⚡️ Главное меню", "Меню",
     "📥 Скачать/загрузить Excel", "Скачать/загрузить Excel", "📥/📤 Скачать/загрузить Excel",
     "📊 Скачать Excel", "📊 Excel-прайс", "Скачать Excel",
@@ -112,7 +116,7 @@ async def send_or_replace_functional_message(
     chat_id: int,
     bot: Bot,
     text: str,
-    reply_markup: Optional[types.ReplyKeyboardMarkup | types.ReplyKeyboardRemove] = None,
+    reply_markup: Optional[types.ReplyKeyboardMarkup | types.ReplyKeyboardRemove | types.InlineKeyboardMarkup] = None,
     photo: Optional[str | FSInputFile] = None,
 ) -> types.Message:
     """
@@ -829,6 +833,23 @@ def create_bot_dispatcher(
         await cleanup_user_message(message)
         await _send_excel_file(message, filter_instance)
 
+    @dp.message(Command("favorites", "fav", "bookmarks", "saved"))
+    async def cmd_favorites(message: types.Message):
+        await cleanup_user_message(message)
+        chat_id = message.chat.id
+        user_id = message.from_user.id if message.from_user else chat_id
+        text, kb = _build_favorites_view(user_id)
+        bot = message.bot
+        if bot:
+            await send_or_replace_functional_message(chat_id=chat_id, bot=bot, text=text, reply_markup=kb)
+        else:
+            await message.answer(text, reply_markup=kb)
+
+    @dp.message(F.text.in_({"⭐️ Избранное", "Избранное", "⭐️ Закладки", "Закладки"}))
+    async def handle_reply_favorites_btn(message: types.Message):
+        await cleanup_user_message(message)
+        await cmd_favorites(message)
+
     @dp.message(F.text.in_({"🔄 Статус воркеров", "🔄 Статус", "Статус"}))
     async def handle_reply_status_btn(message: types.Message):
         await cleanup_user_message(message)
@@ -1174,8 +1195,101 @@ def create_bot_dispatcher(
 
     @dp.callback_query(F.data.startswith("fav:"))
     async def cb_add_to_fav(callback: types.CallbackQuery):
+        user_id = callback.from_user.id
         item_id = callback.data.split(":")[1]
-        await callback.answer(f"Лот #{item_id} сохранен в избранное! ⭐️", show_alert=False)
+        msg = callback.message
+
+        if favorites_manager.is_favorite(user_id, item_id):
+            favorites_manager.remove_favorite(user_id, item_id)
+            await callback.answer("🗑 Лот удален из избранного", show_alert=False)
+            is_fav = False
+        else:
+            cached = favorites_manager.get_cached_lot(item_id)
+            if not cached:
+                model = "Гаджет"
+                price = 0
+                url = ""
+                content = ""
+                if isinstance(msg, types.Message):
+                    content = msg.text or msg.caption or ""
+                for line in content.split("\n"):
+                    if "Модель:" in line:
+                        model = line.replace("Модель:", "").strip()
+                    elif "Цена:" in line:
+                        p_match = re.search(r"(\d[\d\s]*)\s*₽", line)
+                        if p_match:
+                            price = int(re.sub(r"\s+", "", p_match.group(1)))
+                if isinstance(msg, types.Message) and msg.reply_markup and msg.reply_markup.inline_keyboard:
+                    for row in msg.reply_markup.inline_keyboard:
+                        for btn in row:
+                            if btn.url:
+                                url = btn.url
+                                break
+                cached = {
+                    "item_id": item_id,
+                    "model": model,
+                    "price": price,
+                    "url": url,
+                    "platform": "Юла" if "Юла" in content else "Авито",
+                }
+            favorites_manager.add_favorite(user_id, cached)
+            await callback.answer("⭐️ Лот сохранен в Избранное!", show_alert=False)
+            is_fav = True
+
+        if isinstance(msg, types.Message) and msg.reply_markup and msg.reply_markup.inline_keyboard:
+            url = ""
+            for row in msg.reply_markup.inline_keyboard:
+                for btn in row:
+                    if btn.url:
+                        url = btn.url
+                        break
+            if url:
+                try:
+                    await msg.edit_reply_markup(
+                        reply_markup=get_item_keyboard(
+                            url=url,
+                            item_id=item_id,
+                            is_favorite=is_fav,
+                        )
+                    )
+                except Exception as e:
+                    logger.debug("Не удалось обновить клавиатуру лота: %s", e)
+
+    @dp.callback_query(F.data.startswith("fav_del:"))
+    async def cb_fav_del(callback: types.CallbackQuery):
+        parts = callback.data.split(":")
+        item_id = parts[1]
+        page = int(parts[2]) if len(parts) > 2 else 0
+        favorites_manager.remove_favorite(callback.from_user.id, item_id)
+        await callback.answer("Лот удален из избранного 🗑")
+        text, kb = _build_favorites_view(callback.from_user.id, page=page)
+        if isinstance(callback.message, types.Message):
+            try:
+                await callback.message.edit_text(text, reply_markup=kb, parse_mode="HTML")
+            except Exception:
+                pass
+
+    @dp.callback_query(F.data.startswith("fav_page:"))
+    async def cb_fav_page(callback: types.CallbackQuery):
+        page = int(callback.data.split(":")[1])
+        await callback.answer()
+        text, kb = _build_favorites_view(callback.from_user.id, page=page)
+        if isinstance(callback.message, types.Message):
+            try:
+                await callback.message.edit_text(text, reply_markup=kb, parse_mode="HTML")
+            except Exception:
+                pass
+
+    @dp.callback_query(F.data == "fav_clear")
+    async def cb_fav_clear(callback: types.CallbackQuery):
+        count = favorites_manager.clear_favorites(callback.from_user.id)
+        await callback.answer(f"Очищено {count} лотов 🗑")
+        text, kb = _build_favorites_view(callback.from_user.id, page=0)
+        if isinstance(callback.message, types.Message):
+            try:
+                await callback.message.edit_text(text, reply_markup=kb, parse_mode="HTML")
+            except Exception:
+                pass
 
     @dp.callback_query(F.data == "menu:status")
     async def cb_status_menu(callback: types.CallbackQuery):
@@ -1421,6 +1535,43 @@ def _build_stream_dashboard_text(stream: SearchStream) -> str:
         f"• Стоп-слова ({len(stream.blacklist_words)} шт.): <i>{stop_words_preview}</i>\n\n"
         "<i>⚡️ Бот проверяет этот поиск каждые 3–5 секунд. Новые выгодные предложения публикуются прямо в этот чат!</i>"
     )
+
+
+def _build_favorites_view(user_id: int | str, page: int = 0, per_page: int = 5) -> tuple[str, InlineKeyboardMarkup]:
+    """Формирует текст и инлайн-клавиатуру для просмотра сохраненных лотов пользователя."""
+    favs = favorites_manager.get_favorites(user_id)
+    if not favs:
+        text = (
+            "⭐️ <b>Ваше избранное пока пусто</b>\n\n"
+            "Нажимайте кнопку «⭐️ В избранное» под любым объявлением в чате, чтобы сохранить его сюда и вернуться к покупке в удобный момент!"
+        )
+        kb = InlineKeyboardMarkup(
+            inline_keyboard=[
+                [InlineKeyboardButton(text="⬅️ Назад в главное меню", callback_data="menu:main")]
+            ]
+        )
+        return text, kb
+
+    total_pages = max(1, (len(favs) + per_page - 1) // per_page)
+    page = max(0, min(page, total_pages - 1))
+    start_idx = page * per_page
+    page_favs = favs[start_idx : start_idx + per_page]
+
+    lines = [
+        f"⭐️ <b>Ваши избранные лоты (всего: {len(favs)}):</b>\n"
+    ]
+    for idx, item in enumerate(page_favs, start=start_idx + 1):
+        price_val = item.get("price")
+        price_fmt = f"{price_val:,}".replace(",", " ") if price_val else "Цена не указана"
+        platform = item.get("platform", "Авито")
+        model = item.get("model", "Гаджет")
+        loc = f" 📍 {item['location']}" if item.get("location") else ""
+        lines.append(f"{idx}. <b>{model}</b> — <b>{price_fmt} ₽</b> <i>({platform})</i>{loc}")
+
+    lines.append("\n<i>💡 Нажмите кнопку с названием лота внизу, чтобы открыть его на источнике, или 🗑, чтобы удалить из списка.</i>")
+    text = "\n".join(lines)
+    kb = get_favorites_keyboard(favs, page=page, per_page=per_page)
+    return text, kb
 
 
 def _build_dashboard_text(

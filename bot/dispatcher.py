@@ -13,6 +13,7 @@ from core.margin_filter import MarginFilter
 from core.deduplicator import RedisDeduplicator
 from core.regions import RegionManager
 from core.user_profile import UserProfileManager
+from core.favorites import favorites_manager
 from bot.keyboards import get_item_keyboard
 
 from aiogram.types import LinkPreviewOptions
@@ -257,12 +258,16 @@ class ItemDispatcher:
                 return
 
         # 4. Форматирование текста и клавиатуры с быстрыми действиями
+        favorites_manager.cache_dispatched_lot(parsed_item)
+        target_chat = raw_item.target_chat_id or getattr(settings, "TARGET_CHAT_ID", None)
+        is_fav = favorites_manager.is_favorite(target_chat or 0, parsed_item.item_id)
         text = format_lot_message(parsed_item)
         keyboard = get_item_keyboard(
             url=parsed_item.url,
             item_id=parsed_item.item_id,
             model=parsed_item.model,
             price=parsed_item.price,
+            is_favorite=is_fav,
         )
 
         # 5. Определение визуального эффекта сообщения (Message Effect)

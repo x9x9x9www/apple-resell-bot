@@ -21,18 +21,89 @@ def get_item_keyboard(
     item_id: str = "",
     model: str = "",
     price: int = 0,
+    is_favorite: bool = False,
 ) -> InlineKeyboardMarkup:
-    """Генерирует инлайн-кнопки для лота: быстрый переход к объявлению."""
-    return InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
+    """Генерирует инлайн-кнопки для лота: быстрый переход и добавление в избранное."""
+    fav_text = "✅ В избранном" if is_favorite else "⭐️ В избранное"
+    rows = [
+        [
+            InlineKeyboardButton(
+                text="⚡️ Перейти к объявлению",
+                url=url,
+            )
+        ]
+    ]
+    if item_id:
+        rows.append([
+            InlineKeyboardButton(
+                text=fav_text,
+                callback_data=f"fav:{item_id}",
+            )
+        ])
+    return InlineKeyboardMarkup(inline_keyboard=rows)
+
+
+def get_favorites_keyboard(
+    favorites: list[dict[str, Any]],
+    page: int = 0,
+    per_page: int = 5,
+) -> InlineKeyboardMarkup:
+    """Генерирует клавиатуру со списком избранных лотов, ссылками, удалением и очисткой."""
+    rows: list[list[InlineKeyboardButton]] = []
+    total_pages = max(1, (len(favorites) + per_page - 1) // per_page)
+    start_idx = page * per_page
+    page_favs = favorites[start_idx : start_idx + per_page]
+
+    for item in page_favs:
+        item_id = item.get("item_id", "")
+        model = item.get("model", "Лот")[:18]
+        price = item.get("price", 0)
+        price_fmt = f"{price:,}".replace(",", " ") if price else ""
+        url = item.get("url", "")
+
+        row = []
+        if url:
+            row.append(
                 InlineKeyboardButton(
-                    text="⚡️ Перейти к объявлению",
+                    text=f"🔗 {model} ({price_fmt} ₽)",
                     url=url,
                 )
-            ]
-        ]
-    )
+            )
+        row.append(
+            InlineKeyboardButton(
+                text="🗑",
+                callback_data=f"fav_del:{item_id}:{page}",
+            )
+        )
+        rows.append(row)
+
+    # Навигация пагинации
+    if total_pages > 1:
+        nav_row = []
+        if page > 0:
+            nav_row.append(InlineKeyboardButton(text="◀️ Назад", callback_data=f"fav_page:{page - 1}"))
+        nav_row.append(InlineKeyboardButton(text=f"Стр. {page + 1}/{total_pages}", callback_data="noop"))
+        if page < total_pages - 1:
+            nav_row.append(InlineKeyboardButton(text="Вперёд ▶️", callback_data=f"fav_page:{page + 1}"))
+        rows.append(nav_row)
+
+    # Кнопка очистки
+    if favorites:
+        rows.append([
+            InlineKeyboardButton(
+                text="🗑 Очистить всё избранное",
+                callback_data="fav_clear",
+            )
+        ])
+
+    rows.append([
+        InlineKeyboardButton(
+            text="⬅️ Назад в главное меню",
+            callback_data="menu:main",
+        )
+    ])
+
+    return InlineKeyboardMarkup(inline_keyboard=rows)
 
 
 def get_main_menu_keyboard(
@@ -146,10 +217,11 @@ def get_reply_keyboard(
     keyboard = [
         [
             KeyboardButton(text="ℹ️ Информация"),
-            KeyboardButton(text="📥 Скачать/загрузить Excel"),
+            KeyboardButton(text="⭐️ Избранное"),
         ],
         [
             app_btn,
+            KeyboardButton(text="📥 Скачать/загрузить Excel"),
         ],
     ]
 

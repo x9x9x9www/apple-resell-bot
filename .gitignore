@@ -33,5 +33,7 @@ logs/
 *.sqlite*
 region_settings.json
 user_profiles.json
+favorites.json
 *.mp4
 *.MP4
+
