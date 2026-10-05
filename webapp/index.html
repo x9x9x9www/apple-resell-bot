@@ -468,6 +468,46 @@
     .storage-chip-btn.disabled-config .storage-chip-dot {
       background: var(--danger-color);
     }
+    .storage-chip-btn.btn-add-storage-chip {
+      background: rgba(10, 132, 255, 0.12);
+      border: 1px dashed rgba(10, 132, 255, 0.45);
+      color: var(--accent-color);
+      padding: 5px 9px;
+    }
+    .storage-chip-btn.btn-add-storage-chip:hover {
+      background: rgba(10, 132, 255, 0.22);
+      border-color: var(--accent-color);
+    }
+
+    .memory-quick-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+      margin-bottom: 4px;
+    }
+    .mem-chip {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      border-radius: 8px;
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .mem-chip:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+    }
+    .mem-chip.active {
+      background: rgba(10, 132, 255, 0.22);
+      border-color: var(--accent-color);
+      color: #fff;
+      box-shadow: 0 0 8px rgba(10, 132, 255, 0.3);
+    }
 
     .btn-toggle-config {
       background: rgba(255, 255, 255, 0.05);
@@ -1063,7 +1103,16 @@
 
       <div class="form-group">
         <label class="form-label">Память (GB / SSD):</label>
-        <input type="number" class="form-input" id="newModelStorage" value="128" placeholder="128, 256, 512, 1024">
+        <div class="memory-quick-chips" id="addModelMemoryChips">
+          <button type="button" class="mem-chip" data-val="64">64 GB</button>
+          <button type="button" class="mem-chip active" data-val="128">128 GB</button>
+          <button type="button" class="mem-chip" data-val="256">256 GB</button>
+          <button type="button" class="mem-chip" data-val="512">512 GB</button>
+          <button type="button" class="mem-chip" data-val="1024">1 TB</button>
+          <button type="button" class="mem-chip" data-val="0">Без памяти</button>
+        </div>
+        <input type="number" class="form-input" id="newModelStorage" value="128" placeholder="или введите вручную: 128, 256, 512, 1024" style="margin-top:6px;">
+        <div style="font-size:11px; color:var(--text-muted); margin-top:3px;">💡 Можно выбрать один или несколько объемов сразу</div>
       </div>
 
       <div class="form-group">
@@ -1074,13 +1123,48 @@
       <div class="form-group">
         <label class="form-label">Ожидаемая цена продажи (₽):</label>
         <input type="number" step="500" class="form-input" id="newModelMarket" placeholder="например 60000">
-        <div id="newModelMarketHint" style="font-size:11px; color:var(--accent-color); margin-top:5px; cursor:pointer; display:none; background:rgba(10, 132, 255, 0.1); border:1px dashed rgba(10, 132, 255, 0.35); padding:5px 8px; border-radius:6px;">
-          💡 Подставить рекомендуемый рынок: <b id="newModelMarketHintVal"></b> <i>(нажмите сюда)</i>
-        </div>
       </div>
 
       <button class="btn-save" id="btnSubmitNewModel" style="width:100%; margin-top:8px">
-        <span>✅ Добавить в матрицу</span>
+        <span id="btnSubmitNewModelText">✅ Добавить в матрицу</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Модалка: Быстрое добавление объема памяти в существующую модель -->
+  <div class="modal-overlay" id="quickAddStorageModal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title" id="quickAddStorageTitle">➕ Добавить объем</h3>
+        <button class="btn-close-modal" id="btnCloseQuickAddStorageModal">✕</button>
+      </div>
+
+      <input type="hidden" id="quickAddModelName">
+
+      <div class="form-group">
+        <label class="form-label">Выберите объем памяти:</label>
+        <div class="memory-quick-chips" id="quickAddMemoryChips">
+          <button type="button" class="mem-chip" data-val="64">64 GB</button>
+          <button type="button" class="mem-chip" data-val="128">128 GB</button>
+          <button type="button" class="mem-chip active" data-val="256">256 GB</button>
+          <button type="button" class="mem-chip" data-val="512">512 GB</button>
+          <button type="button" class="mem-chip" data-val="1024">1 TB</button>
+        </div>
+        <input type="number" class="form-input" id="quickAddStorageVal" value="256" placeholder="например 256" style="margin-top:6px;">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Макс. цена выкупа (₽):</label>
+        <input type="number" step="500" class="form-input" id="quickAddPrice" placeholder="например 45000">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Ожидаемая цена продажи (₽):</label>
+        <input type="number" step="500" class="form-input" id="quickAddMarket" placeholder="например 55000">
+      </div>
+
+      <button class="btn-save" id="btnSubmitQuickAddStorage" style="width:100%; margin-top:8px">
+        <span>✅ Добавить объем в модель</span>
       </button>
     </div>
   </div>
@@ -1707,6 +1791,8 @@
           return `<button type="button" class="storage-chip-btn ${isSel ? 'active' : ''} ${it.enabled ? '' : 'disabled-config'}" data-key="${it.key}">${sLabel}<span class="storage-chip-dot"></span></button>`;
         }).join('');
 
+        const addStorageBtnHtml = `<button type="button" class="storage-chip-btn btn-add-storage-chip" title="Добавить объем памяти">+ Объем</button>`;
+
         const profit = (activeItem.market || 0) - (activeItem.price || 0);
 
         card.innerHTML = `
@@ -1727,6 +1813,7 @@
 
           <div class="storage-chips-bar">
             ${chipsHtml}
+            ${addStorageBtnHtml}
           </div>
 
           <div class="card-prices-grid">
@@ -1867,6 +1954,15 @@
             saveLocal();
             renderCards();
             if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
+          });
+        }
+
+        // Быстрое добавление объема памяти прямо из карточки
+        const btnAddStorage = card.querySelector('.btn-add-storage-chip');
+        if (btnAddStorage) {
+          btnAddStorage.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openQuickAddStorageModal(group, activeItem);
           });
         }
 
@@ -2224,6 +2320,12 @@
       if (!select) return;
       select.innerHTML = '';
 
+      // Первым пунктом всегда "Все (без привязки к папке)"
+      const allOpt = document.createElement('option');
+      allOpt.value = 'all';
+      allOpt.textContent = '📁 Все (без привязки к папке)';
+      select.appendChild(allOpt);
+
       categories.forEach(cat => {
         const opt = document.createElement('option');
         opt.value = cat.id;
@@ -2236,10 +2338,7 @@
       newOpt.textContent = '➕ Создать новую папку...';
       select.appendChild(newOpt);
 
-      if (categories.length === 0) {
-        select.value = '__new__';
-        inlineNewCatBox.style.display = 'block';
-      }
+      if (inlineNewCatBox) inlineNewCatBox.style.display = 'none';
     }
 
     const newModelCatSelect = document.getElementById('newModelCategory');
@@ -2269,19 +2368,67 @@
 
     // Модалка добавления модели
     const addModal = document.getElementById('addModal');
+    const selectedAddModalMemories = new Set([128]);
+
+    function updateAddSubmitButtonText() {
+      const btn = document.getElementById('btnSubmitNewModelText');
+      if (!btn) return;
+      if (selectedAddModalMemories.size > 1) {
+        btn.textContent = `✅ Добавить (${selectedAddModalMemories.size} конф.)`;
+      } else {
+        btn.textContent = `✅ Добавить в матрицу`;
+      }
+    }
+
+    document.querySelectorAll('#addModelMemoryChips .mem-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const val = parseInt(chip.dataset.val, 10);
+        if (selectedAddModalMemories.has(val)) {
+          if (selectedAddModalMemories.size > 1) {
+            selectedAddModalMemories.delete(val);
+            chip.classList.remove('active');
+          }
+        } else {
+          selectedAddModalMemories.add(val);
+          chip.classList.add('active');
+        }
+        document.getElementById('newModelStorage').value = val;
+        updateAddSubmitButtonText();
+        if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+      });
+    });
+
+    document.getElementById('newModelStorage').addEventListener('input', (e) => {
+      const typedVal = parseInt(e.target.value, 10);
+      document.querySelectorAll('#addModelMemoryChips .mem-chip').forEach(c => {
+        c.classList.toggle('active', parseInt(c.dataset.val, 10) === typedVal);
+      });
+      selectedAddModalMemories.clear();
+      if (!isNaN(typedVal)) {
+        selectedAddModalMemories.add(typedVal);
+      }
+      updateAddSubmitButtonText();
+    });
+
     document.getElementById('btnOpenAddModal').addEventListener('click', () => {
       updateCategoryDropdown();
       inlineNewCatBox.style.display = 'none';
 
-      // Если сейчас открыта конкретная вкладка, сразу выбираем её в селекте
-      if (categories.some(c => c.id === activeFilter)) {
+      // По умолчанию всегда предложен вариант "Все", либо открытая папка
+      if (activeFilter !== 'all' && categories.some(c => c.id === activeFilter)) {
         newModelCatSelect.value = activeFilter;
-      } else if (categories.length > 0) {
-        newModelCatSelect.value = categories[0].id;
       } else {
-        newModelCatSelect.value = '__new__';
-        inlineNewCatBox.style.display = 'block';
+        newModelCatSelect.value = 'all';
       }
+
+      // Сбрасываем выбранные объемы памяти на 128
+      selectedAddModalMemories.clear();
+      selectedAddModalMemories.add(128);
+      document.getElementById('newModelStorage').value = 128;
+      document.querySelectorAll('#addModelMemoryChips .mem-chip').forEach(c => {
+        c.classList.toggle('active', c.dataset.val === '128');
+      });
+      updateAddSubmitButtonText();
 
       addModal.classList.add('active');
       document.getElementById('newModelName').focus();
@@ -2292,7 +2439,6 @@
 
     document.getElementById('btnSubmitNewModel').addEventListener('click', () => {
       const name = document.getElementById('newModelName').value.trim();
-      const storage = parseInt(document.getElementById('newModelStorage').value, 10) || 128;
       const price = parseInt(document.getElementById('newModelPrice').value, 10);
       const market = parseInt(document.getElementById('newModelMarket').value, 10) || Math.round((price || 30000) * 1.2 / 500) * 500;
 
@@ -2304,7 +2450,10 @@
       let selectedSeries = newModelCatSelect.value;
       let categoryName = '';
 
-      if (selectedSeries === '__new__') {
+      if (selectedSeries === 'all') {
+        selectedSeries = 'all';
+        categoryName = '';
+      } else if (selectedSeries === '__new__') {
         const inlineName = document.getElementById('inlineNewCatName').value.trim();
         const inlineIcon = document.getElementById('inlineNewCatEmoji').value.trim() || '📱';
         if (!inlineName) {
@@ -2324,18 +2473,32 @@
         }
       }
 
-      const key = `${name}_${storage}`;
+      const memoriesToAdd = selectedAddModalMemories.size > 0 
+        ? Array.from(selectedAddModalMemories) 
+        : [parseInt(document.getElementById('newModelStorage').value, 10) || 128];
 
-      currentMatrix.unshift({
-        key,
-        model: name,
-        storage,
-        series: selectedSeries,
-        category: categoryName,
-        price,
-        market,
-        enabled: true,
-        isCustom: true
+      memoriesToAdd.forEach((storage) => {
+        const key = `${name}_${storage}`;
+        const existing = currentMatrix.find(m => m.key === key);
+        if (existing) {
+          existing.price = price;
+          existing.market = market;
+          existing.series = selectedSeries;
+          existing.category = categoryName;
+          existing.enabled = true;
+        } else {
+          currentMatrix.unshift({
+            key,
+            model: name,
+            storage,
+            series: selectedSeries,
+            category: categoryName,
+            price,
+            market,
+            enabled: true,
+            isCustom: true
+          });
+        }
       });
 
       saveLocal();
@@ -2344,7 +2507,6 @@
       document.getElementById('newModelPrice').value = '';
       document.getElementById('newModelMarket').value = '';
       document.getElementById('inlineNewCatName').value = '';
-      if (newModelMarketHint) newModelMarketHint.style.display = 'none';
 
       // Переключаем на созданную категорию, если добавили в неё
       if (categories.some(c => c.id === selectedSeries)) {
@@ -2356,31 +2518,80 @@
       if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
     });
 
-    const newModelPriceInput = document.getElementById('newModelPrice');
-    const newModelMarketInput = document.getElementById('newModelMarket');
-    const newModelMarketHint = document.getElementById('newModelMarketHint');
-    const newModelMarketHintVal = document.getElementById('newModelMarketHintVal');
+    // Модалка быстрого добавления объема памяти в карточку
+    const quickAddStorageModal = document.getElementById('quickAddStorageModal');
+    let quickAddCurrentGroup = null;
 
-    function updateMarketPriceHint() {
-      const price = parseInt(newModelPriceInput.value, 10);
-      if (price && price > 0) {
-        const estMarket = Math.round((price * 1.2) / 500) * 500;
-        const profit = estMarket - price;
-        newModelMarketHintVal.textContent = `${estMarket.toLocaleString('ru-RU')} ₽ (+${profit.toLocaleString('ru-RU')} ₽ маржа)`;
-        newModelMarketHint.style.display = 'block';
-      } else {
-        newModelMarketHint.style.display = 'none';
-      }
+    function openQuickAddStorageModal(group, activeItem) {
+      quickAddCurrentGroup = group;
+      document.getElementById('quickAddStorageTitle').textContent = `➕ Память: ${group.model}`;
+      document.getElementById('quickAddModelName').value = group.model;
+
+      // Предлагаем следующий объем, которого еще нет в модели
+      const existingStorages = new Set(group.items.map(i => i.storage));
+      const candidates = [128, 256, 512, 1024, 64];
+      const nextStorage = candidates.find(s => !existingStorages.has(s)) || 256;
+
+      document.getElementById('quickAddStorageVal').value = nextStorage;
+      document.querySelectorAll('#quickAddMemoryChips .mem-chip').forEach(c => {
+        c.classList.toggle('active', parseInt(c.dataset.val, 10) === nextStorage);
+      });
+
+      // Предзаполняем цену выкупа и продажи на основе текущей конфигурации
+      document.getElementById('quickAddPrice').value = activeItem ? activeItem.price : '';
+      document.getElementById('quickAddMarket').value = activeItem ? (activeItem.market || Math.round(activeItem.price * 1.2)) : '';
+
+      quickAddStorageModal.classList.add('active');
     }
 
-    newModelPriceInput.addEventListener('input', updateMarketPriceHint);
-    newModelMarketHint.addEventListener('click', () => {
-      const price = parseInt(newModelPriceInput.value, 10);
-      if (price && price > 0) {
-        const estMarket = Math.round((price * 1.2) / 500) * 500;
-        newModelMarketInput.value = estMarket;
-        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+    document.getElementById('btnCloseQuickAddStorageModal').addEventListener('click', () => {
+      quickAddStorageModal.classList.remove('active');
+    });
+
+    document.querySelectorAll('#quickAddMemoryChips .mem-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('#quickAddMemoryChips .mem-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        document.getElementById('quickAddStorageVal').value = chip.dataset.val;
+      });
+    });
+
+    document.getElementById('btnSubmitQuickAddStorage').addEventListener('click', () => {
+      if (!quickAddCurrentGroup) return;
+      const storage = parseInt(document.getElementById('quickAddStorageVal').value, 10) || 0;
+      const price = parseInt(document.getElementById('quickAddPrice').value, 10);
+      const market = parseInt(document.getElementById('quickAddMarket').value, 10) || Math.round((price || 30000) * 1.2 / 500) * 500;
+
+      if (!price || price <= 0) {
+        alert("Укажите максимальную цену выкупа!");
+        return;
       }
+
+      const key = `${quickAddCurrentGroup.model}_${storage}`;
+      const existing = currentMatrix.find(m => m.key === key);
+      if (existing) {
+        existing.price = price;
+        existing.market = market;
+        existing.enabled = true;
+      } else {
+        currentMatrix.push({
+          key,
+          model: quickAddCurrentGroup.model,
+          storage,
+          series: quickAddCurrentGroup.series,
+          category: quickAddCurrentGroup.category,
+          price,
+          market,
+          enabled: true,
+          isCustom: true
+        });
+      }
+
+      selectedStorageMap.set(quickAddCurrentGroup.model, key);
+      saveLocal();
+      renderCards();
+      quickAddStorageModal.classList.remove('active');
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
     });
 
     // Сохранение и отправка в Telegram бот
