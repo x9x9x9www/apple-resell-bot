@@ -22,30 +22,17 @@ def get_item_keyboard(
     model: str = "",
     price: int = 0,
 ) -> InlineKeyboardMarkup:
-    """Генерирует инлайн-кнопки для лота: быстрый переход, торг и избранное."""
-    rows = [
-        [
-            InlineKeyboardButton(
-                text="⚡️ Перейти к объявлению",
-                url=url,
-            )
+    """Генерирует инлайн-кнопки для лота: быстрый переход к объявлению."""
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="⚡️ Перейти к объявлению",
+                    url=url,
+                )
+            ]
         ]
-    ]
-
-    # Интерактивные кнопки действий
-    if item_id:
-        rows.append([
-            InlineKeyboardButton(
-                text="💬 Шаблон торга",
-                callback_data=f"bargain:{item_id}:{price}",
-            ),
-            InlineKeyboardButton(
-                text="⭐️ В избранное",
-                callback_data=f"fav:{item_id}",
-            ),
-        ])
-
-    return InlineKeyboardMarkup(inline_keyboard=rows)
+    )
 
 
 def get_main_menu_keyboard(

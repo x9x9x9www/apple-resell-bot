@@ -5,6 +5,7 @@ import json
 import logging
 import os
 import re
+import time
 from typing import Optional
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.client.default import DefaultBotProperties
@@ -52,6 +53,8 @@ _last_functional_messages: dict[int, int] = {}
 _keyboard_hidden_users: dict[int, bool] = {}
 # Ссылка на активный экземпляр RegionManager для динамических кнопок
 _active_region_manager: Optional[RegionManager] = None
+# Время последней выгрузки Excel для защиты от многократных случайных нажатий
+_last_excel_send_time: dict[int, float] = {}
 
 # Слушатели для динамического добавления поисковых запросов в парсеры Авито/Юлы
 _worker_query_listeners: list[Callable[[str], None]] = []
@@ -1460,6 +1463,12 @@ async def _send_excel_file(message: types.Message, filter_instance: MarginFilter
     try:
         chat_id = message.chat.id
         bot = message.bot
+        now = time.time()
+        # Защита от спама/двойного клика: если файл запрашивался меньше 2.5 сек назад, игнорируем
+        if now - _last_excel_send_time.get(chat_id, 0.0) < 2.5:
+            return
+        _last_excel_send_time[chat_id] = now
+
         old_msg_id = _last_functional_messages.get(chat_id)
         if old_msg_id and bot:
             try:
@@ -1477,7 +1486,17 @@ async def _send_excel_file(message: types.Message, filter_instance: MarginFilter
             "3. <b>Отправьте сохраненный файл обратно в этот чат</b> — бот мгновенно обновит базу!\n\n"
             "<i>💡 Также вы можете управлять всеми ценами и моделями в Mini App «ПЕРЕКУПЕР» (кнопка 😎).</i>"
         )
-        doc_msg = await message.answer_document(document=file, caption=caption)
+        if _keyboard_hidden_users.get(chat_id, False):
+            reply_markup = get_hide_keyboard()
+        else:
+            current_reg_name = _active_region_manager.current["name"] if _active_region_manager else "Москва"
+            reply_markup = get_reply_keyboard(current_region=current_reg_name)
+
+        doc_msg = await message.answer_document(
+            document=file,
+            caption=caption,
+            reply_markup=reply_markup,
+        )
         _last_functional_messages[chat_id] = doc_msg.message_id
     except Exception as e:
         logger.error("Ошибка при генерации Excel прайса: %s", e, exc_info=True)

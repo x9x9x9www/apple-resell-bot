@@ -35,8 +35,8 @@ class TestModernBotFeatures(unittest.TestCase):
         button_texts = [b.text for b in buttons]
 
         self.assertTrue(any("Перейти к объявлению" in t for t in button_texts))
-        self.assertTrue(any("Шаблон торга" in t for t in button_texts))
-        self.assertTrue(any("В избранное" in t for t in button_texts))
+        self.assertFalse(any("Шаблон торга" in t for t in button_texts))
+        self.assertFalse(any("В избранное" in t for t in button_texts))
 
     def test_custom_model_extraction(self):
         from core.parser import IPhoneNLPParser, RawItem
@@ -347,12 +347,12 @@ class TestModernBotFeatures(unittest.TestCase):
         self.assertEqual(_last_functional_messages[123456], 999)
         self.assertEqual(res.message_id, 999)
 
-        # 3. Проверяем, что кнопки действий присутствуют на объявлениях
+        # 3. Проверяем, что кнопка прямого перехода присутствует на объявлениях
         item_kb = get_item_keyboard("https://avito.ru/item/123", item_id="123", model="iPhone 16", price=55000)
         item_buttons = [b.text for row in item_kb.inline_keyboard for b in row]
         self.assertTrue(any("Перейти к объявлению" in t for t in item_buttons))
-        self.assertTrue(any("Шаблон торга" in t for t in item_buttons))
-        self.assertTrue(any("В избранное" in t for t in item_buttons))
+        self.assertFalse(any("Шаблон торга" in t for t in item_buttons))
+        self.assertFalse(any("В избранное" in t for t in item_buttons))
 
         # 4. Проверяем удаление сообщений пользователя (отсутствие спама от пользователя)
         user_msg_mock = MagicMock()
