@@ -419,6 +419,81 @@
       border-radius: 6px;
     }
 
+    /* Панель чипов памяти внутри карточки */
+    .storage-chips-bar {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 3px 0 5px 0;
+      scrollbar-width: none;
+    }
+    .storage-chips-bar::-webkit-scrollbar { display: none; }
+    .storage-chip-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      border-radius: 9px;
+      padding: 5px 11px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .storage-chip-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+    }
+    .storage-chip-btn.active {
+      background: rgba(10, 132, 255, 0.22);
+      border-color: var(--accent-color);
+      color: #fff;
+      box-shadow: 0 0 10px rgba(10, 132, 255, 0.35);
+    }
+    .storage-chip-btn.disabled-config {
+      opacity: 0.45;
+      text-decoration: line-through;
+    }
+    .storage-chip-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--success-color);
+      display: inline-block;
+    }
+    .storage-chip-btn.disabled-config .storage-chip-dot {
+      background: var(--danger-color);
+    }
+
+    .btn-toggle-config {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 9px;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .btn-toggle-config:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+    .btn-toggle-config.active {
+      color: var(--success-color);
+      border-color: rgba(48, 209, 88, 0.35);
+      background: rgba(48, 209, 88, 0.12);
+    }
+
     .card-actions {
       display: flex;
       align-items: center;
@@ -1531,6 +1606,8 @@
       updateStats();
     }
 
+    const selectedStorageMap = new Map();
+
     function renderCards() {
       const container = document.getElementById('modelsList');
       container.innerHTML = '';
@@ -1580,33 +1657,76 @@
         return;
       }
 
-      filtered.forEach(item => {
-        const card = document.createElement('div');
-        const catObj = categories.find(c => c.id === item.series || (c.name && c.name.toLowerCase() === (item.category || '').toLowerCase()));
-        card.className = `model-card ${item.isCustom ? 'custom-card' : ''} ${item.enabled ? '' : 'disabled'}`;
-        const storageText = item.storage >= 1024 ? `${item.storage / 1024} TB` : `${item.storage} GB`;
-        const profit = (item.market || 0) - (item.price || 0);
-        const icon = getDeviceIcon(item.model, item.series);
+      // Группировка конфигураций памяти по названию модели
+      const modelGroups = [];
+      const groupMap = new Map();
 
+      filtered.forEach(item => {
+        const groupKey = item.model || 'Без названия';
+        if (!groupMap.has(groupKey)) {
+          const group = {
+            model: groupKey,
+            series: item.series,
+            category: item.category,
+            isCustom: item.isCustom,
+            items: []
+          };
+          groupMap.set(groupKey, group);
+          modelGroups.push(group);
+        }
+        groupMap.get(groupKey).items.push(item);
+      });
+
+      modelGroups.forEach(group => {
+        // Сортируем память по возрастанию
+        group.items.sort((a, b) => (a.storage || 0) - (b.storage || 0));
+
+        // Выбираем активную конфигурацию
+        let savedKey = selectedStorageMap.get(group.model);
+        let activeItem = group.items.find(it => it.key === savedKey) || group.items.find(it => it.enabled) || group.items[0];
+        selectedStorageMap.set(group.model, activeItem.key);
+
+        const card = document.createElement('div');
+        const catObj = categories.find(c => c.id === group.series || (c.name && c.name.toLowerCase() === (group.category || '').toLowerCase()));
+        const isModelActive = group.items.some(it => it.enabled);
+        card.className = `model-card ${group.isCustom ? 'custom-card' : ''} ${isModelActive ? '' : 'disabled'}`;
+
+        const icon = getDeviceIcon(group.model, group.series);
         const categoryBadgeHtml = catObj
           ? `<span class="badge-category">${catObj.icon || '📁'} ${catObj.name}</span>`
-          : (item.isCustom ? '<span style="font-size:10px; background:rgba(48,209,88,0.2); color:var(--success-color); padding:1px 5px; border-radius:5px">Своя</span>' : '');
+          : (group.isCustom ? '<span style="font-size:10px; background:rgba(48,209,88,0.2); color:var(--success-color); padding:1px 5px; border-radius:5px">Своя</span>' : '');
+
+        function formatStorageLabel(s) {
+          if (!s || s === 0) return 'Стандарт';
+          return s >= 1024 ? `${s / 1024} TB` : `${s} GB`;
+        }
+
+        const chipsHtml = group.items.map(it => {
+          const isSel = it.key === activeItem.key;
+          const sLabel = formatStorageLabel(it.storage);
+          return `<button type="button" class="storage-chip-btn ${isSel ? 'active' : ''} ${it.enabled ? '' : 'disabled-config'}" data-key="${it.key}">${sLabel}<span class="storage-chip-dot"></span></button>`;
+        }).join('');
+
+        const profit = (activeItem.market || 0) - (activeItem.price || 0);
 
         card.innerHTML = `
           <div class="card-top">
             <div class="card-title-group">
               <span class="device-icon">${icon}</span>
-              <span class="card-title">${item.model}</span>
-              <span class="badge-storage">${storageText}</span>
+              <span class="card-title">${group.model}</span>
               ${categoryBadgeHtml}
             </div>
             <div class="card-actions">
-              ${item.isCustom ? `<button class="btn-delete" data-key="${item.key}" title="Удалить модель">✕</button>` : ''}
-              <label class="switch">
-                <input type="checkbox" ${item.enabled ? 'checked' : ''} data-key="${item.key}">
+              <button class="btn-delete" title="Удалить выбранную конфигурацию">✕</button>
+              <label class="switch" title="Включить/выключить всю модель">
+                <input type="checkbox" class="master-switch" ${isModelActive ? 'checked' : ''}>
                 <span class="slider"></span>
               </label>
             </div>
+          </div>
+
+          <div class="storage-chips-bar">
+            ${chipsHtml}
           </div>
 
           <div class="card-prices-grid">
@@ -1615,7 +1735,7 @@
               <div class="price-stepper-row">
                 <button class="step-btn btn-step" data-step="-1000">-1k</button>
                 <div class="input-wrap">
-                  <input type="number" step="500" class="price-input input-buy" value="${item.price}" data-key="${item.key}">
+                  <input type="number" step="500" class="price-input input-buy" value="${activeItem.price}">
                   <span class="currency">₽</span>
                 </div>
                 <button class="step-btn btn-step" data-step="1000">+1k</button>
@@ -1625,46 +1745,104 @@
             <div class="price-field">
               <label class="price-field-label">Продажа (рынок):</label>
               <div class="input-wrap">
-                <input type="number" step="500" class="price-input input-market" value="${item.market || Math.round(item.price * 1.2)}" data-key="${item.key}">
+                <input type="number" step="500" class="price-input input-market" value="${activeItem.market || Math.round(activeItem.price * 1.2)}">
                 <span class="currency">₽</span>
               </div>
             </div>
           </div>
 
-          <div class="card-footer">
+          <div class="card-footer" style="display:flex; justify-content:space-between; align-items:center;">
             <span class="profit-badge ${profit < 0 ? 'negative' : ''}">Навар: ~${profit.toLocaleString('ru-RU')} ₽</span>
+            <button type="button" class="btn-toggle-config ${activeItem.enabled ? 'active' : ''}" title="Отслеживать именно этот объем памяти">
+              <span class="config-check-icon">${activeItem.enabled ? '🟢 Включен' : '⚪️ Отключен'}</span>
+            </button>
           </div>
         `;
 
-        // Switch активности
-        card.querySelector('input[type="checkbox"]').addEventListener('change', (e) => {
-          if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-          item.enabled = e.target.checked;
-          card.classList.toggle('disabled', !item.enabled);
-          saveLocal();
-          updateStats();
-        });
-
+        const masterSwitch = card.querySelector('.master-switch');
         const buyInput = card.querySelector('.input-buy');
         const marketInput = card.querySelector('.input-market');
         const profitBadge = card.querySelector('.profit-badge');
+        const btnToggleConfig = card.querySelector('.btn-toggle-config');
+        const configCheckIcon = card.querySelector('.config-check-icon');
 
         function updateProfitBadge() {
-          const p = (item.market || 0) - (item.price || 0);
+          const p = (activeItem.market || 0) - (activeItem.price || 0);
           profitBadge.textContent = `Навар: ~${p.toLocaleString('ru-RU')} ₽`;
           profitBadge.classList.toggle('negative', p < 0);
         }
 
+        function updateConfigToggleBtn() {
+          btnToggleConfig.classList.toggle('active', activeItem.enabled);
+          configCheckIcon.textContent = activeItem.enabled ? '🟢 Включен' : '⚪️ Отключен';
+        }
+
+        function refreshActiveChip() {
+          card.querySelectorAll('.storage-chip-btn').forEach(btn => {
+            const isSel = btn.dataset.key === activeItem.key;
+            btn.classList.toggle('active', isSel);
+            const foundIt = group.items.find(it => it.key === btn.dataset.key);
+            if (foundIt) {
+              btn.classList.toggle('disabled-config', !foundIt.enabled);
+            }
+          });
+        }
+
+        // Клик по чипам памяти
+        card.querySelectorAll('.storage-chip-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const key = btn.dataset.key;
+            const targetItem = group.items.find(it => it.key === key);
+            if (!targetItem) return;
+
+            activeItem = targetItem;
+            selectedStorageMap.set(group.model, activeItem.key);
+
+            buyInput.value = activeItem.price;
+            marketInput.value = activeItem.market || Math.round(activeItem.price * 1.2);
+            updateProfitBadge();
+            updateConfigToggleBtn();
+            refreshActiveChip();
+
+            if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+          });
+        });
+
+        // Главный тумблер всей модели
+        masterSwitch.addEventListener('change', (e) => {
+          if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+          const newState = e.target.checked;
+          group.items.forEach(it => { it.enabled = newState; });
+          card.classList.toggle('disabled', !newState);
+          updateConfigToggleBtn();
+          refreshActiveChip();
+          saveLocal();
+          updateStats();
+        });
+
+        // Тумблер конкретного объема памяти
+        btnToggleConfig.addEventListener('click', () => {
+          if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+          activeItem.enabled = !activeItem.enabled;
+          const anyEnabled = group.items.some(it => it.enabled);
+          masterSwitch.checked = anyEnabled;
+          card.classList.toggle('disabled', !anyEnabled);
+          updateConfigToggleBtn();
+          refreshActiveChip();
+          saveLocal();
+          updateStats();
+        });
+
         // Ввод цены выкупа
         buyInput.addEventListener('input', (e) => {
-          item.price = parseInt(e.target.value, 10) || 0;
+          activeItem.price = parseInt(e.target.value, 10) || 0;
           updateProfitBadge();
           saveLocal();
         });
 
         // Ввод цены продажи (рынок)
         marketInput.addEventListener('input', (e) => {
-          item.market = parseInt(e.target.value, 10) || 0;
+          activeItem.market = parseInt(e.target.value, 10) || 0;
           updateProfitBadge();
           saveLocal();
         });
@@ -1674,20 +1852,21 @@
           btn.addEventListener('click', () => {
             if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
             const step = parseInt(btn.dataset.step, 10);
-            item.price = Math.max(0, (item.price || 0) + step);
-            buyInput.value = item.price;
+            activeItem.price = Math.max(0, (activeItem.price || 0) + step);
+            buyInput.value = activeItem.price;
             updateProfitBadge();
             saveLocal();
           });
         });
 
-        // Удаление
+        // Удаление текущей конфигурации
         const delBtn = card.querySelector('.btn-delete');
         if (delBtn) {
           delBtn.addEventListener('click', () => {
-            currentMatrix = currentMatrix.filter(m => m.key !== item.key);
+            currentMatrix = currentMatrix.filter(m => m.key !== activeItem.key);
             saveLocal();
             renderCards();
+            if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
           });
         }
 
@@ -2025,21 +2204,6 @@
       const id = document.getElementById('editCatId').value;
       const cat = categories.find(c => c.id === id);
       if (!cat) return;
-
-      const deleteWithModels = confirm(
-        `Удалить папку «${cat.name}»?\n\n` +
-        `• Нажмите «OK», чтобы удалить папку ВМЕСТЕ со всеми моделями внутри неё.\n` +
-        `• Нажмите «Отмена», чтобы только скрыть папку с панели (модели останутся во вкладке «Все»).`
-      );
-
-      if (deleteWithModels) {
-        currentMatrix = currentMatrix.filter(m => {
-          const matchSeries = m.series === id;
-          const matchCat = m.category && m.category.toLowerCase() === cat.name.toLowerCase();
-          const matchModel = m.model && m.model.toLowerCase().includes(cat.name.toLowerCase());
-          return !matchSeries && !matchCat && !matchModel;
-        });
-      }
 
       categories = categories.filter(c => c.id !== id);
       if (activeFilter === id) {
