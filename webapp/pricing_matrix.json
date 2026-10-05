@@ -1,8 +1,8 @@
 {
   "MacBook Air M1": {
     "256": {
-      "max_buy": 45000,
-      "market": 58000,
+      "max_buy": 42000,
+      "market": 52000,
       "enabled": true
     },
     "512": {
@@ -14,7 +14,7 @@
   "MacBook Air M2 13": {
     "256": {
       "max_buy": 62000,
-      "market": 78000,
+      "market": 74000,
       "enabled": true
     },
     "512": {
@@ -26,7 +26,7 @@
   "MacBook Pro 14 M1 Pro": {
     "512": {
       "max_buy": 85000,
-      "market": 105000,
+      "market": 102000,
       "enabled": true
     },
     "1024": {
@@ -37,13 +37,13 @@
   },
   "Samsung Galaxy S24 Ultra": {
     "256": {
-      "max_buy": 68000,
-      "market": 84000,
+      "max_buy": 65000,
+      "market": 78000,
       "enabled": true
     },
     "512": {
-      "max_buy": 78000,
-      "market": 95000,
+      "max_buy": 74000,
+      "market": 88000,
       "enabled": true
     },
     "1024": {
@@ -55,7 +55,7 @@
   "Samsung Galaxy S24": {
     "128": {
       "max_buy": 42000,
-      "market": 52000,
+      "market": 51000,
       "enabled": true
     },
     "256": {
@@ -66,8 +66,8 @@
   },
   "Samsung Galaxy S23 Ultra": {
     "256": {
-      "max_buy": 52000,
-      "market": 64000,
+      "max_buy": 48000,
+      "market": 58000,
       "enabled": true
     },
     "512": {
@@ -90,8 +90,8 @@
   },
   "Google Pixel 9 Pro": {
     "128": {
-      "max_buy": 62000,
-      "market": 76000,
+      "max_buy": 58000,
+      "market": 70000,
       "enabled": true
     },
     "256": {
@@ -115,7 +115,7 @@
   "Google Pixel 8 Pro": {
     "128": {
       "max_buy": 42000,
-      "market": 53000,
+      "market": 50000,
       "enabled": true
     },
     "256": {
@@ -127,7 +127,7 @@
   "Google Pixel 8": {
     "128": {
       "max_buy": 30000,
-      "market": 39000,
+      "market": 37000,
       "enabled": true
     },
     "256": {
@@ -163,7 +163,7 @@
   "PlayStation 5": {
     "825": {
       "max_buy": 32000,
-      "market": 40000,
+      "market": 39000,
       "enabled": true
     },
     "1024": {
@@ -175,7 +175,7 @@
   "Steam Deck OLED": {
     "512": {
       "max_buy": 38000,
-      "market": 48000,
+      "market": 46000,
       "enabled": true
     },
     "1024": {
@@ -225,8 +225,8 @@
   },
   "iPhone 16 Plus": {
     "128": {
-      "max_buy": 68000,
-      "market": 82000,
+      "max_buy": 72000,
+      "market": 85000,
       "enabled": true
     },
     "256": {
@@ -242,8 +242,8 @@
   },
   "iPhone 16": {
     "128": {
-      "max_buy": 60000,
-      "market": 74000,
+      "max_buy": 68000,
+      "market": 80000,
       "enabled": true
     },
     "256": {
@@ -259,9 +259,9 @@
   },
   "iPhone 15 Pro Max": {
     "256": {
-      "max_buy": 74000,
-      "market": 90000,
-      "enabled": true
+      "max_buy": 82000,
+      "market": 97000,
+      "enabled": false
     },
     "512": {
       "max_buy": 84000,
@@ -276,13 +276,13 @@
   },
   "iPhone 15 Pro": {
     "128": {
-      "max_buy": 57000,
-      "market": 71000,
-      "enabled": true
+      "max_buy": 65000,
+      "market": 78000,
+      "enabled": false
     },
     "256": {
-      "max_buy": 64000,
-      "market": 79000,
+      "max_buy": 72000,
+      "market": 85000,
       "enabled": true
     },
     "512": {
@@ -315,8 +315,8 @@
   },
   "iPhone 15": {
     "128": {
-      "max_buy": 44000,
-      "market": 56000,
+      "max_buy": 50000,
+      "market": 60000,
       "enabled": true
     },
     "256": {
@@ -332,8 +332,8 @@
   },
   "iPhone 14 Pro Max": {
     "128": {
-      "max_buy": 56000,
-      "market": 69000,
+      "max_buy": 58000,
+      "market": 70000,
       "enabled": true
     },
     "256": {
@@ -354,8 +354,8 @@
   },
   "iPhone 14 Pro": {
     "128": {
-      "max_buy": 47000,
-      "market": 59000,
+      "max_buy": 50000,
+      "market": 60000,
       "enabled": true
     },
     "256": {
@@ -393,8 +393,8 @@
   },
   "iPhone 14": {
     "128": {
-      "max_buy": 35000,
-      "market": 45000,
+      "max_buy": 40000,
+      "market": 48000,
       "enabled": true
     },
     "256": {
@@ -410,8 +410,8 @@
   },
   "iPhone 13 Pro Max": {
     "128": {
-      "max_buy": 45000,
-      "market": 56000,
+      "max_buy": 46000,
+      "market": 55000,
       "enabled": true
     },
     "256": {
@@ -433,7 +433,7 @@
   "iPhone 13 Pro": {
     "128": {
       "max_buy": 38000,
-      "market": 48000,
+      "market": 46000,
       "enabled": true
     },
     "256": {
@@ -454,8 +454,8 @@
   },
   "iPhone 13": {
     "128": {
-      "max_buy": 29000,
-      "market": 38000,
+      "max_buy": 32000,
+      "market": 39000,
       "enabled": true
     },
     "256": {
@@ -527,7 +527,7 @@
       "enabled": true
     },
     "128": {
-      "max_buy": 21000,
+      "max_buy": 23000,
       "market": 28000,
       "enabled": true
     },
@@ -596,12 +596,75 @@
     },
     "128": {
       "max_buy": 16000,
-      "market": 22000,
+      "market": 20000,
       "enabled": true
     },
     "256": {
       "max_buy": 19000,
       "market": 25000,
+      "enabled": true
+    }
+  },
+  "MacBook Pro 16 M1 Pro": {
+    "512": {
+      "max_buy": 98000,
+      "market": 118000,
+      "enabled": true
+    }
+  },
+  "Samsung Galaxy S24+": {
+    "256": {
+      "max_buy": 50000,
+      "market": 60000,
+      "enabled": true
+    }
+  },
+  "Samsung Galaxy Z Fold 5": {
+    "256": {
+      "max_buy": 58000,
+      "market": 70000,
+      "enabled": true
+    }
+  },
+  "Google Pixel 7 Pro": {
+    "128": {
+      "max_buy": 27000,
+      "market": 33000,
+      "enabled": true
+    }
+  },
+  "iPad Pro 11 M2": {
+    "128": {
+      "max_buy": 52000,
+      "market": 63000,
+      "enabled": true
+    }
+  },
+  "iPad Pro 12.9 M2": {
+    "128": {
+      "max_buy": 65000,
+      "market": 78000,
+      "enabled": true
+    }
+  },
+  "iPad Air 5 M1": {
+    "64": {
+      "max_buy": 34000,
+      "market": 41000,
+      "enabled": true
+    }
+  },
+  "iPad 10": {
+    "64": {
+      "max_buy": 24000,
+      "market": 29000,
+      "enabled": true
+    }
+  },
+  "PlayStation 5 Slim": {
+    "1024": {
+      "max_buy": 36000,
+      "market": 43000,
       "enabled": true
     }
   }
