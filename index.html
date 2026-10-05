@@ -1585,15 +1585,29 @@
           categories = parsed.categories;
         }
       } else {
-        currentMatrix = DEFAULT_CATALOG;
-        // По умолчанию изначально чисто: только [ Все ] и [ + Папка ],
-        // а готовые папки добавляются в 1 клик из шаблонов в окне "Создать папку"
         categories = [];
       }
     } catch (e) {
       currentMatrix = DEFAULT_CATALOG;
       categories = [];
     }
+
+    const initialMatrixMap = new Map();
+
+    function snapshotInitialMatrix(matrix) {
+      if (initialMatrixMap.size === 0 && matrix && matrix.length > 0) {
+        matrix.forEach(m => {
+          initialMatrixMap.set(m.key, {
+            price: Number(m.price || 0),
+            market: Number(m.market || 0),
+            enabled: m.enabled !== false,
+            category: String(m.category || ''),
+            isCustom: !!m.isCustom
+          });
+        });
+      }
+    }
+    snapshotInitialMatrix(currentMatrix);
 
     // Подгрузка pricing_matrix.json если есть
     async function loadLivePrices() {
@@ -1628,6 +1642,7 @@
             if (m.isCustom && !fileKeys.has(m.key)) loaded.unshift(m);
           });
           currentMatrix = loaded;
+          snapshotInitialMatrix(loaded);
           saveLocal();
           renderSeriesBar();
           renderCards();
@@ -2967,28 +2982,54 @@
     document.getElementById('btnSave').addEventListener('click', () => {
       if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
 
+      // Передаем только те модели, которые были добавлены или реально изменены пользователем (Delta Diff),
+      // чтобы размер JSON гарантированно укладывался в лимит Telegram sendData (4096 байт)
+      const modifiedModels = currentMatrix.filter(m => {
+        if (m.isCustom) return true;
+        const init = initialMatrixMap.get(m.key);
+        if (!init) return true;
+        return Number(m.price) !== Number(init.price) ||
+               Number(m.market) !== Number(init.market) ||
+               Boolean(m.enabled) !== Boolean(init.enabled) ||
+               String(m.category || '') !== String(init.category || '');
+      }).map(m => ({
+        model: m.model,
+        storage: m.storage,
+        enabled: m.enabled !== false,
+        price: Number(m.price || 0),
+        max_buy: Number(m.price || 0),
+        market: Number(m.market || Math.round((m.price || 0) * 1.2)),
+        category: m.category || (categories.find(c => c.id === m.series)?.name) || m.series || ""
+      }));
+
       const payload = {
         action: "save_resell_profile",
         region: currentSelectedRegion,
         condition_rules: conditionRules,
         categories: categories,
-        models: currentMatrix.map(m => ({
+        models: modifiedModels
+      };
+
+      let jsonPayload = JSON.stringify(payload);
+
+      // Защитный лимит Telegram: 4096 байт (оставляем запас до 4000)
+      if (new Blob([jsonPayload]).size > 4000) {
+        payload.models = modifiedModels.slice(0, 45).map(m => ({
           model: m.model,
           storage: m.storage,
           enabled: m.enabled,
           price: m.price,
-          max_buy: m.price,
-          market: m.market || Math.round(m.price * 1.2),
-          category: m.category || (categories.find(c => c.id === m.series)?.name) || m.series || ""
-        }))
-      };
+          category: m.category
+        }));
+        jsonPayload = JSON.stringify(payload);
+      }
 
       if (tg && typeof tg.sendData === 'function') {
         try {
-          tg.sendData(JSON.stringify(payload));
+          tg.sendData(jsonPayload);
           tg.close();
         } catch (err) {
-          alert("Ошибка отправки: " + err.message);
+          alert("Ошибка отправки: " + (err.message || err) + "\n\n💡 Пожалуйста, запускайте Mini App через кнопку «ПЕРЕКУПЕР» на клавиатуре чата.");
         }
       } else {
         alert("✅ Цены выкупа, папки и профиль успешно сохранены!\nПри открытии внутри Telegram они мгновенно синхронизируются с ботом.");
