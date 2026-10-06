@@ -164,8 +164,13 @@ CITY_ALIASES: dict[str, str] = {
     # Москва и МО
     "мск": "moskva",
     "москва": "moskva",
+    "москва и мо": "moskva",
+    "москва и область": "moskva",
+    "москва и московская область": "moskva",
     "мо": "moskva",
     "московская": "moskva",
+    "московская область": "moskva",
+    "подмосковье": "moskva",
     "moskva_i_mo": "moskva",
     "moskovskaya_oblast": "moskva",
 
@@ -175,6 +180,11 @@ CITY_ALIASES: dict[str, str] = {
     "петербург": "spb",
     "санкт-петербург": "spb",
     "санкт петербург": "spb",
+    "санкт-петербург и ло": "spb",
+    "санкт петербург и ло": "spb",
+    "спб и ло": "spb",
+    "питер и ло": "spb",
+    "ленинградская область": "spb",
     "sankt-peterburg": "spb",
     "sankt_peterburg": "spb",
     "saint-petersburg": "spb",
@@ -182,9 +192,12 @@ CITY_ALIASES: dict[str, str] = {
 
     # Якутск (Саха)
     "якутск": "yakutsk",
+    "якутск (саха)": "yakutsk",
+    "якутск саха": "yakutsk",
     "якт": "yakutsk",
     "саха": "yakutsk",
     "якутия": "yakutsk",
+    "саха (якутия)": "yakutsk",
 
     # Сибирь и Дальний Восток
     "омск": "omsk",
@@ -315,7 +328,10 @@ CITY_ALIASES: dict[str, str] = {
     # Россия в целом
     "россия": "all_russia",
     "вся россия": "all_russia",
+    "🇷🇺 вся россия": "all_russia",
+    "🇷🇺 россия": "all_russia",
     "рф": "all_russia",
+    "all_russia": "all_russia",
 }
 
 
@@ -372,7 +388,9 @@ class RegionManager:
         Устанавливает новый регион поиска по ключу или названию.
         Мгновенно уведомляет всех зарегистрированных воркеров.
         """
-        normalized_query = city_key_or_name.lower().strip()
+        import re
+        raw = city_key_or_name.strip()
+        normalized_query = raw.lower()
 
         # 1. Проверка по алиасам (мск, спб, питер, якт...)
         if normalized_query in CITY_ALIASES:
@@ -410,6 +428,7 @@ class RegionManager:
 
     def find_cities(self, query: str) -> list[tuple[str, dict[str, str]]]:
         """Поиск городов по частичному совпадению названия."""
+        import re
         q = query.lower().strip()
         if not q:
             return []
@@ -419,10 +438,25 @@ class RegionManager:
             key = CITY_ALIASES[q]
             return [(key, CITY_DATABASE[key])]
 
+        # Очищенный запрос без скобок и эмодзи
+        q_clean = re.sub(r'[\(\)\[\]\{\}\.,!?;:\"\'«»🇷🇺]', ' ', q)
+        q_clean = re.sub(r'\s+', ' ', q_clean).strip()
+        if q_clean and q_clean in CITY_ALIASES:
+            key = CITY_ALIASES[q_clean]
+            return [(key, CITY_DATABASE[key])]
+
         results: list[tuple[str, dict[str, str]]] = []
         for key, data in CITY_DATABASE.items():
             name = data["name"].lower()
-            if q == name or name.startswith(q) or q in name:
+            if (
+                q == name
+                or (q_clean and q_clean == name)
+                or name.startswith(q)
+                or (q_clean and name.startswith(q_clean))
+                or q in name
+                or (q_clean and q_clean in name)
+                or (len(name) >= 4 and (name in q or (q_clean and name in q_clean)))
+            ):
                 results.append((key, data))
 
         return results

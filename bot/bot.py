@@ -541,8 +541,11 @@ def create_bot_dispatcher(
 
             if action == "set_region":
                 user_id = message.chat.id
-                region_name = str(raw_payload.get("region", "Москва")).strip()
-                updated = reg_manager.set_region(region_name)
+                region_name = str(raw_payload.get("region") or raw_payload.get("key") or "Москва").strip()
+                region_key = str(raw_payload.get("key") or "").strip()
+                updated = reg_manager.set_region(region_key) if region_key else None
+                if not updated:
+                    updated = reg_manager.set_region(region_name)
                 if updated:
                     ans = (
                         f"✅ <b>Регион поиска успешно переключен: {updated['name']}!</b>\n\n"
