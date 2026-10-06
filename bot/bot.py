@@ -182,7 +182,7 @@ async def send_rich_message(
         base_url = getattr(settings, "WEBAPP_URL", "https://x9x9x9www.github.io/apple-resell-bot/")
         if not base_url.endswith("/"):
             base_url += "/"
-        article_url = f"{base_url}article.html?v=2"
+        article_url = f"{base_url}article.html?v=3"
 
     link_opts = LinkPreviewOptions(
         is_disabled=False,
@@ -285,7 +285,7 @@ def create_bot_dispatcher(
             base_url = getattr(settings, "WEBAPP_URL", "https://x9x9x9www.github.io/apple-resell-bot/")
             if not base_url.endswith("/"):
                 base_url += "/"
-            article_url = f"{base_url}article.html?v=2"
+            article_url = f"{base_url}article.html?v=3"
             link_opts = LinkPreviewOptions(
                 is_disabled=False,
                 url=article_url,
@@ -357,7 +357,7 @@ def create_bot_dispatcher(
             base_url = getattr(settings, "WEBAPP_URL", "https://x9x9x9www.github.io/apple-resell-bot/")
             if not base_url.endswith("/"):
                 base_url += "/"
-            article_url = f"{base_url}article.html?v=2"
+            article_url = f"{base_url}article.html?v=3"
             link_opts = LinkPreviewOptions(
                 is_disabled=False,
                 url=article_url,
