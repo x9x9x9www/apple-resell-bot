@@ -1033,11 +1033,8 @@
       <!-- Полный список городов -->
       <div style="margin-top: 12px; flex: 1; overflow-y: auto; max-height: 280px; padding-right: 4px;" id="regionsListContainer"></div>
 
-      <div style="margin-top: 14px; display: flex; gap: 8px;">
-        <button class="btn-cancel-modal" id="btnCancelRegion" style="flex: 1;">Закрыть</button>
-        <button class="btn-add-submit" id="btnApplyRegionNow" style="flex: 2; background: var(--accent-color);">
-          ⚡️ Применить в боте
-        </button>
+      <div style="margin-top: 14px; display: flex; justify-content: center;">
+        <button class="btn-cancel-modal" id="btnCancelRegion" style="width: 100%;">✕ Закрыть</button>
       </div>
     </div>
   </div>
@@ -1072,27 +1069,7 @@
         </div>
       </div>
 
-      <div class="setting-item">
-        <div class="setting-info">
-          <div class="setting-title">Разрешить лоты с дефектами</div>
-          <div class="setting-desc">Битые экраны, трещины. Если выкл — отсекаются сразу</div>
-        </div>
-        <label class="switch">
-          <input type="checkbox" id="allowDefectsToggle">
-          <span class="slider"></span>
-        </label>
-      </div>
 
-      <div class="setting-item" id="defectDiscountRow" style="opacity:0.5;">
-        <div class="setting-info">
-          <div class="setting-title">Скидка за дефект</div>
-          <div class="setting-desc">Уценка за битое стекло/экран если разрешены</div>
-        </div>
-        <div class="stepper-input">
-          <input type="number" id="defectDiscountInput" value="8000" min="1000" max="30000" step="1000" disabled>
-          <span style="font-size:12px; color:var(--text-muted)">₽</span>
-        </div>
-      </div>
 
       <div class="setting-item">
         <div class="setting-info">
@@ -1665,37 +1642,20 @@
     // Синхронизация правил состояния в UI
     const batThresholdEl = document.getElementById('batteryThresholdInput');
     const batDiscountEl = document.getElementById('batteryDiscountInput');
-    const allowDefectsEl = document.getElementById('allowDefectsToggle');
-    const defectDiscountEl = document.getElementById('defectDiscountInput');
-    const defectRowEl = document.getElementById('defectDiscountRow');
     const ignoreFaceIdEl = document.getElementById('ignoreFaceIdToggle');
     const ignoreMdmEl = document.getElementById('ignoreMdmToggle');
 
     batThresholdEl.value = conditionRules.battery_threshold;
     batDiscountEl.value = conditionRules.battery_discount;
-    allowDefectsEl.checked = conditionRules.allow_defects;
-    defectDiscountEl.value = conditionRules.defect_discount;
-    defectRowEl.style.opacity = conditionRules.allow_defects ? '1' : '0.5';
-    defectDiscountEl.disabled = !conditionRules.allow_defects;
     ignoreFaceIdEl.checked = conditionRules.ignore_no_face_id;
     ignoreMdmEl.checked = conditionRules.ignore_mdm_rsim;
 
-    allowDefectsEl.addEventListener('change', (e) => {
-      conditionRules.allow_defects = e.target.checked;
-      defectRowEl.style.opacity = conditionRules.allow_defects ? '1' : '0.5';
-      defectDiscountEl.disabled = !conditionRules.allow_defects;
-      saveLocal();
-    });
     batThresholdEl.addEventListener('input', (e) => {
       conditionRules.battery_threshold = parseInt(e.target.value, 10) || 80;
       saveLocal();
     });
     batDiscountEl.addEventListener('input', (e) => {
       conditionRules.battery_discount = parseInt(e.target.value, 10) || 3000;
-      saveLocal();
-    });
-    defectDiscountEl.addEventListener('input', (e) => {
-      conditionRules.defect_discount = parseInt(e.target.value, 10) || 8000;
       saveLocal();
     });
     ignoreFaceIdEl.addEventListener('change', (e) => {
@@ -2026,7 +1986,7 @@
 
           <div class="card-prices-grid">
             <div class="price-field">
-              <label class="price-field-label">Выкуп (до):</label>
+              <label class="price-field-label">Выкуп:</label>
               <div class="price-stepper-row">
                 <button class="step-btn btn-step" data-step="-1000">-1k</button>
                 <div class="input-wrap">
@@ -2038,7 +1998,7 @@
             </div>
 
             <div class="price-field">
-              <label class="price-field-label">Продажа (рынок):</label>
+              <label class="price-field-label">Продажа:</label>
               <div class="input-wrap">
                 <input type="number" step="500" class="price-input input-market" value="${activeItem.market || Math.round(activeItem.price * 1.2)}">
                 <span class="currency">₽</span>
@@ -2886,7 +2846,7 @@
         chip.className = 'popular-chip' + (city.name.toLowerCase() === currentSelectedRegion.toLowerCase() ? ' active' : '');
         chip.textContent = city.name;
         chip.addEventListener('click', () => {
-          selectRegion(city.name);
+          selectRegion(city.name, city.key);
         });
         popularRegionsBar.appendChild(chip);
       });
@@ -2900,7 +2860,7 @@
         customRow.className = 'region-item-row';
         customRow.innerHTML = `<span>Выбрать: <b>${regionSearchInput.value}</b></span> <span>⚡️</span>`;
         customRow.addEventListener('click', () => {
-          selectRegion(regionSearchInput.value.trim());
+          selectRegion(regionSearchInput.value.trim(), "");
         });
         regionsListContainer.appendChild(customRow);
       } else {
@@ -2913,7 +2873,7 @@
             <span style="font-size: 13px; color: ${isAct ? '#fff' : 'var(--text-muted)'};">${isAct ? '✓ Выбран' : 'Выбрать'}</span>
           `;
           row.addEventListener('click', () => {
-            selectRegion(c.name);
+            selectRegion(c.name, c.key);
           });
           regionsListContainer.appendChild(row);
         });
@@ -2939,15 +2899,32 @@
       }, 2500);
     }
 
-    function selectRegion(name, triggerToast = true) {
+    function selectRegion(name, key = "", triggerToast = true) {
       if (!name) return;
       currentSelectedRegion = name;
       updateRegionUI();
-      renderRegionModal();
+      regionModal.classList.remove('active');
+
       if (triggerToast) {
         showRegionToast(name);
       } else if (tg?.HapticFeedback) {
         tg.HapticFeedback.selectionChanged();
+      }
+
+      // Мгновенная синхронизация с ботом при выборе региона
+      if (tg && typeof tg.sendData === 'function') {
+        try {
+          tg.sendData(JSON.stringify({
+            action: "set_region",
+            region: name,
+            key: key || ""
+          }));
+          setTimeout(() => {
+            try { tg.close(); } catch(e) {}
+          }, 350);
+        } catch (err) {
+          console.error("sendData error:", err);
+        }
       }
     }
 
@@ -2967,26 +2944,6 @@
 
     regionSearchInput.addEventListener('input', () => {
       renderRegionModal();
-    });
-
-    // Мгновенное переключение региона в боте
-    document.getElementById('btnApplyRegionNow').addEventListener('click', () => {
-      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-      regionModal.classList.remove('active');
-
-      if (tg && typeof tg.sendData === 'function') {
-        try {
-          tg.sendData(JSON.stringify({
-            action: "set_region",
-            region: currentSelectedRegion
-          }));
-          tg.close();
-        } catch (err) {
-          alert("Ошибка отправки: " + err.message);
-        }
-      } else {
-        alert(`✅ Регион «${currentSelectedRegion}» успешно сохранен!\nПри открытии внутри Telegram он мгновенно переключит воркеров.`);
-      }
     });
 
     // Сохранение и отправка в Telegram бот
