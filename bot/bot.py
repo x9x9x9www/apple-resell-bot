@@ -182,7 +182,7 @@ async def send_rich_message(
         base_url = getattr(settings, "WEBAPP_URL", "https://x9x9x9www.github.io/apple-resell-bot/")
         if not base_url.endswith("/"):
             base_url += "/"
-        article_url = f"{base_url}article.html"
+        article_url = f"{base_url}article.html?v=2"
 
     link_opts = LinkPreviewOptions(
         is_disabled=False,
@@ -191,10 +191,12 @@ async def send_rich_message(
         show_above_text=True,
     )
 
+    full_text = f'<a href="{article_url}">&#8203;</a>{text}'
+
     return await send_or_replace_functional_message(
         chat_id=chat_id,
         bot=bot,
-        text=text,
+        text=full_text,
         reply_markup=reply_markup,
         link_preview_options=link_opts,
     )
@@ -283,14 +285,16 @@ def create_bot_dispatcher(
             base_url = getattr(settings, "WEBAPP_URL", "https://x9x9x9www.github.io/apple-resell-bot/")
             if not base_url.endswith("/"):
                 base_url += "/"
+            article_url = f"{base_url}article.html?v=2"
             link_opts = LinkPreviewOptions(
                 is_disabled=False,
-                url=f"{base_url}article.html",
+                url=article_url,
                 prefer_large_media=True,
                 show_above_text=True,
             )
+            full_text = f'<a href="{article_url}">&#8203;</a>{text}'
             await message.answer(
-                text,
+                full_text,
                 reply_markup=get_reply_keyboard(current_region=current_reg_name),
                 link_preview_options=link_opts,
             )
@@ -353,14 +357,16 @@ def create_bot_dispatcher(
             base_url = getattr(settings, "WEBAPP_URL", "https://x9x9x9www.github.io/apple-resell-bot/")
             if not base_url.endswith("/"):
                 base_url += "/"
+            article_url = f"{base_url}article.html?v=2"
             link_opts = LinkPreviewOptions(
                 is_disabled=False,
-                url=f"{base_url}article.html",
+                url=article_url,
                 prefer_large_media=True,
                 show_above_text=True,
             )
+            full_text = f'<a href="{article_url}">&#8203;</a>{text}'
             await message.answer(
-                text,
+                full_text,
                 reply_markup=get_reply_keyboard(current_region=current_reg_name),
                 link_preview_options=link_opts,
             )
@@ -1063,19 +1069,21 @@ def create_bot_dispatcher(
     @dp.callback_query(F.data == "menu:main")
     async def cb_main_menu(callback: types.CallbackQuery):
         await callback.answer()
-        stats = filter_instance.get_stats()
-        current_reg_name = reg_manager.current["name"]
-        text = (
-            "⚙️ <b>Панель управления Apple Resell Radar</b>\n\n"
-            f"📍 Текущий регион: <b>{current_reg_name}</b>\n"
-            f"📱 Активных конфигураций: <b>{stats['active_configs']} из {stats['total_configs']}</b>\n\n"
-            "Выберите нужный раздел в меню ниже:"
-        )
         if callback.message:
             try:
-                await callback.message.edit_text(text, reply_markup=get_main_menu_keyboard(current_reg_name))
-            except Exception as e:
-                logger.debug("Сообщение главного меню не изменилось: %s", e)
+                await callback.message.delete()
+            except Exception:
+                pass
+            await cmd_menu(callback.message)
+
+    @dp.callback_query(F.data == "fav_close")
+    async def cb_fav_close(callback: types.CallbackQuery):
+        await callback.answer()
+        if callback.message:
+            try:
+                await callback.message.delete()
+            except Exception:
+                pass
 
     @dp.callback_query(F.data == "menu:region")
     async def cb_regions_menu(callback: types.CallbackQuery):
@@ -1114,16 +1122,12 @@ def create_bot_dispatcher(
         updated = reg_manager.set_region(region_key)
         if updated:
             await callback.answer(f"Регион изменен на {updated['name']} ✅")
-            stats = filter_instance.get_stats()
-            text = (
-                f"✅ <b>Регион поиска успешно изменен на: {updated['name']}</b>\n\n"
-                "⚙️ <b>Панель управления Apple Resell Radar</b>\n\n"
-                f"📍 Текущий регион: <b>{updated['name']}</b>\n"
-                f"📱 Активных конфигураций: <b>{stats['active_configs']} из {stats['total_configs']}</b>\n\n"
-                "Выберите нужный раздел в меню ниже:"
-            )
             if callback.message:
-                await callback.message.edit_text(text, reply_markup=get_main_menu_keyboard(updated["name"]))
+                try:
+                    await callback.message.delete()
+                except Exception:
+                    pass
+                await cmd_menu(callback.message)
         else:
             await callback.answer("Ошибка: регион не найден", show_alert=True)
 
@@ -1606,7 +1610,7 @@ def _build_favorites_view(user_id: int | str, page: int = 0, per_page: int = 5) 
         )
         kb = InlineKeyboardMarkup(
             inline_keyboard=[
-                [InlineKeyboardButton(text="⬅️ Назад в главное меню", callback_data="menu:main")]
+                [InlineKeyboardButton(text="❌ Закрыть", callback_data="fav_close")]
             ]
         )
         return text, kb

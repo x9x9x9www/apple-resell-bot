@@ -87,14 +87,22 @@ def get_favorites_keyboard(
             nav_row.append(InlineKeyboardButton(text="Вперёд ▶️", callback_data=f"fav_page:{page + 1}"))
         rows.append(nav_row)
 
-    # Кнопка очистки
+    # Кнопка очистки и закрытия
+    action_row = []
     if favorites:
-        rows.append([
+        action_row.append(
             InlineKeyboardButton(
-                text="🗑 Очистить всё избранное",
+                text="🗑 Очистить всё",
                 callback_data="fav_clear",
             )
-        ])
+        )
+    action_row.append(
+        InlineKeyboardButton(
+            text="❌ Закрыть",
+            callback_data="fav_close",
+        )
+    )
+    rows.append(action_row)
 
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
