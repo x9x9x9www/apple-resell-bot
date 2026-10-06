@@ -166,6 +166,11 @@ async def send_or_replace_functional_message(
     return msg
 
 
+from pathlib import Path
+
+BANNER_FILE_PATH = Path(__file__).resolve().parent.parent / "assets" / "banner.jpg"
+
+
 async def send_rich_message(
     chat_id: int,
     bot: Bot,
@@ -174,31 +179,24 @@ async def send_rich_message(
     article_url: Optional[str] = None,
 ) -> types.Message:
     """
-    Отправляет главное меню / сервисное сообщение в формате 'статьи через скрепку' (Rich Message):
-    название сверху, под ним раскрывается большой баннер со специальной OpenGraph разметкой,
-    а под баннером располагаются параметры региона и мониторинга.
+    Отправляет главное меню с баннером 'ПЕРЕКУПЕР' напрямую через bot.send_photo
+    со строгим текстом в подписи (название сверху, регион и статус мониторинга снизу).
     """
-    if article_url is None:
+    photo = None
+    if BANNER_FILE_PATH.exists():
+        photo = FSInputFile(str(BANNER_FILE_PATH))
+    else:
         base_url = getattr(settings, "WEBAPP_URL", "https://x9x9x9www.github.io/apple-resell-bot/")
         if not base_url.endswith("/"):
             base_url += "/"
-        article_url = f"{base_url}article.html?v=3"
-
-    link_opts = LinkPreviewOptions(
-        is_disabled=False,
-        url=article_url,
-        prefer_large_media=True,
-        show_above_text=True,
-    )
-
-    full_text = f'<a href="{article_url}">&#8203;</a>{text}'
+        photo = f"{base_url}banner.jpg"
 
     return await send_or_replace_functional_message(
         chat_id=chat_id,
         bot=bot,
-        text=full_text,
+        text=text,
         reply_markup=reply_markup,
-        link_preview_options=link_opts,
+        photo=photo,
     )
 
 
@@ -282,22 +280,18 @@ def create_bot_dispatcher(
                 reply_markup=get_reply_keyboard(current_region=current_reg_name),
             )
         else:
-            base_url = getattr(settings, "WEBAPP_URL", "https://x9x9x9www.github.io/apple-resell-bot/")
-            if not base_url.endswith("/"):
-                base_url += "/"
-            article_url = f"{base_url}article.html?v=3"
-            link_opts = LinkPreviewOptions(
-                is_disabled=False,
-                url=article_url,
-                prefer_large_media=True,
-                show_above_text=True,
-            )
-            full_text = f'<a href="{article_url}">&#8203;</a>{text}'
-            await message.answer(
-                full_text,
-                reply_markup=get_reply_keyboard(current_region=current_reg_name),
-                link_preview_options=link_opts,
-            )
+            photo = FSInputFile(str(BANNER_FILE_PATH)) if BANNER_FILE_PATH.exists() else None
+            if photo:
+                await message.answer_photo(
+                    photo=photo,
+                    caption=text,
+                    reply_markup=get_reply_keyboard(current_region=current_reg_name),
+                )
+            else:
+                await message.answer(
+                    text,
+                    reply_markup=get_reply_keyboard(current_region=current_reg_name),
+                )
 
     @dp.message(Command("keyboard", "kb", "buttons", "show_keyboard"))
     async def cmd_keyboard(message: types.Message):
@@ -354,22 +348,18 @@ def create_bot_dispatcher(
                 reply_markup=get_reply_keyboard(current_region=current_reg_name),
             )
         else:
-            base_url = getattr(settings, "WEBAPP_URL", "https://x9x9x9www.github.io/apple-resell-bot/")
-            if not base_url.endswith("/"):
-                base_url += "/"
-            article_url = f"{base_url}article.html?v=3"
-            link_opts = LinkPreviewOptions(
-                is_disabled=False,
-                url=article_url,
-                prefer_large_media=True,
-                show_above_text=True,
-            )
-            full_text = f'<a href="{article_url}">&#8203;</a>{text}'
-            await message.answer(
-                full_text,
-                reply_markup=get_reply_keyboard(current_region=current_reg_name),
-                link_preview_options=link_opts,
-            )
+            photo = FSInputFile(str(BANNER_FILE_PATH)) if BANNER_FILE_PATH.exists() else None
+            if photo:
+                await message.answer_photo(
+                    photo=photo,
+                    caption=text,
+                    reply_markup=get_reply_keyboard(current_region=current_reg_name),
+                )
+            else:
+                await message.answer(
+                    text,
+                    reply_markup=get_reply_keyboard(current_region=current_reg_name),
+                )
 
     @dp.message(Command("status"))
     async def cmd_status(message: types.Message):
@@ -1648,6 +1638,7 @@ def _build_dashboard_text(
     """Единое информативное сообщение панели управления (дашборд без спама)."""
     current_reg = reg_manager.current
     return (
+        "⚡️ <b>ПЕРЕКУПЕР</b>\n\n"
         f"📍 <b>Текущий регион:</b> {current_reg['name']}\n"
         "📡 <b>Мониторинг:</b> Авито + Юла"
     )

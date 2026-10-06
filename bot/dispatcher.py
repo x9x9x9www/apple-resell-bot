@@ -93,6 +93,12 @@ def format_lot_message(item: ParsedIPhone) -> str:
         header = f"⚡️ <b>СВЕЖИЙ ЛОТ | {item.platform.value}</b>"
         price_line = f"💰 <b>Цена:</b> {price_formatted} ₽"
 
+    # Расчетная примерная прибыль перекупщика
+    profit_line = ""
+    if getattr(item, "profit", None) and item.profit > 0:
+        profit_fmt = f"{item.profit:,}".replace(",", " ")
+        profit_line = f"\n💵 <b>Примерная прибыль:</b> ~{profit_fmt} ₽"
+
     # Профиль продавца (рейтинг и отзывы)
     seller_line = ""
     if getattr(item, "seller_name", None):
@@ -112,7 +118,8 @@ def format_lot_message(item: ParsedIPhone) -> str:
         f"💾 <b>Память:</b> {storage_display}\n"
         f"🔋 <b>АКБ:</b> {battery_display}{battery_penalty_text}"
         f"{defect_line}\n"
-        f"{price_line}\n"
+        f"{price_line}"
+        f"{profit_line}\n"
         f"📍 <b>Локация:</b> {item.location}"
         f"{seller_line}"
         f"{reserve_line}"
