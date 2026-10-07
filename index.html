@@ -1562,17 +1562,27 @@
       ignore_replicas: true
     };
 
+    let deletedKeys = new Set();
+
     // Загрузка сохраненных данных
     try {
       const saved = localStorage.getItem('gadget_resell_matrix_clean');
       if (saved) {
         const parsed = JSON.parse(saved);
-        currentMatrix = parsed.matrix || DEFAULT_CATALOG;
+        if (parsed.deletedKeys && Array.isArray(parsed.deletedKeys)) {
+          deletedKeys = new Set(parsed.deletedKeys);
+        }
+        if (Array.isArray(parsed.matrix) && parsed.matrix.length > 0) {
+          currentMatrix = parsed.matrix.filter(m => !deletedKeys.has(m.key));
+        } else {
+          currentMatrix = DEFAULT_CATALOG.filter(m => !deletedKeys.has(m.key));
+        }
         if (parsed.conditionRules) conditionRules = Object.assign(conditionRules, parsed.conditionRules);
         if (Array.isArray(parsed.categories)) {
           categories = parsed.categories;
         }
       } else {
+        currentMatrix = DEFAULT_CATALOG;
         categories = [];
       }
     } catch (e) {
@@ -1582,8 +1592,9 @@
 
     const initialMatrixMap = new Map();
 
-    function snapshotInitialMatrix(matrix) {
-      if (initialMatrixMap.size === 0 && matrix && matrix.length > 0) {
+    function snapshotInitialMatrix(matrix, force = false) {
+      if ((force || initialMatrixMap.size === 0) && matrix && matrix.length > 0) {
+        initialMatrixMap.clear();
         matrix.forEach(m => {
           initialMatrixMap.set(m.key, {
             price: Number(m.price || 0),
@@ -1597,8 +1608,13 @@
     }
     snapshotInitialMatrix(currentMatrix);
 
-    // Подгрузка pricing_matrix.json если есть
+    // Подгрузка pricing_matrix.json ТОЛЬКО при первом запуске (если локальное хранилище пустое)
     async function loadLivePrices() {
+      const hasLocalData = !!localStorage.getItem('gadget_resell_matrix_clean');
+      if (hasLocalData && currentMatrix && currentMatrix.length > 0) {
+        // У пользователя уже сохранены персональные настройки цен и удаленные модели — сохраняем их!
+        return;
+      }
       try {
         const res = await fetch('./pricing_matrix.json?t=' + Date.now());
         if (!res.ok) return;
@@ -1608,6 +1624,7 @@
           const series = detectSeries(model);
           for (const [storage, cfg] of Object.entries(storages)) {
             const key = `${model}_${storage}`;
+            if (deletedKeys.has(key)) continue;
             const price = Number(cfg.max_buy || cfg.price || 0);
             const market = Number(cfg.market || Math.round(price * 1.2 / 500) * 500);
             const enabled = cfg.enabled !== false;
@@ -1627,7 +1644,7 @@
         if (loaded.length > 0) {
           const fileKeys = new Set(loaded.map(x => x.key));
           currentMatrix.forEach(m => {
-            if (m.isCustom && !fileKeys.has(m.key)) loaded.unshift(m);
+            if (m.isCustom && !fileKeys.has(m.key) && !deletedKeys.has(m.key)) loaded.unshift(m);
           });
           currentMatrix = loaded;
           snapshotInitialMatrix(loaded);
@@ -2114,11 +2131,12 @@
           });
         });
 
-        // Удаление текущей конфигурации
+        // Удаление модели целиком (всех конфигураций памяти данной модели)
         const delBtn = card.querySelector('.btn-delete');
         if (delBtn) {
           delBtn.addEventListener('click', () => {
-            currentMatrix = currentMatrix.filter(m => m.key !== activeItem.key);
+            group.items.forEach(it => deletedKeys.add(it.key));
+            currentMatrix = currentMatrix.filter(m => m.model !== group.model);
             saveLocal();
             renderCards();
             if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
@@ -2145,7 +2163,8 @@
         localStorage.setItem('gadget_resell_matrix_clean', JSON.stringify({
           matrix: currentMatrix,
           conditionRules,
-          categories: categories
+          categories: categories,
+          deletedKeys: Array.from(deletedKeys)
         }));
       } catch (e) {}
     }
@@ -2303,6 +2322,7 @@
         tpl.models.forEach((m, idx) => {
           if (!selectedPresetIndices.has(idx)) return;
           const key = `${m.model}_${m.storage || 0}`;
+          deletedKeys.delete(key);
           const existing = currentMatrix.find(item => item.key === key);
           if (!existing) {
             currentMatrix.push({
@@ -2647,6 +2667,7 @@
 
       memoriesToAdd.forEach((storage) => {
         const key = `${name}_${storage}`;
+        deletedKeys.delete(key);
         const existing = currentMatrix.find(m => m.key === key);
         if (existing) {
           existing.price = price;
@@ -2736,6 +2757,7 @@
       }
 
       const key = `${quickAddCurrentGroup.model}_${storage}`;
+      deletedKeys.delete(key);
       const existing = currentMatrix.find(m => m.key === key);
       if (existing) {
         existing.price = price;
@@ -2950,14 +2972,19 @@
     document.getElementById('btnSave').addEventListener('click', () => {
       if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
 
-      // Передаем только те модели, которые были добавлены или реально изменены пользователем (Delta Diff)
-      // Используем ультра-компактный массив [model, storage, price, enabled, category],
-      // чтобы гарантированно уложиться в 4096 байт лимита Telegram
+      saveLocal();
+
+      const activeCount = currentMatrix.filter(m => m.enabled !== false).length;
+      const totalCount = currentMatrix.length;
+      const remainingKeys = currentMatrix.map(m => m.key);
+
+      // Измененные или добавленные модели (передаем их значения для обновления в боте)
       const modifiedModels = currentMatrix.filter(m => {
         if (m.isCustom) return true;
         const init = initialMatrixMap.get(m.key);
-        if (!init) return false;
+        if (!init) return true;
         return Number(m.price) !== Number(init.price) ||
+               Number(m.market) !== Number(init.market) ||
                Boolean(m.enabled) !== Boolean(init.enabled) ||
                String(m.category || '') !== String(init.category || '');
       }).map(m => [
@@ -2965,7 +2992,8 @@
         m.storage,
         Number(m.price || 0),
         m.enabled !== false ? 1 : 0,
-        m.category || (categories.find(c => c.id === m.series)?.name) || m.series || ""
+        m.category || (categories.find(c => c.id === m.series)?.name) || m.series || "",
+        Number(m.market || 0)
       ]);
 
       const payload = {
@@ -2973,14 +3001,24 @@
         region: currentSelectedRegion,
         condition_rules: conditionRules,
         categories: categories,
+        active_count: activeCount,
+        total_count: totalCount,
+        deleted_keys: Array.from(deletedKeys),
+        remaining_keys: remainingKeys,
         models: modifiedModels
       };
 
+      snapshotInitialMatrix(currentMatrix, true);
+
       let jsonPayload = JSON.stringify(payload);
 
-      // Защитный лимит Telegram: 4096 байт (держим до 3800 с запасом)
+      // Защитный лимит Telegram: 4096 байт
       if (new Blob([jsonPayload]).size > 3800) {
-        payload.models = modifiedModels.slice(0, 40);
+        delete payload.remaining_keys;
+        jsonPayload = JSON.stringify(payload);
+      }
+      if (new Blob([jsonPayload]).size > 3800) {
+        payload.models = modifiedModels.slice(0, 30);
         jsonPayload = JSON.stringify(payload);
       }
 
