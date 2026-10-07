@@ -400,9 +400,15 @@ class TestModernBotFeatures(unittest.TestCase):
         bot_mock.send_photo = AsyncMock()
         queue = asyncio.Queue()
 
+        from core.margin_filter import MarginFilter
+        mf = MarginFilter()
+        if "iPhone 13" not in mf.matrix:
+            mf.matrix["iPhone 13"] = {"128": {"max_buy": 35000, "market": 45000, "enabled": True}}
+
         dispatcher = ItemDispatcher(
             bot=bot_mock,
             queue=queue,
+            margin_filter=mf,
             region_manager=rm,
             target_chat_id=12345,
         )
