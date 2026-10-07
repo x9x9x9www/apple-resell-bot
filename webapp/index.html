@@ -3380,7 +3380,7 @@
         renderCards();
         updateStats();
 
-        // Отправляем команду сброса в Telegram бот
+        // Отправляем команду сброса в Telegram бот (БЕЗ закрытия приложения!)
         if (tg && typeof tg.sendData === 'function') {
           const resetPayload = {
             action: "reset_resell_profile",
@@ -3391,15 +3391,13 @@
           };
           try {
             tg.sendData(JSON.stringify(resetPayload));
-            tg.close();
-            return;
           } catch (err) { }
         }
 
         if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-        showRegionToast("Каталог сброшен");
+        showDynamicIsland("Каталог восстановлен", "Базовый каталог (38 моделей) загружен", "🔄");
       } catch (err) {
-        alert("Ошибка сброса: " + (err.message || err));
+        showDynamicIsland("Ошибка сброса", err.message || "Не удалось сбросить", "✕", "error");
       }
     });
 
@@ -3421,7 +3419,7 @@
         renderCards();
         updateStats();
 
-        // Отправляем очистку в бот, чтобы мгновенно сбросить активные конфигурации до 0
+        // Отправляем очистку в бот, чтобы мгновенно сбросить активные конфигурации до 0 (БЕЗ закрытия приложения!)
         if (tg && typeof tg.sendData === 'function') {
           const clearPayload = {
             action: "save_resell_profile",
@@ -3435,20 +3433,27 @@
           };
           try {
             tg.sendData(JSON.stringify(clearPayload));
-            tg.close();
-            return;
           } catch (err) { }
         }
 
         if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-        showRegionToast("Каталог полностью очищен");
+        showDynamicIsland("Каталог очищен", "Все модели удалены (0 шт.)", "🗑️");
       } catch (err) {
-        alert("Ошибка очистки: " + (err.message || err));
+        showDynamicIsland("Ошибка очистки", err.message || "Не удалось очистить", "✕", "error");
       }
     });
 
     // Сохранение и отправка в Telegram бот
     document.getElementById('btnSave').addEventListener('click', () => {
+      const saveBtn = document.getElementById('btnSave');
+      const originalSaveHtml = saveBtn.innerHTML;
+      saveBtn.classList.add('success-state');
+      saveBtn.innerHTML = `<span>✨ Цены применены!</span>`;
+      setTimeout(() => {
+        saveBtn.classList.remove('success-state');
+        saveBtn.innerHTML = originalSaveHtml;
+      }, 1800);
+
       if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
 
       saveLocal();
@@ -3505,13 +3510,11 @@
       if (tg && typeof tg.sendData === 'function') {
         try {
           tg.sendData(jsonPayload);
-          tg.close();
         } catch (err) {
-          alert("Ошибка отправки: " + (err.message || err) + "\n\n💡 Пожалуйста, запускайте Mini App через кнопку «ПЕРЕКУПЕР» на клавиатуре чата.");
+          console.error("sendData error:", err);
         }
-      } else {
-        alert("✅ Цены выкупа, папки и профиль успешно сохранены!\nПри открытии внутри Telegram они мгновенно синхронизируются с ботом.");
       }
+      showDynamicIsland("Цены применены", `${activeCount} активных моделей синхронизировано с ботом`, "💾");
     });
 
     updateRegionUI();

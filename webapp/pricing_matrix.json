@@ -37,7 +37,7 @@
   },
   "Samsung Galaxy S24 Ultra": {
     "256": {
-      "max_buy": 65000,
+      "max_buy": 66000,
       "market": 78000,
       "enabled": true
     },
@@ -582,6 +582,13 @@
     "128": {
       "max_buy": 27000,
       "market": 32400,
+      "enabled": true
+    }
+  },
+  "xi": {
+    "128": {
+      "max_buy": 12,
+      "market": 12,
       "enabled": true
     }
   }
