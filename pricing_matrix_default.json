@@ -136,54 +136,6 @@
       "enabled": true
     }
   },
-  "iPad Pro 11": {
-    "128": {
-      "max_buy": 52000,
-      "market": 65000,
-      "enabled": true
-    },
-    "256": {
-      "max_buy": 59000,
-      "market": 73000,
-      "enabled": true
-    }
-  },
-  "iPad Air 5": {
-    "64": {
-      "max_buy": 36000,
-      "market": 46000,
-      "enabled": true
-    },
-    "256": {
-      "max_buy": 46000,
-      "market": 58000,
-      "enabled": true
-    }
-  },
-  "PlayStation 5": {
-    "825": {
-      "max_buy": 32000,
-      "market": 39000,
-      "enabled": true
-    },
-    "1024": {
-      "max_buy": 37000,
-      "market": 46000,
-      "enabled": true
-    }
-  },
-  "Steam Deck OLED": {
-    "512": {
-      "max_buy": 38000,
-      "market": 46000,
-      "enabled": true
-    },
-    "1024": {
-      "max_buy": 45000,
-      "market": 56000,
-      "enabled": true
-    }
-  },
   "iPhone 16 Pro Max": {
     "256": {
       "max_buy": 105000,
@@ -630,53 +582,6 @@
     "128": {
       "max_buy": 27000,
       "market": 32400,
-      "enabled": true
-    }
-  },
-  "iPad Pro 11 M2": {
-    "128": {
-      "max_buy": 52000,
-      "market": 63000,
-      "enabled": true
-    }
-  },
-  "iPad Pro 12.9 M2": {
-    "128": {
-      "max_buy": 65000,
-      "market": 78000,
-      "enabled": true
-    }
-  },
-  "iPad Air 5 M1": {
-    "64": {
-      "max_buy": 34000,
-      "market": 41000,
-      "enabled": true
-    }
-  },
-  "iPad 10": {
-    "64": {
-      "max_buy": 24000,
-      "market": 29000,
-      "enabled": true
-    }
-  },
-  "PlayStation 5 Slim": {
-    "1024": {
-      "max_buy": 36000,
-      "market": 43000,
-      "enabled": true
-    }
-  },
-  "iphone": {
-    "128": {
-      "max_buy": 1,
-      "market": 1,
-      "enabled": true
-    },
-    "0": {
-      "max_buy": 1,
-      "market": 1,
       "enabled": true
     }
   }
