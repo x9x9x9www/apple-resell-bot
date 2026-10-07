@@ -1278,6 +1278,133 @@
       color: #fff;
       box-shadow: var(--card-specular), 0 3px 12px var(--accent-glow);
     }
+
+    /* ========================================================
+       iOS Native UIAlertController (In-App Dialogs)
+       ======================================================== */
+    .ios-alert-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 3000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.24s var(--spring-smooth);
+    }
+    .ios-alert-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .ios-alert-dialog {
+      width: 290px;
+      max-width: 90vw;
+      background: rgba(26, 26, 28, 0.94);
+      backdrop-filter: blur(35px) saturate(200%);
+      -webkit-backdrop-filter: blur(35px) saturate(200%);
+      border: 0.5px solid rgba(255, 255, 255, 0.16);
+      border-radius: 18px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85), var(--card-specular);
+      overflow: hidden;
+      transform: scale(1.08);
+      transition: transform 0.28s var(--spring-bounce);
+    }
+    .ios-alert-overlay.active .ios-alert-dialog {
+      transform: scale(1);
+    }
+    .ios-alert-content {
+      padding: 20px 18px 16px 18px;
+      text-align: center;
+    }
+    .ios-alert-icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+      display: inline-block;
+    }
+    .ios-alert-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.3px;
+      margin-bottom: 6px;
+    }
+    .ios-alert-message {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      font-weight: 400;
+    }
+    .ios-alert-actions {
+      display: flex;
+      border-top: 0.5px solid rgba(255, 255, 255, 0.12);
+    }
+    .ios-alert-btn {
+      flex: 1;
+      height: 46px;
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s ease;
+    }
+    .ios-alert-btn:active {
+      background: rgba(255, 255, 255, 0.12);
+    }
+    .ios-alert-btn + .ios-alert-btn {
+      border-left: 0.5px solid rgba(255, 255, 255, 0.12);
+    }
+    .ios-alert-btn.cancel {
+      color: #8E8E93;
+      font-weight: 400;
+    }
+    .ios-alert-btn.primary {
+      color: var(--accent-highlight);
+      font-weight: 700;
+    }
+    .ios-alert-btn.destructive {
+      color: var(--danger-color);
+      font-weight: 700;
+    }
+
+    /* Dynamic Island Error and Warning Theming */
+    .dynamic-toast.toast-error {
+      border-color: rgba(255, 69, 58, 0.45);
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.85), 0 4px 24px rgba(255, 69, 58, 0.35);
+    }
+    .dynamic-toast.toast-error .dynamic-toast-icon {
+      background: linear-gradient(135deg, #FF453A 0%, #B81D4C 100%);
+      box-shadow: 0 2px 10px rgba(255, 69, 58, 0.45);
+    }
+    .dynamic-toast.toast-warning {
+      border-color: rgba(255, 159, 10, 0.45);
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.85), 0 4px 24px rgba(255, 159, 10, 0.35);
+    }
+    .dynamic-toast.toast-warning .dynamic-toast-icon {
+      background: linear-gradient(135deg, #FF9F0A 0%, #D46B08 100%);
+      box-shadow: 0 2px 10px rgba(255, 159, 10, 0.45);
+    }
+
+    /* Input Field Error Shake Animation */
+    @keyframes iosInputShake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+    .form-input.input-error, .search-input.input-error, .price-input.input-error {
+      border-color: var(--danger-color) !important;
+      box-shadow: 0 0 14px rgba(255, 69, 58, 0.45) !important;
+      animation: iosInputShake 0.38s var(--spring-bounce);
+    }
   </style>
 </head>
 <body>
@@ -1731,6 +1858,19 @@
 
       <div style="margin-top: 10px;">
         <button class="btn-cancel-modal" id="btnCancelCatalogManage" style="width: 100%;">✕ Отмена</button>
+      </div>
+    </div>
+  <!-- iOS Native UIAlertController Modal -->
+  <div class="ios-alert-overlay" id="iosAlertModal">
+    <div class="ios-alert-dialog">
+      <div class="ios-alert-content">
+        <div class="ios-alert-icon" id="iosAlertIcon">⚠️</div>
+        <div class="ios-alert-title" id="iosAlertTitle">Подтверждение</div>
+        <div class="ios-alert-message" id="iosAlertMessage">Текст сообщения</div>
+      </div>
+      <div class="ios-alert-actions" id="iosAlertActions">
+        <button type="button" class="ios-alert-btn cancel" id="iosAlertCancelBtn">Отмена</button>
+        <button type="button" class="ios-alert-btn action primary" id="iosAlertConfirmBtn">OK</button>
       </div>
     </div>
   </div>
@@ -2480,12 +2620,21 @@
         // Удаление модели целиком (всех конфигураций памяти данной модели)
         const delBtn = card.querySelector('.btn-delete');
         if (delBtn) {
-          delBtn.addEventListener('click', () => {
+          delBtn.addEventListener('click', async () => {
+            const confirmed = await showIosAlert({
+              title: "Удалить модель?",
+              message: `Удалить «${group.model}» и все объемы памяти из матрицы?`,
+              confirmText: "Удалить",
+              cancelText: "Отмена",
+              isDestructive: true,
+              icon: "🗑️"
+            });
+            if (!confirmed) return;
             group.items.forEach(it => deletedKeys.add(it.key));
             currentMatrix = currentMatrix.filter(m => m.model !== group.model);
             saveLocal();
             renderCards();
-            if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
+            showDynamicIsland("Удалено", `${group.model} убран из каталога`, "🗑️");
           });
         }
 
@@ -2734,7 +2883,7 @@
       const name = document.getElementById('newCatName').value.trim();
       const icon = document.getElementById('newCatEmoji').value.trim() || '📁';
       if (!name) {
-        alert("Введите название папки / бренда!");
+        triggerFieldError(document.getElementById('newCatName'), "Введите название папки или бренда");
         return;
       }
 
@@ -2804,7 +2953,7 @@
       const name = document.getElementById('editCatName').value.trim();
       const icon = document.getElementById('editCatEmoji').value.trim() || '📁';
       if (!name) {
-        alert("Название папки не может быть пустым!");
+        triggerFieldError(document.getElementById('editCatName'), "Название папки не может быть пустым");
         return;
       }
 
@@ -2826,14 +2975,24 @@
         updateCategoryDropdown();
         renderCards();
         manageCatModal.classList.remove('active');
-        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+        showDynamicIsland("Папка сохранена", `«${name}» обновлена`, "📁");
       }
     });
 
-    document.getElementById('btnDeleteCategory').addEventListener('click', () => {
+    document.getElementById('btnDeleteCategory').addEventListener('click', async () => {
       const id = document.getElementById('editCatId').value;
       const cat = categories.find(c => c.id === id);
       if (!cat) return;
+
+      const confirmed = await showIosAlert({
+        title: "Удалить папку?",
+        message: `Удалить папку «${cat.name}»? Сами модели останутся в каталоге.`,
+        confirmText: "Удалить",
+        cancelText: "Отмена",
+        isDestructive: true,
+        icon: "📁"
+      });
+      if (!confirmed) return;
 
       categories = categories.filter(c => c.id !== id);
       if (activeFilter === id) {
@@ -2845,7 +3004,7 @@
       updateCategoryDropdown();
       renderCards();
       manageCatModal.classList.remove('active');
-      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      showDynamicIsland("Папка удалена", `«${cat.name}» скрыта`, "🗑️");
     });
 
     // Обновление списка папок в модалке «Добавить модель»
@@ -2976,8 +3135,12 @@
       const price = parseInt(document.getElementById('newModelPrice').value, 10);
       const market = parseInt(document.getElementById('newModelMarket').value, 10) || Math.round((price || 30000) * 1.2 / 500) * 500;
 
-      if (!name || !price || price <= 0) {
-        alert("Укажите название модели и максимальную цену выкупа!");
+      if (!name) {
+        triggerFieldError(document.getElementById('newModelName'), "Укажите название модели");
+        return;
+      }
+      if (!price || price <= 0) {
+        triggerFieldError(document.getElementById('newModelPrice'), "Укажите цену выкупа");
         return;
       }
 
@@ -2991,7 +3154,7 @@
         const inlineName = document.getElementById('inlineNewCatName').value.trim();
         const inlineIcon = document.getElementById('inlineNewCatEmoji').value.trim() || '📱';
         if (!inlineName) {
-          alert("Введите название новой папки!");
+          triggerFieldError(document.getElementById('inlineNewCatName'), "Введите название новой папки");
           return;
         }
         const newCatId = 'cat_' + Date.now();
@@ -3098,7 +3261,7 @@
       const market = parseInt(document.getElementById('quickAddMarket').value, 10) || Math.round((price || 30000) * 1.2 / 500) * 500;
 
       if (!price || price <= 0) {
-        alert("Укажите максимальную цену выкупа!");
+        triggerFieldError(document.getElementById('quickAddPrice'), "Укажите максимальную цену выкупа");
         return;
       }
 
@@ -3249,7 +3412,7 @@
     }
 
     let toastTimeout = null;
-    function showDynamicIsland(title, desc, icon = "⚡️") {
+    function showDynamicIsland(title, desc, icon = "⚡️", theme = "default") {
       const toast = document.getElementById('dynamicToast');
       const titleEl = document.getElementById('dynamicToastTitle');
       const descEl = document.getElementById('dynamicToastDesc');
@@ -3260,19 +3423,110 @@
       if (descEl) descEl.textContent = desc;
       if (iconEl) iconEl.textContent = icon;
 
+      toast.classList.remove('toast-error', 'toast-warning');
+      if (theme === 'error') toast.classList.add('toast-error');
+      else if (theme === 'warning') toast.classList.add('toast-warning');
+
       toast.classList.remove('active');
       void toast.offsetWidth; // force reflow for bouncy spring animation
       toast.classList.add('active');
 
       if (tg?.HapticFeedback) {
-        tg.HapticFeedback.notificationOccurred('success');
+        if (theme === 'error') tg.HapticFeedback.notificationOccurred('error');
+        else if (theme === 'warning') tg.HapticFeedback.notificationOccurred('warning');
+        else tg.HapticFeedback.notificationOccurred('success');
       }
 
       if (toastTimeout) clearTimeout(toastTimeout);
       toastTimeout = setTimeout(() => {
         toast.classList.remove('active');
-      }, 2600);
+      }, theme === 'error' ? 3200 : 2600);
     }
+
+    function triggerFieldError(inputElement, message) {
+      if (inputElement) {
+        inputElement.classList.remove('input-error');
+        void inputElement.offsetWidth;
+        inputElement.classList.add('input-error');
+        try { inputElement.focus(); } catch(e) {}
+        setTimeout(() => {
+          inputElement.classList.remove('input-error');
+        }, 2200);
+      }
+      showDynamicIsland("Внимание", message, "⚠️", "warning");
+    }
+
+    function showIosAlert({ title, message, confirmText = "OK", cancelText = null, isDestructive = false, icon = "" }) {
+      return new Promise((resolve) => {
+        const modal = document.getElementById('iosAlertModal');
+        const titleEl = document.getElementById('iosAlertTitle');
+        const msgEl = document.getElementById('iosAlertMessage');
+        const iconEl = document.getElementById('iosAlertIcon');
+        const confirmBtn = document.getElementById('iosAlertConfirmBtn');
+        const cancelBtn = document.getElementById('iosAlertCancelBtn');
+
+        if (titleEl) titleEl.textContent = title || "Внимание";
+        if (msgEl) msgEl.innerHTML = (message || "").replace(/\n/g, '<br>');
+        if (iconEl) {
+          if (icon) {
+            iconEl.textContent = icon;
+            iconEl.style.display = 'block';
+          } else {
+            iconEl.style.display = 'none';
+          }
+        }
+
+        if (confirmBtn) {
+          confirmBtn.textContent = confirmText;
+          confirmBtn.className = 'ios-alert-btn action' + (isDestructive ? ' destructive' : ' primary');
+        }
+
+        if (cancelBtn) {
+          if (cancelText) {
+            cancelBtn.textContent = cancelText;
+            cancelBtn.style.display = 'block';
+          } else {
+            cancelBtn.style.display = 'none';
+          }
+        }
+
+        if (tg?.HapticFeedback) {
+          if (isDestructive) tg.HapticFeedback.notificationOccurred('warning');
+          else tg.HapticFeedback.impactOccurred('medium');
+        }
+
+        function onConfirm() {
+          cleanup();
+          resolve(true);
+        }
+
+        function onCancel() {
+          cleanup();
+          resolve(false);
+        }
+
+        function cleanup() {
+          modal.classList.remove('active');
+          confirmBtn.removeEventListener('click', onConfirm);
+          if (cancelBtn) cancelBtn.removeEventListener('click', onCancel);
+        }
+
+        confirmBtn.addEventListener('click', onConfirm, { once: true });
+        if (cancelBtn) cancelBtn.addEventListener('click', onCancel, { once: true });
+
+        modal.classList.add('active');
+      });
+    }
+
+    // Global Unhandled Error Boundary (keeps everything inside the in-app concept)
+    window.addEventListener('error', (e) => {
+      console.error("Unhandled error:", e);
+      showDynamicIsland("Сбой в приложении", e.message || "Непредвиденная ошибка", "⚠️", "error");
+    });
+    window.addEventListener('unhandledrejection', (e) => {
+      console.error("Unhandled rejection:", e);
+      showDynamicIsland("Сетевой сбой", "Не удалось завершить операцию", "⚠️", "error");
+    });
 
     function showRegionToast(cityName) {
       showDynamicIsland("Регион обновлен", `${cityName} • Воркеры переключены`, "📍");
@@ -3285,12 +3539,14 @@
       regionModal.classList.remove('active');
 
       if (triggerToast) {
-        showRegionToast(name);
+        showDynamicIsland("Регион поиска изменен", `${name} • Мониторинг настроен ⚡️`, "📍");
       } else if (tg?.HapticFeedback) {
         tg.HapticFeedback.selectionChanged();
       }
 
-      // Мгновенная синхронизация с ботом при выборе региона
+      saveLocal();
+
+      // Мгновенная синхронизация с ботом при выборе региона (БЕЗ закрытия приложения!)
       if (tg && typeof tg.sendData === 'function') {
         try {
           tg.sendData(JSON.stringify({
@@ -3298,9 +3554,6 @@
             region: name,
             key: key || ""
           }));
-          setTimeout(() => {
-            try { tg.close(); } catch(e) {}
-          }, 350);
         } catch (err) {
           console.error("sendData error:", err);
         }
@@ -3344,8 +3597,14 @@
     // Опция 1: Восстановление каталога по умолчанию (117 моделей)
     document.getElementById('btnActionRestoreDefault').addEventListener('click', async () => {
       catalogManageModal.classList.remove('active');
-      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
-      const confirmed = confirm("Восстановить заводской каталог и цены по умолчанию?\n\nВсе 117 стандартных моделей вернутся, а цены сбросятся к базовым значениям.");
+      const confirmed = await showIosAlert({
+        title: "Сбросить каталог?",
+        message: "Восстановить заводской каталог и цены по умолчанию?\nВсе стандартные флагманы вернутся к базовым значениям.",
+        confirmText: "Восстановить",
+        cancelText: "Отмена",
+        isDestructive: true,
+        icon: "🔄"
+      });
       if (!confirmed) return;
 
       try {
@@ -3437,18 +3696,23 @@
           } catch (err) {}
         }
 
-        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-        showRegionToast("Каталог сброшен");
+        showDynamicIsland("Каталог сброшен", "Заводские цены восстановлены", "🔄");
       } catch (err) {
-        alert("Ошибка сброса: " + (err.message || err));
+        showDynamicIsland("Ошибка сброса", err.message || "Не удалось сбросить", "✕", "error");
       }
     });
 
     // Опция 2: Полная очистка каталога (0 моделей — для настройки с нуля)
-    document.getElementById('btnActionClearAll').addEventListener('click', () => {
+    document.getElementById('btnActionClearAll').addEventListener('click', async () => {
       catalogManageModal.classList.remove('active');
-      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
-      const confirmed = confirm("Полностью очистить весь каталог?\n\nВсе модели будут удалены (0 шт.), и вы сможете с чистого листа добавить только нужные вам устройства.");
+      const confirmed = await showIosAlert({
+        title: "Очистить каталог?",
+        message: "Все модели будут удалены (0 шт.), и вы сможете вручную с чистого листа добавить только нужные устройства.",
+        confirmText: "Очистить всё",
+        cancelText: "Отмена",
+        isDestructive: true,
+        icon: "🗑️"
+      });
       if (!confirmed) return;
 
       try {
@@ -3481,10 +3745,9 @@
           } catch (err) {}
         }
 
-        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-        showRegionToast("Каталог полностью очищен");
+        showDynamicIsland("Каталог очищен", "0 моделей в списке", "🗑️");
       } catch (err) {
-        alert("Ошибка очистки: " + (err.message || err));
+        showDynamicIsland("Ошибка очистки", err.message || "Не удалось очистить", "✕", "error");
       }
     });
 
@@ -3559,7 +3822,7 @@
           tg.sendData(jsonPayload);
           tg.close();
         } catch (err) {
-          alert("Ошибка отправки: " + (err.message || err) + "\n\n💡 Пожалуйста, запускайте Mini App через кнопку «ПЕРЕКУПЕР» на клавиатуре чата.");
+          showDynamicIsland("Ошибка отправки", "Запускайте через кнопку «ПЕРЕКУПЕР»", "✕", "error");
         }
       } else {
         showDynamicIsland("Успешно сохранено", `${activeCount} моделей готовы к синхронизации`, "✅");

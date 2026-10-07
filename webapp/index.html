@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -18,43 +19,21 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
-      /* OLED True Black Palette */
-      --bg-color: #000000;
-      --card-bg: rgba(22, 22, 24, 0.82);
-      --card-bg-elevated: rgba(30, 30, 34, 0.92);
+      --bg-color: #080C14;
+      --card-bg: rgba(20, 27, 45, 0.72);
       --card-border: rgba(255, 255, 255, 0.08);
-      --card-border-hover: rgba(255, 255, 255, 0.18);
-      --card-specular: inset 0 0.5px 0 rgba(255, 255, 255, 0.14);
-
-      /* iPhone 18 Burgundy / Cosmic Maroon Accent */
-      --accent-color: #B81D4C;
-      --accent-highlight: #FF4D79;
-      --accent-glow: rgba(184, 29, 76, 0.42);
-      --accent-subtle: rgba(184, 29, 76, 0.15);
-      --accent-border: rgba(184, 29, 76, 0.38);
-      --accent-gradient: linear-gradient(135deg, #C92658 0%, #801234 100%);
-      --accent-gradient-hover: linear-gradient(135deg, #D43063 0%, #94173D 100%);
-
-      /* Apple System Colors */
+      --card-border-hover: rgba(10, 132, 255, 0.4);
+      --accent-color: #0A84FF;
+      --accent-glow: rgba(10, 132, 255, 0.4);
+      --accent-gradient: linear-gradient(135deg, #0A84FF 0%, #0056B3 100%);
       --success-color: #30D158;
-      --success-subtle: rgba(48, 209, 88, 0.14);
       --success-gradient: linear-gradient(135deg, #30D158 0%, #248A3D 100%);
       --danger-color: #FF453A;
-      --danger-subtle: rgba(255, 69, 58, 0.14);
       --warning-color: #FF9F0A;
-      --warning-subtle: rgba(255, 159, 10, 0.14);
-
-      /* Typography & Neutral Shades */
       --text-main: #FFFFFF;
       --text-muted: #8E8E93;
-      --text-tertiary: #636366;
-      --tag-bg: rgba(255, 255, 255, 0.07);
-      --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', system-ui, sans-serif;
-
-      /* Spring Physics curves (Design Spells & Apple HIG) */
-      --spring-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      --spring-smooth: cubic-bezier(0.32, 0.72, 0, 1);
-      --spring-press: cubic-bezier(0.2, 0, 0, 1);
+      --tag-bg: rgba(255, 255, 255, 0.08);
+      --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
 
     * {
@@ -62,132 +41,37 @@
       margin: 0;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-
-    input, textarea, select {
-      user-select: text;
-      -webkit-user-select: text;
-    }
-
-    html {
-      background-color: var(--bg-color);
-      color-scheme: dark;
     }
 
     body {
       background-color: var(--bg-color);
       color: var(--text-main);
       font-family: var(--font-family);
-      padding: 0 16px;
-      padding-top: calc(56px + env(safe-area-inset-top, 0px));
-      padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+      padding: 14px;
+      padding-bottom: 96px;
       min-height: 100vh;
       overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Tabular numerals for prices, badges, and stats */
-    .price-input, .profit-badge, .stats-pill, .currency, .card-title, .badge-storage, .btn-step {
-      font-variant-numeric: tabular-nums;
-      font-feature-settings: "tnum" 1, "cv05" 1;
+    /* Шапка */
+    .header {
+      margin-bottom: 12px;
     }
 
-    /* ========================================================
-       iOS Sticky Navigation Bar with Frosted Glass & Large Title Collapse
-       ======================================================== */
-    .ios-nav-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: calc(50px + env(safe-area-inset-top, 0px));
-      padding-top: env(safe-area-inset-top, 0px);
-      padding-left: 16px;
-      padding-right: 16px;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(25px) saturate(190%);
-      -webkit-backdrop-filter: blur(25px) saturate(190%);
-      border-bottom: 0.5px solid transparent;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      transition: border-color 0.25s ease, background 0.25s ease;
-    }
-
-    .ios-nav-bar.scrolled {
-      background: rgba(10, 10, 12, 0.88);
-      border-bottom-color: rgba(255, 255, 255, 0.1);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-    }
-
-    .ios-nav-content {
-      width: 100%;
+    .header-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 10px;
     }
 
-    .ios-nav-inline-title {
-      font-size: 15px;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      opacity: 0;
-      transform: translateY(6px);
-      pointer-events: none;
-      transition: opacity 0.22s var(--spring-smooth), transform 0.22s var(--spring-smooth);
-    }
-
-    .ios-nav-bar.scrolled .ios-nav-inline-title {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
-
-    .ios-nav-right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    /* iOS Large Title Header */
-    .ios-large-header {
-      padding-top: 10px;
-      margin-bottom: 16px;
-    }
-
-    .ios-large-title-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 12px;
-    }
-
-    .ios-large-title {
-      font-size: 30px;
+    .header h1 {
+      font-size: 19px;
       font-weight: 800;
-      letter-spacing: -0.7px;
-      line-height: 1.12;
-      color: #fff;
+      letter-spacing: -0.4px;
       display: flex;
       align-items: center;
       gap: 8px;
-      margin: 0;
-    }
-
-    .ios-large-title .title-accent {
-      background: var(--accent-gradient);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
     }
 
     .header-actions {
@@ -196,139 +80,138 @@
       gap: 8px;
     }
 
-    /* iOS Pill Buttons (Burgundy & Glass) */
     .btn-condition {
       background: rgba(255, 255, 255, 0.08);
-      border: 0.5px solid var(--card-border);
+      border: 1px solid var(--card-border);
       color: #fff;
-      padding: 7px 14px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: -0.2px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      box-shadow: var(--card-specular);
-      transition: transform 0.15s var(--spring-press), background 0.15s ease;
-      white-space: nowrap;
-    }
-    .btn-condition:active {
-      transform: scale(0.95);
-      background: rgba(255, 255, 255, 0.14);
-    }
-
-    .btn-add-model {
-      background: var(--accent-gradient);
-      color: #fff;
-      border: none;
-      padding: 7px 15px;
+      padding: 7px 12px;
       border-radius: 20px;
       font-size: 12px;
       font-weight: 700;
-      letter-spacing: -0.2px;
       cursor: pointer;
-      display: inline-flex;
+      display: flex;
       align-items: center;
       gap: 5px;
-      box-shadow: var(--card-specular), 0 4px 16px var(--accent-glow);
-      transition: transform 0.15s var(--spring-press), filter 0.15s ease;
+      transition: background 0.15s ease;
       white-space: nowrap;
-    }
-    .btn-add-model:active {
-      transform: scale(0.95);
-      filter: brightness(1.15);
     }
 
-    .btn-region-badge {
-      background: rgba(255, 255, 255, 0.08);
-      border: 0.5px solid rgba(255, 255, 255, 0.14);
-      color: #fff;
-      padding: 6px 13px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: -0.2px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      box-shadow: var(--card-specular);
-      transition: transform 0.15s var(--spring-press), background 0.15s ease;
-      white-space: nowrap;
-    }
-    .btn-region-badge:active {
-      transform: scale(0.95);
+    .btn-condition:active {
       background: rgba(255, 255, 255, 0.16);
     }
 
-    /* Stats Bar */
-    .stats-bar {
+    .btn-add-model {
+      background: var(--success-gradient);
+      color: #fff;
+      border: none;
+      padding: 7px 13px;
+      border-radius: 20px;
       font-size: 12px;
-      color: var(--text-muted);
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .stats-pill {
-      background: rgba(255, 255, 255, 0.08);
-      padding: 2px 7px;
-      border-radius: 6px;
       font-weight: 700;
-      color: var(--text-main);
-      box-shadow: var(--card-specular);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 4px 12px rgba(48, 209, 88, 0.3);
+      transition: transform 0.15s ease;
+      white-space: nowrap;
     }
-    .btn-reset-catalog {
-      margin-left: auto;
-      background: rgba(255, 69, 58, 0.12);
-      border: 0.5px solid rgba(255, 69, 58, 0.32);
-      color: #ff453a;
-      border-radius: 12px;
-      padding: 3px 10px;
-      font-size: 11px;
-      font-weight: 600;
+
+    .btn-region-badge {
+      background: rgba(10, 132, 255, 0.14);
+      border: 1px solid rgba(10, 132, 255, 0.35);
+      color: #5ac8fa;
+      padding: 5px 11px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      transition: transform 0.15s var(--spring-press), background 0.15s ease;
-    }
-    .btn-reset-catalog:active {
-      transform: scale(0.94);
-      background: rgba(255, 69, 58, 0.25);
+      transition: all 0.15s ease;
+      white-space: nowrap;
     }
 
-    /* ========================================================
-       Design Spells: Dynamic Island (Authentic iOS Spring Physics)
-       ======================================================== */
+    .btn-region-badge:active {
+      background: rgba(10, 132, 255, 0.28);
+      transform: scale(0.95);
+    }
+
+    .region-item-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: 12px;
+      margin-bottom: 5px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-size: 14px;
+    }
+
+    .region-item-row:active {
+      background: rgba(10, 132, 255, 0.18);
+      border-color: rgba(10, 132, 255, 0.5);
+    }
+
+    .region-item-row.active {
+      background: rgba(10, 132, 255, 0.2);
+      border-color: var(--accent-color);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .popular-chip {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .popular-chip:active {
+      transform: scale(0.94);
+    }
+
+    .popular-chip.active {
+      background: var(--accent-color);
+      color: #fff;
+      border-color: var(--accent-color);
+    }
+
+    /* Authentic iOS Dynamic Island Toast */
     .dynamic-toast {
       position: fixed;
-      top: calc(10px + env(safe-area-inset-top, 0px));
+      top: 12px;
       left: 50%;
-      transform: translateX(-50%) translateY(-65px) scale(0.65);
+      transform: translateX(-50%) translateY(-75px) scale(0.72);
       opacity: 0;
-      filter: blur(8px);
+      filter: blur(6px);
       pointer-events: none;
       z-index: 999999;
-      background: rgba(14, 14, 18, 0.94);
-      backdrop-filter: blur(35px) saturate(200%);
-      -webkit-backdrop-filter: blur(35px) saturate(200%);
-      border: 0.5px solid rgba(255, 255, 255, 0.18);
-      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.85),
-                  0 0 0 1px rgba(255, 255, 255, 0.06),
-                  0 4px 22px var(--accent-glow);
-      border-radius: 36px;
+      background: rgba(10, 10, 14, 0.94);
+      backdrop-filter: blur(30px) saturate(180%);
+      -webkit-backdrop-filter: blur(30px) saturate(180%);
+      border: 0.5px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.06), 0 6px 20px rgba(10, 132, 255, 0.22);
+      border-radius: 40px;
       padding: 6px 18px 6px 8px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 11px;
       max-width: 90vw;
-      transition: transform 0.42s var(--spring-smooth),
-                  opacity 0.22s ease,
-                  filter 0.25s ease,
-                  border-radius 0.35s ease;
+      transition: transform 0.45s cubic-bezier(0.32, 1, 0.32, 1),
+        opacity 0.25s ease,
+        filter 0.3s ease,
+        border-radius 0.4s ease;
       will-change: transform, opacity, filter;
     }
 
@@ -338,29 +221,24 @@
       filter: blur(0px);
       border-radius: 26px;
       pointer-events: auto;
-      transition: transform 0.55s var(--spring-bounce),
-                  opacity 0.25s ease,
-                  filter 0.25s ease;
+      transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+        opacity 0.3s ease,
+        filter 0.3s ease,
+        border-radius 0.5s ease;
     }
 
     .dynamic-toast-icon {
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      background: var(--accent-gradient);
-      border: 0.5px solid rgba(255, 255, 255, 0.3);
+      background: linear-gradient(135deg, rgba(10, 132, 255, 0.35), rgba(90, 200, 250, 0.15));
+      border: 0.5px solid rgba(255, 255, 255, 0.25);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 15px;
+      font-size: 16px;
       flex-shrink: 0;
-      box-shadow: 0 2px 10px var(--accent-glow), inset 0 1px 1px rgba(255, 255, 255, 0.35);
-      animation: islandPulse 2s ease infinite;
-    }
-
-    @keyframes islandPulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.06); }
+      box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.2);
     }
 
     .dynamic-toast-body {
@@ -368,98 +246,191 @@
       flex-direction: column;
       gap: 1px;
     }
+
     .dynamic-toast-title {
       font-size: 13px;
       font-weight: 700;
       color: #fff;
-      letter-spacing: -0.2px;
+      letter-spacing: -0.25px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
+
     .dynamic-toast-desc {
       font-size: 11px;
-      color: rgba(255, 255, 255, 0.7);
+      color: rgba(255, 255, 255, 0.65);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       font-weight: 500;
     }
 
-    /* ========================================================
-       iOS Native Search Bar
-       ======================================================== */
+    .stats-bar {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .stats-pill {
+      background: var(--tag-bg);
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .btn-reset-catalog {
+      margin-left: auto;
+      background: rgba(255, 69, 58, 0.12);
+      border: 1px solid rgba(255, 69, 58, 0.35);
+      color: #ff453a;
+      border-radius: 8px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-reset-catalog:hover {
+      background: rgba(255, 69, 58, 0.25);
+      border-color: #ff453a;
+      color: #fff;
+    }
+
+    .catalog-action-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+      user-select: none;
+    }
+
+    .catalog-action-card:hover,
+    .catalog-action-card:active {
+      background: rgba(10, 132, 255, 0.1);
+      border-color: var(--accent-color);
+      transform: translateY(-1px);
+    }
+
+    .catalog-action-card.danger:hover,
+    .catalog-action-card.danger:active {
+      background: rgba(255, 69, 58, 0.1);
+      border-color: #ff453a;
+    }
+
+    .action-card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+      border: 1px solid transparent;
+    }
+
+    .action-card-content {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .action-card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .action-card-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Поле поиска */
     .search-wrapper {
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       position: relative;
     }
+
     .search-input {
       width: 100%;
-      background: rgba(255, 255, 255, 0.08);
-      border: 0.5px solid var(--card-border);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
       border-radius: 12px;
-      padding: 10px 14px 10px 36px;
+      padding: 9px 14px 9px 34px;
       color: #fff;
       font-size: 14px;
-      font-weight: 500;
       outline: none;
-      box-shadow: var(--card-specular);
-      transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+      transition: all 0.2s ease;
     }
-    .search-input::placeholder {
-      color: var(--text-muted);
-    }
+
     .search-input:focus {
-      background: rgba(255, 255, 255, 0.11);
-      border-color: var(--accent-border);
-      box-shadow: var(--card-specular), 0 0 16px var(--accent-glow);
+      border-color: var(--accent-color);
+      box-shadow: 0 0 10px var(--accent-glow);
+      background: rgba(255, 255, 255, 0.09);
     }
+
     .search-icon {
       position: absolute;
-      left: 12px;
+      left: 11px;
       top: 50%;
       transform: translateY(-50%);
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text-muted);
-      pointer-events: none;
     }
 
-    /* ========================================================
-       iOS Segmented Control / Series Carousel
-       ======================================================== */
+    /* Селектор серий */
     .series-bar {
       display: flex;
-      gap: 8px;
+      gap: 7px;
       overflow-x: auto;
-      padding-bottom: 8px;
-      margin-bottom: 14px;
+      padding-bottom: 6px;
+      margin-bottom: 12px;
       scrollbar-width: none;
-      -webkit-overflow-scrolling: touch;
     }
-    .series-bar::-webkit-scrollbar { display: none; }
+
+    .series-bar::-webkit-scrollbar {
+      display: none;
+    }
 
     .series-pill {
-      background: rgba(255, 255, 255, 0.06);
-      border: 0.5px solid var(--card-border);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       color: var(--text-muted);
-      padding: 7px 15px;
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: -0.2px;
+      padding: 6px 13px;
+      border-radius: 18px;
+      font-size: 12px;
+      font-weight: 700;
       cursor: pointer;
       white-space: nowrap;
-      transition: transform 0.15s var(--spring-press), background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+      transition: all 0.2s ease;
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      box-shadow: var(--card-specular);
+      user-select: none;
     }
-    .series-pill:active {
-      transform: scale(0.95);
-    }
+
     .series-pill.active {
-      background: var(--accent-gradient);
+      background: var(--accent-color);
       color: #fff;
-      border-color: transparent;
-      box-shadow: var(--card-specular), 0 4px 18px var(--accent-glow);
+      box-shadow: 0 0 10px var(--accent-glow);
+      border-color: var(--accent-color);
     }
 
     .series-pill .btn-pill-edit {
@@ -473,188 +444,281 @@
       border-radius: 4px;
       transition: opacity 0.15s ease, background 0.15s ease;
     }
+
     .series-pill .btn-pill-edit:hover {
       opacity: 1;
       background: rgba(255, 255, 255, 0.25);
     }
 
     .series-pill.btn-add-pill {
-      background: var(--accent-subtle);
-      border: 0.5px dashed var(--accent-border);
-      color: var(--accent-highlight);
-      padding: 7px 14px;
+      background: rgba(10, 132, 255, 0.12);
+      border: 1px dashed rgba(10, 132, 255, 0.45);
+      color: var(--accent-color);
+      padding: 6px 12px;
     }
-    .series-pill.btn-add-pill:active {
-      transform: scale(0.95);
-      background: rgba(184, 29, 76, 0.25);
+
+    .series-pill.btn-add-pill:hover {
+      background: rgba(10, 132, 255, 0.22);
+      border-color: var(--accent-color);
     }
 
     .badge-category {
-      background: var(--accent-subtle);
-      color: var(--accent-highlight);
-      font-size: 11px;
+      background: rgba(48, 209, 88, 0.18);
+      color: var(--success-color);
+      font-size: 10px;
       font-weight: 700;
-      padding: 2px 7px;
-      border-radius: 8px;
+      padding: 2px 6px;
+      border-radius: 6px;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      border: 0.5px solid var(--accent-border);
+      gap: 3px;
     }
 
-    /* Drag and drop states */
-    .series-pill[draggable="true"] { cursor: grab; }
+    .emoji-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+      margin-bottom: 10px;
+    }
+
+    .series-pill[draggable="true"] {
+      cursor: grab;
+      touch-action: pan-x;
+    }
+
     .series-pill.dragging {
       opacity: 0.45;
-      transform: scale(0.95);
+      transform: scale(0.96);
       border: 1px dashed var(--accent-color) !important;
-    }
-    .series-pill.drag-over {
-      border: 1.5px solid var(--accent-color) !important;
-      transform: scale(1.05);
-      box-shadow: 0 0 16px var(--accent-glow);
+      cursor: grabbing;
     }
 
-    /* ========================================================
-       iOS Inset Grouped Model Cards
-       ======================================================== */
+    .series-pill.drag-over {
+      border: 2px solid var(--accent-color) !important;
+      transform: scale(1.06);
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .template-chips-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 6px;
+    }
+
+    .template-chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      border-radius: 12px;
+      padding: 6px 11px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      user-select: none;
+    }
+
+    .template-chip:hover {
+      background: rgba(10, 132, 255, 0.18);
+      border-color: var(--accent-color);
+      transform: translateY(-1px);
+    }
+
+    .template-chip.added {
+      opacity: 0.45;
+      border-style: dashed;
+      pointer-events: none;
+    }
+
+    /* Список моделей пресета в модалке */
+    .preset-models-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 330px;
+      overflow-y: auto;
+      margin: 10px 0;
+      padding-right: 4px;
+    }
+
+    .preset-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 9px 12px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .preset-item:hover {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .preset-item.selected {
+      border-color: var(--accent-color);
+      background: rgba(10, 132, 255, 0.09);
+    }
+
+    .preset-checkbox {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent-color);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .preset-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .preset-title-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .preset-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .preset-storage {
+      font-size: 10px;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1px 5px;
+      border-radius: 4px;
+      color: var(--text-muted);
+    }
+
+    .preset-prices {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .preset-prices b {
+      color: #fff;
+    }
+
+    .preset-profit-tag {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--success-color);
+      margin-left: 4px;
+    }
+
+    .emoji-chip {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 4px 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .emoji-chip:hover,
+    .emoji-chip.active {
+      background: var(--accent-color);
+      border-color: var(--accent-color);
+      transform: scale(1.08);
+    }
+
+    /* Список карточек */
     .models-list {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
 
     .model-card {
       background: var(--card-bg);
-      backdrop-filter: blur(25px) saturate(180%);
-      -webkit-backdrop-filter: blur(25px) saturate(180%);
-      border: 0.5px solid var(--card-border);
-      border-radius: 20px;
-      padding: 14px 16px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 12px 14px;
       display: flex;
       flex-direction: column;
-      gap: 11px;
-      box-shadow: var(--card-specular), 0 8px 24px rgba(0, 0, 0, 0.45);
-      transition: transform 0.2s var(--spring-smooth), border-color 0.2s ease, opacity 0.2s ease;
-      will-change: transform;
+      gap: 9px;
+      transition: all 0.2s ease;
     }
-    .model-card:hover {
-      border-color: var(--card-border-hover);
-    }
+
     .model-card.custom-card {
-      border-color: rgba(184, 29, 76, 0.35);
+      border-color: rgba(48, 209, 88, 0.3);
     }
+
     .model-card.disabled {
-      opacity: 0.46;
+      opacity: 0.52;
     }
 
     .card-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
+
     .card-title-group {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
       flex-wrap: wrap;
     }
-    .device-icon { font-size: 16px; }
-    .card-title {
+
+    .device-icon {
       font-size: 15px;
+    }
+
+    .card-title {
+      font-size: 14px;
       font-weight: 700;
       color: var(--text-main);
-      letter-spacing: -0.3px;
     }
+
     .badge-storage {
-      background: var(--accent-subtle);
-      color: var(--accent-highlight);
+      background: rgba(10, 132, 255, 0.18);
+      color: #5AC8FA;
       font-size: 11px;
       font-weight: 700;
-      padding: 2px 7px;
-      border-radius: 7px;
-      border: 0.5px solid var(--accent-border);
+      padding: 2px 6px;
+      border-radius: 6px;
     }
 
-    .card-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .btn-delete {
-      background: var(--danger-subtle);
-      border: 0.5px solid rgba(255, 69, 58, 0.3);
-      color: var(--danger-color);
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 11px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.15s var(--spring-press), background 0.15s ease;
-    }
-    .btn-delete:active {
-      transform: scale(0.9);
-      background: rgba(255, 69, 58, 0.25);
-    }
-
-    /* iOS Native Switch (51x31px) */
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 44px;
-      height: 26px;
-      flex-shrink: 0;
-    }
-    .switch input { opacity: 0; width: 0; height: 0; }
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(255, 255, 255, 0.16);
-      transition: background-color 0.25s var(--spring-smooth);
-      border-radius: 26px;
-      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
-    }
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 20px;
-      width: 20px;
-      left: 3px;
-      bottom: 3px;
-      background-color: #FFFFFF;
-      transition: transform 0.25s var(--spring-bounce);
-      border-radius: 50%;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-    }
-    input:checked + .slider {
-      background-color: var(--success-color);
-    }
-    input:checked + .slider:before {
-      transform: translateX(18px);
-    }
-
-    /* Storage Selector Pills */
+    /* Панель чипов памяти внутри карточки */
     .storage-chips-bar {
       display: flex;
       gap: 6px;
       overflow-x: auto;
-      padding: 2px 0 4px 0;
+      padding: 3px 0 5px 0;
       scrollbar-width: none;
     }
-    .storage-chips-bar::-webkit-scrollbar { display: none; }
+
+    .storage-chips-bar::-webkit-scrollbar {
+      display: none;
+    }
 
     .storage-chip-btn {
       background: rgba(255, 255, 255, 0.06);
-      border: 0.5px solid var(--card-border);
+      border: 1px solid var(--card-border);
       color: var(--text-muted);
-      border-radius: 10px;
+      border-radius: 9px;
       padding: 5px 11px;
       font-size: 11px;
       font-weight: 700;
@@ -662,23 +726,28 @@
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      box-shadow: var(--card-specular);
-      transition: transform 0.15s var(--spring-press), background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+      transition: all 0.15s ease;
       white-space: nowrap;
+      user-select: none;
     }
-    .storage-chip-btn:active {
-      transform: scale(0.95);
+
+    .storage-chip-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
     }
+
     .storage-chip-btn.active {
-      background: var(--accent-gradient);
-      border-color: transparent;
+      background: rgba(10, 132, 255, 0.22);
+      border-color: var(--accent-color);
       color: #fff;
-      box-shadow: var(--card-specular), 0 3px 12px var(--accent-glow);
+      box-shadow: 0 0 10px rgba(10, 132, 255, 0.35);
     }
+
     .storage-chip-btn.disabled-config {
-      opacity: 0.4;
+      opacity: 0.45;
       text-decoration: line-through;
     }
+
     .storage-chip-dot {
       width: 6px;
       height: 6px;
@@ -686,58 +755,193 @@
       background: var(--success-color);
       display: inline-block;
     }
+
     .storage-chip-btn.disabled-config .storage-chip-dot {
       background: var(--danger-color);
     }
+
     .storage-chip-btn.btn-add-storage-chip {
-      background: var(--accent-subtle);
-      border: 0.5px dashed var(--accent-border);
-      color: var(--accent-highlight);
-      padding: 5px 10px;
+      background: rgba(10, 132, 255, 0.12);
+      border: 1px dashed rgba(10, 132, 255, 0.45);
+      color: var(--accent-color);
+      padding: 5px 9px;
     }
 
-    /* Card Price Inputs & Steppers */
+    .storage-chip-btn.btn-add-storage-chip:hover {
+      background: rgba(10, 132, 255, 0.22);
+      border-color: var(--accent-color);
+    }
+
+    .memory-quick-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+      margin-bottom: 4px;
+    }
+
+    .mem-chip {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      border-radius: 8px;
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .mem-chip:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+    }
+
+    .mem-chip.active {
+      background: rgba(10, 132, 255, 0.22);
+      border-color: var(--accent-color);
+      color: #fff;
+      box-shadow: 0 0 8px rgba(10, 132, 255, 0.3);
+    }
+
+    .btn-toggle-config {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 9px;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .btn-toggle-config:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .btn-toggle-config.active {
+      color: var(--success-color);
+      border-color: rgba(48, 209, 88, 0.35);
+      background: rgba(48, 209, 88, 0.12);
+    }
+
+    .card-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-delete {
+      background: rgba(255, 69, 58, 0.15);
+      border: 1px solid rgba(255, 69, 58, 0.3);
+      color: var(--danger-color);
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Switch */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(255, 255, 255, 0.16);
+      transition: .2s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .2s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 50%;
+    }
+
+    input:checked+.slider {
+      background-color: var(--accent-color);
+    }
+
+    input:checked+.slider:before {
+      transform: translateX(16px);
+    }
+
+    /* Поля цен: Выкуп и Продажа */
     .card-prices-grid {
       display: grid;
       grid-template-columns: 1.4fr 1fr;
-      gap: 10px;
+      gap: 8px;
       align-items: flex-end;
     }
 
     .price-field {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
     }
+
     .price-field-label {
-      font-size: 11px;
-      font-weight: 600;
+      font-size: 10px;
+      font-weight: 700;
       color: var(--text-muted);
-      letter-spacing: -0.1px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
     }
 
     .price-stepper-row {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
     }
 
     .step-btn {
       background: rgba(255, 255, 255, 0.08);
-      border: 0.5px solid var(--card-border);
+      border: 1px solid var(--card-border);
       color: var(--text-main);
-      padding: 7px 9px;
-      border-radius: 9px;
+      padding: 7px 8px;
+      border-radius: 8px;
       font-size: 11px;
       font-weight: 700;
       cursor: pointer;
       flex-shrink: 0;
-      box-shadow: var(--card-specular);
-      transition: transform 0.12s var(--spring-press), background 0.12s ease;
     }
+
     .step-btn:active {
-      transform: scale(0.91);
-      background: rgba(255, 255, 255, 0.16);
+      transform: scale(0.92);
     }
 
     .input-wrap {
@@ -746,109 +950,67 @@
       display: flex;
       align-items: center;
     }
+
     .price-input {
       width: 100%;
-      background: rgba(0, 0, 0, 0.65);
-      border: 0.5px solid var(--card-border);
-      border-radius: 10px;
-      padding: 8px 24px 8px 10px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--card-border);
+      border-radius: 9px;
+      padding: 7px 22px 7px 8px;
       color: #fff;
       font-size: 14px;
       font-weight: 700;
       outline: none;
-      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      transition: border-color 0.2s;
     }
+
     .price-input:focus {
-      border-color: var(--accent-border);
-      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5), 0 0 10px var(--accent-glow);
+      border-color: var(--accent-color);
     }
+
     .currency {
       position: absolute;
-      right: 8px;
+      right: 7px;
       font-size: 12px;
       color: var(--text-muted);
       font-weight: 700;
-      pointer-events: none;
     }
 
-    /* Card Footer & Micro-Interactions */
     .card-footer {
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-size: 11px;
-      padding-top: 4px;
-      border-top: 0.5px solid rgba(255, 255, 255, 0.05);
+      padding-top: 2px;
     }
+
     .profit-badge {
       color: var(--success-color);
       font-weight: 700;
-      background: var(--success-subtle);
-      padding: 3px 9px;
-      border-radius: 8px;
-      border: 0.5px solid rgba(48, 209, 88, 0.3);
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      transition: transform 0.2s var(--spring-bounce);
+      background: rgba(48, 209, 88, 0.12);
+      padding: 2px 7px;
+      border-radius: 6px;
     }
-    .profit-badge.pulse {
-      animation: profitTickPulse 0.35s var(--spring-bounce);
-    }
-    @keyframes profitTickPulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.08); filter: brightness(1.25); }
-      100% { transform: scale(1); }
-    }
+
     .profit-badge.negative {
       color: var(--danger-color);
-      background: var(--danger-subtle);
-      border-color: rgba(255, 69, 58, 0.3);
+      background: rgba(255, 69, 58, 0.12);
     }
 
-    .btn-toggle-config {
-      background: rgba(255, 255, 255, 0.06);
-      border: 0.5px solid var(--card-border);
-      border-radius: 9px;
-      color: var(--text-muted);
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 4px 10px;
-      box-shadow: var(--card-specular);
-      transition: transform 0.15s var(--spring-press), background 0.15s ease, border-color 0.15s ease;
-    }
-    .btn-toggle-config:active {
-      transform: scale(0.95);
-    }
-    .btn-toggle-config.active {
-      color: var(--success-color);
-      border-color: rgba(48, 209, 88, 0.35);
-      background: var(--success-subtle);
-    }
-
-    /* ========================================================
-       Floating Action Dock / Apple Pay Style Save Bar
-       ======================================================== */
+    /* Нижняя плавающая плашка */
     .save-bar {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
       padding: 12px 16px;
-      padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-      background: rgba(10, 10, 12, 0.88);
-      backdrop-filter: blur(25px) saturate(190%);
-      -webkit-backdrop-filter: blur(25px) saturate(190%);
-      border-top: 0.5px solid rgba(255, 255, 255, 0.1);
+      background: rgba(8, 12, 20, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--card-border);
       display: flex;
       gap: 10px;
-      z-index: 1000;
-      box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.6);
+      z-index: 100;
     }
 
     .btn-save {
@@ -856,155 +1018,141 @@
       background: var(--accent-gradient);
       color: #fff;
       border: none;
-      padding: 14px;
-      border-radius: 16px;
+      padding: 13px;
+      border-radius: 12px;
       font-size: 15px;
       font-weight: 700;
-      letter-spacing: -0.3px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      box-shadow: var(--card-specular), 0 4px 20px var(--accent-glow);
-      transition: transform 0.15s var(--spring-press), filter 0.15s ease, background 0.3s ease;
-    }
-    .btn-save:active {
-      transform: scale(0.96);
-      filter: brightness(1.15);
-    }
-    .btn-save.success-state {
-      background: var(--success-gradient) !important;
-      box-shadow: 0 4px 20px rgba(48, 209, 88, 0.45);
+      box-shadow: 0 4px 16px var(--accent-glow);
+      transition: transform 0.1s ease;
     }
 
-    /* ========================================================
-       iOS Modal Bottom Sheets with Grabber & Spring Physics
-       ======================================================== */
+    .btn-save:active {
+      transform: scale(0.97);
+    }
+
+    /* Модальные окна */
     .modal-overlay {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      z-index: 2000;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 200;
       display: none;
       align-items: flex-end;
-      opacity: 0;
-      transition: opacity 0.28s var(--spring-smooth);
     }
+
     .modal-overlay.active {
       display: flex;
-      opacity: 1;
     }
 
     .modal-sheet {
       width: 100%;
-      background: #141416;
-      border-top-left-radius: 26px;
-      border-top-right-radius: 26px;
-      border-top: 0.5px solid rgba(255, 255, 255, 0.14);
-      padding: 12px 18px calc(24px + env(safe-area-inset-bottom, 0px));
-      max-height: 88vh;
+      background: #111726;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      border-top: 1px solid var(--card-border);
+      padding: 18px 16px 28px;
+      max-height: 85vh;
       overflow-y: auto;
-      box-shadow: 0 -12px 48px rgba(0, 0, 0, 0.8), var(--card-specular);
-      transform: translateY(100%);
-      transition: transform 0.36s var(--spring-smooth);
-    }
-    .modal-overlay.active .modal-sheet {
-      transform: translateY(0);
-    }
-
-    .modal-grabber {
-      width: 36px;
-      height: 5px;
-      border-radius: 3px;
-      background: rgba(255, 255, 255, 0.3);
-      margin: 2px auto 14px auto;
     }
 
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
+
     .modal-title {
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 700;
-      letter-spacing: -0.3px;
     }
+
     .btn-close-modal {
       background: rgba(255, 255, 255, 0.1);
       border: none;
       color: #fff;
-      width: 30px;
-      height: 30px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
-      transition: transform 0.15s var(--spring-press), background 0.15s ease;
-    }
-    .btn-close-modal:active {
-      transform: scale(0.9);
-      background: rgba(255, 255, 255, 0.2);
     }
 
-    .form-group { margin-bottom: 14px; }
+    .form-group {
+      margin-bottom: 12px;
+    }
+
     .form-label {
       font-size: 12px;
       color: var(--text-muted);
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       display: block;
       font-weight: 600;
     }
+
     .form-input {
       width: 100%;
-      background: rgba(255, 255, 255, 0.08);
-      border: 0.5px solid var(--card-border);
-      border-radius: 12px;
-      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 9px 12px;
       color: #fff;
       font-size: 14px;
       outline: none;
-      box-shadow: var(--card-specular);
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-    .form-input:focus {
-      border-color: var(--accent-border);
-      box-shadow: var(--card-specular), 0 0 12px var(--accent-glow);
     }
 
     .setting-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 0;
-      border-bottom: 0.5px solid rgba(255, 255, 255, 0.07);
-      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      gap: 10px;
     }
-    .setting-item:last-child { border-bottom: none; }
+
+    .setting-item:last-child {
+      border-bottom: none;
+    }
+
     .setting-info {
       display: flex;
       flex-direction: column;
       gap: 2px;
       flex: 1;
     }
-    .setting-title { font-size: 14px; font-weight: 600; color: #fff; }
-    .setting-desc { font-size: 12px; color: var(--text-muted); }
+
+    .setting-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .setting-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
 
     .stepper-input {
       display: flex;
       align-items: center;
-      background: rgba(0, 0, 0, 0.5);
-      border: 0.5px solid var(--card-border);
-      border-radius: 10px;
-      padding: 4px 8px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 3px 6px;
       gap: 6px;
     }
+
     .stepper-input input {
       width: 60px;
       background: transparent;
@@ -1015,306 +1163,29 @@
       text-align: right;
       outline: none;
     }
-
-    .catalog-action-card {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 14px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 0.5px solid var(--card-border);
-      border-radius: 16px;
-      cursor: pointer;
-      box-shadow: var(--card-specular);
-      transition: transform 0.15s var(--spring-press), border-color 0.15s ease, background 0.15s ease;
-    }
-    .catalog-action-card:active {
-      transform: scale(0.97);
-      background: var(--accent-subtle);
-      border-color: var(--accent-border);
-    }
-    .catalog-action-card.danger:active {
-      background: var(--danger-subtle);
-      border-color: rgba(255, 69, 58, 0.5);
-    }
-    .action-card-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      flex-shrink: 0;
-      box-shadow: var(--card-specular);
-    }
-    .action-card-content {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-    .action-card-title {
-      font-size: 14px;
-      font-weight: 700;
-      color: #fff;
-    }
-    .action-card-desc {
-      font-size: 12px;
-      color: var(--text-muted);
-      line-height: 1.35;
-    }
-
-    .btn-cancel-modal {
-      background: rgba(255, 255, 255, 0.08);
-      border: 0.5px solid var(--card-border);
-      color: #fff;
-      padding: 12px;
-      border-radius: 14px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: var(--card-specular);
-      transition: transform 0.15s var(--spring-press);
-    }
-    .btn-cancel-modal:active {
-      transform: scale(0.96);
-    }
-
-    .popular-chip {
-      background: rgba(255, 255, 255, 0.06);
-      border: 0.5px solid var(--card-border);
-      color: var(--text-main);
-      padding: 6px 13px;
-      border-radius: 16px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: var(--card-specular);
-      transition: transform 0.15s var(--spring-press), background 0.15s ease;
-      white-space: nowrap;
-    }
-    .popular-chip:active {
-      transform: scale(0.94);
-    }
-    .popular-chip.active {
-      background: var(--accent-gradient);
-      color: #fff;
-      border-color: transparent;
-      box-shadow: var(--card-specular), 0 3px 12px var(--accent-glow);
-    }
-
-    .region-item-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 11px 14px;
-      border-radius: 14px;
-      margin-bottom: 6px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 0.5px solid var(--card-border);
-      cursor: pointer;
-      box-shadow: var(--card-specular);
-      transition: transform 0.15s var(--spring-press), background 0.15s ease, border-color 0.15s ease;
-      font-size: 14px;
-    }
-    .region-item-row:active {
-      transform: scale(0.98);
-      background: var(--accent-subtle);
-      border-color: var(--accent-border);
-    }
-    .region-item-row.active {
-      background: var(--accent-subtle);
-      border-color: var(--accent-border);
-      color: #fff;
-      font-weight: 700;
-    }
-
-    .template-chips-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-      margin-top: 6px;
-    }
-    .template-chip {
-      background: rgba(255, 255, 255, 0.06);
-      border: 0.5px solid var(--card-border);
-      color: var(--text-main);
-      border-radius: 12px;
-      padding: 7px 12px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: var(--card-specular);
-      transition: transform 0.15s var(--spring-press), background 0.15s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .template-chip:active {
-      transform: scale(0.95);
-      background: var(--accent-subtle);
-      border-color: var(--accent-border);
-    }
-    .template-chip.added {
-      opacity: 0.45;
-      border-style: dashed;
-      pointer-events: none;
-    }
-
-    .emoji-row {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-top: 6px;
-      margin-bottom: 10px;
-    }
-    .emoji-chip {
-      background: rgba(255, 255, 255, 0.06);
-      border: 0.5px solid var(--card-border);
-      border-radius: 10px;
-      padding: 5px 9px;
-      font-size: 16px;
-      cursor: pointer;
-      box-shadow: var(--card-specular);
-      transition: transform 0.15s var(--spring-press), background 0.15s ease;
-    }
-    .emoji-chip:active, .emoji-chip.active {
-      background: var(--accent-subtle);
-      border-color: var(--accent-border);
-      transform: scale(1.1);
-    }
-
-    .preset-models-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 330px;
-      overflow-y: auto;
-      margin: 10px 0;
-      padding-right: 4px;
-    }
-    .preset-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 0.5px solid var(--card-border);
-      border-radius: 14px;
-      padding: 10px 14px;
-      cursor: pointer;
-      box-shadow: var(--card-specular);
-      transition: transform 0.15s var(--spring-press), background 0.15s ease;
-    }
-    .preset-item:active {
-      transform: scale(0.98);
-    }
-    .preset-item.selected {
-      border-color: var(--accent-border);
-      background: var(--accent-subtle);
-    }
-    .preset-checkbox {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--accent-color);
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-    .preset-info { flex: 1; min-width: 0; }
-    .preset-title-row { display: flex; align-items: center; gap: 6px; }
-    .preset-name {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text-main);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .preset-storage {
-      font-size: 10px;
-      font-weight: 700;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 1px 6px;
-      border-radius: 4px;
-      color: var(--text-muted);
-    }
-    .preset-prices {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-    .preset-prices b { color: #fff; }
-    .preset-profit-tag {
-      font-size: 10px;
-      font-weight: 700;
-      color: var(--success-color);
-      margin-left: 4px;
-    }
-
-    .memory-quick-chips {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-top: 6px;
-      margin-bottom: 4px;
-    }
-    .mem-chip {
-      background: rgba(255, 255, 255, 0.06);
-      border: 0.5px solid var(--card-border);
-      color: var(--text-muted);
-      border-radius: 10px;
-      padding: 6px 11px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: var(--card-specular);
-      transition: transform 0.15s var(--spring-press), background 0.15s ease;
-    }
-    .mem-chip:active {
-      transform: scale(0.95);
-    }
-    .mem-chip.active {
-      background: var(--accent-gradient);
-      border-color: transparent;
-      color: #fff;
-      box-shadow: var(--card-specular), 0 3px 12px var(--accent-glow);
-    }
   </style>
 </head>
+
 <body>
 
   <!-- Dynamic Island / iOS Notification Toast -->
   <div class="dynamic-toast" id="dynamicToast">
-    <div class="dynamic-toast-icon" id="dynamicToastIcon">⚡️</div>
+    <div class="dynamic-toast-icon">📍</div>
     <div class="dynamic-toast-body">
-      <div class="dynamic-toast-title" id="dynamicToastTitle">Регион обновлен</div>
+      <div class="dynamic-toast-title">Регион обновлен</div>
       <div class="dynamic-toast-desc" id="dynamicToastDesc">Якутск • Воркеры переключены</div>
     </div>
   </div>
 
-  <!-- iOS Top Sticky Navigation Bar with Frosted Glass -->
-  <header class="ios-nav-bar" id="iosNavBar">
-    <div class="ios-nav-content">
-      <div class="ios-nav-left">
-        <div class="ios-nav-inline-title" id="iosNavInlineTitle">
-          <span style="font-size:16px;">⚡️</span>
-          <span>ПЕРЕКУПЕР</span>
-        </div>
-      </div>
-      <div class="ios-nav-right">
+  <!-- Шапка -->
+  <div class="header">
+    <div class="header-row">
+      <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+        <h1 style="margin: 0;">⚡️ БРЕДЛИ ПЕРЕКУПЕР</h1>
         <button class="btn-region-badge" id="btnOpenRegionModal" title="Выбрать регион поиска">
           📍 <span id="currentRegionLabel">Якутск</span> ▾
         </button>
       </div>
-    </div>
-  </header>
-
-  <!-- iOS Large Title Header -->
-  <div class="ios-large-header" id="iosLargeHeader">
-    <div class="ios-large-title-row">
-      <h1 class="ios-large-title">
-        <span>⚡️</span>
-        <span>ПЕРЕКУПЕР</span>
-      </h1>
       <div class="header-actions">
         <button class="btn-condition" id="btnOpenConditionModal">
           <span>⚙️ Состояние</span>
@@ -1327,8 +1198,9 @@
     <div class="stats-bar">
       <span>Всего: <b class="stats-pill" id="statTotal">0</b></span>
       <span>Активных: <b class="stats-pill" id="statActive">0</b></span>
-      <span>Серия: <span id="statFilter" style="color:var(--accent-highlight); font-weight:700;">Все</span></span>
-      <button class="btn-reset-catalog" id="btnResetCatalog" title="Сбросить все изменения и восстановить каталог по умолчанию">
+      <span>Фильтр: <span id="statFilter" style="color:var(--accent-color)">Все</span></span>
+      <button class="btn-reset-catalog" id="btnResetCatalog"
+        title="Сбросить все изменения и восстановить каталог по умолчанию">
         🔄 Сброс
       </button>
     </div>
@@ -1360,7 +1232,6 @@
   <!-- Модалка: Выбор региона поиска -->
   <div class="modal-overlay" id="regionModal">
     <div class="modal-sheet" style="max-height: 85vh; display: flex; flex-direction: column;">
-      <div class="modal-grabber"></div>
       <div class="modal-header">
         <h3 class="modal-title">📍 Регион поиска лотов</h3>
         <button class="btn-close-modal" id="btnCloseRegionModal">✕</button>
@@ -1369,20 +1240,23 @@
       <div style="padding: 10px 0 6px 0;">
         <div class="search-wrapper" style="margin: 0;">
           <span class="search-icon">🔍</span>
-          <input type="text" class="search-input" id="regionSearchInput" placeholder="Поиск города (Москва, Якутск, Казань...)">
+          <input type="text" class="search-input" id="regionSearchInput"
+            placeholder="Поиск города (Москва, Якутск, Казань...)">
         </div>
       </div>
 
       <!-- Быстрый выбор популярных городов -->
       <div style="margin-top: 8px;">
-        <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px;">
+        <div
+          style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px;">
           🔥 Популярные регионы
         </div>
         <div class="chips-scroll-bar" id="popularRegionsBar" style="display: flex; gap: 6px; flex-wrap: wrap;"></div>
       </div>
 
       <!-- Полный список городов -->
-      <div style="margin-top: 12px; flex: 1; overflow-y: auto; max-height: 280px; padding-right: 4px;" id="regionsListContainer"></div>
+      <div style="margin-top: 12px; flex: 1; overflow-y: auto; max-height: 280px; padding-right: 4px;"
+        id="regionsListContainer"></div>
 
       <div style="margin-top: 14px; display: flex; justify-content: center;">
         <button class="btn-cancel-modal" id="btnCancelRegion" style="width: 100%;">✕ Закрыть</button>
@@ -1393,7 +1267,6 @@
   <!-- Модалка: Настройки состояния (АКБ, Дефекты, Риск) -->
   <div class="modal-overlay" id="conditionModal">
     <div class="modal-sheet">
-      <div class="modal-grabber"></div>
       <div class="modal-header">
         <h3 class="modal-title">⚙️ Настройка правил состояния</h3>
         <button class="btn-close-modal" id="btnCloseConditionModal">✕</button>
@@ -1454,15 +1327,14 @@
   <!-- Модалка: Создать категорию / папку -->
   <div class="modal-overlay" id="createCategoryModal">
     <div class="modal-sheet">
-      <div class="modal-grabber"></div>
       <div class="modal-header">
-        <h3 class="modal-title">📁 Добавить папку / Бренд</h3>
+        <h3 class="modal-title">📁 Добавить папку</h3>
         <button class="btn-close-modal" id="btnCloseCreateCategoryModal">✕</button>
       </div>
 
       <!-- Раздел готовых шаблонов -->
       <div class="form-group" style="margin-bottom:12px;">
-        <label class="form-label">⚡️ Готовые категории (добавить в 1 клик):</label>
+        <label class="form-label">⚡️ Готовые категории:</label>
         <div class="template-chips-grid" id="categoryTemplatesGrid">
           <!-- Генерируется через JS -->
         </div>
@@ -1492,7 +1364,8 @@
           <span class="emoji-chip">⭐️</span>
         </div>
         <div style="display:flex; align-items:center; gap:8px;">
-          <input type="text" class="form-input" id="newCatEmoji" value="📱" style="width:60px; text-align:center; font-size:18px">
+          <input type="text" class="form-input" id="newCatEmoji" value="📱"
+            style="width:60px; text-align:center; font-size:18px">
           <span style="font-size:12px; color:var(--text-muted)">Можно выбрать из списка или ввести свой</span>
         </div>
       </div>
@@ -1506,7 +1379,6 @@
   <!-- Модалка: Выбор моделей для папки шаблона -->
   <div class="modal-overlay" id="selectTemplateModelsModal">
     <div class="modal-sheet">
-      <div class="modal-grabber"></div>
       <div class="modal-header">
         <h3 class="modal-title" id="presetModalTitle">⚡️ Добавление папки</h3>
         <button class="btn-close-modal" id="btnClosePresetModal">✕</button>
@@ -1518,7 +1390,8 @@
 
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
         <span style="font-size: 11px; color: var(--text-muted);" id="presetSelectedCounter">Выбрано: 0 моделей</span>
-        <button type="button" id="btnToggleAllPresets" style="background:none; border:none; color:var(--accent-color); font-size:11px; font-weight:700; cursor:pointer; padding:2px 4px;">
+        <button type="button" id="btnToggleAllPresets"
+          style="background:none; border:none; color:var(--accent-color); font-size:11px; font-weight:700; cursor:pointer; padding:2px 4px;">
           Снять все
         </button>
       </div>
@@ -1531,7 +1404,8 @@
         <button class="btn-save" id="btnConfirmAddPresetModels" style="width:100%;">
           <span id="btnConfirmPresetLabel">✅ Добавить выбранные модели</span>
         </button>
-        <button type="button" class="btn-step" id="btnAddEmptyCategoryOnly" style="width:100%; height:38px; border-radius:10px; font-size:12px; font-weight:700; background:rgba(255,255,255,0.06);">
+        <button type="button" class="btn-step" id="btnAddEmptyCategoryOnly"
+          style="width:100%; height:38px; border-radius:10px; font-size:12px; font-weight:700; background:rgba(255,255,255,0.06);">
           📁 Создать только пустую папку
         </button>
       </div>
@@ -1541,7 +1415,6 @@
   <!-- Модалка: Управление категорией / папкой -->
   <div class="modal-overlay" id="manageCategoryModal">
     <div class="modal-sheet">
-      <div class="modal-grabber"></div>
       <div class="modal-header">
         <h3 class="modal-title">⚙️ Управление папкой</h3>
         <button class="btn-close-modal" id="btnCloseManageCategoryModal">✕</button>
@@ -1550,7 +1423,7 @@
       <input type="hidden" id="editCatId">
 
       <div class="form-group">
-        <label class="form-label">Название папки / бренда:</label>
+        <label class="form-label">Название папки:</label>
         <input type="text" class="form-input" id="editCatName">
       </div>
 
@@ -1576,7 +1449,8 @@
         </div>
       </div>
 
-      <button type="button" class="btn-step" id="btnManageAddPresetModels" style="width:100%; margin-top:6px; margin-bottom:8px; height:38px; border-radius:10px; font-weight:700; background:rgba(10, 132, 255, 0.12); border:1px solid rgba(10, 132, 255, 0.35); color:var(--accent-color); font-size:12px; display:none;">
+      <button type="button" class="btn-step" id="btnManageAddPresetModels"
+        style="width:100%; margin-top:6px; margin-bottom:8px; height:38px; border-radius:10px; font-weight:700; background:rgba(10, 132, 255, 0.12); border:1px solid rgba(10, 132, 255, 0.35); color:var(--accent-color); font-size:12px; display:none;">
         ⚡️ Добавить популярные модели бренда...
       </button>
 
@@ -1584,7 +1458,8 @@
         <span>💾 Сохранить изменения</span>
       </button>
 
-      <button class="btn-step" id="btnDeleteCategory" style="width:100%; margin-top:12px; height:42px; background:rgba(255,69,58,0.15); border:1px solid rgba(255,69,58,0.3); color:var(--danger-color); font-weight:700">
+      <button class="btn-step" id="btnDeleteCategory"
+        style="width:100%; margin-top:12px; height:42px; background:rgba(255,69,58,0.15); border:1px solid rgba(255,69,58,0.3); color:var(--danger-color); font-weight:700">
         🗑 Удалить / скрыть папку
       </button>
     </div>
@@ -1593,7 +1468,6 @@
   <!-- Модалка: Добавить модель -->
   <div class="modal-overlay" id="addModal">
     <div class="modal-sheet">
-      <div class="modal-grabber"></div>
       <div class="modal-header">
         <h3 class="modal-title">➕ Добавить модель</h3>
         <button class="btn-close-modal" id="btnCloseAddModal">✕</button>
@@ -1614,17 +1488,20 @@
       </div>
 
       <!-- Появляется, если выбрано "➕ Создать новую папку..." -->
-      <div id="inlineNewCategoryBox" style="display:none; background:rgba(255,255,255,0.03); border:1px solid var(--card-border); border-radius:10px; padding:10px; margin-bottom:12px;">
+      <div id="inlineNewCategoryBox"
+        style="display:none; background:rgba(255,255,255,0.03); border:1px solid var(--card-border); border-radius:10px; padding:10px; margin-bottom:12px;">
         <label class="form-label" style="font-size:11px; margin-bottom:4px;">Название новой папки / бренда:</label>
         <div style="display:flex; gap:8px;">
-          <input type="text" class="form-input" id="inlineNewCatEmoji" value="📱" style="width:50px; text-align:center; font-size:16px;">
+          <input type="text" class="form-input" id="inlineNewCatEmoji" value="📱"
+            style="width:50px; text-align:center; font-size:16px;">
           <input type="text" class="form-input" id="inlineNewCatName" placeholder="например Xiaomi или Dyson">
         </div>
       </div>
 
       <div class="form-group">
         <label class="form-label">Название модели:</label>
-        <input type="text" class="form-input" id="newModelName" placeholder="например: Xiaomi 14 Ultra или Dyson Airwrap">
+        <input type="text" class="form-input" id="newModelName"
+          placeholder="например: Xiaomi 14 Ultra или Dyson Airwrap">
       </div>
 
       <div class="form-group">
@@ -1637,8 +1514,10 @@
           <button type="button" class="mem-chip" data-val="1024">1 TB</button>
           <button type="button" class="mem-chip" data-val="0">Без памяти</button>
         </div>
-        <input type="number" class="form-input" id="newModelStorage" value="128" placeholder="или введите вручную: 128, 256, 512, 1024" style="margin-top:6px;">
-        <div style="font-size:11px; color:var(--text-muted); margin-top:3px;">💡 Можно выбрать один или несколько объемов сразу</div>
+        <input type="number" class="form-input" id="newModelStorage" value="128"
+          placeholder="или введите вручную: 128, 256, 512, 1024" style="margin-top:6px;">
+        <div style="font-size:11px; color:var(--text-muted); margin-top:3px;">💡 Можно выбрать один или несколько
+          объемов сразу</div>
       </div>
 
       <div class="form-group">
@@ -1660,7 +1539,6 @@
   <!-- Модалка: Быстрое добавление объема памяти в существующую модель -->
   <div class="modal-overlay" id="quickAddStorageModal">
     <div class="modal-sheet">
-      <div class="modal-grabber"></div>
       <div class="modal-header">
         <h3 class="modal-title" id="quickAddStorageTitle">➕ Добавить объем</h3>
         <button class="btn-close-modal" id="btnCloseQuickAddStorageModal">✕</button>
@@ -1677,7 +1555,8 @@
           <button type="button" class="mem-chip" data-val="512">512 GB</button>
           <button type="button" class="mem-chip" data-val="1024">1 TB</button>
         </div>
-        <input type="number" class="form-input" id="quickAddStorageVal" value="256" placeholder="например 256" style="margin-top:6px;">
+        <input type="number" class="form-input" id="quickAddStorageVal" value="256" placeholder="например 256"
+          style="margin-top:6px;">
       </div>
 
       <div class="form-group">
@@ -1699,7 +1578,6 @@
   <!-- Модалка: Сброс и управление каталогом -->
   <div class="modal-overlay" id="catalogManageModal">
     <div class="modal-sheet">
-      <div class="modal-grabber"></div>
       <div class="modal-header">
         <h3 class="modal-title">⚙️ Управление каталогом</h3>
         <button class="btn-close-modal" id="btnCloseCatalogManageModal">✕</button>
@@ -1708,23 +1586,27 @@
       <div style="padding: 10px 0 6px 0; display: flex; flex-direction: column; gap: 10px;">
         <!-- Карточка 1: Восстановить по умолчанию -->
         <div class="catalog-action-card" id="btnActionRestoreDefault">
-          <div class="action-card-icon" style="background: rgba(10, 132, 255, 0.18); border-color: rgba(10, 132, 255, 0.35); color: var(--accent-color);">
+          <div class="action-card-icon"
+            style="background: rgba(10, 132, 255, 0.18); border-color: rgba(10, 132, 255, 0.35); color: var(--accent-color);">
             🔄
           </div>
           <div class="action-card-content">
             <div class="action-card-title">Восстановить по умолчанию</div>
-            <div class="action-card-desc">Вернуть стандартный каталог (флагманы iPhone, MacBook, Samsung Galaxy, Google Pixel) со стандартными ценами</div>
+            <div class="action-card-desc">Вернуть полный заводской каталог (117 моделей: iPhone, MacBook, Samsung,
+              Pixel, Консоли) со стандартными ценами</div>
           </div>
         </div>
 
         <!-- Карточка 2: Полная очистка -->
         <div class="catalog-action-card danger" id="btnActionClearAll">
-          <div class="action-card-icon" style="background: rgba(255, 69, 58, 0.18); border-color: rgba(255, 69, 58, 0.35); color: #ff453a;">
+          <div class="action-card-icon"
+            style="background: rgba(255, 69, 58, 0.18); border-color: rgba(255, 69, 58, 0.35); color: #ff453a;">
             🗑️
           </div>
           <div class="action-card-content">
-            <div class="action-card-title" style="color: #ff453a;">Очистить всё (с чистого листа)</div>
-            <div class="action-card-desc">Удалить абсолютно все модели, чтобы вручную выстроить свой собственный список гаджетов с нуля</div>
+            <div class="action-card-title" style="color: #ff453a;">Очистить всё</div>
+            <div class="action-card-desc">Удалить абсолютно все модели, чтобы вручную выстроить свой собственный список
+              гаджетов с нуля</div>
           </div>
         </div>
       </div>
@@ -1740,21 +1622,9 @@
     if (tg) {
       tg.ready();
       tg.expand();
-      if (tg.setHeaderColor) tg.setHeaderColor('#000000');
-      if (tg.setBackgroundColor) tg.setBackgroundColor('#000000');
+      if (tg.setHeaderColor) tg.setHeaderColor('#080C14');
+      if (tg.setBackgroundColor) tg.setBackgroundColor('#080C14');
     }
-
-    // iOS Large Title Dynamic Scroll Collapse
-    window.addEventListener('scroll', () => {
-      const navBar = document.getElementById('iosNavBar');
-      if (navBar) {
-        if (window.scrollY > 28) {
-          navBar.classList.add('scrolled');
-        } else {
-          navBar.classList.remove('scrolled');
-        }
-      }
-    }, { passive: true });
 
     const DEFAULT_CATALOG = [
       // MacBooks
@@ -1784,7 +1654,10 @@
       { key: "Samsung Galaxy S23 Ultra_256", model: "Samsung Galaxy S23 Ultra", storage: 256, series: "samsung", price: 48000, market: 58000, enabled: true },
       // Pixel
       { key: "Google Pixel 9 Pro_128", model: "Google Pixel 9 Pro", storage: 128, series: "pixel", price: 58000, market: 70000, enabled: true },
-      { key: "Google Pixel 8 Pro_128", model: "Google Pixel 8 Pro", storage: 128, series: "pixel", price: 42000, market: 50000, enabled: true }
+      { key: "Google Pixel 8 Pro_128", model: "Google Pixel 8 Pro", storage: 128, series: "pixel", price: 42000, market: 50000, enabled: true },
+      // Consoles & iPad
+      { key: "PlayStation 5_825", model: "PlayStation 5", storage: 825, series: "consoles", price: 32000, market: 39000, enabled: true },
+      { key: "iPad Pro 11 M2_128", model: "iPad Pro 11 M2", storage: 128, series: "ipad", price: 52000, market: 63000, enabled: true }
     ];
 
     const POPULAR_TEMPLATES = [
@@ -1838,6 +1711,85 @@
           { model: "Google Pixel 8 Pro", storage: 128, price: 42000, market: 50000 },
           { model: "Google Pixel 8", storage: 128, price: 32000, market: 39000 },
           { model: "Google Pixel 7 Pro", storage: 128, price: 26000, market: 32000 }
+        ]
+      },
+      {
+        id: 'ipad',
+        name: 'iPad',
+        icon: '📟',
+        models: [
+          { model: "iPad Pro 11 M2", storage: 128, price: 52000, market: 63000 },
+          { model: "iPad Air 5 M1", storage: 64, price: 36000, market: 44000 },
+          { model: "iPad 10 (2022)", storage: 64, price: 24000, market: 30000 },
+          { model: "iPad mini 6", storage: 64, price: 28000, market: 35000 }
+        ]
+      },
+      {
+        id: 'consoles',
+        name: 'Консоли',
+        icon: '🎮',
+        models: [
+          { model: "PlayStation 5", storage: 825, price: 32000, market: 39000 },
+          { model: "PlayStation 5 Slim", storage: 1000, price: 38000, market: 46000 },
+          { model: "Xbox Series X", storage: 1000, price: 33000, market: 40000 },
+          { model: "Xbox Series S", storage: 512, price: 17000, market: 22000 },
+          { model: "Steam Deck OLED", storage: 512, price: 42000, market: 50000 },
+          { model: "Nintendo Switch OLED", storage: 64, price: 18000, market: 23000 }
+        ]
+      },
+      {
+        id: 'dyson',
+        name: 'Dyson',
+        icon: '💨',
+        models: [
+          { model: "Dyson Airwrap Multi-Styler", storage: 0, price: 33000, market: 42000 },
+          { model: "Dyson Supersonic HD08", storage: 0, price: 22000, market: 28000 },
+          { model: "Dyson V15 Detect Absolute", storage: 0, price: 45000, market: 56000 },
+          { model: "Dyson V12 Slim Absolute", storage: 0, price: 34000, market: 42000 }
+        ]
+      },
+      {
+        id: 'xiaomi',
+        name: 'Xiaomi',
+        icon: '📱',
+        models: [
+          { model: "Xiaomi 14", storage: 256, price: 45000, market: 55000 },
+          { model: "Xiaomi 13T Pro", storage: 256, price: 32000, market: 39000 },
+          { model: "POCO F6 Pro", storage: 256, price: 28000, market: 35000 },
+          { model: "Redmi Note 13 Pro+", storage: 256, price: 20000, market: 26000 }
+        ]
+      },
+      {
+        id: 'headphones',
+        name: 'Наушники',
+        icon: '🎧',
+        models: [
+          { model: "AirPods Pro 2 Type-C", storage: 0, price: 14000, market: 18000 },
+          { model: "AirPods Max", storage: 0, price: 34000, market: 43000 },
+          { model: "AirPods 3", storage: 0, price: 8500, market: 11500 },
+          { model: "Sony WH-1000XM5", storage: 0, price: 21000, market: 27000 }
+        ]
+      },
+      {
+        id: 'watch',
+        name: 'Apple Watch',
+        icon: '⌚️',
+        models: [
+          { model: "Apple Watch Ultra 2", storage: 49, price: 52000, market: 63000 },
+          { model: "Apple Watch Series 9 45mm", storage: 45, price: 25000, market: 31000 },
+          { model: "Apple Watch Series 8 45mm", storage: 45, price: 18000, market: 23000 },
+          { model: "Apple Watch SE 2 44mm", storage: 44, price: 14000, market: 18000 }
+        ]
+      },
+      {
+        id: 'sony',
+        name: 'Sony',
+        icon: '📷',
+        models: [
+          { model: "Sony A7 IV Body", storage: 0, price: 145000, market: 175000 },
+          { model: "Sony A7 III Body", storage: 0, price: 80000, market: 98000 },
+          { model: "Sony FX30 Body", storage: 0, price: 110000, market: 135000 },
+          { model: "Sony ZV-E10 Body", storage: 0, price: 40000, market: 50000 }
         ]
       }
     ];
@@ -1979,7 +1931,7 @@
           renderCards();
           updateStats();
         }
-      } catch (err) {}
+      } catch (err) { }
     }
 
     // Синхронизация правил состояния в UI
@@ -2385,9 +2337,6 @@
           const p = (activeItem.market || 0) - (activeItem.price || 0);
           profitBadge.textContent = `Навар: ~${p.toLocaleString('ru-RU')} ₽`;
           profitBadge.classList.toggle('negative', p < 0);
-          profitBadge.classList.remove('pulse');
-          void profitBadge.offsetWidth;
-          profitBadge.classList.add('pulse');
         }
 
         function updateConfigToggleBtn() {
@@ -2512,7 +2461,7 @@
           categories: categories,
           deletedKeys: Array.from(deletedKeys)
         }));
-      } catch (e) {}
+      } catch (e) { }
     }
 
     // Слушатель поиска
@@ -2697,6 +2646,7 @@
       createCatModal.classList.remove('active');
       manageCatModal.classList.remove('active');
       if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      showDynamicIsland("Папка добавлена", `${tpl.name} (${selectedPresetIndices.size} моделей) • Добавлено`, tpl.icon || "📁");
     }
 
     document.getElementById('btnConfirmAddPresetModels').addEventListener('click', () => {
@@ -2754,6 +2704,7 @@
       selectFilter(id);
       createCatModal.classList.remove('active');
       if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      showDynamicIsland("Папка создана", `«${name}» добавлена в список`, icon);
     });
 
     function openManageCategoryModal(catId) {
@@ -2898,6 +2849,7 @@
     document.getElementById('btnSaveConditionModal').addEventListener('click', () => {
       condModal.classList.remove('active');
       if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      showDynamicIsland("Правила сохранены", "Критерии АКБ и дефектов обновлены", "⚙️");
     });
 
     // Модалка добавления модели
@@ -3007,8 +2959,8 @@
         }
       }
 
-      const memoriesToAdd = selectedAddModalMemories.size > 0 
-        ? Array.from(selectedAddModalMemories) 
+      const memoriesToAdd = selectedAddModalMemories.size > 0
+        ? Array.from(selectedAddModalMemories)
         : [parseInt(document.getElementById('newModelStorage').value, 10) || 128];
 
       memoriesToAdd.forEach((storage) => {
@@ -3051,6 +3003,7 @@
       }
 
       if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      showDynamicIsland("Модель добавлена", `${name} (${memoriesToAdd.length} конф.) • Добавлена в матрицу`, "➕");
     });
 
     // Модалка быстрого добавления объема памяти в карточку
@@ -3128,6 +3081,7 @@
       renderCards();
       quickAddStorageModal.classList.remove('active');
       if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      showDynamicIsland("Память добавлена", `${quickAddCurrentGroup.model} ${storage} ГБ • Добавлено`, "💾");
     });
 
     // -------------------------------------------------------------
@@ -3249,7 +3203,7 @@
     }
 
     let toastTimeout = null;
-    function showDynamicIsland(title, desc, icon = "⚡️") {
+    function showDynamicIsland(title, desc, icon = "⚡️", theme = "default") {
       const toast = document.getElementById('dynamicToast');
       const titleEl = document.getElementById('dynamicToastTitle');
       const descEl = document.getElementById('dynamicToastDesc');
@@ -3260,22 +3214,28 @@
       if (descEl) descEl.textContent = desc;
       if (iconEl) iconEl.textContent = icon;
 
+      toast.classList.remove('toast-error', 'toast-warning');
+      if (theme === 'error') toast.classList.add('toast-error');
+      else if (theme === 'warning') toast.classList.add('toast-warning');
+
       toast.classList.remove('active');
-      void toast.offsetWidth; // force reflow for bouncy spring animation
+      void toast.offsetWidth; // force reflow for smooth animation
       toast.classList.add('active');
 
       if (tg?.HapticFeedback) {
-        tg.HapticFeedback.notificationOccurred('success');
+        if (theme === 'error') tg.HapticFeedback.notificationOccurred('error');
+        else if (theme === 'warning') tg.HapticFeedback.notificationOccurred('warning');
+        else tg.HapticFeedback.notificationOccurred('success');
       }
 
       if (toastTimeout) clearTimeout(toastTimeout);
       toastTimeout = setTimeout(() => {
         toast.classList.remove('active');
-      }, 2600);
+      }, theme === 'error' ? 3200 : 2600);
     }
 
     function showRegionToast(cityName) {
-      showDynamicIsland("Регион обновлен", `${cityName} • Воркеры переключены`, "📍");
+      showDynamicIsland("Регион поиска изменен", `${cityName} • Мониторинг настроен ⚡️`, "📍");
     }
 
     function selectRegion(name, key = "", triggerToast = true) {
@@ -3290,7 +3250,9 @@
         tg.HapticFeedback.selectionChanged();
       }
 
-      // Мгновенная синхронизация с ботом при выборе региона
+      saveLocal();
+
+      // Мгновенная синхронизация с ботом при выборе региона (БЕЗ закрытия приложения!)
       if (tg && typeof tg.sendData === 'function') {
         try {
           tg.sendData(JSON.stringify({
@@ -3298,9 +3260,6 @@
             region: name,
             key: key || ""
           }));
-          setTimeout(() => {
-            try { tg.close(); } catch(e) {}
-          }, 350);
         } catch (err) {
           console.error("sendData error:", err);
         }
@@ -3378,7 +3337,7 @@
               }
             }
           }
-        } catch (e) {}
+        } catch (e) { }
 
         if (loaded.length === 0) {
           try {
@@ -3406,7 +3365,7 @@
                 }
               }
             }
-          } catch (e) {}
+          } catch (e) { }
         }
 
         if (loaded.length > 0) {
@@ -3434,7 +3393,7 @@
             tg.sendData(JSON.stringify(resetPayload));
             tg.close();
             return;
-          } catch (err) {}
+          } catch (err) { }
         }
 
         if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
@@ -3478,7 +3437,7 @@
             tg.sendData(JSON.stringify(clearPayload));
             tg.close();
             return;
-          } catch (err) {}
+          } catch (err) { }
         }
 
         if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
@@ -3490,15 +3449,6 @@
 
     // Сохранение и отправка в Telegram бот
     document.getElementById('btnSave').addEventListener('click', () => {
-      const saveBtn = document.getElementById('btnSave');
-      const originalSaveHtml = saveBtn.innerHTML;
-      saveBtn.classList.add('success-state');
-      saveBtn.innerHTML = `<span>✨ Цены применены!</span>`;
-      setTimeout(() => {
-        saveBtn.classList.remove('success-state');
-        saveBtn.innerHTML = originalSaveHtml;
-      }, 1800);
-
       if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
 
       saveLocal();
@@ -3507,17 +3457,15 @@
       const totalCount = currentMatrix.length;
       const remainingKeys = currentMatrix.map(m => m.key);
 
-      showDynamicIsland("Синхронизация", `${activeCount} активных моделей • Сохранено`, "💾");
-
       // Измененные или добавленные модели (передаем их значения для обновления в боте)
       const modifiedModels = currentMatrix.filter(m => {
         if (m.isCustom) return true;
         const init = initialMatrixMap.get(m.key);
         if (!init) return true;
         return Number(m.price) !== Number(init.price) ||
-               Number(m.market) !== Number(init.market) ||
-               Boolean(m.enabled) !== Boolean(init.enabled) ||
-               String(m.category || '') !== String(init.category || '');
+          Number(m.market) !== Number(init.market) ||
+          Boolean(m.enabled) !== Boolean(init.enabled) ||
+          String(m.category || '') !== String(init.category || '');
       }).map(m => [
         m.model,
         m.storage,
@@ -3562,7 +3510,7 @@
           alert("Ошибка отправки: " + (err.message || err) + "\n\n💡 Пожалуйста, запускайте Mini App через кнопку «ПЕРЕКУПЕР» на клавиатуре чата.");
         }
       } else {
-        showDynamicIsland("Успешно сохранено", `${activeCount} моделей готовы к синхронизации`, "✅");
+        alert("✅ Цены выкупа, папки и профиль успешно сохранены!\nПри открытии внутри Telegram они мгновенно синхронизируются с ботом.");
       }
     });
 
@@ -3572,4 +3520,5 @@
     loadLivePrices();
   </script>
 </body>
+
 </html>
