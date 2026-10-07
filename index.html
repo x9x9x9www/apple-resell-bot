@@ -878,30 +878,6 @@
       box-shadow: 0 4px 20px rgba(48, 209, 88, 0.45);
     }
 
-    .btn-send-bot {
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text-primary);
-      border: 1px solid var(--border-subtle);
-      padding: 14px 18px;
-      border-radius: 16px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: transform 0.15s var(--spring-press), background 0.15s ease, border-color 0.15s ease;
-      white-space: nowrap;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-    .btn-send-bot:active {
-      transform: scale(0.96);
-      background: rgba(255, 255, 255, 0.14);
-      border-color: rgba(255, 255, 255, 0.2);
-    }
-
     /* ========================================================
        iOS Modal Bottom Sheets with Grabber & Spring Physics
        ======================================================== */
@@ -1504,10 +1480,7 @@
   <!-- Нижняя панель сохранения -->
   <div class="save-bar">
     <button class="btn-save" id="btnSave">
-      <span>💾 Применить цены</span>
-    </button>
-    <button class="btn-send-bot" id="btnSendBot" title="Отправить конфигурацию в чат бота">
-      <span>📤 В бот</span>
+      <span>💾 Применить в бота</span>
     </button>
   </div>
 
@@ -3782,12 +3755,12 @@
       return jsonPayload;
     }
 
-    // Сохранение цен в приложении (БЕЗ закрытия приложения!)
+    // Сохранение и применение цен в бота (БЕЗ закрытия приложения!)
     document.getElementById('btnSave').addEventListener('click', () => {
       const saveBtn = document.getElementById('btnSave');
       const originalSaveHtml = saveBtn.innerHTML;
       saveBtn.classList.add('success-state');
-      saveBtn.innerHTML = `<span>✨ Цены сохранены!</span>`;
+      saveBtn.innerHTML = `<span>✨ Цены применены в бота!</span>`;
       setTimeout(() => {
         saveBtn.classList.remove('success-state');
         saveBtn.innerHTML = originalSaveHtml;
@@ -3799,42 +3772,8 @@
       snapshotInitialMatrix(currentMatrix, true);
 
       const activeCount = currentMatrix.filter(m => m.enabled !== false).length;
-      showDynamicIsland("Цены применены", `${activeCount} активных моделей сохранены в профиле ⚡️`, "💾");
+      showDynamicIsland("Цены применены", `${activeCount} активных моделей настроено в боте ⚡️`, "💾");
     });
-
-    // Передача конфигурации в чат бота (с явным диалогом подтверждения)
-    const btnSendBot = document.getElementById('btnSendBot');
-    if (btnSendBot) {
-      btnSendBot.addEventListener('click', async () => {
-        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-
-        const activeCount = currentMatrix.filter(m => m.enabled !== false).length;
-        const confirmed = await showIosAlert({
-          title: "Передать в чат бота?",
-          message: `Синхронизировать ${activeCount} моделей с ботом?\n\n⚠️ Обратите внимание: Telegram автоматически закроет Mini App при передаче сообщения в чат бота.`,
-          confirmText: "Отправить и закрыть",
-          cancelText: "Остаться в приложении",
-          isDestructive: false,
-          icon: "📤"
-        });
-        if (!confirmed) return;
-
-        saveLocal();
-        snapshotInitialMatrix(currentMatrix, true);
-        const jsonPayload = buildResellPayload();
-
-        if (tg && typeof tg.sendData === 'function') {
-          try {
-            tg.sendData(jsonPayload);
-          } catch (err) {
-            console.error("sendData error:", err);
-            showDynamicIsland("Ошибка отправки", err.message || "Не удалось отправить", "⚠️", "error");
-          }
-        } else {
-          showDynamicIsland("Офлайн режим", "Вне Telegram отправка в чат недоступна", "ℹ️");
-        }
-      });
-    }
 
     updateRegionUI();
     renderSeriesBar();
