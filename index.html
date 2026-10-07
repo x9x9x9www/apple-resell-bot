@@ -878,6 +878,30 @@
       box-shadow: 0 4px 20px rgba(48, 209, 88, 0.45);
     }
 
+    .btn-send-bot {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-primary);
+      border: 1px solid var(--border-subtle);
+      padding: 14px 18px;
+      border-radius: 16px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.15s var(--spring-press), background 0.15s ease, border-color 0.15s ease;
+      white-space: nowrap;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .btn-send-bot:active {
+      transform: scale(0.96);
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
     /* ========================================================
        iOS Modal Bottom Sheets with Grabber & Spring Physics
        ======================================================== */
@@ -1480,7 +1504,10 @@
   <!-- Нижняя панель сохранения -->
   <div class="save-bar">
     <button class="btn-save" id="btnSave">
-      <span>💾 Применить цены в бота</span>
+      <span>💾 Применить цены</span>
+    </button>
+    <button class="btn-send-bot" id="btnSendBot" title="Отправить конфигурацию в чат бота">
+      <span>📤 В бот</span>
     </button>
   </div>
 
@@ -2159,7 +2186,7 @@
       const filterPill = document.querySelector(`.series-pill[data-series="${activeFilter}"]`);
       if (filterPill) {
         const textSpan = filterPill.querySelector('span:first-child') || filterPill;
-        document.getElementById('statFilter').textContent = textSpan.textContent.trim();
+        document.getElementById('statFilter').textContent = (textSpan?.textContent || '').trim() || 'Все';
       } else {
         document.getElementById('statFilter').textContent = 'Все';
       }
@@ -3545,19 +3572,6 @@
       }
 
       saveLocal();
-
-      // Мгновенная синхронизация с ботом при выборе региона (БЕЗ закрытия приложения!)
-      if (tg && typeof tg.sendData === 'function') {
-        try {
-          tg.sendData(JSON.stringify({
-            action: "set_region",
-            region: name,
-            key: key || ""
-          }));
-        } catch (err) {
-          console.error("sendData error:", err);
-        }
-      }
     }
 
     document.getElementById('btnOpenRegionModal').addEventListener('click', () => {
@@ -3680,21 +3694,8 @@
         renderCards();
         updateStats();
 
-        // Отправляем команду сброса в Telegram бот
-        if (tg && typeof tg.sendData === 'function') {
-          const resetPayload = {
-            action: "reset_resell_profile",
-            reset_to_default: true,
-            region: currentSelectedRegion,
-            active_count: currentMatrix.filter(m => m.enabled !== false).length,
-            total_count: currentMatrix.length
-          };
-          try {
-            tg.sendData(JSON.stringify(resetPayload));
-          } catch (err) {}
-        }
-
-        showDynamicIsland("Каталог сброшен", "Заводские цены восстановлены", "🔄");
+        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+        showDynamicIsland("Каталог сброшен", "Заводские цены восстановлены ⚡️", "🔄");
       } catch (err) {
         showDynamicIsland("Ошибка сброса", err.message || "Не удалось сбросить", "✕", "error");
       }
@@ -3714,7 +3715,7 @@
       if (!confirmed) return;
 
       try {
-        // Добавляем все текущие ключи в список удаленных для синхронизации с ботом
+        // Добавляем все текущие ключи в список удаленных для синхронизации
         currentMatrix.forEach(m => deletedKeys.add(m.key));
         currentMatrix = [];
 
@@ -3724,51 +3725,19 @@
         renderCards();
         updateStats();
 
-        // Отправляем очистку в бот, чтобы мгновенно сбросить активные конфигурации до 0
-        if (tg && typeof tg.sendData === 'function') {
-          const clearPayload = {
-            action: "save_resell_profile",
-            clear_all: true,
-            region: currentSelectedRegion,
-            active_count: 0,
-            total_count: 0,
-            deleted_keys: Array.from(deletedKeys),
-            remaining_keys: [],
-            models: []
-          };
-          try {
-            tg.sendData(JSON.stringify(clearPayload));
-          } catch (err) {}
-        }
-
-        showDynamicIsland("Каталог очищен", "0 моделей в списке", "🗑️");
+        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
+        showDynamicIsland("Каталог очищен", "Все модели удалены (0 шт.)", "🗑️");
       } catch (err) {
         showDynamicIsland("Ошибка очистки", err.message || "Не удалось очистить", "✕", "error");
       }
     });
 
-    // Сохранение и отправка в Telegram бот
-    document.getElementById('btnSave').addEventListener('click', () => {
-      const saveBtn = document.getElementById('btnSave');
-      const originalSaveHtml = saveBtn.innerHTML;
-      saveBtn.classList.add('success-state');
-      saveBtn.innerHTML = `<span>✨ Цены применены!</span>`;
-      setTimeout(() => {
-        saveBtn.classList.remove('success-state');
-        saveBtn.innerHTML = originalSaveHtml;
-      }, 1800);
-
-      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-
-      saveLocal();
-
+    // Функция сборки данных профиля
+    function buildResellPayload() {
       const activeCount = currentMatrix.filter(m => m.enabled !== false).length;
       const totalCount = currentMatrix.length;
       const remainingKeys = currentMatrix.map(m => m.key);
 
-      showDynamicIsland("Синхронизация", `${activeCount} активных моделей • Сохранено`, "💾");
-
-      // Измененные или добавленные модели (передаем их значения для обновления в боте)
       const modifiedModels = currentMatrix.filter(m => {
         if (m.isCustom) return true;
         const init = initialMatrixMap.get(m.key);
@@ -3799,8 +3768,6 @@
         models: modifiedModels
       };
 
-      snapshotInitialMatrix(currentMatrix, true);
-
       let jsonPayload = JSON.stringify(payload);
 
       // Защитный лимит Telegram: 4096 байт
@@ -3812,16 +3779,62 @@
         payload.models = modifiedModels.slice(0, 30);
         jsonPayload = JSON.stringify(payload);
       }
+      return jsonPayload;
+    }
 
-      if (tg && typeof tg.sendData === 'function') {
-        try {
-          tg.sendData(jsonPayload);
-        } catch (err) {
-          console.error("sendData error:", err);
-        }
-      }
-      showDynamicIsland("Цены применены", `${activeCount} активных моделей синхронизировано с ботом`, "💾");
+    // Сохранение цен в приложении (БЕЗ закрытия приложения!)
+    document.getElementById('btnSave').addEventListener('click', () => {
+      const saveBtn = document.getElementById('btnSave');
+      const originalSaveHtml = saveBtn.innerHTML;
+      saveBtn.classList.add('success-state');
+      saveBtn.innerHTML = `<span>✨ Цены сохранены!</span>`;
+      setTimeout(() => {
+        saveBtn.classList.remove('success-state');
+        saveBtn.innerHTML = originalSaveHtml;
+      }, 1800);
+
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+
+      saveLocal();
+      snapshotInitialMatrix(currentMatrix, true);
+
+      const activeCount = currentMatrix.filter(m => m.enabled !== false).length;
+      showDynamicIsland("Цены применены", `${activeCount} активных моделей сохранены в профиле ⚡️`, "💾");
     });
+
+    // Передача конфигурации в чат бота (с явным диалогом подтверждения)
+    const btnSendBot = document.getElementById('btnSendBot');
+    if (btnSendBot) {
+      btnSendBot.addEventListener('click', async () => {
+        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+
+        const activeCount = currentMatrix.filter(m => m.enabled !== false).length;
+        const confirmed = await showIosAlert({
+          title: "Передать в чат бота?",
+          message: `Синхронизировать ${activeCount} моделей с ботом?\n\n⚠️ Обратите внимание: Telegram автоматически закроет Mini App при передаче сообщения в чат бота.`,
+          confirmText: "Отправить и закрыть",
+          cancelText: "Остаться в приложении",
+          isDestructive: false,
+          icon: "📤"
+        });
+        if (!confirmed) return;
+
+        saveLocal();
+        snapshotInitialMatrix(currentMatrix, true);
+        const jsonPayload = buildResellPayload();
+
+        if (tg && typeof tg.sendData === 'function') {
+          try {
+            tg.sendData(jsonPayload);
+          } catch (err) {
+            console.error("sendData error:", err);
+            showDynamicIsland("Ошибка отправки", err.message || "Не удалось отправить", "⚠️", "error");
+          }
+        } else {
+          showDynamicIsland("Офлайн режим", "Вне Telegram отправка в чат недоступна", "ℹ️");
+        }
+      });
+    }
 
     updateRegionUI();
     renderSeriesBar();
