@@ -3,24 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Матрица цен гаджетов — Gadget Resell Radar</title>
+  <title>⚡️ ПЕРЕКУПЕР</title>
+  <!-- OpenGraph Metadata для статьи через скрепку / Link Preview в Telegram -->
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="⚡️ ПЕРЕКУПЕР">
+  <meta property="og:title" content="⚡️ ПЕРЕКУПЕР">
+  <meta property="og:description" content="">
+  <meta property="og:image" content="https://x9x9x9www.github.io/apple-resell-bot/banner.jpg">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="720">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="⚡️ ПЕРЕКУПЕР">
+  <meta name="twitter:image" content="https://x9x9x9www.github.io/apple-resell-bot/banner.jpg">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
-      --bg-color: #080C14;
-      --card-bg: rgba(20, 27, 45, 0.72);
+      /* OLED True Black Palette */
+      --bg-color: #000000;
+      --card-bg: rgba(22, 22, 24, 0.82);
+      --card-bg-elevated: rgba(30, 30, 34, 0.92);
       --card-border: rgba(255, 255, 255, 0.08);
-      --card-border-hover: rgba(10, 132, 255, 0.4);
-      --accent-color: #0A84FF;
-      --accent-glow: rgba(10, 132, 255, 0.4);
-      --accent-gradient: linear-gradient(135deg, #0A84FF 0%, #0056B3 100%);
-      --add-btn-gradient: linear-gradient(135deg, #30D158 0%, #248A3D 100%);
+      --card-border-hover: rgba(255, 255, 255, 0.18);
+      --card-specular: inset 0 0.5px 0 rgba(255, 255, 255, 0.14);
+
+      /* iPhone 18 Burgundy / Cosmic Maroon Accent */
+      --accent-color: #B81D4C;
+      --accent-highlight: #FF4D79;
+      --accent-glow: rgba(184, 29, 76, 0.42);
+      --accent-subtle: rgba(184, 29, 76, 0.15);
+      --accent-border: rgba(184, 29, 76, 0.38);
+      --accent-gradient: linear-gradient(135deg, #C92658 0%, #801234 100%);
+      --accent-gradient-hover: linear-gradient(135deg, #D43063 0%, #94173D 100%);
+
+      /* Apple System Colors */
+      --success-color: #30D158;
+      --success-subtle: rgba(48, 209, 88, 0.14);
+      --success-gradient: linear-gradient(135deg, #30D158 0%, #248A3D 100%);
+      --danger-color: #FF453A;
+      --danger-subtle: rgba(255, 69, 58, 0.14);
+      --warning-color: #FF9F0A;
+      --warning-subtle: rgba(255, 159, 10, 0.14);
+
+      /* Typography & Neutral Shades */
       --text-main: #FFFFFF;
       --text-muted: #8E8E93;
-      --success-color: #30D158;
-      --danger-color: #FF453A;
-      --tag-bg: rgba(255, 255, 255, 0.08);
-      --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --text-tertiary: #636366;
+      --tag-bg: rgba(255, 255, 255, 0.07);
+      --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', system-ui, sans-serif;
+
+      /* Spring Physics curves (Design Spells & Apple HIG) */
+      --spring-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      --spring-smooth: cubic-bezier(0.32, 0.72, 0, 1);
+      --spring-press: cubic-bezier(0.2, 0, 0, 1);
     }
 
     * {
@@ -28,96 +62,354 @@
       margin: 0;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    input, textarea, select {
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    html {
+      background-color: var(--bg-color);
+      color-scheme: dark;
     }
 
     body {
       background-color: var(--bg-color);
       color: var(--text-main);
       font-family: var(--font-family);
-      padding: 16px;
-      padding-bottom: 96px;
+      padding: 0 16px;
+      padding-top: calc(56px + env(safe-area-inset-top, 0px));
+      padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
       min-height: 100vh;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Верхняя шапка */
-    .header {
-      margin-bottom: 16px;
+    /* Tabular numerals for prices, badges, and stats */
+    .price-input, .profit-badge, .stats-pill, .currency, .card-title, .badge-storage, .btn-step {
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum" 1, "cv05" 1;
     }
 
-    .header-row {
+    /* ========================================================
+       iOS Sticky Navigation Bar with Frosted Glass & Large Title Collapse
+       ======================================================== */
+    .ios-nav-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: calc(50px + env(safe-area-inset-top, 0px));
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-left: 16px;
+      padding-right: 16px;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(25px) saturate(190%);
+      -webkit-backdrop-filter: blur(25px) saturate(190%);
+      border-bottom: 0.5px solid transparent;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      transition: border-color 0.25s ease, background 0.25s ease;
+    }
+
+    .ios-nav-bar.scrolled {
+      background: rgba(10, 10, 12, 0.88);
+      border-bottom-color: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .ios-nav-content {
+      width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
-    .header h1 {
-      font-size: 20px;
+    .ios-nav-inline-title {
+      font-size: 15px;
       font-weight: 700;
-      letter-spacing: -0.4px;
+      letter-spacing: -0.3px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      opacity: 0;
+      transform: translateY(6px);
+      pointer-events: none;
+      transition: opacity 0.22s var(--spring-smooth), transform 0.22s var(--spring-smooth);
+    }
+
+    .ios-nav-bar.scrolled .ios-nav-inline-title {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .ios-nav-right {
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .btn-add-model {
-      background: var(--add-btn-gradient);
+    /* iOS Large Title Header */
+    .ios-large-header {
+      padding-top: 10px;
+      margin-bottom: 16px;
+    }
+
+    .ios-large-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .ios-large-title {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -0.7px;
+      line-height: 1.12;
       color: #fff;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
-      box-shadow: 0 4px 12px rgba(48, 209, 88, 0.3);
-      transition: transform 0.15s ease, filter 0.2s;
+      gap: 8px;
+      margin: 0;
+    }
+
+    .ios-large-title .title-accent {
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* iOS Pill Buttons (Burgundy & Glass) */
+    .btn-condition {
+      background: rgba(255, 255, 255, 0.08);
+      border: 0.5px solid var(--card-border);
+      color: #fff;
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: var(--card-specular);
+      transition: transform 0.15s var(--spring-press), background 0.15s ease;
+      white-space: nowrap;
+    }
+    .btn-condition:active {
+      transform: scale(0.95);
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    .btn-add-model {
+      background: var(--accent-gradient);
+      color: #fff;
+      border: none;
+      padding: 7px 15px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: var(--card-specular), 0 4px 16px var(--accent-glow);
+      transition: transform 0.15s var(--spring-press), filter 0.15s ease;
       white-space: nowrap;
     }
     .btn-add-model:active {
       transform: scale(0.95);
-      filter: brightness(0.9);
+      filter: brightness(1.15);
     }
 
+    .btn-region-badge {
+      background: rgba(255, 255, 255, 0.08);
+      border: 0.5px solid rgba(255, 255, 255, 0.14);
+      color: #fff;
+      padding: 6px 13px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: var(--card-specular);
+      transition: transform 0.15s var(--spring-press), background 0.15s ease;
+      white-space: nowrap;
+    }
+    .btn-region-badge:active {
+      transform: scale(0.95);
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    /* Stats Bar */
     .stats-bar {
-      margin-top: 8px;
       font-size: 12px;
       color: var(--text-muted);
       display: flex;
       gap: 12px;
       align-items: center;
+      flex-wrap: wrap;
     }
     .stats-pill {
-      background: var(--tag-bg);
-      padding: 2px 8px;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 2px 7px;
       border-radius: 6px;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--text-main);
+      box-shadow: var(--card-specular);
+    }
+    .btn-reset-catalog {
+      margin-left: auto;
+      background: rgba(255, 69, 58, 0.12);
+      border: 0.5px solid rgba(255, 69, 58, 0.32);
+      color: #ff453a;
+      border-radius: 12px;
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: transform 0.15s var(--spring-press), background 0.15s ease;
+    }
+    .btn-reset-catalog:active {
+      transform: scale(0.94);
+      background: rgba(255, 69, 58, 0.25);
     }
 
-    /* Поле поиска */
+    /* ========================================================
+       Design Spells: Dynamic Island (Authentic iOS Spring Physics)
+       ======================================================== */
+    .dynamic-toast {
+      position: fixed;
+      top: calc(10px + env(safe-area-inset-top, 0px));
+      left: 50%;
+      transform: translateX(-50%) translateY(-65px) scale(0.65);
+      opacity: 0;
+      filter: blur(8px);
+      pointer-events: none;
+      z-index: 999999;
+      background: rgba(14, 14, 18, 0.94);
+      backdrop-filter: blur(35px) saturate(200%);
+      -webkit-backdrop-filter: blur(35px) saturate(200%);
+      border: 0.5px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.85),
+                  0 0 0 1px rgba(255, 255, 255, 0.06),
+                  0 4px 22px var(--accent-glow);
+      border-radius: 36px;
+      padding: 6px 18px 6px 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 90vw;
+      transition: transform 0.42s var(--spring-smooth),
+                  opacity 0.22s ease,
+                  filter 0.25s ease,
+                  border-radius 0.35s ease;
+      will-change: transform, opacity, filter;
+    }
+
+    .dynamic-toast.active {
+      transform: translateX(-50%) translateY(0) scale(1);
+      opacity: 1;
+      filter: blur(0px);
+      border-radius: 26px;
+      pointer-events: auto;
+      transition: transform 0.55s var(--spring-bounce),
+                  opacity 0.25s ease,
+                  filter 0.25s ease;
+    }
+
+    .dynamic-toast-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--accent-gradient);
+      border: 0.5px solid rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 10px var(--accent-glow), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+      animation: islandPulse 2s ease infinite;
+    }
+
+    @keyframes islandPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+
+    .dynamic-toast-body {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+    .dynamic-toast-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.2px;
+    }
+    .dynamic-toast-desc {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.7);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: 500;
+    }
+
+    /* ========================================================
+       iOS Native Search Bar
+       ======================================================== */
     .search-wrapper {
       margin-bottom: 12px;
       position: relative;
     }
     .search-input {
       width: 100%;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid var(--card-border);
+      background: rgba(255, 255, 255, 0.08);
+      border: 0.5px solid var(--card-border);
       border-radius: 12px;
       padding: 10px 14px 10px 36px;
       color: #fff;
       font-size: 14px;
+      font-weight: 500;
       outline: none;
-      transition: all 0.2s ease;
+      box-shadow: var(--card-specular);
+      transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    }
+    .search-input::placeholder {
+      color: var(--text-muted);
     }
     .search-input:focus {
-      border-color: var(--accent-color);
-      box-shadow: 0 0 10px var(--accent-glow);
-      background: rgba(255, 255, 255, 0.09);
+      background: rgba(255, 255, 255, 0.11);
+      border-color: var(--accent-border);
+      box-shadow: var(--card-specular), 0 0 16px var(--accent-glow);
     }
     .search-icon {
       position: absolute;
@@ -126,9 +418,12 @@
       transform: translateY(-50%);
       font-size: 14px;
       color: var(--text-muted);
+      pointer-events: none;
     }
 
-    /* Селектор категорий */
+    /* ========================================================
+       iOS Segmented Control / Series Carousel
+       ======================================================== */
     .series-bar {
       display: flex;
       gap: 8px;
@@ -136,29 +431,93 @@
       padding-bottom: 8px;
       margin-bottom: 14px;
       scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
     }
     .series-bar::-webkit-scrollbar { display: none; }
 
     .series-pill {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
+      background: rgba(255, 255, 255, 0.06);
+      border: 0.5px solid var(--card-border);
       color: var(--text-muted);
-      padding: 6px 14px;
+      padding: 7px 15px;
       border-radius: 20px;
       font-size: 13px;
       font-weight: 600;
+      letter-spacing: -0.2px;
       cursor: pointer;
       white-space: nowrap;
-      transition: all 0.2s ease;
+      transition: transform 0.15s var(--spring-press), background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: var(--card-specular);
+    }
+    .series-pill:active {
+      transform: scale(0.95);
     }
     .series-pill.active {
-      background: var(--accent-color);
+      background: var(--accent-gradient);
       color: #fff;
-      box-shadow: 0 0 12px var(--accent-glow);
-      border-color: var(--accent-color);
+      border-color: transparent;
+      box-shadow: var(--card-specular), 0 4px 18px var(--accent-glow);
     }
 
-    /* Список карточек */
+    .series-pill .btn-pill-edit {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      opacity: 0.75;
+      padding: 1px 4px;
+      margin-left: 2px;
+      border-radius: 4px;
+      transition: opacity 0.15s ease, background 0.15s ease;
+    }
+    .series-pill .btn-pill-edit:hover {
+      opacity: 1;
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .series-pill.btn-add-pill {
+      background: var(--accent-subtle);
+      border: 0.5px dashed var(--accent-border);
+      color: var(--accent-highlight);
+      padding: 7px 14px;
+    }
+    .series-pill.btn-add-pill:active {
+      transform: scale(0.95);
+      background: rgba(184, 29, 76, 0.25);
+    }
+
+    .badge-category {
+      background: var(--accent-subtle);
+      color: var(--accent-highlight);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border: 0.5px solid var(--accent-border);
+    }
+
+    /* Drag and drop states */
+    .series-pill[draggable="true"] { cursor: grab; }
+    .series-pill.dragging {
+      opacity: 0.45;
+      transform: scale(0.95);
+      border: 1px dashed var(--accent-color) !important;
+    }
+    .series-pill.drag-over {
+      border: 1.5px solid var(--accent-color) !important;
+      transform: scale(1.05);
+      box-shadow: 0 0 16px var(--accent-glow);
+    }
+
+    /* ========================================================
+       iOS Inset Grouped Model Cards
+       ======================================================== */
     .models-list {
       display: flex;
       flex-direction: column;
@@ -167,90 +526,84 @@
 
     .model-card {
       background: var(--card-bg);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--card-border);
-      border-radius: 14px;
-      padding: 14px;
+      backdrop-filter: blur(25px) saturate(180%);
+      -webkit-backdrop-filter: blur(25px) saturate(180%);
+      border: 0.5px solid var(--card-border);
+      border-radius: 20px;
+      padding: 14px 16px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      transition: all 0.2s ease;
-      position: relative;
+      gap: 11px;
+      box-shadow: var(--card-specular), 0 8px 24px rgba(0, 0, 0, 0.45);
+      transition: transform 0.2s var(--spring-smooth), border-color 0.2s ease, opacity 0.2s ease;
+      will-change: transform;
+    }
+    .model-card:hover {
+      border-color: var(--card-border-hover);
     }
     .model-card.custom-card {
-      border-color: rgba(48, 209, 88, 0.25);
+      border-color: rgba(184, 29, 76, 0.35);
+    }
+    .model-card.disabled {
+      opacity: 0.46;
     }
 
     .card-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
-
     .card-title-group {
       display: flex;
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
     }
-
-    .device-icon {
-      font-size: 16px;
-    }
-
+    .device-icon { font-size: 16px; }
     .card-title {
       font-size: 15px;
       font-weight: 700;
       color: var(--text-main);
+      letter-spacing: -0.3px;
     }
-
     .badge-storage {
-      background: rgba(10, 132, 255, 0.18);
-      color: #5AC8FA;
-      font-size: 12px;
-      font-weight: 700;
-      padding: 2px 7px;
-      border-radius: 6px;
-    }
-
-    .badge-custom {
-      background: rgba(48, 209, 88, 0.18);
-      color: var(--success-color);
+      background: var(--accent-subtle);
+      color: var(--accent-highlight);
       font-size: 11px;
       font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 6px;
+      padding: 2px 7px;
+      border-radius: 7px;
+      border: 0.5px solid var(--accent-border);
     }
 
     .card-actions {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
     .btn-delete {
-      background: rgba(255, 69, 58, 0.15);
-      border: 1px solid rgba(255, 69, 58, 0.3);
+      background: var(--danger-subtle);
+      border: 0.5px solid rgba(255, 69, 58, 0.3);
       color: var(--danger-color);
       width: 28px;
       height: 28px;
-      border-radius: 8px;
+      border-radius: 50%;
       cursor: pointer;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.15s;
+      transition: transform 0.15s var(--spring-press), background 0.15s ease;
     }
     .btn-delete:active {
       transform: scale(0.9);
-      background: rgba(255, 69, 58, 0.3);
+      background: rgba(255, 69, 58, 0.25);
     }
 
-    /* Переключатель вкл/выкл модели */
+    /* iOS Native Switch (51x31px) */
     .switch {
       position: relative;
       display: inline-block;
@@ -258,18 +611,15 @@
       height: 26px;
       flex-shrink: 0;
     }
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
+    .switch input { opacity: 0; width: 0; height: 0; }
     .slider {
       position: absolute;
       cursor: pointer;
       top: 0; left: 0; right: 0; bottom: 0;
       background-color: rgba(255, 255, 255, 0.16);
-      transition: .25s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: background-color 0.25s var(--spring-smooth);
       border-radius: 26px;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
     }
     .slider:before {
       position: absolute;
@@ -278,92 +628,227 @@
       width: 20px;
       left: 3px;
       bottom: 3px;
-      background-color: white;
-      transition: .25s cubic-bezier(0.16, 1, 0.3, 1);
+      background-color: #FFFFFF;
+      transition: transform 0.25s var(--spring-bounce);
       border-radius: 50%;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
     }
     input:checked + .slider {
-      background-color: var(--accent-color);
+      background-color: var(--success-color);
     }
     input:checked + .slider:before {
       transform: translateX(18px);
     }
 
-    /* Блок редактирования цены */
-    .card-bottom {
+    /* Storage Selector Pills */
+    .storage-chips-bar {
       display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 2px 0 4px 0;
+      scrollbar-width: none;
+    }
+    .storage-chips-bar::-webkit-scrollbar { display: none; }
+
+    .storage-chip-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 0.5px solid var(--card-border);
+      color: var(--text-muted);
+      border-radius: 10px;
+      padding: 5px 11px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 5px;
+      box-shadow: var(--card-specular);
+      transition: transform 0.15s var(--spring-press), background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+      white-space: nowrap;
+    }
+    .storage-chip-btn:active {
+      transform: scale(0.95);
+    }
+    .storage-chip-btn.active {
+      background: var(--accent-gradient);
+      border-color: transparent;
+      color: #fff;
+      box-shadow: var(--card-specular), 0 3px 12px var(--accent-glow);
+    }
+    .storage-chip-btn.disabled-config {
+      opacity: 0.4;
+      text-decoration: line-through;
+    }
+    .storage-chip-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--success-color);
+      display: inline-block;
+    }
+    .storage-chip-btn.disabled-config .storage-chip-dot {
+      background: var(--danger-color);
+    }
+    .storage-chip-btn.btn-add-storage-chip {
+      background: var(--accent-subtle);
+      border: 0.5px dashed var(--accent-border);
+      color: var(--accent-highlight);
+      padding: 5px 10px;
     }
 
-    .price-input-wrapper {
-      flex: 1;
+    /* Card Price Inputs & Steppers */
+    .card-prices-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .price-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .price-field-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: -0.1px;
+    }
+
+    .price-stepper-row {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .step-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 0.5px solid var(--card-border);
+      color: var(--text-main);
+      padding: 7px 9px;
+      border-radius: 9px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+      box-shadow: var(--card-specular);
+      transition: transform 0.12s var(--spring-press), background 0.12s ease;
+    }
+    .step-btn:active {
+      transform: scale(0.91);
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .input-wrap {
       position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
     }
     .price-input {
       width: 100%;
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid var(--card-border);
+      background: rgba(0, 0, 0, 0.65);
+      border: 0.5px solid var(--card-border);
       border-radius: 10px;
-      padding: 8px 30px 8px 12px;
+      padding: 8px 24px 8px 10px;
       color: #fff;
-      font-size: 17px;
+      font-size: 14px;
       font-weight: 700;
       outline: none;
-      transition: border-color 0.2s;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
     .price-input:focus {
-      border-color: var(--accent-color);
+      border-color: var(--accent-border);
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5), 0 0 10px var(--accent-glow);
     }
-    .price-currency {
+    .currency {
       position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
+      right: 8px;
+      font-size: 12px;
       color: var(--text-muted);
       font-weight: 700;
-      font-size: 15px;
+      pointer-events: none;
     }
 
-    /* Кнопки быстрой корректировки цены (+/-) */
-    .quick-step-btn {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid var(--card-border);
-      color: var(--text-main);
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.15s, transform 0.1s;
-    }
-    .quick-step-btn:active {
-      transform: scale(0.92);
-      background: rgba(255, 255, 255, 0.18);
-    }
-
-    .card-meta {
+    /* Card Footer & Micro-Interactions */
+    .card-footer {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 2px;
+      padding-top: 4px;
+      border-top: 0.5px solid rgba(255, 255, 255, 0.05);
+    }
+    .profit-badge {
+      color: var(--success-color);
+      font-weight: 700;
+      background: var(--success-subtle);
+      padding: 3px 9px;
+      border-radius: 8px;
+      border: 0.5px solid rgba(48, 209, 88, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: transform 0.2s var(--spring-bounce);
+    }
+    .profit-badge.pulse {
+      animation: profitTickPulse 0.35s var(--spring-bounce);
+    }
+    @keyframes profitTickPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); filter: brightness(1.25); }
+      100% { transform: scale(1); }
+    }
+    .profit-badge.negative {
+      color: var(--danger-color);
+      background: var(--danger-subtle);
+      border-color: rgba(255, 69, 58, 0.3);
     }
 
-    /* Плавающая панель сохранения внизу */
+    .btn-toggle-config {
+      background: rgba(255, 255, 255, 0.06);
+      border: 0.5px solid var(--card-border);
+      border-radius: 9px;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      box-shadow: var(--card-specular);
+      transition: transform 0.15s var(--spring-press), background 0.15s ease, border-color 0.15s ease;
+    }
+    .btn-toggle-config:active {
+      transform: scale(0.95);
+    }
+    .btn-toggle-config.active {
+      color: var(--success-color);
+      border-color: rgba(48, 209, 88, 0.35);
+      background: var(--success-subtle);
+    }
+
+    /* ========================================================
+       Floating Action Dock / Apple Pay Style Save Bar
+       ======================================================== */
     .save-bar {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      background: rgba(8, 12, 20, 0.92);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border-top: 1px solid var(--card-border);
       padding: 12px 16px;
+      padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+      background: rgba(10, 10, 12, 0.88);
+      backdrop-filter: blur(25px) saturate(190%);
+      -webkit-backdrop-filter: blur(25px) saturate(190%);
+      border-top: 0.5px solid rgba(255, 255, 255, 0.1);
       display: flex;
       gap: 10px;
-      z-index: 100;
+      z-index: 1000;
+      box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.6);
     }
 
     .btn-save {
@@ -372,270 +857,881 @@
       color: #fff;
       border: none;
       padding: 14px;
-      border-radius: 14px;
-      font-size: 16px;
+      border-radius: 16px;
+      font-size: 15px;
       font-weight: 700;
+      letter-spacing: -0.3px;
       cursor: pointer;
-      box-shadow: 0 4px 18px var(--accent-glow);
-      transition: transform 0.1s ease, filter 0.2s;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
+      box-shadow: var(--card-specular), 0 4px 20px var(--accent-glow);
+      transition: transform 0.15s var(--spring-press), filter 0.15s ease, background 0.3s ease;
     }
     .btn-save:active {
-      transform: scale(0.98);
-      filter: brightness(0.9);
+      transform: scale(0.96);
+      filter: brightness(1.15);
+    }
+    .btn-save.success-state {
+      background: var(--success-gradient) !important;
+      box-shadow: 0 4px 20px rgba(48, 209, 88, 0.45);
     }
 
-    /* Модальное окно добавления модели */
+    /* ========================================================
+       iOS Modal Bottom Sheets with Grabber & Spring Physics
+       ======================================================== */
     .modal-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      z-index: 2000;
       display: none;
-      justify-content: center;
       align-items: flex-end;
-      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.28s var(--spring-smooth);
     }
     .modal-overlay.active {
       display: flex;
+      opacity: 1;
     }
 
     .modal-sheet {
-      background: #111726;
-      border: 1px solid var(--card-border);
-      border-radius: 20px 20px 0 0;
       width: 100%;
-      max-width: 500px;
-      padding: 20px 18px 30px;
-      box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.6);
-      animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      max-height: 90vh;
+      background: #141416;
+      border-top-left-radius: 26px;
+      border-top-right-radius: 26px;
+      border-top: 0.5px solid rgba(255, 255, 255, 0.14);
+      padding: 12px 18px calc(24px + env(safe-area-inset-bottom, 0px));
+      max-height: 88vh;
       overflow-y: auto;
+      box-shadow: 0 -12px 48px rgba(0, 0, 0, 0.8), var(--card-specular);
+      transform: translateY(100%);
+      transition: transform 0.36s var(--spring-smooth);
+    }
+    .modal-overlay.active .modal-sheet {
+      transform: translateY(0);
     }
 
-    @keyframes slideUp {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
+    .modal-grabber {
+      width: 36px;
+      height: 5px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.3);
+      margin: 2px auto 14px auto;
     }
 
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 16px;
     }
     .modal-title {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 700;
+      letter-spacing: -0.3px;
     }
     .btn-close-modal {
       background: rgba(255, 255, 255, 0.1);
       border: none;
-      color: var(--text-muted);
-      width: 28px;
-      height: 28px;
+      color: #fff;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 14px;
+      transition: transform 0.15s var(--spring-press), background 0.15s ease;
+    }
+    .btn-close-modal:active {
+      transform: scale(0.9);
+      background: rgba(255, 255, 255, 0.2);
     }
 
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+    .form-group { margin-bottom: 14px; }
     .form-label {
       font-size: 12px;
-      font-weight: 600;
       color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      display: block;
+      font-weight: 600;
     }
     .form-input {
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid var(--card-border);
-      border-radius: 10px;
-      padding: 10px 12px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 0.5px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 14px;
       color: #fff;
-      font-size: 15px;
+      font-size: 14px;
       outline: none;
+      box-shadow: var(--card-specular);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
     .form-input:focus {
-      border-color: var(--accent-color);
+      border-color: var(--accent-border);
+      box-shadow: var(--card-specular), 0 0 12px var(--accent-glow);
     }
 
-    /* Селектор памяти в модалке */
-    .storage-options {
+    .setting-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 0.5px solid rgba(255, 255, 255, 0.07);
+      gap: 12px;
+    }
+    .setting-item:last-child { border-bottom: none; }
+    .setting-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+    }
+    .setting-title { font-size: 14px; font-weight: 600; color: #fff; }
+    .setting-desc { font-size: 12px; color: var(--text-muted); }
+
+    .stepper-input {
+      display: flex;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.5);
+      border: 0.5px solid var(--card-border);
+      border-radius: 10px;
+      padding: 4px 8px;
+      gap: 6px;
+    }
+    .stepper-input input {
+      width: 60px;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: right;
+      outline: none;
+    }
+
+    .catalog-action-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 0.5px solid var(--card-border);
+      border-radius: 16px;
+      cursor: pointer;
+      box-shadow: var(--card-specular);
+      transition: transform 0.15s var(--spring-press), border-color 0.15s ease, background 0.15s ease;
+    }
+    .catalog-action-card:active {
+      transform: scale(0.97);
+      background: var(--accent-subtle);
+      border-color: var(--accent-border);
+    }
+    .catalog-action-card.danger:active {
+      background: var(--danger-subtle);
+      border-color: rgba(255, 69, 58, 0.5);
+    }
+    .action-card-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+      box-shadow: var(--card-specular);
+    }
+    .action-card-content {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .action-card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .action-card-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+
+    .btn-cancel-modal {
+      background: rgba(255, 255, 255, 0.08);
+      border: 0.5px solid var(--card-border);
+      color: #fff;
+      padding: 12px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: var(--card-specular);
+      transition: transform 0.15s var(--spring-press);
+    }
+    .btn-cancel-modal:active {
+      transform: scale(0.96);
+    }
+
+    .popular-chip {
+      background: rgba(255, 255, 255, 0.06);
+      border: 0.5px solid var(--card-border);
+      color: var(--text-main);
+      padding: 6px 13px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: var(--card-specular);
+      transition: transform 0.15s var(--spring-press), background 0.15s ease;
+      white-space: nowrap;
+    }
+    .popular-chip:active {
+      transform: scale(0.94);
+    }
+    .popular-chip.active {
+      background: var(--accent-gradient);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: var(--card-specular), 0 3px 12px var(--accent-glow);
+    }
+
+    .region-item-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 14px;
+      border-radius: 14px;
+      margin-bottom: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 0.5px solid var(--card-border);
+      cursor: pointer;
+      box-shadow: var(--card-specular);
+      transition: transform 0.15s var(--spring-press), background 0.15s ease, border-color 0.15s ease;
+      font-size: 14px;
+    }
+    .region-item-row:active {
+      transform: scale(0.98);
+      background: var(--accent-subtle);
+      border-color: var(--accent-border);
+    }
+    .region-item-row.active {
+      background: var(--accent-subtle);
+      border-color: var(--accent-border);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .template-chips-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 6px;
+    }
+    .template-chip {
+      background: rgba(255, 255, 255, 0.06);
+      border: 0.5px solid var(--card-border);
+      color: var(--text-main);
+      border-radius: 12px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: var(--card-specular);
+      transition: transform 0.15s var(--spring-press), background 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .template-chip:active {
+      transform: scale(0.95);
+      background: var(--accent-subtle);
+      border-color: var(--accent-border);
+    }
+    .template-chip.added {
+      opacity: 0.45;
+      border-style: dashed;
+      pointer-events: none;
+    }
+
+    .emoji-row {
       display: flex;
       gap: 6px;
       flex-wrap: wrap;
+      margin-top: 6px;
+      margin-bottom: 10px;
     }
-    .storage-chip {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid var(--card-border);
-      color: var(--text-muted);
-      padding: 6px 12px;
-      border-radius: 14px;
-      font-size: 13px;
-      font-weight: 600;
+    .emoji-chip {
+      background: rgba(255, 255, 255, 0.06);
+      border: 0.5px solid var(--card-border);
+      border-radius: 10px;
+      padding: 5px 9px;
+      font-size: 16px;
       cursor: pointer;
-      transition: all 0.15s;
+      box-shadow: var(--card-specular);
+      transition: transform 0.15s var(--spring-press), background 0.15s ease;
     }
-    .storage-chip.active {
-      background: var(--accent-color);
-      color: #fff;
-      border-color: var(--accent-color);
+    .emoji-chip:active, .emoji-chip.active {
+      background: var(--accent-subtle);
+      border-color: var(--accent-border);
+      transform: scale(1.1);
     }
 
-    /* Быстрые шаблоны моделей */
-    .preset-chips {
+    .preset-models-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 330px;
+      overflow-y: auto;
+      margin: 10px 0;
+      padding-right: 4px;
+    }
+    .preset-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 0.5px solid var(--card-border);
+      border-radius: 14px;
+      padding: 10px 14px;
+      cursor: pointer;
+      box-shadow: var(--card-specular);
+      transition: transform 0.15s var(--spring-press), background 0.15s ease;
+    }
+    .preset-item:active {
+      transform: scale(0.98);
+    }
+    .preset-item.selected {
+      border-color: var(--accent-border);
+      background: var(--accent-subtle);
+    }
+    .preset-checkbox {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent-color);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .preset-info { flex: 1; min-width: 0; }
+    .preset-title-row { display: flex; align-items: center; gap: 6px; }
+    .preset-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .preset-storage {
+      font-size: 10px;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1px 6px;
+      border-radius: 4px;
+      color: var(--text-muted);
+    }
+    .preset-prices {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .preset-prices b { color: #fff; }
+    .preset-profit-tag {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--success-color);
+      margin-left: 4px;
+    }
+
+    .memory-quick-chips {
       display: flex;
       gap: 6px;
-      overflow-x: auto;
-      padding-bottom: 4px;
-      scrollbar-width: none;
+      flex-wrap: wrap;
+      margin-top: 6px;
+      margin-bottom: 4px;
     }
-    .preset-chips::-webkit-scrollbar { display: none; }
-    .preset-chip {
+    .mem-chip {
       background: rgba(255, 255, 255, 0.06);
-      border: 1px solid var(--card-border);
+      border: 0.5px solid var(--card-border);
       color: var(--text-muted);
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 11px;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .modal-btn-submit {
-      background: var(--add-btn-gradient);
-      color: #fff;
-      border: none;
-      padding: 14px;
-      border-radius: 12px;
-      font-size: 16px;
+      border-radius: 10px;
+      padding: 6px 11px;
+      font-size: 12px;
       font-weight: 700;
       cursor: pointer;
-      margin-top: 6px;
-      box-shadow: 0 4px 14px rgba(48, 209, 88, 0.3);
+      box-shadow: var(--card-specular);
+      transition: transform 0.15s var(--spring-press), background 0.15s ease;
+    }
+    .mem-chip:active {
+      transform: scale(0.95);
+    }
+    .mem-chip.active {
+      background: var(--accent-gradient);
+      border-color: transparent;
+      color: #fff;
+      box-shadow: var(--card-specular), 0 3px 12px var(--accent-glow);
     }
   </style>
 </head>
 <body>
 
-  <!-- Заголовок страницы -->
-  <div class="header">
-    <div class="header-row">
-      <h1>⚡️ Матрица цен гаджетов</h1>
-      <button class="btn-add-model" id="btnOpenAddModal">
-        <span>➕ Добавить модель</span>
-      </button>
+  <!-- Dynamic Island / iOS Notification Toast -->
+  <div class="dynamic-toast" id="dynamicToast">
+    <div class="dynamic-toast-icon" id="dynamicToastIcon">⚡️</div>
+    <div class="dynamic-toast-body">
+      <div class="dynamic-toast-title" id="dynamicToastTitle">Регион обновлен</div>
+      <div class="dynamic-toast-desc" id="dynamicToastDesc">Якутск • Воркеры переключены</div>
+    </div>
+  </div>
+
+  <!-- iOS Top Sticky Navigation Bar with Frosted Glass -->
+  <header class="ios-nav-bar" id="iosNavBar">
+    <div class="ios-nav-content">
+      <div class="ios-nav-left">
+        <div class="ios-nav-inline-title" id="iosNavInlineTitle">
+          <span style="font-size:16px;">⚡️</span>
+          <span>ПЕРЕКУПЕР</span>
+        </div>
+      </div>
+      <div class="ios-nav-right">
+        <button class="btn-region-badge" id="btnOpenRegionModal" title="Выбрать регион поиска">
+          📍 <span id="currentRegionLabel">Якутск</span> ▾
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- iOS Large Title Header -->
+  <div class="ios-large-header" id="iosLargeHeader">
+    <div class="ios-large-title-row">
+      <h1 class="ios-large-title">
+        <span>⚡️</span>
+        <span>ПЕРЕКУПЕР</span>
+      </h1>
+      <div class="header-actions">
+        <button class="btn-condition" id="btnOpenConditionModal">
+          <span>⚙️ Состояние</span>
+        </button>
+        <button class="btn-add-model" id="btnOpenAddModal">
+          <span>➕ Модель</span>
+        </button>
+      </div>
     </div>
     <div class="stats-bar">
       <span>Всего: <b class="stats-pill" id="statTotal">0</b></span>
       <span>Активных: <b class="stats-pill" id="statActive">0</b></span>
-      <span>Фильтр: <span id="statFilter" style="color:var(--accent-color)">Все</span></span>
+      <span>Серия: <span id="statFilter" style="color:var(--accent-highlight); font-weight:700;">Все</span></span>
+      <button class="btn-reset-catalog" id="btnResetCatalog" title="Сбросить все изменения и восстановить каталог по умолчанию">
+        🔄 Сброс
+      </button>
     </div>
   </div>
 
-  <!-- Поиск по названию / памяти -->
+  <!-- Поиск -->
   <div class="search-wrapper">
     <span class="search-icon">🔍</span>
     <input type="text" class="search-input" id="searchInput" placeholder="Поиск (MacBook, S24, Pixel, iPad, iPhone...)">
   </div>
 
-  <!-- Фильтр по категориям -->
+  <!-- Фильтр по сериям -->
   <div class="series-bar" id="seriesBar">
-    <div class="series-pill active" data-series="all">Все</div>
-    <div class="series-pill" data-series="macbook">💻 Mac</div>
-    <div class="series-pill" data-series="iphone">📱 iPhone</div>
-    <div class="series-pill" data-series="samsung">📱 Samsung</div>
-    <div class="series-pill" data-series="pixel">📱 Pixel</div>
-    <div class="series-pill" data-series="ipad">📟 iPad</div>
-    <div class="series-pill" data-series="consoles">🎮 Консоли</div>
-    <div class="series-pill" data-series="custom">⭐ Свои</div>
+    <!-- Генерируется динамически через renderSeriesBar() -->
   </div>
 
   <!-- Список моделей -->
   <div class="models-list" id="modelsList">
-    <!-- Генерируется динамически через JS -->
+    <!-- Генерируется через JS -->
   </div>
 
-  <!-- Плавающая кнопка сохранения внизу -->
+  <!-- Нижняя панель сохранения -->
   <div class="save-bar">
     <button class="btn-save" id="btnSave">
       <span>💾 Применить цены в бота</span>
     </button>
   </div>
 
-  <!-- Модальное окно "Добавить модель" -->
-  <div class="modal-overlay" id="addModal">
-    <div class="modal-sheet">
+  <!-- Модалка: Выбор региона поиска -->
+  <div class="modal-overlay" id="regionModal">
+    <div class="modal-sheet" style="max-height: 85vh; display: flex; flex-direction: column;">
+      <div class="modal-grabber"></div>
       <div class="modal-header">
-        <h3 class="modal-title">➕ Новая конфигурация</h3>
-        <button class="btn-close-modal" id="btnCloseModal">✕</button>
+        <h3 class="modal-title">📍 Регион поиска лотов</h3>
+        <button class="btn-close-modal" id="btnCloseRegionModal">✕</button>
+      </div>
+
+      <div style="padding: 10px 0 6px 0;">
+        <div class="search-wrapper" style="margin: 0;">
+          <span class="search-icon">🔍</span>
+          <input type="text" class="search-input" id="regionSearchInput" placeholder="Поиск города (Москва, Якутск, Казань...)">
+        </div>
+      </div>
+
+      <!-- Быстрый выбор популярных городов -->
+      <div style="margin-top: 8px;">
+        <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px;">
+          🔥 Популярные регионы
+        </div>
+        <div class="chips-scroll-bar" id="popularRegionsBar" style="display: flex; gap: 6px; flex-wrap: wrap;"></div>
+      </div>
+
+      <!-- Полный список городов -->
+      <div style="margin-top: 12px; flex: 1; overflow-y: auto; max-height: 280px; padding-right: 4px;" id="regionsListContainer"></div>
+
+      <div style="margin-top: 14px; display: flex; justify-content: center;">
+        <button class="btn-cancel-modal" id="btnCancelRegion" style="width: 100%;">✕ Закрыть</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модалка: Настройки состояния (АКБ, Дефекты, Риск) -->
+  <div class="modal-overlay" id="conditionModal">
+    <div class="modal-sheet">
+      <div class="modal-grabber"></div>
+      <div class="modal-header">
+        <h3 class="modal-title">⚙️ Настройка правил состояния</h3>
+        <button class="btn-close-modal" id="btnCloseConditionModal">✕</button>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <div class="setting-title">Порог износа АКБ</div>
+          <div class="setting-desc">Если АКБ ниже порога, применяется скидка</div>
+        </div>
+        <div class="stepper-input">
+          <input type="number" id="batteryThresholdInput" value="80" min="50" max="95">
+          <span style="font-size:12px; color:var(--text-muted)">%</span>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <div class="setting-title">Скидка на замену АКБ</div>
+          <div class="setting-desc">Вычитается из порога выкупа при слабом АКБ</div>
+        </div>
+        <div class="stepper-input">
+          <input type="number" id="batteryDiscountInput" value="3000" min="500" max="10000" step="500">
+          <span style="font-size:12px; color:var(--text-muted)">₽</span>
+        </div>
+      </div>
+
+
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <div class="setting-title">Отсекать без Face ID / Touch ID</div>
+          <div class="setting-desc">Игнорировать лоты без биометрии</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="ignoreFaceIdToggle" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <div class="setting-title">Отсекать MDM / Demo / R-Sim</div>
+          <div class="setting-desc">Блокировать залоченные устройства</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="ignoreMdmToggle" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <button class="btn-save" id="btnSaveConditionModal" style="width:100%; margin-top:14px">
+        <span>✅ Готово</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Модалка: Создать категорию / папку -->
+  <div class="modal-overlay" id="createCategoryModal">
+    <div class="modal-sheet">
+      <div class="modal-grabber"></div>
+      <div class="modal-header">
+        <h3 class="modal-title">📁 Добавить папку / Бренд</h3>
+        <button class="btn-close-modal" id="btnCloseCreateCategoryModal">✕</button>
+      </div>
+
+      <!-- Раздел готовых шаблонов -->
+      <div class="form-group" style="margin-bottom:12px;">
+        <label class="form-label">⚡️ Готовые категории (добавить в 1 клик):</label>
+        <div class="template-chips-grid" id="categoryTemplatesGrid">
+          <!-- Генерируется через JS -->
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid var(--card-border); margin: 14px 0 12px 0;"></div>
+
+      <div class="form-group">
+        <label class="form-label">Или создайте свою папку:</label>
+        <input type="text" class="form-input" id="newCatName" placeholder="например: Xiaomi, Dyson, Sony, Наушники">
       </div>
 
       <div class="form-group">
-        <label class="form-label">Быстрый выбор модели:</label>
-        <div class="preset-chips" id="presetChips">
-          <span class="preset-chip" data-name="MacBook Air M1">MacBook Air M1</span>
-          <span class="preset-chip" data-name="MacBook Air M2 13">MacBook Air M2</span>
-          <span class="preset-chip" data-name="MacBook Pro 14 M1 Pro">MacBook Pro 14</span>
-          <span class="preset-chip" data-name="iPhone 16 Pro Max">16 Pro Max</span>
-          <span class="preset-chip" data-name="iPhone 16 Pro">16 Pro</span>
-          <span class="preset-chip" data-name="iPhone 15 Pro">15 Pro</span>
-          <span class="preset-chip" data-name="Samsung Galaxy S24 Ultra">S24 Ultra</span>
-          <span class="preset-chip" data-name="Samsung Galaxy S23 Ultra">S23 Ultra</span>
-          <span class="preset-chip" data-name="Google Pixel 9 Pro">Pixel 9 Pro</span>
-          <span class="preset-chip" data-name="Google Pixel 8 Pro">Pixel 8 Pro</span>
-          <span class="preset-chip" data-name="iPad Pro 11">iPad Pro 11</span>
-          <span class="preset-chip" data-name="PlayStation 5">PlayStation 5</span>
-          <span class="preset-chip" data-name="Steam Deck OLED">Steam Deck</span>
+        <label class="form-label">Иконка / Эмодзи:</label>
+        <div class="emoji-row" id="createEmojiRow">
+          <span class="emoji-chip active">📱</span>
+          <span class="emoji-chip">💻</span>
+          <span class="emoji-chip">📟</span>
+          <span class="emoji-chip">🎧</span>
+          <span class="emoji-chip">⌚️</span>
+          <span class="emoji-chip">🎮</span>
+          <span class="emoji-chip">💨</span>
+          <span class="emoji-chip">📷</span>
+          <span class="emoji-chip">📺</span>
+          <span class="emoji-chip">⚡️</span>
+          <span class="emoji-chip">📁</span>
+          <span class="emoji-chip">⭐️</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <input type="text" class="form-input" id="newCatEmoji" value="📱" style="width:60px; text-align:center; font-size:18px">
+          <span style="font-size:12px; color:var(--text-muted)">Можно выбрать из списка или ввести свой</span>
+        </div>
+      </div>
+
+      <button class="btn-save" id="btnSubmitCreateCategory" style="width:100%; margin-top:8px">
+        <span>✅ Создать свою папку</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Модалка: Выбор моделей для папки шаблона -->
+  <div class="modal-overlay" id="selectTemplateModelsModal">
+    <div class="modal-sheet">
+      <div class="modal-grabber"></div>
+      <div class="modal-header">
+        <h3 class="modal-title" id="presetModalTitle">⚡️ Добавление папки</h3>
+        <button class="btn-close-modal" id="btnClosePresetModal">✕</button>
+      </div>
+
+      <div style="font-size: 12px; color: var(--text-muted); line-height: 1.4; margin-bottom: 8px;">
+        Выберите популярные модели для отслеживания выкупа или добавьте пустую папку:
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
+        <span style="font-size: 11px; color: var(--text-muted);" id="presetSelectedCounter">Выбрано: 0 моделей</span>
+        <button type="button" id="btnToggleAllPresets" style="background:none; border:none; color:var(--accent-color); font-size:11px; font-weight:700; cursor:pointer; padding:2px 4px;">
+          Снять все
+        </button>
+      </div>
+
+      <div class="preset-models-list" id="presetModelsList">
+        <!-- Список моделей генерируется в JS -->
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:8px; margin-top:10px;">
+        <button class="btn-save" id="btnConfirmAddPresetModels" style="width:100%;">
+          <span id="btnConfirmPresetLabel">✅ Добавить выбранные модели</span>
+        </button>
+        <button type="button" class="btn-step" id="btnAddEmptyCategoryOnly" style="width:100%; height:38px; border-radius:10px; font-size:12px; font-weight:700; background:rgba(255,255,255,0.06);">
+          📁 Создать только пустую папку
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модалка: Управление категорией / папкой -->
+  <div class="modal-overlay" id="manageCategoryModal">
+    <div class="modal-sheet">
+      <div class="modal-grabber"></div>
+      <div class="modal-header">
+        <h3 class="modal-title">⚙️ Управление папкой</h3>
+        <button class="btn-close-modal" id="btnCloseManageCategoryModal">✕</button>
+      </div>
+
+      <input type="hidden" id="editCatId">
+
+      <div class="form-group">
+        <label class="form-label">Название папки / бренда:</label>
+        <input type="text" class="form-input" id="editCatName">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Иконка / Эмодзи:</label>
+        <div class="emoji-row" id="editEmojiRow">
+          <span class="emoji-chip">📱</span>
+          <span class="emoji-chip">💻</span>
+          <span class="emoji-chip">📟</span>
+          <span class="emoji-chip">🎧</span>
+          <span class="emoji-chip">⌚️</span>
+          <span class="emoji-chip">🎮</span>
+          <span class="emoji-chip">💨</span>
+          <span class="emoji-chip">📷</span>
+          <span class="emoji-chip">📺</span>
+          <span class="emoji-chip">⚡️</span>
+          <span class="emoji-chip">📁</span>
+          <span class="emoji-chip">⭐️</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <input type="text" class="form-input" id="editCatEmoji" style="width:60px; text-align:center; font-size:18px">
+          <span style="font-size:12px; color:var(--text-muted)">Иконка папки</span>
+        </div>
+      </div>
+
+      <button type="button" class="btn-step" id="btnManageAddPresetModels" style="width:100%; margin-top:6px; margin-bottom:8px; height:38px; border-radius:10px; font-weight:700; background:rgba(10, 132, 255, 0.12); border:1px solid rgba(10, 132, 255, 0.35); color:var(--accent-color); font-size:12px; display:none;">
+        ⚡️ Добавить популярные модели бренда...
+      </button>
+
+      <button class="btn-save" id="btnSaveCategoryEdit" style="width:100%; margin-top:4px">
+        <span>💾 Сохранить изменения</span>
+      </button>
+
+      <button class="btn-step" id="btnDeleteCategory" style="width:100%; margin-top:12px; height:42px; background:rgba(255,69,58,0.15); border:1px solid rgba(255,69,58,0.3); color:var(--danger-color); font-weight:700">
+        🗑 Удалить / скрыть папку
+      </button>
+    </div>
+  </div>
+
+  <!-- Модалка: Добавить модель -->
+  <div class="modal-overlay" id="addModal">
+    <div class="modal-sheet">
+      <div class="modal-grabber"></div>
+      <div class="modal-header">
+        <h3 class="modal-title">➕ Добавить модель</h3>
+        <button class="btn-close-modal" id="btnCloseAddModal">✕</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Папка / Бренд:</label>
+        <select class="form-input" id="newModelCategory">
+          <option value="iphone">📱 iPhone</option>
+          <option value="macbook">💻 Mac</option>
+          <option value="samsung">📱 Samsung</option>
+          <option value="pixel">📱 Pixel</option>
+          <option value="ipad">📟 iPad</option>
+          <option value="consoles">🎮 Консоли</option>
+          <optgroup label="Ваши папки" id="customCatOptionsGroup"></optgroup>
+          <option value="__new__">➕ Создать новую папку...</option>
+        </select>
+      </div>
+
+      <!-- Появляется, если выбрано "➕ Создать новую папку..." -->
+      <div id="inlineNewCategoryBox" style="display:none; background:rgba(255,255,255,0.03); border:1px solid var(--card-border); border-radius:10px; padding:10px; margin-bottom:12px;">
+        <label class="form-label" style="font-size:11px; margin-bottom:4px;">Название новой папки / бренда:</label>
+        <div style="display:flex; gap:8px;">
+          <input type="text" class="form-input" id="inlineNewCatEmoji" value="📱" style="width:50px; text-align:center; font-size:16px;">
+          <input type="text" class="form-input" id="inlineNewCatName" placeholder="например Xiaomi или Dyson">
         </div>
       </div>
 
       <div class="form-group">
         <label class="form-label">Название модели:</label>
-        <input type="text" class="form-input" id="newModelName" placeholder="например: MacBook Air M2 или S24 Ultra">
+        <input type="text" class="form-input" id="newModelName" placeholder="например: Xiaomi 14 Ultra или Dyson Airwrap">
       </div>
 
       <div class="form-group">
-        <label class="form-label">Объем памяти (GB / SSD):</label>
-        <div class="storage-options" id="storageOptions">
-          <span class="storage-chip" data-storage="64">64 GB</span>
-          <span class="storage-chip" data-storage="128">128 GB</span>
-          <span class="storage-chip active" data-storage="256">256 GB</span>
-          <span class="storage-chip" data-storage="512">512 GB</span>
-          <span class="storage-chip" data-storage="825">825 GB</span>
-          <span class="storage-chip" data-storage="1024">1 TB</span>
-          <span class="storage-chip" data-storage="2048">2 TB</span>
+        <label class="form-label">Память (GB / SSD):</label>
+        <div class="memory-quick-chips" id="addModelMemoryChips">
+          <button type="button" class="mem-chip" data-val="64">64 GB</button>
+          <button type="button" class="mem-chip active" data-val="128">128 GB</button>
+          <button type="button" class="mem-chip" data-val="256">256 GB</button>
+          <button type="button" class="mem-chip" data-val="512">512 GB</button>
+          <button type="button" class="mem-chip" data-val="1024">1 TB</button>
+          <button type="button" class="mem-chip" data-val="0">Без памяти</button>
         </div>
-        <input type="hidden" id="newModelStorage" value="256">
+        <input type="number" class="form-input" id="newModelStorage" value="128" placeholder="или введите вручную: 128, 256, 512, 1024" style="margin-top:6px;">
+        <div style="font-size:11px; color:var(--text-muted); margin-top:3px;">💡 Можно выбрать один или несколько объемов сразу</div>
       </div>
 
       <div class="form-group">
-        <label class="form-label">Макс. выкуп перекупа (₽):</label>
-        <input type="number" step="500" class="form-input" id="newModelPrice" placeholder="50000">
+        <label class="form-label">Макс. цена выкупа (₽):</label>
+        <input type="number" step="500" class="form-input" id="newModelPrice" placeholder="например 50000">
       </div>
 
       <div class="form-group">
-        <label class="form-label">Оценка рынка (₽):</label>
-        <input type="number" step="500" class="form-input" id="newModelMarket" placeholder="Автоматически (+20%)">
+        <label class="form-label">Ожидаемая цена продажи (₽):</label>
+        <input type="number" step="500" class="form-input" id="newModelMarket" placeholder="например 60000">
       </div>
 
-      <button class="modal-btn-submit" id="btnSubmitNewModel">
-        ✅ Добавить конфигурацию
+      <button class="btn-save" id="btnSubmitNewModel" style="width:100%; margin-top:8px">
+        <span id="btnSubmitNewModelText">✅ Добавить в матрицу</span>
       </button>
+    </div>
+  </div>
+
+  <!-- Модалка: Быстрое добавление объема памяти в существующую модель -->
+  <div class="modal-overlay" id="quickAddStorageModal">
+    <div class="modal-sheet">
+      <div class="modal-grabber"></div>
+      <div class="modal-header">
+        <h3 class="modal-title" id="quickAddStorageTitle">➕ Добавить объем</h3>
+        <button class="btn-close-modal" id="btnCloseQuickAddStorageModal">✕</button>
+      </div>
+
+      <input type="hidden" id="quickAddModelName">
+
+      <div class="form-group">
+        <label class="form-label">Выберите объем памяти:</label>
+        <div class="memory-quick-chips" id="quickAddMemoryChips">
+          <button type="button" class="mem-chip" data-val="64">64 GB</button>
+          <button type="button" class="mem-chip" data-val="128">128 GB</button>
+          <button type="button" class="mem-chip active" data-val="256">256 GB</button>
+          <button type="button" class="mem-chip" data-val="512">512 GB</button>
+          <button type="button" class="mem-chip" data-val="1024">1 TB</button>
+        </div>
+        <input type="number" class="form-input" id="quickAddStorageVal" value="256" placeholder="например 256" style="margin-top:6px;">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Макс. цена выкупа (₽):</label>
+        <input type="number" step="500" class="form-input" id="quickAddPrice" placeholder="например 45000">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Ожидаемая цена продажи (₽):</label>
+        <input type="number" step="500" class="form-input" id="quickAddMarket" placeholder="например 55000">
+      </div>
+
+      <button class="btn-save" id="btnSubmitQuickAddStorage" style="width:100%; margin-top:8px">
+        <span>✅ Добавить объем в модель</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Модалка: Сброс и управление каталогом -->
+  <div class="modal-overlay" id="catalogManageModal">
+    <div class="modal-sheet">
+      <div class="modal-grabber"></div>
+      <div class="modal-header">
+        <h3 class="modal-title">⚙️ Управление каталогом</h3>
+        <button class="btn-close-modal" id="btnCloseCatalogManageModal">✕</button>
+      </div>
+
+      <div style="padding: 10px 0 6px 0; display: flex; flex-direction: column; gap: 10px;">
+        <!-- Карточка 1: Восстановить по умолчанию -->
+        <div class="catalog-action-card" id="btnActionRestoreDefault">
+          <div class="action-card-icon" style="background: rgba(10, 132, 255, 0.18); border-color: rgba(10, 132, 255, 0.35); color: var(--accent-color);">
+            🔄
+          </div>
+          <div class="action-card-content">
+            <div class="action-card-title">Восстановить по умолчанию</div>
+            <div class="action-card-desc">Вернуть стандартный каталог (флагманы iPhone, MacBook, Samsung Galaxy, Google Pixel) со стандартными ценами</div>
+          </div>
+        </div>
+
+        <!-- Карточка 2: Полная очистка -->
+        <div class="catalog-action-card danger" id="btnActionClearAll">
+          <div class="action-card-icon" style="background: rgba(255, 69, 58, 0.18); border-color: rgba(255, 69, 58, 0.35); color: #ff453a;">
+            🗑️
+          </div>
+          <div class="action-card-content">
+            <div class="action-card-title" style="color: #ff453a;">Очистить всё (с чистого листа)</div>
+            <div class="action-card-desc">Удалить абсолютно все модели, чтобы вручную выстроить свой собственный список гаджетов с нуля</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 10px;">
+        <button class="btn-cancel-modal" id="btnCancelCatalogManage" style="width: 100%;">✕ Отмена</button>
+      </div>
     </div>
   </div>
 
@@ -644,86 +1740,275 @@
     if (tg) {
       tg.ready();
       tg.expand();
-      if (tg.setHeaderColor) tg.setHeaderColor('#080C14');
-      if (tg.setBackgroundColor) tg.setBackgroundColor('#080C14');
+      if (tg.setHeaderColor) tg.setHeaderColor('#000000');
+      if (tg.setBackgroundColor) tg.setBackgroundColor('#000000');
     }
 
-    // Базовый мульти-гаджет каталог моделей
+    // iOS Large Title Dynamic Scroll Collapse
+    window.addEventListener('scroll', () => {
+      const navBar = document.getElementById('iosNavBar');
+      if (navBar) {
+        if (window.scrollY > 28) {
+          navBar.classList.add('scrolled');
+        } else {
+          navBar.classList.remove('scrolled');
+        }
+      }
+    }, { passive: true });
+
     const DEFAULT_CATALOG = [
       // MacBooks
       { key: "MacBook Air M1_256", model: "MacBook Air M1", storage: 256, series: "macbook", price: 42000, market: 52000, enabled: true },
       { key: "MacBook Air M2 13_256", model: "MacBook Air M2 13", storage: 256, series: "macbook", price: 62000, market: 74000, enabled: true },
       { key: "MacBook Pro 14 M1 Pro_512", model: "MacBook Pro 14 M1 Pro", storage: 512, series: "macbook", price: 85000, market: 102000, enabled: true },
-      { key: "MacBook Pro 16 M1 Pro_512", model: "MacBook Pro 16 M1 Pro", storage: 512, series: "macbook", price: 98000, market: 118000, enabled: true },
-      // iPhones
+      // iPhones 16
       { key: "iPhone 16 Pro Max_256", model: "iPhone 16 Pro Max", storage: 256, series: "iphone", price: 105000, market: 125000, enabled: true },
-      { key: "iPhone 16 Pro Max_512", model: "iPhone 16 Pro Max", storage: 512, series: "iphone", price: 118000, market: 140000, enabled: true },
       { key: "iPhone 16 Pro_128", model: "iPhone 16 Pro", storage: 128, series: "iphone", price: 88000, market: 104000, enabled: true },
-      { key: "iPhone 16 Pro_256", model: "iPhone 16 Pro", storage: 256, series: "iphone", price: 96000, market: 114000, enabled: true },
-      { key: "iPhone 16 Plus_128", model: "iPhone 16 Plus", storage: 128, series: "iphone", price: 72000, market: 85000, enabled: true },
       { key: "iPhone 16_128", model: "iPhone 16", storage: 128, series: "iphone", price: 68000, market: 80000, enabled: true },
+      // iPhones 15
       { key: "iPhone 15 Pro Max_256", model: "iPhone 15 Pro Max", storage: 256, series: "iphone", price: 82000, market: 97000, enabled: true },
       { key: "iPhone 15 Pro_128", model: "iPhone 15 Pro", storage: 128, series: "iphone", price: 65000, market: 78000, enabled: true },
-      { key: "iPhone 15 Pro_256", model: "iPhone 15 Pro", storage: 256, series: "iphone", price: 72000, market: 85000, enabled: true },
       { key: "iPhone 15_128", model: "iPhone 15", storage: 128, series: "iphone", price: 50000, market: 60000, enabled: true },
+      // iPhones 14
       { key: "iPhone 14 Pro Max_128", model: "iPhone 14 Pro Max", storage: 128, series: "iphone", price: 58000, market: 70000, enabled: true },
       { key: "iPhone 14 Pro_128", model: "iPhone 14 Pro", storage: 128, series: "iphone", price: 50000, market: 60000, enabled: true },
       { key: "iPhone 14_128", model: "iPhone 14", storage: 128, series: "iphone", price: 40000, market: 48000, enabled: true },
-      { key: "iPhone 13 Pro Max_128", model: "iPhone 13 Pro Max", storage: 128, series: "iphone", price: 46000, market: 55000, enabled: true },
+      // iPhones 13
       { key: "iPhone 13 Pro_128", model: "iPhone 13 Pro", storage: 128, series: "iphone", price: 38000, market: 46000, enabled: true },
       { key: "iPhone 13_128", model: "iPhone 13", storage: 128, series: "iphone", price: 32000, market: 39000, enabled: true },
+      // iPhones 12 / 11
       { key: "iPhone 12_128", model: "iPhone 12", storage: 128, series: "iphone", price: 23000, market: 28000, enabled: true },
       { key: "iPhone 11_128", model: "iPhone 11", storage: 128, series: "iphone", price: 16000, market: 20000, enabled: true },
       // Samsung
       { key: "Samsung Galaxy S24 Ultra_256", model: "Samsung Galaxy S24 Ultra", storage: 256, series: "samsung", price: 65000, market: 78000, enabled: true },
-      { key: "Samsung Galaxy S24 Ultra_512", model: "Samsung Galaxy S24 Ultra", storage: 512, series: "samsung", price: 74000, market: 88000, enabled: true },
-      { key: "Samsung Galaxy S24+_256", model: "Samsung Galaxy S24+", storage: 256, series: "samsung", price: 50000, market: 60000, enabled: true },
-      { key: "Samsung Galaxy S24_128", model: "Samsung Galaxy S24", storage: 128, series: "samsung", price: 42000, market: 51000, enabled: true },
       { key: "Samsung Galaxy S23 Ultra_256", model: "Samsung Galaxy S23 Ultra", storage: 256, series: "samsung", price: 48000, market: 58000, enabled: true },
-      { key: "Samsung Galaxy Z Fold 5_256", model: "Samsung Galaxy Z Fold 5", storage: 256, series: "samsung", price: 58000, market: 70000, enabled: true },
       // Pixel
       { key: "Google Pixel 9 Pro_128", model: "Google Pixel 9 Pro", storage: 128, series: "pixel", price: 58000, market: 70000, enabled: true },
-      { key: "Google Pixel 8 Pro_128", model: "Google Pixel 8 Pro", storage: 128, series: "pixel", price: 42000, market: 50000, enabled: true },
-      { key: "Google Pixel 8_128", model: "Google Pixel 8", storage: 128, series: "pixel", price: 30000, market: 37000, enabled: true },
-      { key: "Google Pixel 7 Pro_128", model: "Google Pixel 7 Pro", storage: 128, series: "pixel", price: 27000, market: 33000, enabled: true },
-      // iPad
-      { key: "iPad Pro 11 M2_128", model: "iPad Pro 11 M2", storage: 128, series: "ipad", price: 52000, market: 63000, enabled: true },
-      { key: "iPad Pro 12.9 M2_128", model: "iPad Pro 12.9 M2", storage: 128, series: "ipad", price: 65000, market: 78000, enabled: true },
-      { key: "iPad Air 5 M1_64", model: "iPad Air 5 M1", storage: 64, series: "ipad", price: 34000, market: 41000, enabled: true },
-      { key: "iPad 10_64", model: "iPad 10", storage: 64, series: "ipad", price: 24000, market: 29000, enabled: true },
-      // Consoles
-      { key: "PlayStation 5_825", model: "PlayStation 5", storage: 825, series: "consoles", price: 32000, market: 39000, enabled: true },
-      { key: "PlayStation 5 Slim_1024", model: "PlayStation 5 Slim", storage: 1024, series: "consoles", price: 36000, market: 43000, enabled: true },
-      { key: "Steam Deck OLED_512", model: "Steam Deck OLED", storage: 512, series: "consoles", price: 38000, market: 46000, enabled: true },
+      { key: "Google Pixel 8 Pro_128", model: "Google Pixel 8 Pro", storage: 128, series: "pixel", price: 42000, market: 50000, enabled: true }
     ];
 
-    // Определение иконки девайса
+    const POPULAR_TEMPLATES = [
+      {
+        id: 'iphone',
+        name: 'iPhone',
+        icon: '📱',
+        models: [
+          { model: "iPhone 16 Pro Max", storage: 256, price: 105000, market: 125000 },
+          { model: "iPhone 16 Pro", storage: 128, price: 88000, market: 104000 },
+          { model: "iPhone 16", storage: 128, price: 68000, market: 80000 },
+          { model: "iPhone 15 Pro Max", storage: 256, price: 82000, market: 97000 },
+          { model: "iPhone 15 Pro", storage: 128, price: 65000, market: 78000 },
+          { model: "iPhone 15", storage: 128, price: 50000, market: 60000 },
+          { model: "iPhone 14 Pro", storage: 128, price: 50000, market: 60000 },
+          { model: "iPhone 13", storage: 128, price: 32000, market: 39000 },
+          { model: "iPhone 12", storage: 128, price: 23000, market: 28000 },
+          { model: "iPhone 11", storage: 128, price: 16000, market: 20000 }
+        ]
+      },
+      {
+        id: 'macbook',
+        name: 'Mac',
+        icon: '💻',
+        models: [
+          { model: "MacBook Air M1 13", storage: 256, price: 42000, market: 52000 },
+          { model: "MacBook Air M2 13", storage: 256, price: 62000, market: 74000 },
+          { model: "MacBook Pro 14 M1 Pro", storage: 512, price: 85000, market: 102000 },
+          { model: "MacBook Pro 16 M1 Pro", storage: 512, price: 95000, market: 115000 }
+        ]
+      },
+      {
+        id: 'samsung',
+        name: 'Samsung',
+        icon: '📱',
+        models: [
+          { model: "Samsung Galaxy S24 Ultra", storage: 256, price: 65000, market: 78000 },
+          { model: "Samsung Galaxy S24", storage: 128, price: 45000, market: 55000 },
+          { model: "Samsung Galaxy S23 Ultra", storage: 256, price: 48000, market: 58000 },
+          { model: "Samsung Galaxy S23", storage: 128, price: 35000, market: 43000 },
+          { model: "Samsung Galaxy Z Flip 5", storage: 256, price: 38000, market: 46000 },
+          { model: "Samsung Galaxy Z Fold 5", storage: 256, price: 68000, market: 82000 }
+        ]
+      },
+      {
+        id: 'pixel',
+        name: 'Pixel',
+        icon: '📱',
+        models: [
+          { model: "Google Pixel 9 Pro", storage: 128, price: 58000, market: 70000 },
+          { model: "Google Pixel 8 Pro", storage: 128, price: 42000, market: 50000 },
+          { model: "Google Pixel 8", storage: 128, price: 32000, market: 39000 },
+          { model: "Google Pixel 7 Pro", storage: 128, price: 26000, market: 32000 }
+        ]
+      }
+    ];
+
+    let categories = []; // Пользовательские папки в настраиваемом порядке
+
     function getDeviceIcon(name, series) {
-      const lower = (name + ' ' + (series || '')).toLowerCase();
-      if (lower.includes('macbook') || lower.includes('mac') || series === 'macbook') return '💻';
-      if (lower.includes('ipad') || series === 'ipad') return '📟';
-      if (lower.includes('playstation') || lower.includes('ps5') || lower.includes('steam deck') || lower.includes('xbox') || series === 'consoles') return '🎮';
-      if (lower.includes('samsung') || series === 'samsung') return '📱';
-      if (lower.includes('pixel') || series === 'pixel') return '📱';
-      if (lower.includes('iphone') || series === 'iphone') return '📱';
-      return '⚡️';
+      const cat = categories.find(c => c.id === series || (c.name && c.name.toLowerCase() === (series || '').toLowerCase()));
+      if (cat && cat.icon) return cat.icon;
+
+      const lower = ((name || '') + ' ' + (series || '')).toLowerCase();
+      if (lower.includes('macbook') || lower.includes('mac')) return '💻';
+      if (lower.includes('ipad')) return '📟';
+      if (lower.includes('playstation') || lower.includes('ps5') || lower.includes('steam deck') || lower.includes('xbox')) return '🎮';
+      if (lower.includes('samsung') || lower.includes('galaxy')) return '📱';
+      if (lower.includes('pixel')) return '📱';
+      if (lower.includes('iphone')) return '📱';
+      if (lower.includes('dyson') || lower.includes('airwrap') || lower.includes('фен')) return '💨';
+      if (lower.includes('наушники') || lower.includes('airpods') || lower.includes('wh-') || lower.includes('sony')) return '🎧';
+      if (lower.includes('watch') || lower.includes('часы')) return '⌚️';
+      return '📱';
     }
 
-    // Загружаем сохраненные данные из localStorage
-    let currentMatrix = [];
-    try {
-      const saved = localStorage.getItem('gadget_resell_user_matrix') || localStorage.getItem('apple_resell_user_matrix');
-      currentMatrix = saved ? JSON.parse(saved) : DEFAULT_CATALOG;
-      // Приводим старые числовые серии айфонов к серии "iphone" если нужно
-      currentMatrix.forEach(item => {
-        if (!item.series || ["11", "12", "13", "14", "15", "16"].includes(item.series)) {
-          if (item.model.toLowerCase().includes('iphone')) item.series = 'iphone';
-          else if (item.model.toLowerCase().includes('macbook')) item.series = 'macbook';
+    function detectSeries(name) {
+      const lower = (name || '').toLowerCase();
+      for (const cat of categories) {
+        if (cat.name && lower.includes(cat.name.toLowerCase())) {
+          return cat.id;
         }
-      });
+      }
+      if (lower.includes('macbook') || lower.includes('mac')) return 'macbook';
+      if (lower.includes('samsung') || lower.includes('galaxy')) return 'samsung';
+      if (lower.includes('pixel')) return 'pixel';
+      if (lower.includes('ipad')) return 'ipad';
+      if (lower.includes('playstation') || lower.includes('ps5') || lower.includes('steam deck')) return 'consoles';
+      if (lower.includes('iphone')) return 'iphone';
+      return 'custom';
+    }
+
+    let currentMatrix = [];
+    let conditionRules = {
+      battery_threshold: 80,
+      battery_discount: 3000,
+      allow_defects: false,
+      defect_discount: 8000,
+      ignore_no_face_id: true,
+      ignore_mdm_rsim: true,
+      ignore_replicas: true
+    };
+
+    let deletedKeys = new Set();
+
+    // Загрузка сохраненных данных
+    try {
+      const saved = localStorage.getItem('gadget_resell_matrix_clean');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.deletedKeys && Array.isArray(parsed.deletedKeys)) {
+          deletedKeys = new Set(parsed.deletedKeys);
+        }
+        if (Array.isArray(parsed.matrix) && parsed.matrix.length > 0) {
+          currentMatrix = parsed.matrix.filter(m => !deletedKeys.has(m.key));
+        } else {
+          currentMatrix = DEFAULT_CATALOG.filter(m => !deletedKeys.has(m.key));
+        }
+        if (parsed.conditionRules) conditionRules = Object.assign(conditionRules, parsed.conditionRules);
+        if (Array.isArray(parsed.categories)) {
+          categories = parsed.categories;
+        }
+      } else {
+        currentMatrix = DEFAULT_CATALOG;
+        categories = [];
+      }
     } catch (e) {
       currentMatrix = DEFAULT_CATALOG;
+      categories = [];
     }
+
+    const initialMatrixMap = new Map();
+
+    function snapshotInitialMatrix(matrix, force = false) {
+      if ((force || initialMatrixMap.size === 0) && matrix && matrix.length > 0) {
+        initialMatrixMap.clear();
+        matrix.forEach(m => {
+          initialMatrixMap.set(m.key, {
+            price: Number(m.price || 0),
+            market: Number(m.market || 0),
+            enabled: m.enabled !== false,
+            category: String(m.category || ''),
+            isCustom: !!m.isCustom
+          });
+        });
+      }
+    }
+    snapshotInitialMatrix(currentMatrix);
+
+    // Подгрузка pricing_matrix.json ТОЛЬКО при первом запуске (если локальное хранилище пустое)
+    async function loadLivePrices() {
+      const hasLocalData = !!localStorage.getItem('gadget_resell_matrix_clean');
+      if (hasLocalData && currentMatrix && currentMatrix.length > 0) {
+        // У пользователя уже сохранены персональные настройки цен и удаленные модели — сохраняем их!
+        return;
+      }
+      try {
+        const res = await fetch('./pricing_matrix.json?t=' + Date.now());
+        if (!res.ok) return;
+        const data = await res.json();
+        const loaded = [];
+        for (const [model, storages] of Object.entries(data)) {
+          const series = detectSeries(model);
+          for (const [storage, cfg] of Object.entries(storages)) {
+            const key = `${model}_${storage}`;
+            if (deletedKeys.has(key)) continue;
+            const price = Number(cfg.max_buy || cfg.price || 0);
+            const market = Number(cfg.market || Math.round(price * 1.2 / 500) * 500);
+            const enabled = cfg.enabled !== false;
+            loaded.push({
+              key,
+              model,
+              storage: Number(storage) || storage,
+              series,
+              category: cfg.category || '',
+              price,
+              market,
+              enabled,
+              isCustom: series === 'custom' || categories.some(c => c.id === series)
+            });
+          }
+        }
+        if (loaded.length > 0) {
+          const fileKeys = new Set(loaded.map(x => x.key));
+          currentMatrix.forEach(m => {
+            if (m.isCustom && !fileKeys.has(m.key) && !deletedKeys.has(m.key)) loaded.unshift(m);
+          });
+          currentMatrix = loaded;
+          snapshotInitialMatrix(loaded);
+          saveLocal();
+          renderSeriesBar();
+          renderCards();
+          updateStats();
+        }
+      } catch (err) {}
+    }
+
+    // Синхронизация правил состояния в UI
+    const batThresholdEl = document.getElementById('batteryThresholdInput');
+    const batDiscountEl = document.getElementById('batteryDiscountInput');
+    const ignoreFaceIdEl = document.getElementById('ignoreFaceIdToggle');
+    const ignoreMdmEl = document.getElementById('ignoreMdmToggle');
+
+    batThresholdEl.value = conditionRules.battery_threshold;
+    batDiscountEl.value = conditionRules.battery_discount;
+    ignoreFaceIdEl.checked = conditionRules.ignore_no_face_id;
+    ignoreMdmEl.checked = conditionRules.ignore_mdm_rsim;
+
+    batThresholdEl.addEventListener('input', (e) => {
+      conditionRules.battery_threshold = parseInt(e.target.value, 10) || 80;
+      saveLocal();
+    });
+    batDiscountEl.addEventListener('input', (e) => {
+      conditionRules.battery_discount = parseInt(e.target.value, 10) || 3000;
+      saveLocal();
+    });
+    ignoreFaceIdEl.addEventListener('change', (e) => {
+      conditionRules.ignore_no_face_id = e.target.checked;
+      saveLocal();
+    });
+    ignoreMdmEl.addEventListener('change', (e) => {
+      conditionRules.ignore_mdm_rsim = e.target.checked;
+      saveLocal();
+    });
 
     let activeFilter = 'all';
     let searchQuery = '';
@@ -731,35 +2016,224 @@
     function updateStats() {
       document.getElementById('statTotal').textContent = currentMatrix.length;
       document.getElementById('statActive').textContent = currentMatrix.filter(m => m.enabled).length;
-      const filterPill = document.querySelector('.series-pill.active');
-      document.getElementById('statFilter').textContent = filterPill ? filterPill.textContent : 'Все';
+      const filterPill = document.querySelector(`.series-pill[data-series="${activeFilter}"]`);
+      if (filterPill) {
+        const textSpan = filterPill.querySelector('span:first-child') || filterPill;
+        document.getElementById('statFilter').textContent = textSpan.textContent.trim();
+      } else {
+        document.getElementById('statFilter').textContent = 'Все';
+      }
     }
+
+    // Перестановка порядка папок
+    function reorderCategories(fromIndex, toIndex) {
+      if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0 || fromIndex >= categories.length || toIndex >= categories.length) return;
+      const [moved] = categories.splice(fromIndex, 1);
+      categories.splice(toIndex, 0, moved);
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      saveLocal();
+      renderSeriesBar();
+      renderCards();
+    }
+
+    // Рендер панели категорий с поддержкой Drag & Drop
+    let dragSrcIndex = null;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let isTouchDragging = false;
+    let longPressTimer = null;
+    let touchIndex = null;
+
+    function renderSeriesBar() {
+      const bar = document.getElementById('seriesBar');
+      bar.innerHTML = '';
+
+      // Вкладка "Все" (всегда первая)
+      const allPill = document.createElement('div');
+      allPill.className = `series-pill all-pill ${activeFilter === 'all' ? 'active' : ''}`;
+      allPill.dataset.series = 'all';
+      allPill.textContent = 'Все';
+      allPill.addEventListener('click', () => selectFilter('all'));
+      bar.appendChild(allPill);
+
+      // Пользовательские папки
+      categories.forEach((cat, idx) => {
+        const pill = document.createElement('div');
+        pill.className = `series-pill ${activeFilter === cat.id ? 'active' : ''}`;
+        pill.dataset.series = cat.id;
+        pill.dataset.categoryIndex = idx;
+        pill.draggable = true;
+
+        const titleSpan = document.createElement('span');
+        titleSpan.textContent = `${cat.icon || '📁'} ${cat.name}`;
+        pill.appendChild(titleSpan);
+
+        const editBtn = document.createElement('span');
+        editBtn.className = 'btn-pill-edit';
+        editBtn.textContent = '✏️';
+        editBtn.title = 'Настроить папку';
+        editBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          openManageCategoryModal(cat.id);
+        });
+        pill.appendChild(editBtn);
+
+        pill.addEventListener('click', () => {
+          if (!isTouchDragging) {
+            selectFilter(cat.id);
+          }
+        });
+
+        // HTML5 Mouse Drag & Drop
+        pill.addEventListener('dragstart', (e) => {
+          dragSrcIndex = idx;
+          pill.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
+          e.dataTransfer.setData('text/plain', idx);
+        });
+
+        pill.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          pill.classList.add('drag-over');
+        });
+
+        pill.addEventListener('dragleave', () => {
+          pill.classList.remove('drag-over');
+        });
+
+        pill.addEventListener('drop', (e) => {
+          e.preventDefault();
+          pill.classList.remove('drag-over');
+          if (dragSrcIndex !== null && dragSrcIndex !== idx) {
+            reorderCategories(dragSrcIndex, idx);
+          }
+        });
+
+        pill.addEventListener('dragend', () => {
+          document.querySelectorAll('.series-pill').forEach(p => p.classList.remove('dragging', 'drag-over'));
+        });
+
+        // Touch Drag & Drop (для мобильного Telegram WebApp)
+        pill.addEventListener('touchstart', (e) => {
+          const touch = e.touches[0];
+          touchStartX = touch.clientX;
+          touchStartY = touch.clientY;
+          touchIndex = idx;
+
+          longPressTimer = setTimeout(() => {
+            isTouchDragging = true;
+            if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+            pill.classList.add('dragging');
+          }, 250);
+        }, { passive: true });
+
+        pill.addEventListener('touchmove', (e) => {
+          const touch = e.touches[0];
+          const dx = Math.abs(touch.clientX - touchStartX);
+          const dy = Math.abs(touch.clientY - touchStartY);
+
+          if (!isTouchDragging) {
+            if (dx > 10 || dy > 10) {
+              clearTimeout(longPressTimer);
+            }
+            return;
+          }
+
+          e.preventDefault();
+          const el = document.elementFromPoint(touch.clientX, touch.clientY);
+          const targetPill = el ? el.closest('.series-pill[data-category-index]') : null;
+          document.querySelectorAll('.series-pill').forEach(p => p.classList.remove('drag-over'));
+          if (targetPill && targetPill !== pill) {
+            targetPill.classList.add('drag-over');
+          }
+        }, { passive: false });
+
+        pill.addEventListener('touchend', (e) => {
+          clearTimeout(longPressTimer);
+          if (isTouchDragging) {
+            isTouchDragging = false;
+            pill.classList.remove('dragging');
+            const touch = e.changedTouches[0];
+            const el = document.elementFromPoint(touch.clientX, touch.clientY);
+            const targetPill = el ? el.closest('.series-pill[data-category-index]') : null;
+            document.querySelectorAll('.series-pill').forEach(p => p.classList.remove('drag-over'));
+            if (targetPill && targetPill !== pill) {
+              const toIndex = parseInt(targetPill.dataset.categoryIndex, 10);
+              if (!isNaN(toIndex)) {
+                reorderCategories(touchIndex, toIndex);
+              }
+            }
+          }
+        });
+
+        pill.addEventListener('touchcancel', () => {
+          clearTimeout(longPressTimer);
+          isTouchDragging = false;
+          pill.classList.remove('dragging');
+          document.querySelectorAll('.series-pill').forEach(p => p.classList.remove('drag-over'));
+        });
+
+        bar.appendChild(pill);
+      });
+
+      // Кнопка добавления новой папки
+      const addBtn = document.createElement('div');
+      addBtn.className = 'series-pill btn-add-pill';
+      addBtn.id = 'btnAddCategoryBtn';
+      addBtn.innerHTML = '<span>➕ Папка</span>';
+      addBtn.title = 'Добавить или создать папку';
+      addBtn.addEventListener('click', () => {
+        openCreateCategoryModal();
+      });
+      bar.appendChild(addBtn);
+    }
+
+    function selectFilter(filterId) {
+      if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+      activeFilter = filterId;
+      document.querySelectorAll('.series-pill').forEach(p => {
+        if (p.dataset.series) {
+          p.classList.toggle('active', p.dataset.series === filterId);
+        }
+      });
+      renderCards();
+      updateStats();
+    }
+
+    const selectedStorageMap = new Map();
 
     function renderCards() {
       const container = document.getElementById('modelsList');
       container.innerHTML = '';
-
       const query = searchQuery.toLowerCase().trim();
 
       const filtered = currentMatrix.filter(item => {
-        // Фильтр по категории/серии
-        if (activeFilter === 'custom' && !item.isCustom) return false;
-        if (activeFilter !== 'all' && activeFilter !== 'custom') {
-          if (item.series !== activeFilter) {
-            // Мягкая проверка по вхождению в название
-            const lowerModel = item.model.toLowerCase();
-            if (activeFilter === 'iphone' && !lowerModel.includes('iphone')) return false;
-            else if (activeFilter === 'macbook' && !lowerModel.includes('mac')) return false;
-            else if (activeFilter === 'samsung' && !lowerModel.includes('samsung') && !lowerModel.includes('galaxy')) return false;
-            else if (activeFilter === 'pixel' && !lowerModel.includes('pixel')) return false;
-            else if (activeFilter === 'ipad' && !lowerModel.includes('ipad')) return false;
-            else if (activeFilter === 'consoles' && !lowerModel.includes('playstation') && !lowerModel.includes('steam deck') && !lowerModel.includes('ps5')) return false;
+        if (activeFilter !== 'all') {
+          const cat = categories.find(c => c.id === activeFilter);
+          if (!cat) return false;
+
+          const lowerModel = (item.model || '').toLowerCase();
+          const lowerCat = cat.name.toLowerCase();
+
+          const matchesId = item.series === cat.id;
+          const matchesCategoryField = item.category && item.category.toLowerCase() === lowerCat;
+          const matchesModelName = lowerModel.includes(lowerCat);
+          const matchesSpecial = (
+            (cat.id === 'iphone' && lowerModel.includes('iphone')) ||
+            (cat.id === 'macbook' && lowerModel.includes('mac')) ||
+            (cat.id === 'samsung' && (lowerModel.includes('samsung') || lowerModel.includes('galaxy'))) ||
+            (cat.id === 'pixel' && lowerModel.includes('pixel')) ||
+            (cat.id === 'ipad' && lowerModel.includes('ipad')) ||
+            (cat.id === 'consoles' && (lowerModel.includes('playstation') || lowerModel.includes('ps5') || lowerModel.includes('steam deck') || lowerModel.includes('xbox')))
+          );
+
+          if (!matchesId && !matchesCategoryField && !matchesModelName && !matchesSpecial) {
+            return false;
           }
         }
-
-        // Поиск по тексту
         if (query) {
-          const matchTitle = item.model.toLowerCase().includes(query);
+          const matchTitle = (item.model || '').toLowerCase().includes(query);
           const matchStorage = (item.storage + '').includes(query);
           return matchTitle || matchStorage;
         }
@@ -767,111 +2241,260 @@
       });
 
       if (filtered.length === 0) {
-        container.innerHTML = `
-          <div style="text-align:center; padding: 40px 10px; color: var(--text-muted)">
-            <p style="font-size: 28px; margin-bottom: 8px">🔍</p>
-            <p style="font-size: 15px; font-weight: 600">Гаджеты не найдены</p>
-            <p style="font-size: 13px; margin-top: 4px">Измените фильтр или добавьте свою модель кнопкой выше.</p>
-          </div>
-        `;
+        if (currentMatrix.length === 0) {
+          container.innerHTML = `
+            <div style="text-align:center; padding: 45px 15px; color: var(--text-muted)">
+              <p style="font-size: 32px; margin-bottom: 8px">📭</p>
+              <p style="font-size: 15px; font-weight: 700; color: #fff;">Каталог полностью очищен</p>
+              <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px; line-height: 1.4;">Вы можете выстроить свой собственный список моделей с нуля с помощью кнопки «➕ Модель» или восстановить базовый каталог через «🔄 Сброс».</p>
+              <button type="button" class="btn-save" id="btnEmptyAddFirstModel" style="margin: 14px auto 0 auto; padding: 9px 18px; font-size: 13px; max-width: 240px;">➕ Добавить первую модель</button>
+            </div>
+          `;
+          const btnAddFirst = container.querySelector('#btnEmptyAddFirstModel');
+          if (btnAddFirst) {
+            btnAddFirst.addEventListener('click', () => {
+              document.getElementById('btnOpenAddModal').click();
+            });
+          }
+        } else {
+          container.innerHTML = `
+            <div style="text-align:center; padding: 40px 10px; color: var(--text-muted)">
+              <p style="font-size: 26px; margin-bottom: 6px">🔍</p>
+              <p style="font-size: 14px; font-weight: 600">В этой вкладке пока нет моделей</p>
+              <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px">Нажмите «➕ Добавить модель», чтобы добавить сюда гаджет</p>
+            </div>
+          `;
+        }
         updateStats();
         return;
       }
 
-      filtered.forEach(item => {
-        const card = document.createElement('div');
-        card.className = `model-card ${item.isCustom ? 'custom-card' : ''}`;
+      // Группировка конфигураций памяти по названию модели
+      const modelGroups = [];
+      const groupMap = new Map();
 
-        const storageText = item.storage >= 1024 ? `${item.storage / 1024} TB` : `${item.storage} GB`;
-        const profitEst = Math.max(0, (item.market || Math.round(item.price * 1.2)) - item.price);
-        const icon = getDeviceIcon(item.model, item.series);
+      filtered.forEach(item => {
+        const groupKey = item.model || 'Без названия';
+        if (!groupMap.has(groupKey)) {
+          const group = {
+            model: groupKey,
+            series: item.series,
+            category: item.category,
+            isCustom: item.isCustom,
+            items: []
+          };
+          groupMap.set(groupKey, group);
+          modelGroups.push(group);
+        }
+        groupMap.get(groupKey).items.push(item);
+      });
+
+      modelGroups.forEach(group => {
+        // Сортируем память по возрастанию
+        group.items.sort((a, b) => (a.storage || 0) - (b.storage || 0));
+
+        // Выбираем активную конфигурацию
+        let savedKey = selectedStorageMap.get(group.model);
+        let activeItem = group.items.find(it => it.key === savedKey) || group.items.find(it => it.enabled) || group.items[0];
+        selectedStorageMap.set(group.model, activeItem.key);
+
+        const card = document.createElement('div');
+        const catObj = categories.find(c => c.id === group.series || (c.name && c.name.toLowerCase() === (group.category || '').toLowerCase()));
+        const isModelActive = group.items.some(it => it.enabled);
+        card.className = `model-card ${group.isCustom ? 'custom-card' : ''} ${isModelActive ? '' : 'disabled'}`;
+
+        const icon = getDeviceIcon(group.model, group.series);
+        const categoryBadgeHtml = catObj
+          ? `<span class="badge-category">${catObj.icon || '📁'} ${catObj.name}</span>`
+          : (group.isCustom ? '<span style="font-size:10px; background:rgba(48,209,88,0.2); color:var(--success-color); padding:1px 5px; border-radius:5px">Своя</span>' : '');
+
+        function formatStorageLabel(s) {
+          if (!s || s === 0) return 'Стандарт';
+          return s >= 1024 ? `${s / 1024} TB` : `${s} GB`;
+        }
+
+        const chipsHtml = group.items.map(it => {
+          const isSel = it.key === activeItem.key;
+          const sLabel = formatStorageLabel(it.storage);
+          return `<button type="button" class="storage-chip-btn ${isSel ? 'active' : ''} ${it.enabled ? '' : 'disabled-config'}" data-key="${it.key}">${sLabel}<span class="storage-chip-dot"></span></button>`;
+        }).join('');
+
+        const addStorageBtnHtml = `<button type="button" class="storage-chip-btn btn-add-storage-chip" title="Добавить объем памяти">+ Объем</button>`;
+
+        const profit = (activeItem.market || 0) - (activeItem.price || 0);
 
         card.innerHTML = `
           <div class="card-top">
             <div class="card-title-group">
               <span class="device-icon">${icon}</span>
-              <span class="card-title">${item.model}</span>
-              <span class="badge-storage">${storageText}</span>
-              ${item.isCustom ? '<span class="badge-custom">⭐ Своя</span>' : ''}
+              <span class="card-title">${group.model}</span>
+              ${categoryBadgeHtml}
             </div>
             <div class="card-actions">
-              ${item.isCustom ? `<button class="btn-delete" data-key="${item.key}" title="Удалить">✕</button>` : ''}
-              <label class="switch">
-                <input type="checkbox" ${item.enabled ? 'checked' : ''} data-key="${item.key}">
+              <button class="btn-delete" title="Удалить выбранную конфигурацию">✕</button>
+              <label class="switch" title="Включить/выключить всю модель">
+                <input type="checkbox" class="master-switch" ${isModelActive ? 'checked' : ''}>
                 <span class="slider"></span>
               </label>
             </div>
           </div>
 
-          <div class="card-bottom">
-            <button class="quick-step-btn" data-step="-1000" data-key="${item.key}">-1k</button>
-            <div class="price-input-wrapper">
-              <input type="number" step="500" class="price-input" value="${item.price}" data-key="${item.key}">
-              <span class="price-currency">₽</span>
-            </div>
-            <button class="quick-step-btn" data-step="1000" data-key="${item.key}">+1k</button>
+          <div class="storage-chips-bar">
+            ${chipsHtml}
+            ${addStorageBtnHtml}
           </div>
 
-          <div class="card-meta">
-            <span>Рынок: <b>${(item.market || Math.round(item.price * 1.2)).toLocaleString('ru-RU')} ₽</b></span>
-            <span>Маржа: <b style="color:var(--success-color)">~${profitEst.toLocaleString('ru-RU')} ₽</b></span>
+          <div class="card-prices-grid">
+            <div class="price-field">
+              <label class="price-field-label">Выкуп:</label>
+              <div class="price-stepper-row">
+                <button class="step-btn btn-step" data-step="-1000">-1k</button>
+                <div class="input-wrap">
+                  <input type="number" step="500" class="price-input input-buy" value="${activeItem.price}">
+                  <span class="currency">₽</span>
+                </div>
+                <button class="step-btn btn-step" data-step="1000">+1k</button>
+              </div>
+            </div>
+
+            <div class="price-field">
+              <label class="price-field-label">Продажа:</label>
+              <div class="input-wrap">
+                <input type="number" step="500" class="price-input input-market" value="${activeItem.market || Math.round(activeItem.price * 1.2)}">
+                <span class="currency">₽</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer" style="display:flex; justify-content:space-between; align-items:center;">
+            <span class="profit-badge ${profit < 0 ? 'negative' : ''}">Навар: ~${profit.toLocaleString('ru-RU')} ₽</span>
+            <button type="button" class="btn-toggle-config ${activeItem.enabled ? 'active' : ''}" title="Отслеживать именно этот объем памяти">
+              <span class="config-check-icon">${activeItem.enabled ? '🟢 Включен' : '⚪️ Отключен'}</span>
+            </button>
           </div>
         `;
 
-        // Слушатель чекбокса активности
-        card.querySelector('input[type="checkbox"]').addEventListener('change', (e) => {
-          if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-          item.enabled = e.target.checked;
-          saveToLocalStorage();
-          updateStats();
-        });
+        const masterSwitch = card.querySelector('.master-switch');
+        const buyInput = card.querySelector('.input-buy');
+        const marketInput = card.querySelector('.input-market');
+        const profitBadge = card.querySelector('.profit-badge');
+        const btnToggleConfig = card.querySelector('.btn-toggle-config');
+        const configCheckIcon = card.querySelector('.config-check-icon');
 
-        // Слушатель ручного ввода цены и динамическое обновление маржи
-        const priceInput = card.querySelector('input.price-input');
-        const metaEl = card.querySelector('.card-meta');
-
-        function updateCardMeta() {
-          const currentMarket = item.market || Math.round(item.price * 1.2);
-          const profitEst = Math.max(0, currentMarket - item.price);
-          metaEl.innerHTML = `
-            <span>Рынок: <b>${currentMarket.toLocaleString('ru-RU')} ₽</b></span>
-            <span>Маржа: <b style="color:var(--success-color)">~${profitEst.toLocaleString('ru-RU')} ₽</b></span>
-          `;
+        function updateProfitBadge() {
+          const p = (activeItem.market || 0) - (activeItem.price || 0);
+          profitBadge.textContent = `Навар: ~${p.toLocaleString('ru-RU')} ₽`;
+          profitBadge.classList.toggle('negative', p < 0);
+          profitBadge.classList.remove('pulse');
+          void profitBadge.offsetWidth;
+          profitBadge.classList.add('pulse');
         }
 
-        priceInput.addEventListener('input', (e) => {
-          const val = parseInt(e.target.value, 10) || 0;
-          item.price = val;
-          if (!item.market || item.market < val) {
-            item.market = Math.round(val * 1.2 / 500) * 500;
-          }
-          updateCardMeta();
-          saveToLocalStorage();
-        });
+        function updateConfigToggleBtn() {
+          btnToggleConfig.classList.toggle('active', activeItem.enabled);
+          configCheckIcon.textContent = activeItem.enabled ? '🟢 Включен' : '⚪️ Отключен';
+        }
 
-        // Быстрые кнопки +/- 1000 руб
-        card.querySelectorAll('.quick-step-btn').forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-            const step = parseInt(btn.dataset.step, 10);
-            item.price = Math.max(0, item.price + step);
-            priceInput.value = item.price;
-            if (!item.market || item.market < item.price) {
-              item.market = Math.round(item.price * 1.2 / 500) * 500;
+        function refreshActiveChip() {
+          card.querySelectorAll('.storage-chip-btn').forEach(btn => {
+            const isSel = btn.dataset.key === activeItem.key;
+            btn.classList.toggle('active', isSel);
+            const foundIt = group.items.find(it => it.key === btn.dataset.key);
+            if (foundIt) {
+              btn.classList.toggle('disabled-config', !foundIt.enabled);
             }
-            updateCardMeta();
-            saveToLocalStorage();
+          });
+        }
+
+        // Клик по чипам памяти
+        card.querySelectorAll('.storage-chip-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const key = btn.dataset.key;
+            const targetItem = group.items.find(it => it.key === key);
+            if (!targetItem) return;
+
+            activeItem = targetItem;
+            selectedStorageMap.set(group.model, activeItem.key);
+
+            buyInput.value = activeItem.price;
+            marketInput.value = activeItem.market || Math.round(activeItem.price * 1.2);
+            updateProfitBadge();
+            updateConfigToggleBtn();
+            refreshActiveChip();
+
+            if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
           });
         });
 
-        // Кнопка удаления (для пользовательских)
+        // Главный тумблер всей модели
+        masterSwitch.addEventListener('change', (e) => {
+          if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+          const newState = e.target.checked;
+          group.items.forEach(it => { it.enabled = newState; });
+          card.classList.toggle('disabled', !newState);
+          updateConfigToggleBtn();
+          refreshActiveChip();
+          saveLocal();
+          updateStats();
+        });
+
+        // Тумблер конкретного объема памяти
+        btnToggleConfig.addEventListener('click', () => {
+          if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+          activeItem.enabled = !activeItem.enabled;
+          const anyEnabled = group.items.some(it => it.enabled);
+          masterSwitch.checked = anyEnabled;
+          card.classList.toggle('disabled', !anyEnabled);
+          updateConfigToggleBtn();
+          refreshActiveChip();
+          saveLocal();
+          updateStats();
+        });
+
+        // Ввод цены выкупа
+        buyInput.addEventListener('input', (e) => {
+          activeItem.price = parseInt(e.target.value, 10) || 0;
+          updateProfitBadge();
+          saveLocal();
+        });
+
+        // Ввод цены продажи (рынок)
+        marketInput.addEventListener('input', (e) => {
+          activeItem.market = parseInt(e.target.value, 10) || 0;
+          updateProfitBadge();
+          saveLocal();
+        });
+
+        // Кнопки -1k / +1k
+        card.querySelectorAll('.btn-step').forEach(btn => {
+          btn.addEventListener('click', () => {
+            if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+            const step = parseInt(btn.dataset.step, 10);
+            activeItem.price = Math.max(0, (activeItem.price || 0) + step);
+            buyInput.value = activeItem.price;
+            updateProfitBadge();
+            saveLocal();
+          });
+        });
+
+        // Удаление модели целиком (всех конфигураций памяти данной модели)
         const delBtn = card.querySelector('.btn-delete');
         if (delBtn) {
           delBtn.addEventListener('click', () => {
-            if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
-            currentMatrix = currentMatrix.filter(m => m.key !== item.key);
-            saveToLocalStorage();
+            group.items.forEach(it => deletedKeys.add(it.key));
+            currentMatrix = currentMatrix.filter(m => m.model !== group.model);
+            saveLocal();
             renderCards();
+            if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
+          });
+        }
+
+        // Быстрое добавление объема памяти прямо из карточки
+        const btnAddStorage = card.querySelector('.btn-add-storage-chip');
+        if (btnAddStorage) {
+          btnAddStorage.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openQuickAddStorageModal(group, activeItem);
           });
         }
 
@@ -881,151 +2504,1072 @@
       updateStats();
     }
 
-    function saveToLocalStorage() {
+    function saveLocal() {
       try {
-        localStorage.setItem('gadget_resell_user_matrix', JSON.stringify(currentMatrix));
+        localStorage.setItem('gadget_resell_matrix_clean', JSON.stringify({
+          matrix: currentMatrix,
+          conditionRules,
+          categories: categories,
+          deletedKeys: Array.from(deletedKeys)
+        }));
       } catch (e) {}
     }
 
-    // Слушатели фильтров по сериям/категориям
-    document.querySelectorAll('.series-pill').forEach(pill => {
-      pill.addEventListener('click', () => {
-        if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
-        document.querySelectorAll('.series-pill').forEach(p => p.classList.remove('active'));
-        pill.classList.add('active');
-        activeFilter = pill.dataset.series;
-        renderCards();
-      });
-    });
-
-    // Живой поиск
+    // Слушатель поиска
     document.getElementById('searchInput').addEventListener('input', (e) => {
       searchQuery = e.target.value;
       renderCards();
     });
 
-    // Модальное окно добавления
-    const modal = document.getElementById('addModal');
-    document.getElementById('btnOpenAddModal').addEventListener('click', () => {
-      if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-      modal.classList.add('active');
-      document.getElementById('newModelName').focus();
-    });
+    // Управление категориями / папками
+    const createCatModal = document.getElementById('createCategoryModal');
+    const manageCatModal = document.getElementById('manageCategoryModal');
+    const presetModal = document.getElementById('selectTemplateModelsModal');
+    let activePresetTemplate = null;
+    let selectedPresetIndices = new Set();
 
-    document.getElementById('btnCloseModal').addEventListener('click', () => {
-      modal.classList.remove('active');
-    });
+    function renderTemplatesGrid() {
+      const grid = document.getElementById('categoryTemplatesGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
 
-    // Пресеты моделей в модалке
-    document.querySelectorAll('.preset-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
-        document.getElementById('newModelName').value = chip.dataset.name;
+      POPULAR_TEMPLATES.forEach(tpl => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        const isAdded = categories.some(c => c.id === tpl.id || (c.name && c.name.toLowerCase() === tpl.name.toLowerCase()));
+        chip.className = `template-chip ${isAdded ? 'added' : ''}`;
+        chip.innerHTML = `${tpl.icon} <span>${tpl.name}</span>${isAdded ? ' ✓' : ' ➕'}`;
+
+        if (!isAdded) {
+          chip.addEventListener('click', () => {
+            openTemplatePresetModal(tpl);
+          });
+        }
+        grid.appendChild(chip);
       });
-    });
-
-    // Выбор памяти в модалке
-    document.querySelectorAll('.storage-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
-        document.querySelectorAll('.storage-chip').forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
-        document.getElementById('newModelStorage').value = chip.dataset.storage;
-      });
-    });
-
-    // Авто-расчет рынка при вводе выкупной цены
-    document.getElementById('newModelPrice').addEventListener('input', (e) => {
-      const buyPrice = parseInt(e.target.value, 10);
-      if (buyPrice && buyPrice > 0) {
-        document.getElementById('newModelMarket').placeholder = Math.round(buyPrice * 1.2 / 500) * 500;
-      }
-    });
-
-    // Определение категории/серии при добавлении модели
-    function detectSeries(name) {
-      const lower = name.toLowerCase();
-      if (lower.includes('macbook') || lower.includes('mac')) return 'macbook';
-      if (lower.includes('samsung') || lower.includes('galaxy') || lower.includes('ultra')) return 'samsung';
-      if (lower.includes('pixel')) return 'pixel';
-      if (lower.includes('ipad')) return 'ipad';
-      if (lower.includes('playstation') || lower.includes('ps5') || lower.includes('steam deck') || lower.includes('xbox')) return 'consoles';
-      if (lower.includes('iphone')) return 'iphone';
-      return 'custom';
     }
 
-    // Добавление новой конфигурации
+    function openTemplatePresetModal(tpl) {
+      activePresetTemplate = tpl;
+      selectedPresetIndices = new Set((tpl.models || []).map((_, idx) => idx));
+
+      document.getElementById('presetModalTitle').textContent = `${tpl.icon} Добавить: ${tpl.name}`;
+      updatePresetModalCounter();
+      renderPresetModelsList();
+
+      presetModal.classList.add('active');
+    }
+
+    function updatePresetModalCounter() {
+      const total = activePresetTemplate?.models?.length || 0;
+      const count = selectedPresetIndices.size;
+      const counterEl = document.getElementById('presetSelectedCounter');
+      const labelEl = document.getElementById('btnConfirmPresetLabel');
+      const toggleBtn = document.getElementById('btnToggleAllPresets');
+
+      if (counterEl) counterEl.textContent = `Выбрано: ${count} из ${total}`;
+      if (labelEl) labelEl.textContent = count > 0 ? `✅ Добавить выбранные (${count})` : `✅ Создать пустую папку`;
+      if (toggleBtn) toggleBtn.textContent = count === total ? 'Снять все' : 'Выбрать все';
+    }
+
+    function renderPresetModelsList() {
+      const listEl = document.getElementById('presetModelsList');
+      if (!listEl || !activePresetTemplate) return;
+      listEl.innerHTML = '';
+
+      const models = activePresetTemplate.models || [];
+      if (models.length === 0) {
+        listEl.innerHTML = '<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:15px;">У этого бренда нет готовых моделей. Можно создать пустую папку и добавить модели вручную.</div>';
+        return;
+      }
+
+      models.forEach((m, idx) => {
+        const isSelected = selectedPresetIndices.has(idx);
+        const item = document.createElement('div');
+        item.className = `preset-item ${isSelected ? 'selected' : ''}`;
+
+        const profit = (m.market || 0) - (m.price || 0);
+        const profitFmt = profit > 0 ? `+${profit.toLocaleString('ru-RU')} ₽ маржа` : '';
+        const storageBadge = m.storage ? `<span class="preset-storage">${m.storage} GB</span>` : '';
+
+        item.innerHTML = `
+          <input type="checkbox" class="preset-checkbox" ${isSelected ? 'checked' : ''}>
+          <div class="preset-info">
+            <div class="preset-title-row">
+              <span class="preset-name">${m.model}</span>
+              ${storageBadge}
+            </div>
+            <div class="preset-prices">
+              Выкуп: <b>${(m.price || 0).toLocaleString('ru-RU')} ₽</b> • Рынок: <b>~${(m.market || 0).toLocaleString('ru-RU')} ₽</b>
+              <span class="preset-profit-tag">${profitFmt}</span>
+            </div>
+          </div>
+        `;
+
+        const cb = item.querySelector('.preset-checkbox');
+        const toggleSelection = (e) => {
+          if (e.target !== cb) cb.checked = !cb.checked;
+          if (cb.checked) {
+            selectedPresetIndices.add(idx);
+            item.classList.add('selected');
+          } else {
+            selectedPresetIndices.delete(idx);
+            item.classList.remove('selected');
+          }
+          updatePresetModalCounter();
+        };
+
+        item.addEventListener('click', toggleSelection);
+        cb.addEventListener('change', (e) => {
+          e.stopPropagation();
+          if (cb.checked) {
+            selectedPresetIndices.add(idx);
+            item.classList.add('selected');
+          } else {
+            selectedPresetIndices.delete(idx);
+            item.classList.remove('selected');
+          }
+          updatePresetModalCounter();
+        });
+
+        listEl.appendChild(item);
+      });
+    }
+
+    document.getElementById('btnClosePresetModal').addEventListener('click', () => {
+      presetModal.classList.remove('active');
+    });
+
+    document.getElementById('btnToggleAllPresets').addEventListener('click', () => {
+      if (!activePresetTemplate) return;
+      const total = activePresetTemplate.models?.length || 0;
+      if (selectedPresetIndices.size === total) {
+        selectedPresetIndices.clear();
+      } else {
+        selectedPresetIndices = new Set(activePresetTemplate.models.map((_, i) => i));
+      }
+      renderPresetModelsList();
+      updatePresetModalCounter();
+    });
+
+    function commitAddPresetCategory(addModels) {
+      if (!activePresetTemplate) return;
+      const tpl = activePresetTemplate;
+
+      // Добавляем категорию, если ещё нет
+      let cat = categories.find(c => c.id === tpl.id || (c.name && c.name.toLowerCase() === tpl.name.toLowerCase()));
+      if (!cat) {
+        cat = { id: tpl.id, name: tpl.name, icon: tpl.icon };
+        categories.push(cat);
+      }
+
+      // Добавляем выбранные модели в каталог
+      if (addModels && tpl.models && selectedPresetIndices.size > 0) {
+        tpl.models.forEach((m, idx) => {
+          if (!selectedPresetIndices.has(idx)) return;
+          const key = `${m.model}_${m.storage || 0}`;
+          deletedKeys.delete(key);
+          const existing = currentMatrix.find(item => item.key === key);
+          if (!existing) {
+            currentMatrix.push({
+              key,
+              model: m.model,
+              storage: m.storage || 0,
+              series: tpl.id,
+              category: tpl.name,
+              price: m.price,
+              market: m.market || Math.round(m.price * 1.2 / 500) * 500,
+              enabled: true
+            });
+          } else {
+            existing.series = tpl.id;
+            existing.category = tpl.name;
+            existing.enabled = true;
+          }
+        });
+      }
+
+      saveLocal();
+      renderSeriesBar();
+      updateCategoryDropdown();
+      selectFilter(tpl.id);
+      presetModal.classList.remove('active');
+      createCatModal.classList.remove('active');
+      manageCatModal.classList.remove('active');
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+    }
+
+    document.getElementById('btnConfirmAddPresetModels').addEventListener('click', () => {
+      commitAddPresetCategory(true);
+    });
+
+    document.getElementById('btnAddEmptyCategoryOnly').addEventListener('click', () => {
+      commitAddPresetCategory(false);
+    });
+
+    function openCreateCategoryModal() {
+      renderTemplatesGrid();
+      createCatModal.classList.add('active');
+      document.getElementById('newCatName').value = '';
+      document.getElementById('newCatEmoji').value = '📱';
+      document.querySelectorAll('#createEmojiRow .emoji-chip').forEach((c, idx) => {
+        c.classList.toggle('active', idx === 0);
+      });
+      setTimeout(() => document.getElementById('newCatName').focus(), 100);
+    }
+
+    document.getElementById('btnCloseCreateCategoryModal').addEventListener('click', () => {
+      createCatModal.classList.remove('active');
+    });
+
+    document.querySelectorAll('#createEmojiRow .emoji-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('#createEmojiRow .emoji-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        document.getElementById('newCatEmoji').value = chip.textContent.trim();
+      });
+    });
+
+    document.getElementById('btnSubmitCreateCategory').addEventListener('click', () => {
+      const name = document.getElementById('newCatName').value.trim();
+      const icon = document.getElementById('newCatEmoji').value.trim() || '📁';
+      if (!name) {
+        alert("Введите название папки / бренда!");
+        return;
+      }
+
+      // Если введено имя одного из готовых шаблонов (например Samsung или Dyson)
+      const matchingTpl = POPULAR_TEMPLATES.find(t => t.name.toLowerCase() === name.toLowerCase() || t.id.toLowerCase() === name.toLowerCase());
+      if (matchingTpl && matchingTpl.models && matchingTpl.models.length > 0) {
+        createCatModal.classList.remove('active');
+        openTemplatePresetModal(matchingTpl);
+        return;
+      }
+
+      const id = 'cat_' + Date.now();
+      categories.push({ id, name, icon });
+      saveLocal();
+      renderSeriesBar();
+      updateCategoryDropdown();
+      selectFilter(id);
+      createCatModal.classList.remove('active');
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+    });
+
+    function openManageCategoryModal(catId) {
+      const idx = categories.findIndex(c => c.id === catId);
+      if (idx === -1) return;
+      const cat = categories[idx];
+
+      document.getElementById('editCatId').value = cat.id;
+      document.getElementById('editCatName').value = cat.name;
+      document.getElementById('editCatEmoji').value = cat.icon || '📱';
+
+      document.querySelectorAll('#editEmojiRow .emoji-chip').forEach(c => {
+        c.classList.toggle('active', c.textContent.trim() === cat.icon);
+      });
+
+      // Проверяем, есть ли готовый пресет моделей для этого бренда
+      const matchingTpl = POPULAR_TEMPLATES.find(t => t.id === cat.id || (t.name && t.name.toLowerCase() === cat.name.toLowerCase()));
+      const btnAddPreset = document.getElementById('btnManageAddPresetModels');
+      if (btnAddPreset) {
+        if (matchingTpl && matchingTpl.models && matchingTpl.models.length > 0) {
+          btnAddPreset.style.display = 'block';
+          btnAddPreset.onclick = () => {
+            manageCatModal.classList.remove('active');
+            openTemplatePresetModal(matchingTpl);
+          };
+        } else {
+          btnAddPreset.style.display = 'none';
+        }
+      }
+
+      manageCatModal.classList.add('active');
+    }
+
+    document.getElementById('btnCloseManageCategoryModal').addEventListener('click', () => {
+      manageCatModal.classList.remove('active');
+    });
+
+    document.querySelectorAll('#editEmojiRow .emoji-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('#editEmojiRow .emoji-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        document.getElementById('editCatEmoji').value = chip.textContent.trim();
+      });
+    });
+
+    document.getElementById('btnSaveCategoryEdit').addEventListener('click', () => {
+      const id = document.getElementById('editCatId').value;
+      const name = document.getElementById('editCatName').value.trim();
+      const icon = document.getElementById('editCatEmoji').value.trim() || '📁';
+      if (!name) {
+        alert("Название папки не может быть пустым!");
+        return;
+      }
+
+      const cat = categories.find(c => c.id === id);
+      if (cat) {
+        const oldName = cat.name;
+        cat.name = name;
+        cat.icon = icon;
+
+        // Обновляем модели, привязанные к имени этой категории
+        currentMatrix.forEach(m => {
+          if (m.series === id || (m.category && m.category.toLowerCase() === oldName.toLowerCase())) {
+            m.category = name;
+          }
+        });
+
+        saveLocal();
+        renderSeriesBar();
+        updateCategoryDropdown();
+        renderCards();
+        manageCatModal.classList.remove('active');
+        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      }
+    });
+
+    document.getElementById('btnDeleteCategory').addEventListener('click', () => {
+      const id = document.getElementById('editCatId').value;
+      const cat = categories.find(c => c.id === id);
+      if (!cat) return;
+
+      categories = categories.filter(c => c.id !== id);
+      if (activeFilter === id) {
+        activeFilter = 'all';
+      }
+
+      saveLocal();
+      renderSeriesBar();
+      updateCategoryDropdown();
+      renderCards();
+      manageCatModal.classList.remove('active');
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+    });
+
+    // Обновление списка папок в модалке «Добавить модель»
+    function updateCategoryDropdown() {
+      const select = document.getElementById('newModelCategory');
+      if (!select) return;
+      select.innerHTML = '';
+
+      // Первым пунктом всегда "Все (без привязки к папке)"
+      const allOpt = document.createElement('option');
+      allOpt.value = 'all';
+      allOpt.textContent = '📁 Все (без привязки к папке)';
+      select.appendChild(allOpt);
+
+      categories.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat.id;
+        opt.textContent = `${cat.icon || '📁'} ${cat.name}`;
+        select.appendChild(opt);
+      });
+
+      const newOpt = document.createElement('option');
+      newOpt.value = '__new__';
+      newOpt.textContent = '➕ Создать новую папку...';
+      select.appendChild(newOpt);
+
+      if (inlineNewCatBox) inlineNewCatBox.style.display = 'none';
+    }
+
+    const newModelCatSelect = document.getElementById('newModelCategory');
+    const inlineNewCatBox = document.getElementById('inlineNewCategoryBox');
+
+    newModelCatSelect.addEventListener('change', (e) => {
+      if (e.target.value === '__new__') {
+        inlineNewCatBox.style.display = 'block';
+        document.getElementById('inlineNewCatName').focus();
+      } else {
+        inlineNewCatBox.style.display = 'none';
+      }
+    });
+
+    // Модалка состояния
+    const condModal = document.getElementById('conditionModal');
+    document.getElementById('btnOpenConditionModal').addEventListener('click', () => {
+      condModal.classList.add('active');
+    });
+    document.getElementById('btnCloseConditionModal').addEventListener('click', () => {
+      condModal.classList.remove('active');
+    });
+    document.getElementById('btnSaveConditionModal').addEventListener('click', () => {
+      condModal.classList.remove('active');
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+    });
+
+    // Модалка добавления модели
+    const addModal = document.getElementById('addModal');
+    const selectedAddModalMemories = new Set([128]);
+
+    function updateAddSubmitButtonText() {
+      const btn = document.getElementById('btnSubmitNewModelText');
+      if (!btn) return;
+      if (selectedAddModalMemories.size > 1) {
+        btn.textContent = `✅ Добавить (${selectedAddModalMemories.size} конф.)`;
+      } else {
+        btn.textContent = `✅ Добавить в матрицу`;
+      }
+    }
+
+    document.querySelectorAll('#addModelMemoryChips .mem-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const val = parseInt(chip.dataset.val, 10);
+        if (selectedAddModalMemories.has(val)) {
+          if (selectedAddModalMemories.size > 1) {
+            selectedAddModalMemories.delete(val);
+            chip.classList.remove('active');
+          }
+        } else {
+          selectedAddModalMemories.add(val);
+          chip.classList.add('active');
+        }
+        document.getElementById('newModelStorage').value = val;
+        updateAddSubmitButtonText();
+        if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+      });
+    });
+
+    document.getElementById('newModelStorage').addEventListener('input', (e) => {
+      const typedVal = parseInt(e.target.value, 10);
+      document.querySelectorAll('#addModelMemoryChips .mem-chip').forEach(c => {
+        c.classList.toggle('active', parseInt(c.dataset.val, 10) === typedVal);
+      });
+      selectedAddModalMemories.clear();
+      if (!isNaN(typedVal)) {
+        selectedAddModalMemories.add(typedVal);
+      }
+      updateAddSubmitButtonText();
+    });
+
+    document.getElementById('btnOpenAddModal').addEventListener('click', () => {
+      updateCategoryDropdown();
+      inlineNewCatBox.style.display = 'none';
+
+      // По умолчанию всегда предложен вариант "Все", либо открытая папка
+      if (activeFilter !== 'all' && categories.some(c => c.id === activeFilter)) {
+        newModelCatSelect.value = activeFilter;
+      } else {
+        newModelCatSelect.value = 'all';
+      }
+
+      // Сбрасываем выбранные объемы памяти на 128
+      selectedAddModalMemories.clear();
+      selectedAddModalMemories.add(128);
+      document.getElementById('newModelStorage').value = 128;
+      document.querySelectorAll('#addModelMemoryChips .mem-chip').forEach(c => {
+        c.classList.toggle('active', c.dataset.val === '128');
+      });
+      updateAddSubmitButtonText();
+
+      addModal.classList.add('active');
+      document.getElementById('newModelName').focus();
+    });
+    document.getElementById('btnCloseAddModal').addEventListener('click', () => {
+      addModal.classList.remove('active');
+    });
+
     document.getElementById('btnSubmitNewModel').addEventListener('click', () => {
       const name = document.getElementById('newModelName').value.trim();
-      const storage = parseInt(document.getElementById('newModelStorage').value, 10) || 128;
       const price = parseInt(document.getElementById('newModelPrice').value, 10);
-      const marketInput = parseInt(document.getElementById('newModelMarket').value, 10);
+      const market = parseInt(document.getElementById('newModelMarket').value, 10) || Math.round((price || 30000) * 1.2 / 500) * 500;
 
-      if (!name) {
-        alert("Пожалуйста, введите название модели!");
-        return;
-      }
-      if (!price || price <= 0) {
-        alert("Укажите корректную максимальную цену выкупа!");
+      if (!name || !price || price <= 0) {
+        alert("Укажите название модели и максимальную цену выкупа!");
         return;
       }
 
-      const market = marketInput && marketInput > price ? marketInput : Math.round(price * 1.2 / 500) * 500;
-      const series = detectSeries(name);
-      const key = `${name}_${storage}`;
+      let selectedSeries = newModelCatSelect.value;
+      let categoryName = '';
 
-      // Проверка на существующую запись
-      const existingIdx = currentMatrix.findIndex(m => m.key === key);
-      if (existingIdx >= 0) {
-        currentMatrix[existingIdx].price = price;
-        currentMatrix[existingIdx].market = market;
-        currentMatrix[existingIdx].enabled = true;
+      if (selectedSeries === 'all') {
+        selectedSeries = 'all';
+        categoryName = '';
+      } else if (selectedSeries === '__new__') {
+        const inlineName = document.getElementById('inlineNewCatName').value.trim();
+        const inlineIcon = document.getElementById('inlineNewCatEmoji').value.trim() || '📱';
+        if (!inlineName) {
+          alert("Введите название новой папки!");
+          return;
+        }
+        const newCatId = 'cat_' + Date.now();
+        categories.push({ id: newCatId, name: inlineName, icon: inlineIcon });
+        selectedSeries = newCatId;
+        categoryName = inlineName;
+        renderSeriesBar();
+        updateCategoryDropdown();
       } else {
-        currentMatrix.unshift({
-          key: key,
-          model: name,
-          storage: storage,
-          series: series,
-          price: price,
-          market: market,
+        const foundCat = categories.find(c => c.id === selectedSeries);
+        if (foundCat) {
+          categoryName = foundCat.name;
+        }
+      }
+
+      const memoriesToAdd = selectedAddModalMemories.size > 0 
+        ? Array.from(selectedAddModalMemories) 
+        : [parseInt(document.getElementById('newModelStorage').value, 10) || 128];
+
+      memoriesToAdd.forEach((storage) => {
+        const key = `${name}_${storage}`;
+        deletedKeys.delete(key);
+        const existing = currentMatrix.find(m => m.key === key);
+        if (existing) {
+          existing.price = price;
+          existing.market = market;
+          existing.series = selectedSeries;
+          existing.category = categoryName;
+          existing.enabled = true;
+        } else {
+          currentMatrix.unshift({
+            key,
+            model: name,
+            storage,
+            series: selectedSeries,
+            category: categoryName,
+            price,
+            market,
+            enabled: true,
+            isCustom: true
+          });
+        }
+      });
+
+      saveLocal();
+      addModal.classList.remove('active');
+      document.getElementById('newModelName').value = '';
+      document.getElementById('newModelPrice').value = '';
+      document.getElementById('newModelMarket').value = '';
+      document.getElementById('inlineNewCatName').value = '';
+
+      // Переключаем на созданную категорию, если добавили в неё
+      if (categories.some(c => c.id === selectedSeries)) {
+        selectFilter(selectedSeries);
+      } else {
+        renderCards();
+      }
+
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+    });
+
+    // Модалка быстрого добавления объема памяти в карточку
+    const quickAddStorageModal = document.getElementById('quickAddStorageModal');
+    let quickAddCurrentGroup = null;
+
+    function openQuickAddStorageModal(group, activeItem) {
+      quickAddCurrentGroup = group;
+      document.getElementById('quickAddStorageTitle').textContent = `➕ Память: ${group.model}`;
+      document.getElementById('quickAddModelName').value = group.model;
+
+      // Предлагаем следующий объем, которого еще нет в модели
+      const existingStorages = new Set(group.items.map(i => i.storage));
+      const candidates = [128, 256, 512, 1024, 64];
+      const nextStorage = candidates.find(s => !existingStorages.has(s)) || 256;
+
+      document.getElementById('quickAddStorageVal').value = nextStorage;
+      document.querySelectorAll('#quickAddMemoryChips .mem-chip').forEach(c => {
+        c.classList.toggle('active', parseInt(c.dataset.val, 10) === nextStorage);
+      });
+
+      // Предзаполняем цену выкупа и продажи на основе текущей конфигурации
+      document.getElementById('quickAddPrice').value = activeItem ? activeItem.price : '';
+      document.getElementById('quickAddMarket').value = activeItem ? (activeItem.market || Math.round(activeItem.price * 1.2)) : '';
+
+      quickAddStorageModal.classList.add('active');
+    }
+
+    document.getElementById('btnCloseQuickAddStorageModal').addEventListener('click', () => {
+      quickAddStorageModal.classList.remove('active');
+    });
+
+    document.querySelectorAll('#quickAddMemoryChips .mem-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('#quickAddMemoryChips .mem-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        document.getElementById('quickAddStorageVal').value = chip.dataset.val;
+      });
+    });
+
+    document.getElementById('btnSubmitQuickAddStorage').addEventListener('click', () => {
+      if (!quickAddCurrentGroup) return;
+      const storage = parseInt(document.getElementById('quickAddStorageVal').value, 10) || 0;
+      const price = parseInt(document.getElementById('quickAddPrice').value, 10);
+      const market = parseInt(document.getElementById('quickAddMarket').value, 10) || Math.round((price || 30000) * 1.2 / 500) * 500;
+
+      if (!price || price <= 0) {
+        alert("Укажите максимальную цену выкупа!");
+        return;
+      }
+
+      const key = `${quickAddCurrentGroup.model}_${storage}`;
+      deletedKeys.delete(key);
+      const existing = currentMatrix.find(m => m.key === key);
+      if (existing) {
+        existing.price = price;
+        existing.market = market;
+        existing.enabled = true;
+      } else {
+        currentMatrix.push({
+          key,
+          model: quickAddCurrentGroup.model,
+          storage,
+          series: quickAddCurrentGroup.series,
+          category: quickAddCurrentGroup.category,
+          price,
+          market,
           enabled: true,
           isCustom: true
         });
       }
 
-      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-
-      saveToLocalStorage();
-      modal.classList.remove('active');
-      document.getElementById('newModelName').value = '';
-      document.getElementById('newModelPrice').value = '';
-      document.getElementById('newModelMarket').value = '';
+      selectedStorageMap.set(quickAddCurrentGroup.model, key);
+      saveLocal();
       renderCards();
+      quickAddStorageModal.classList.remove('active');
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
     });
 
-    // Сохранение и отправка всей матрицы в Telegram бот
-    document.getElementById('btnSave').addEventListener('click', () => {
-      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+    // -------------------------------------------------------------
+    // ВЫБОР РЕГИОНА ПОИСКА
+    // -------------------------------------------------------------
+    const ALL_CITIES = [
+      { key: "yakutsk", name: "Якутск" },
+      { key: "moskva", name: "Москва и МО" },
+      { key: "spb", name: "Санкт-Петербург и ЛО" },
+      { key: "ekaterinburg", name: "Екатеринбург" },
+      { key: "novosibirsk", name: "Новосибирск" },
+      { key: "kazan", name: "Казань" },
+      { key: "krasnodar", name: "Краснодар" },
+      { key: "rostov", name: "Ростов-на-Дону" },
+      { key: "nn", name: "Нижний Новгород" },
+      { key: "samara", name: "Самара" },
+      { key: "sochi", name: "Сочи" },
+      { key: "ufa", name: "Уфа" },
+      { key: "chelyabinsk", name: "Челябинск" },
+      { key: "krasnoyarsk", name: "Красноярск" },
+      { key: "perm", name: "Пермь" },
+      { key: "volgograd", name: "Волгоград" },
+      { key: "voronezh", name: "Воронеж" },
+      { key: "tyumen", name: "Тюмень" },
+      { key: "vladivostok", name: "Владивосток" },
+      { key: "khabarovsk", name: "Хабаровск" },
+      { key: "irkutsk", name: "Иркутск" },
+      { key: "surgut", name: "Сургут" },
+      { key: "barnaul", name: "Барнаул" },
+      { key: "yaroslavl", name: "Ярославль" },
+      { key: "tomsk", name: "Томск" },
+      { key: "orenburg", name: "Оренбург" },
+      { key: "kemerovo", name: "Кемерово" },
+      { key: "ryazan", name: "Рязань" },
+      { key: "naberezhnye_chelny", name: "Набережные Челны" },
+      { key: "astrakhan", name: "Астрахань" },
+      { key: "penza", name: "Пенза" },
+      { key: "kirov", name: "Киров" },
+      { key: "lipetsk", name: "Липецк" },
+      { key: "tula", name: "Тула" },
+      { key: "kaliningrad", name: "Калининград" },
+      { key: "kursk", name: "Курск" },
+      { key: "ulan_ude", name: "Улан-Удэ" },
+      { key: "chita", name: "Чита" },
+      { key: "all_russia", name: "Вся Россия" }
+    ];
 
-      const payload = {
-        action: "sync_matrix",
-        matrix: currentMatrix.map(item => ({
-          model: item.model,
-          storage: item.storage,
-          price: item.price,
-          market: item.market || Math.round(item.price * 1.2),
-          enabled: item.enabled
-        }))
-      };
+    const POPULAR_KEYS = ["yakutsk", "moskva", "spb", "ekaterinburg", "novosibirsk", "kazan", "krasnodar", "all_russia"];
 
-      if (tg) {
-        tg.sendData(JSON.stringify(payload));
+    function getInitialRegion() {
+      if (window.location.hash) {
+        const m = window.location.hash.match(/region=([^&]+)/);
+        if (m) return decodeURIComponent(m[1]);
+      }
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('region')) return urlParams.get('region');
+      const saved = localStorage.getItem('resell_selected_region');
+      if (saved) return saved;
+      return "Якутск";
+    }
+
+    let currentSelectedRegion = getInitialRegion();
+
+    function updateRegionUI() {
+      const labelEl = document.getElementById('currentRegionLabel');
+      if (labelEl) labelEl.textContent = currentSelectedRegion;
+      localStorage.setItem('resell_selected_region', currentSelectedRegion);
+    }
+
+    const regionModal = document.getElementById('regionModal');
+    const regionSearchInput = document.getElementById('regionSearchInput');
+    const popularRegionsBar = document.getElementById('popularRegionsBar');
+    const regionsListContainer = document.getElementById('regionsListContainer');
+
+    function renderRegionModal() {
+      const query = (regionSearchInput.value || '').trim().toLowerCase();
+
+      // Рендер популярных чипов
+      popularRegionsBar.innerHTML = '';
+      POPULAR_KEYS.forEach(k => {
+        const city = ALL_CITIES.find(c => c.key === k);
+        if (!city) return;
+        const chip = document.createElement('div');
+        chip.className = 'popular-chip' + (city.name.toLowerCase() === currentSelectedRegion.toLowerCase() ? ' active' : '');
+        chip.textContent = city.name;
+        chip.addEventListener('click', () => {
+          selectRegion(city.name, city.key);
+        });
+        popularRegionsBar.appendChild(chip);
+      });
+
+      // Рендер списка
+      regionsListContainer.innerHTML = '';
+      const filtered = ALL_CITIES.filter(c => !query || c.name.toLowerCase().includes(query));
+
+      if (filtered.length === 0) {
+        const customRow = document.createElement('div');
+        customRow.className = 'region-item-row';
+        customRow.innerHTML = `<span>Выбрать: <b>${regionSearchInput.value}</b></span> <span>⚡️</span>`;
+        customRow.addEventListener('click', () => {
+          selectRegion(regionSearchInput.value.trim(), "");
+        });
+        regionsListContainer.appendChild(customRow);
       } else {
-        alert(`Синхронизировано ${currentMatrix.length} моделей! В Telegram боте матрица цен обновится мгновенно.`);
+        filtered.forEach(c => {
+          const isAct = c.name.toLowerCase() === currentSelectedRegion.toLowerCase();
+          const row = document.createElement('div');
+          row.className = 'region-item-row' + (isAct ? ' active' : '');
+          row.innerHTML = `
+            <span>${c.name}</span>
+            <span style="font-size: 13px; color: ${isAct ? '#fff' : 'var(--text-muted)'};">${isAct ? '✓ Выбран' : 'Выбрать'}</span>
+          `;
+          row.addEventListener('click', () => {
+            selectRegion(c.name, c.key);
+          });
+          regionsListContainer.appendChild(row);
+        });
+      }
+    }
+
+    let toastTimeout = null;
+    function showDynamicIsland(title, desc, icon = "⚡️") {
+      const toast = document.getElementById('dynamicToast');
+      const titleEl = document.getElementById('dynamicToastTitle');
+      const descEl = document.getElementById('dynamicToastDesc');
+      const iconEl = document.getElementById('dynamicToastIcon');
+      if (!toast) return;
+
+      if (titleEl) titleEl.textContent = title;
+      if (descEl) descEl.textContent = desc;
+      if (iconEl) iconEl.textContent = icon;
+
+      toast.classList.remove('active');
+      void toast.offsetWidth; // force reflow for bouncy spring animation
+      toast.classList.add('active');
+
+      if (tg?.HapticFeedback) {
+        tg.HapticFeedback.notificationOccurred('success');
+      }
+
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('active');
+      }, 2600);
+    }
+
+    function showRegionToast(cityName) {
+      showDynamicIsland("Регион обновлен", `${cityName} • Воркеры переключены`, "📍");
+    }
+
+    function selectRegion(name, key = "", triggerToast = true) {
+      if (!name) return;
+      currentSelectedRegion = name;
+      updateRegionUI();
+      regionModal.classList.remove('active');
+
+      if (triggerToast) {
+        showRegionToast(name);
+      } else if (tg?.HapticFeedback) {
+        tg.HapticFeedback.selectionChanged();
+      }
+
+      // Мгновенная синхронизация с ботом при выборе региона
+      if (tg && typeof tg.sendData === 'function') {
+        try {
+          tg.sendData(JSON.stringify({
+            action: "set_region",
+            region: name,
+            key: key || ""
+          }));
+          setTimeout(() => {
+            try { tg.close(); } catch(e) {}
+          }, 350);
+        } catch (err) {
+          console.error("sendData error:", err);
+        }
+      }
+    }
+
+    document.getElementById('btnOpenRegionModal').addEventListener('click', () => {
+      regionSearchInput.value = '';
+      renderRegionModal();
+      regionModal.classList.add('active');
+    });
+
+    document.getElementById('btnCloseRegionModal').addEventListener('click', () => {
+      regionModal.classList.remove('active');
+    });
+
+    document.getElementById('btnCancelRegion').addEventListener('click', () => {
+      regionModal.classList.remove('active');
+    });
+
+    regionSearchInput.addEventListener('input', () => {
+      renderRegionModal();
+    });
+
+    // Модалка управления каталогом (Сброс по умолчанию / Полная очистка)
+    const catalogManageModal = document.getElementById('catalogManageModal');
+
+    document.getElementById('btnResetCatalog').addEventListener('click', () => {
+      if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+      catalogManageModal.classList.add('active');
+    });
+
+    document.getElementById('btnCloseCatalogManageModal').addEventListener('click', () => {
+      catalogManageModal.classList.remove('active');
+    });
+
+    document.getElementById('btnCancelCatalogManage').addEventListener('click', () => {
+      catalogManageModal.classList.remove('active');
+    });
+
+    // Опция 1: Восстановление каталога по умолчанию (117 моделей)
+    document.getElementById('btnActionRestoreDefault').addEventListener('click', async () => {
+      catalogManageModal.classList.remove('active');
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
+      const confirmed = confirm("Восстановить заводской каталог и цены по умолчанию?\n\nВсе 117 стандартных моделей вернутся, а цены сбросятся к базовым значениям.");
+      if (!confirmed) return;
+
+      try {
+        localStorage.removeItem('gadget_resell_matrix_clean');
+        deletedKeys.clear();
+
+        let loaded = [];
+        try {
+          const res = await fetch('./pricing_matrix_default.json?t=' + Date.now());
+          if (res.ok) {
+            const data = await res.json();
+            for (const [model, storages] of Object.entries(data)) {
+              const series = detectSeries(model);
+              for (const [storage, cfg] of Object.entries(storages)) {
+                const key = `${model}_${storage}`;
+                const price = Number(cfg.max_buy || cfg.price || 0);
+                const market = Number(cfg.market || Math.round(price * 1.2 / 500) * 500);
+                const enabled = cfg.enabled !== false;
+                loaded.push({
+                  key,
+                  model,
+                  storage: Number(storage) || storage,
+                  series,
+                  category: cfg.category || '',
+                  price,
+                  market,
+                  enabled,
+                  isCustom: series === 'custom' || categories.some(c => c.id === series)
+                });
+              }
+            }
+          }
+        } catch (e) {}
+
+        if (loaded.length === 0) {
+          try {
+            const res2 = await fetch('./pricing_matrix.json?t=' + Date.now());
+            if (res2.ok) {
+              const data2 = await res2.json();
+              for (const [model, storages] of Object.entries(data2)) {
+                const series = detectSeries(model);
+                for (const [storage, cfg] of Object.entries(storages)) {
+                  const key = `${model}_${storage}`;
+                  const price = Number(cfg.max_buy || cfg.price || 0);
+                  const market = Number(cfg.market || Math.round(price * 1.2 / 500) * 500);
+                  const enabled = cfg.enabled !== false;
+                  loaded.push({
+                    key,
+                    model,
+                    storage: Number(storage) || storage,
+                    series,
+                    category: cfg.category || '',
+                    price,
+                    market,
+                    enabled,
+                    isCustom: series === 'custom' || categories.some(c => c.id === series)
+                  });
+                }
+              }
+            }
+          } catch (e) {}
+        }
+
+        if (loaded.length > 0) {
+          currentMatrix = loaded;
+        } else {
+          currentMatrix = JSON.parse(JSON.stringify(DEFAULT_CATALOG));
+        }
+
+        snapshotInitialMatrix(currentMatrix, true);
+        saveLocal();
+        renderSeriesBar();
+        renderCards();
+        updateStats();
+
+        // Отправляем команду сброса в Telegram бот
+        if (tg && typeof tg.sendData === 'function') {
+          const resetPayload = {
+            action: "reset_resell_profile",
+            reset_to_default: true,
+            region: currentSelectedRegion,
+            active_count: currentMatrix.filter(m => m.enabled !== false).length,
+            total_count: currentMatrix.length
+          };
+          try {
+            tg.sendData(JSON.stringify(resetPayload));
+            tg.close();
+            return;
+          } catch (err) {}
+        }
+
+        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+        showRegionToast("Каталог сброшен");
+      } catch (err) {
+        alert("Ошибка сброса: " + (err.message || err));
       }
     });
 
+    // Опция 2: Полная очистка каталога (0 моделей — для настройки с нуля)
+    document.getElementById('btnActionClearAll').addEventListener('click', () => {
+      catalogManageModal.classList.remove('active');
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
+      const confirmed = confirm("Полностью очистить весь каталог?\n\nВсе модели будут удалены (0 шт.), и вы сможете с чистого листа добавить только нужные вам устройства.");
+      if (!confirmed) return;
+
+      try {
+        // Добавляем все текущие ключи в список удаленных для синхронизации с ботом
+        currentMatrix.forEach(m => deletedKeys.add(m.key));
+        currentMatrix = [];
+
+        saveLocal();
+        snapshotInitialMatrix([], true);
+        renderSeriesBar();
+        renderCards();
+        updateStats();
+
+        // Отправляем очистку в бот, чтобы мгновенно сбросить активные конфигурации до 0
+        if (tg && typeof tg.sendData === 'function') {
+          const clearPayload = {
+            action: "save_resell_profile",
+            clear_all: true,
+            region: currentSelectedRegion,
+            active_count: 0,
+            total_count: 0,
+            deleted_keys: Array.from(deletedKeys),
+            remaining_keys: [],
+            models: []
+          };
+          try {
+            tg.sendData(JSON.stringify(clearPayload));
+            tg.close();
+            return;
+          } catch (err) {}
+        }
+
+        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+        showRegionToast("Каталог полностью очищен");
+      } catch (err) {
+        alert("Ошибка очистки: " + (err.message || err));
+      }
+    });
+
+    // Сохранение и отправка в Telegram бот
+    document.getElementById('btnSave').addEventListener('click', () => {
+      const saveBtn = document.getElementById('btnSave');
+      const originalSaveHtml = saveBtn.innerHTML;
+      saveBtn.classList.add('success-state');
+      saveBtn.innerHTML = `<span>✨ Цены применены!</span>`;
+      setTimeout(() => {
+        saveBtn.classList.remove('success-state');
+        saveBtn.innerHTML = originalSaveHtml;
+      }, 1800);
+
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+
+      saveLocal();
+
+      const activeCount = currentMatrix.filter(m => m.enabled !== false).length;
+      const totalCount = currentMatrix.length;
+      const remainingKeys = currentMatrix.map(m => m.key);
+
+      showDynamicIsland("Синхронизация", `${activeCount} активных моделей • Сохранено`, "💾");
+
+      // Измененные или добавленные модели (передаем их значения для обновления в боте)
+      const modifiedModels = currentMatrix.filter(m => {
+        if (m.isCustom) return true;
+        const init = initialMatrixMap.get(m.key);
+        if (!init) return true;
+        return Number(m.price) !== Number(init.price) ||
+               Number(m.market) !== Number(init.market) ||
+               Boolean(m.enabled) !== Boolean(init.enabled) ||
+               String(m.category || '') !== String(init.category || '');
+      }).map(m => [
+        m.model,
+        m.storage,
+        Number(m.price || 0),
+        m.enabled !== false ? 1 : 0,
+        m.category || (categories.find(c => c.id === m.series)?.name) || m.series || "",
+        Number(m.market || 0)
+      ]);
+
+      const payload = {
+        action: "save_resell_profile",
+        region: currentSelectedRegion,
+        condition_rules: conditionRules,
+        categories: categories,
+        active_count: activeCount,
+        total_count: totalCount,
+        clear_all: currentMatrix.length === 0,
+        deleted_keys: Array.from(deletedKeys),
+        remaining_keys: remainingKeys,
+        models: modifiedModels
+      };
+
+      snapshotInitialMatrix(currentMatrix, true);
+
+      let jsonPayload = JSON.stringify(payload);
+
+      // Защитный лимит Telegram: 4096 байт
+      if (new Blob([jsonPayload]).size > 3800) {
+        delete payload.remaining_keys;
+        jsonPayload = JSON.stringify(payload);
+      }
+      if (new Blob([jsonPayload]).size > 3800) {
+        payload.models = modifiedModels.slice(0, 30);
+        jsonPayload = JSON.stringify(payload);
+      }
+
+      if (tg && typeof tg.sendData === 'function') {
+        try {
+          tg.sendData(jsonPayload);
+          tg.close();
+        } catch (err) {
+          alert("Ошибка отправки: " + (err.message || err) + "\n\n💡 Пожалуйста, запускайте Mini App через кнопку «ПЕРЕКУПЕР» на клавиатуре чата.");
+        }
+      } else {
+        showDynamicIsland("Успешно сохранено", `${activeCount} моделей готовы к синхронизации`, "✅");
+      }
+    });
+
+    updateRegionUI();
+    renderSeriesBar();
     renderCards();
+    loadLivePrices();
   </script>
 </body>
 </html>
