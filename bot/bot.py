@@ -112,7 +112,9 @@ async def cleanup_user_message(message: types.Message) -> None:
         logger.debug("Не удалось удалить сообщение пользователя: %s", e)
 
 
-BANNER_FILE_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "assets", "banner.jpg")
+from pathlib import Path
+
+BANNER_FILE_PATH = Path(__file__).resolve().parent.parent / "assets" / "banner.jpg"
 
 
 async def send_or_replace_functional_message(
@@ -122,9 +124,10 @@ async def send_or_replace_functional_message(
     reply_markup: Optional[types.ReplyKeyboardMarkup | types.ReplyKeyboardRemove | types.InlineKeyboardMarkup] = None,
     photo: Optional[str | FSInputFile] = None,
     link_preview_options: Optional[LinkPreviewOptions] = None,
+    with_banner: bool = True,
 ) -> types.Message:
     """
-    Отправляет сервисное/функциональное сообщение бота, предварительно
+    Отправляет сервисное/функциональное сообщение бота с баннером 'ПЕРЕКУПЕР', предварительно
     удаляя предыдущее функциональное сообщение в этом чате.
     Благодаря этому чат не захламляется дублирующимися меню и статусами
     (функционал всегда представлен ровно одним актуальным сообщением, без спама).
@@ -145,15 +148,29 @@ async def send_or_replace_functional_message(
             current_reg_name = _active_region_manager.current["name"] if _active_region_manager else "Москва"
             reply_markup = get_reply_keyboard(current_region=current_reg_name)
 
+    # Прикрепляем баннер 'ПЕРЕКУПЕР' на всех служебных/функциональных сообщениях бота
+    if photo is None and with_banner and BANNER_FILE_PATH.exists():
+        photo = FSInputFile(str(BANNER_FILE_PATH))
+
     if photo:
         photo_obj = FSInputFile(photo) if isinstance(photo, str) else photo
-        msg = await bot.send_photo(
-            chat_id=chat_id,
-            photo=photo_obj,
-            caption=text,
-            parse_mode="HTML",
-            reply_markup=reply_markup,
-        )
+        try:
+            msg = await bot.send_photo(
+                chat_id=chat_id,
+                photo=photo_obj,
+                caption=text,
+                parse_mode="HTML",
+                reply_markup=reply_markup,
+            )
+        except Exception as photo_err:
+            logger.warning("Не удалось отправить фото баннера (%s): %s. Отправка текстом...", photo, photo_err)
+            msg = await bot.send_message(
+                chat_id=chat_id,
+                text=text,
+                parse_mode="HTML",
+                reply_markup=reply_markup,
+                link_preview_options=link_preview_options,
+            )
     else:
         msg = await bot.send_message(
             chat_id=chat_id,
@@ -166,11 +183,6 @@ async def send_or_replace_functional_message(
     return msg
 
 
-from pathlib import Path
-
-BANNER_FILE_PATH = Path(__file__).resolve().parent.parent / "assets" / "banner.jpg"
-
-
 async def send_rich_message(
     chat_id: int,
     bot: Bot,
@@ -179,24 +191,14 @@ async def send_rich_message(
     article_url: Optional[str] = None,
 ) -> types.Message:
     """
-    Отправляет главное меню с баннером 'ПЕРЕКУПЕР' напрямую через bot.send_photo
-    со строгим текстом в подписи (название сверху, регион и статус мониторинга снизу).
+    Отправляет главное меню / сервисное сообщение с гарантированным показом баннера 'ПЕРЕКУПЕР'.
     """
-    photo = None
-    if BANNER_FILE_PATH.exists():
-        photo = FSInputFile(str(BANNER_FILE_PATH))
-    else:
-        base_url = getattr(settings, "WEBAPP_URL", "https://x9x9x9www.github.io/apple-resell-bot/")
-        if not base_url.endswith("/"):
-            base_url += "/"
-        photo = f"{base_url}banner.jpg"
-
     return await send_or_replace_functional_message(
         chat_id=chat_id,
         bot=bot,
         text=text,
         reply_markup=reply_markup,
-        photo=photo,
+        with_banner=True,
     )
 
 
@@ -538,8 +540,10 @@ def create_bot_dispatcher(
                     updated = reg_manager.set_region(region_name)
                 if updated:
                     ans = (
-                        f"✅ <b>Регион поиска успешно переключен: {updated['name']}!</b>\n\n"
-                        "Воркеры Авито и Юлы мгновенно переключились на поиск в новом регионе ⚡️"
+                        "⚡️ <b>ПЕРЕКУПЕР</b>\n\n"
+                        f"✅ <b>Регион поиска успешно переключен:</b> {updated['name']}\n"
+                        "📡 <b>Мониторинг:</b> Авито + Юла ⚡️\n\n"
+                        "<i>Воркеры мгновенно переключились на поиск в новом регионе.</i>"
                     )
                 else:
                     ans = f"⚠️ Не удалось распознать регион: {region_name}"
@@ -547,12 +551,15 @@ def create_bot_dispatcher(
                 if bot:
                     await send_or_replace_functional_message(chat_id=user_id, bot=bot, text=ans, reply_markup=get_reply_keyboard(current_region=reg_manager.current["name"]))
                 else:
-                    await message.answer(ans, reply_markup=get_reply_keyboard(current_region=reg_manager.current["name"]))
+                    photo_obj = FSInputFile(str(BANNER_FILE_PATH)) if BANNER_FILE_PATH.exists() else None
+                    if photo_obj:
+                        await message.answer_photo(photo=photo_obj, caption=ans, reply_markup=get_reply_keyboard(current_region=reg_manager.current["name"]))
+                    else:
+                        await message.answer(ans, reply_markup=get_reply_keyboard(current_region=reg_manager.current["name"]))
                 return
 
             if action == "save_resell_profile":
                 user_id = message.chat.id
-                target_margin = int(raw_payload.get("target_margin", 5000))
                 cond_data = raw_payload.get("condition_rules", {})
                 models_data = raw_payload.get("models", [])
                 categories_data = raw_payload.get("categories", [])
@@ -574,7 +581,6 @@ def create_bot_dispatcher(
                 )
 
                 profile = user_profile_mgr.get_or_create_profile(user_id)
-                profile.target_margin = target_margin
                 profile.condition_rules = condition_rules
 
                 # Сохраняем пользовательские папки/категории
@@ -643,31 +649,35 @@ def create_bot_dispatcher(
                 filter_instance.reload_matrix()
                 active_count = filter_instance.get_stats().get("active_configs", active_count)
 
-                defects_status = f"Скидка -{condition_rules.defect_discount:,} ₽" if condition_rules.allow_defects else "🚫 Запрещены"
-                face_status = "❌ Отсекать" if condition_rules.ignore_no_face_id else "Пропускать"
-                mdm_status = "❌ Отсекать" if condition_rules.ignore_mdm_rsim else "Пропускать"
-
-                cats_info = ""
-                if profile.categories:
-                    cats_str = ", ".join(f"{c.icon} {c.name}" for c in profile.categories)
-                    cats_info = f"📁 <b>Ваши папки:</b> {cats_str}\n"
-
+                active_reg_name = reg_manager.current["name"]
                 text = (
-                    "🎯 <b>Персональный профиль перекупщика сохранен!</b>\n\n"
-                    f"{reg_info}"
-                    f"💰 <b>Минимальная маржа:</b> от <code>{target_margin:,} ₽</code>\n"
-                    f"{cats_info}"
-                    f"🔋 <b>Уценка АКБ &lt;{condition_rules.battery_threshold}%:</b> -<code>{condition_rules.battery_discount:,} ₽</code>\n"
-                    f"🛠 <b>Лоты с дефектами:</b> <b>{defects_status}</b>\n"
-                    f"🛡 <b>Без Face ID:</b> <b>{face_status}</b> | <b>MDM/R-Sim:</b> <b>{mdm_status}</b>\n"
-                    f"📱 <b>Активных конфигураций:</b> <b>{active_count}</b>\n\n"
-                    "⚡️ <i>Воркеры Авито и Юлы автоматически ведут мониторинг по вашим брендам и правилам!</i>"
+                    "⚡️ <b>ПЕРЕКУПЕР</b>\n\n"
+                    "✅ <b>Настройки и цены успешно сохранены!</b>\n"
+                    f"📍 <b>Активный регион:</b> {active_reg_name}\n"
+                    f"📱 <b>Активных конфигураций:</b> {active_count}\n\n"
+                    "⚡️ <i>Мониторинг Авито и Юлы обновлен</i>"
                 )
                 bot = message.bot
                 if bot:
-                    await send_or_replace_functional_message(chat_id=message.chat.id, bot=bot, text=text, reply_markup=get_reply_keyboard(current_region=reg_manager.current["name"]))
+                    await send_or_replace_functional_message(
+                        chat_id=message.chat.id,
+                        bot=bot,
+                        text=text,
+                        reply_markup=get_reply_keyboard(current_region=active_reg_name),
+                    )
                 else:
-                    await message.answer(text, reply_markup=get_reply_keyboard(current_region=reg_manager.current["name"]))
+                    photo_obj = FSInputFile(str(BANNER_FILE_PATH)) if BANNER_FILE_PATH.exists() else None
+                    if photo_obj:
+                        await message.answer_photo(
+                            photo=photo_obj,
+                            caption=text,
+                            reply_markup=get_reply_keyboard(current_region=active_reg_name),
+                        )
+                    else:
+                        await message.answer(
+                            text,
+                            reply_markup=get_reply_keyboard(current_region=active_reg_name),
+                        )
 
             elif action in ("update_matrix", "sync_matrix"):
                 updated_models = raw_payload.get("matrix", [])
