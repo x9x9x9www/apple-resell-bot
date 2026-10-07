@@ -266,7 +266,7 @@ class ItemDispatcher:
 
         # 4. Форматирование текста и клавиатуры с быстрыми действиями
         favorites_manager.cache_dispatched_lot(parsed_item)
-        target_chat = raw_item.target_chat_id or getattr(settings, "TARGET_CHAT_ID", None)
+        target_chat = raw_item.target_chat_id or self.target_chat_id
         is_fav = favorites_manager.is_favorite(target_chat or 0, parsed_item.item_id)
         text = format_lot_message(parsed_item)
         keyboard = get_item_keyboard(

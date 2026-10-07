@@ -21,8 +21,6 @@ class MarginFilter:
         ("macbook", "💻 MacBook (Air / Pro)"),
         ("samsung", "📱 Samsung Galaxy"),
         ("pixel", "📱 Google Pixel"),
-        ("ipad", "📟 iPad (Pro / Air / 10)"),
-        ("consoles", "🎮 Консоли (PS5 / Steam Deck)"),
         ("16", "iPhone 16 / 16 Pro"),
         ("15", "iPhone 15 / 15 Pro"),
         ("14", "iPhone 14 / 14 Pro"),
