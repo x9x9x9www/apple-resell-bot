@@ -595,7 +595,44 @@ def create_bot_dispatcher(
                         broadcast_worker_query(c_name)
                 profile.categories = parsed_categories
 
-                active_count = 0
+                deleted_keys = set(raw_payload.get("deleted_keys", []))
+                remaining_keys = raw_payload.get("remaining_keys")
+                remaining_set = set(remaining_keys) if (isinstance(remaining_keys, list) and remaining_keys) else None
+
+                # 1. Удаление моделей и конфигураций по явному списку deleted_keys
+                for del_key in deleted_keys:
+                    if "_" in del_key:
+                        m_part, s_part = del_key.rsplit("_", 1)
+                        if m_part in filter_instance.matrix:
+                            filter_instance.matrix[m_part].pop(s_part, None)
+                            if not filter_instance.matrix[m_part]:
+                                del filter_instance.matrix[m_part]
+                        if m_part in profile.models:
+                            profile.models[m_part].pop(s_part, None)
+                            if not profile.models[m_part]:
+                                del profile.models[m_part]
+                    if del_key in filter_instance.matrix:
+                        del filter_instance.matrix[del_key]
+                    if del_key in profile.models:
+                        del profile.models[del_key]
+
+                # 2. Очистка конфигураций, отсутствующих в remaining_keys (если передан список оставшихся)
+                if remaining_set is not None:
+                    for m_name in list(filter_instance.matrix.keys()):
+                        for s_val in list(filter_instance.matrix[m_name].keys()):
+                            if f"{m_name}_{s_val}" not in remaining_set:
+                                filter_instance.matrix[m_name].pop(s_val, None)
+                        if not filter_instance.matrix[m_name]:
+                            del filter_instance.matrix[m_name]
+
+                    for m_name in list(profile.models.keys()):
+                        for s_val in list(profile.models[m_name].keys()):
+                            if f"{m_name}_{s_val}" not in remaining_set:
+                                profile.models[m_name].pop(s_val, None)
+                        if not profile.models[m_name]:
+                            del profile.models[m_name]
+
+                # 3. Сохранение измененных/добавленных моделей и цен
                 for item in models_data:
                     if isinstance(item, (list, tuple)) and len(item) >= 3:
                         m_name = str(item[0]).strip()
@@ -603,13 +640,13 @@ def create_bot_dispatcher(
                         m_buy = int(item[2])
                         en = bool(item[3]) if len(item) > 3 else True
                         cat = str(item[4]).strip() if len(item) > 4 else ""
-                        mkt = int(m_buy * 1.2) if m_buy > 0 else 0
+                        mkt = int(item[5]) if len(item) > 5 and (isinstance(item[5], (int, float)) or str(item[5]).isdigit()) else (int(m_buy * 1.2) if m_buy > 0 else 0)
                         min_p = 0
                     elif isinstance(item, dict):
                         m_name = str(item.get("model", "")).strip()
                         s_val = int(item.get("storage", 128)) if str(item.get("storage", "")).isdigit() else 128
                         m_buy = int(item.get("price") or item.get("max_buy", 0))
-                        mkt = int(item.get("market", int(m_buy * 1.2) if m_buy > 0 else 0))
+                        mkt = int(item.get("market") or (int(m_buy * 1.2) if m_buy > 0 else 0))
                         en = bool(item.get("enabled", True))
                         min_p = int(item.get("min_price", 0))
                         cat = str(item.get("category", "")).strip()
@@ -631,7 +668,6 @@ def create_bot_dispatcher(
                         category=cat,
                     )
                     if en:
-                        active_count += 1
                         # Добавляем в поисковый цикл воркеров
                         broadcast_worker_query(m_name)
 
@@ -647,7 +683,12 @@ def create_bot_dispatcher(
                 user_profile_mgr.save_profile(profile)
                 filter_instance.save_matrix()
                 filter_instance.reload_matrix()
-                active_count = filter_instance.get_stats().get("active_configs", active_count)
+
+                front_active_count = raw_payload.get("active_count")
+                if front_active_count is not None and isinstance(front_active_count, int):
+                    active_count = front_active_count
+                else:
+                    active_count = filter_instance.get_stats().get("active_configs", 0)
 
                 active_reg_name = reg_manager.current["name"]
                 text = (
