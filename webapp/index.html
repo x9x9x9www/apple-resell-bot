@@ -287,6 +287,55 @@
       color: #fff;
     }
 
+    .catalog-action-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+      user-select: none;
+    }
+    .catalog-action-card:hover, .catalog-action-card:active {
+      background: rgba(10, 132, 255, 0.1);
+      border-color: var(--accent-color);
+      transform: translateY(-1px);
+    }
+    .catalog-action-card.danger:hover, .catalog-action-card.danger:active {
+      background: rgba(255, 69, 58, 0.1);
+      border-color: #ff453a;
+    }
+    .action-card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+      border: 1px solid transparent;
+    }
+    .action-card-content {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .action-card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .action-card-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
     /* Поле поиска */
     .search-wrapper {
       margin-bottom: 10px;
@@ -1362,6 +1411,44 @@
     </div>
   </div>
 
+  <!-- Модалка: Сброс и управление каталогом -->
+  <div class="modal-overlay" id="catalogManageModal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title">⚙️ Управление каталогом</h3>
+        <button class="btn-close-modal" id="btnCloseCatalogManageModal">✕</button>
+      </div>
+
+      <div style="padding: 10px 0 6px 0; display: flex; flex-direction: column; gap: 10px;">
+        <!-- Карточка 1: Восстановить по умолчанию -->
+        <div class="catalog-action-card" id="btnActionRestoreDefault">
+          <div class="action-card-icon" style="background: rgba(10, 132, 255, 0.18); border-color: rgba(10, 132, 255, 0.35); color: var(--accent-color);">
+            🔄
+          </div>
+          <div class="action-card-content">
+            <div class="action-card-title">Восстановить по умолчанию</div>
+            <div class="action-card-desc">Вернуть полный заводской каталог (117 моделей: iPhone, MacBook, Samsung, Pixel, Консоли) со стандартными ценами</div>
+          </div>
+        </div>
+
+        <!-- Карточка 2: Полная очистка -->
+        <div class="catalog-action-card danger" id="btnActionClearAll">
+          <div class="action-card-icon" style="background: rgba(255, 69, 58, 0.18); border-color: rgba(255, 69, 58, 0.35); color: #ff453a;">
+            🗑️
+          </div>
+          <div class="action-card-content">
+            <div class="action-card-title" style="color: #ff453a;">Очистить всё (с чистого листа)</div>
+            <div class="action-card-desc">Удалить абсолютно все модели, чтобы вручную выстроить свой собственный список гаджетов с нуля</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 10px;">
+        <button class="btn-cancel-modal" id="btnCancelCatalogManage" style="width: 100%;">✕ Отмена</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const tg = window.Telegram?.WebApp;
     if (tg) {
@@ -1938,13 +2025,30 @@
       });
 
       if (filtered.length === 0) {
-        container.innerHTML = `
-          <div style="text-align:center; padding: 40px 10px; color: var(--text-muted)">
-            <p style="font-size: 26px; margin-bottom: 6px">🔍</p>
-            <p style="font-size: 14px; font-weight: 600">В этой вкладке пока нет моделей</p>
-            <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px">Нажмите «➕ Добавить модель», чтобы добавить сюда гаджет</p>
-          </div>
-        `;
+        if (currentMatrix.length === 0) {
+          container.innerHTML = `
+            <div style="text-align:center; padding: 45px 15px; color: var(--text-muted)">
+              <p style="font-size: 32px; margin-bottom: 8px">📭</p>
+              <p style="font-size: 15px; font-weight: 700; color: #fff;">Каталог полностью очищен</p>
+              <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px; line-height: 1.4;">Вы можете выстроить свой собственный список моделей с нуля с помощью кнопки «➕ Модель» или восстановить базовый каталог через «🔄 Сброс».</p>
+              <button type="button" class="btn-save" id="btnEmptyAddFirstModel" style="margin: 14px auto 0 auto; padding: 9px 18px; font-size: 13px; max-width: 240px;">➕ Добавить первую модель</button>
+            </div>
+          `;
+          const btnAddFirst = container.querySelector('#btnEmptyAddFirstModel');
+          if (btnAddFirst) {
+            btnAddFirst.addEventListener('click', () => {
+              document.getElementById('btnOpenAddModal').click();
+            });
+          }
+        } else {
+          container.innerHTML = `
+            <div style="text-align:center; padding: 40px 10px; color: var(--text-muted)">
+              <p style="font-size: 26px; margin-bottom: 6px">🔍</p>
+              <p style="font-size: 14px; font-weight: 600">В этой вкладке пока нет моделей</p>
+              <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px">Нажмите «➕ Добавить модель», чтобы добавить сюда гаджет</p>
+            </div>
+          `;
+        }
         updateStats();
         return;
       }
@@ -2991,10 +3095,27 @@
       renderRegionModal();
     });
 
-    // Сброс и полное восстановление каталога по умолчанию
-    document.getElementById('btnResetCatalog').addEventListener('click', async () => {
+    // Модалка управления каталогом (Сброс по умолчанию / Полная очистка)
+    const catalogManageModal = document.getElementById('catalogManageModal');
+
+    document.getElementById('btnResetCatalog').addEventListener('click', () => {
+      if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+      catalogManageModal.classList.add('active');
+    });
+
+    document.getElementById('btnCloseCatalogManageModal').addEventListener('click', () => {
+      catalogManageModal.classList.remove('active');
+    });
+
+    document.getElementById('btnCancelCatalogManage').addEventListener('click', () => {
+      catalogManageModal.classList.remove('active');
+    });
+
+    // Опция 1: Восстановление каталога по умолчанию (117 моделей)
+    document.getElementById('btnActionRestoreDefault').addEventListener('click', async () => {
+      catalogManageModal.classList.remove('active');
       if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
-      const confirmed = confirm("Восстановить каталог и цены по умолчанию?\n\nВсе удаленные модели будут возвращены, а цены сброшены к базовым значениям.");
+      const confirmed = confirm("Восстановить заводской каталог и цены по умолчанию?\n\nВсе 117 стандартных моделей вернутся, а цены сбросятся к базовым значениям.");
       if (!confirmed) return;
 
       try {
@@ -3093,6 +3214,50 @@
       }
     });
 
+    // Опция 2: Полная очистка каталога (0 моделей — для настройки с нуля)
+    document.getElementById('btnActionClearAll').addEventListener('click', () => {
+      catalogManageModal.classList.remove('active');
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
+      const confirmed = confirm("Полностью очистить весь каталог?\n\nВсе модели будут удалены (0 шт.), и вы сможете с чистого листа добавить только нужные вам устройства.");
+      if (!confirmed) return;
+
+      try {
+        // Добавляем все текущие ключи в список удаленных для синхронизации с ботом
+        currentMatrix.forEach(m => deletedKeys.add(m.key));
+        currentMatrix = [];
+
+        saveLocal();
+        snapshotInitialMatrix([], true);
+        renderSeriesBar();
+        renderCards();
+        updateStats();
+
+        // Отправляем очистку в бот, чтобы мгновенно сбросить активные конфигурации до 0
+        if (tg && typeof tg.sendData === 'function') {
+          const clearPayload = {
+            action: "save_resell_profile",
+            clear_all: true,
+            region: currentSelectedRegion,
+            active_count: 0,
+            total_count: 0,
+            deleted_keys: Array.from(deletedKeys),
+            remaining_keys: [],
+            models: []
+          };
+          try {
+            tg.sendData(JSON.stringify(clearPayload));
+            tg.close();
+            return;
+          } catch (err) {}
+        }
+
+        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+        showRegionToast("Каталог полностью очищен");
+      } catch (err) {
+        alert("Ошибка очистки: " + (err.message || err));
+      }
+    });
+
     // Сохранение и отправка в Telegram бот
     document.getElementById('btnSave').addEventListener('click', () => {
       if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
@@ -3128,6 +3293,7 @@
         categories: categories,
         active_count: activeCount,
         total_count: totalCount,
+        clear_all: currentMatrix.length === 0,
         deleted_keys: Array.from(deletedKeys),
         remaining_keys: remainingKeys,
         models: modifiedModels

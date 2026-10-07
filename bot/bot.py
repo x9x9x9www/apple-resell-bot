@@ -639,7 +639,12 @@ def create_bot_dispatcher(
 
                 deleted_keys = set(raw_payload.get("deleted_keys", []))
                 remaining_keys = raw_payload.get("remaining_keys")
-                remaining_set = set(remaining_keys) if (isinstance(remaining_keys, list) and remaining_keys) else None
+                remaining_set = set(remaining_keys) if isinstance(remaining_keys, list) else None
+                clear_all = bool(raw_payload.get("clear_all", False))
+
+                if clear_all:
+                    filter_instance.matrix.clear()
+                    profile.models.clear()
 
                 # 1. Удаление моделей и конфигураций по явному списку deleted_keys
                 for del_key in deleted_keys:
