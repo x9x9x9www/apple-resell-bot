@@ -558,6 +558,48 @@ def create_bot_dispatcher(
                         await message.answer(ans, reply_markup=get_reply_keyboard(current_region=reg_manager.current["name"]))
                 return
 
+            if action == "reset_resell_profile" or raw_payload.get("reset_to_default"):
+                default_path = settings.BASE_DIR / "pricing_matrix_default.json"
+                if default_path.exists():
+                    try:
+                        with open(default_path, "r", encoding="utf-8") as f:
+                            filter_instance.matrix = json.load(f)
+                        filter_instance.save_matrix()
+                        filter_instance.reload_matrix()
+                    except Exception as e:
+                        logger.error("Ошибка при восстановлении дефолтной матрицы: %s", e)
+
+                user_id = message.chat.id
+                profile = user_profile_mgr.get_or_create_profile(user_id)
+                profile.models = {}
+                user_profile_mgr.save_profile(profile)
+
+                stats = filter_instance.get_stats()
+                active_count = stats.get("active_configs", 115)
+                active_reg_name = reg_manager.current["name"]
+                text = (
+                    "⚡️ <b>ПЕРЕКУПЕР</b>\n\n"
+                    "🔄 <b>Каталог успешно сброшен к базовым настройкам!</b>\n"
+                    f"📍 <b>Активный регион:</b> {active_reg_name}\n"
+                    f"📱 <b>Активных конфигураций:</b> {active_count}\n\n"
+                    "⚡️ <i>Мониторинг Авито и Юлы обновлен</i>"
+                )
+                bot = message.bot
+                if bot:
+                    await send_or_replace_functional_message(
+                        chat_id=user_id,
+                        bot=bot,
+                        text=text,
+                        reply_markup=get_reply_keyboard(current_region=active_reg_name),
+                    )
+                else:
+                    photo_obj = FSInputFile(str(BANNER_FILE_PATH)) if BANNER_FILE_PATH.exists() else None
+                    if photo_obj:
+                        await message.answer_photo(photo=photo_obj, caption=text, reply_markup=get_reply_keyboard(current_region=active_reg_name))
+                    else:
+                        await message.answer(text, reply_markup=get_reply_keyboard(current_region=active_reg_name))
+                return
+
             if action == "save_resell_profile":
                 user_id = message.chat.id
                 cond_data = raw_payload.get("condition_rules", {})

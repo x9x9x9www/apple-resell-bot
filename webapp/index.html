@@ -266,6 +266,26 @@
       font-weight: 700;
       color: var(--text-main);
     }
+    .btn-reset-catalog {
+      margin-left: auto;
+      background: rgba(255, 69, 58, 0.12);
+      border: 1px solid rgba(255, 69, 58, 0.35);
+      color: #ff453a;
+      border-radius: 8px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+    }
+    .btn-reset-catalog:hover {
+      background: rgba(255, 69, 58, 0.25);
+      border-color: #ff453a;
+      color: #fff;
+    }
 
     /* Поле поиска */
     .search-wrapper {
@@ -981,6 +1001,9 @@
       <span>Всего: <b class="stats-pill" id="statTotal">0</b></span>
       <span>Активных: <b class="stats-pill" id="statActive">0</b></span>
       <span>Фильтр: <span id="statFilter" style="color:var(--accent-color)">Все</span></span>
+      <button class="btn-reset-catalog" id="btnResetCatalog" title="Сбросить все изменения и восстановить каталог по умолчанию">
+        🔄 Сброс
+      </button>
     </div>
   </div>
 
@@ -2966,6 +2989,108 @@
 
     regionSearchInput.addEventListener('input', () => {
       renderRegionModal();
+    });
+
+    // Сброс и полное восстановление каталога по умолчанию
+    document.getElementById('btnResetCatalog').addEventListener('click', async () => {
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
+      const confirmed = confirm("Восстановить каталог и цены по умолчанию?\n\nВсе удаленные модели будут возвращены, а цены сброшены к базовым значениям.");
+      if (!confirmed) return;
+
+      try {
+        localStorage.removeItem('gadget_resell_matrix_clean');
+        deletedKeys.clear();
+
+        let loaded = [];
+        try {
+          const res = await fetch('./pricing_matrix_default.json?t=' + Date.now());
+          if (res.ok) {
+            const data = await res.json();
+            for (const [model, storages] of Object.entries(data)) {
+              const series = detectSeries(model);
+              for (const [storage, cfg] of Object.entries(storages)) {
+                const key = `${model}_${storage}`;
+                const price = Number(cfg.max_buy || cfg.price || 0);
+                const market = Number(cfg.market || Math.round(price * 1.2 / 500) * 500);
+                const enabled = cfg.enabled !== false;
+                loaded.push({
+                  key,
+                  model,
+                  storage: Number(storage) || storage,
+                  series,
+                  category: cfg.category || '',
+                  price,
+                  market,
+                  enabled,
+                  isCustom: series === 'custom' || categories.some(c => c.id === series)
+                });
+              }
+            }
+          }
+        } catch (e) {}
+
+        if (loaded.length === 0) {
+          try {
+            const res2 = await fetch('./pricing_matrix.json?t=' + Date.now());
+            if (res2.ok) {
+              const data2 = await res2.json();
+              for (const [model, storages] of Object.entries(data2)) {
+                const series = detectSeries(model);
+                for (const [storage, cfg] of Object.entries(storages)) {
+                  const key = `${model}_${storage}`;
+                  const price = Number(cfg.max_buy || cfg.price || 0);
+                  const market = Number(cfg.market || Math.round(price * 1.2 / 500) * 500);
+                  const enabled = cfg.enabled !== false;
+                  loaded.push({
+                    key,
+                    model,
+                    storage: Number(storage) || storage,
+                    series,
+                    category: cfg.category || '',
+                    price,
+                    market,
+                    enabled,
+                    isCustom: series === 'custom' || categories.some(c => c.id === series)
+                  });
+                }
+              }
+            }
+          } catch (e) {}
+        }
+
+        if (loaded.length > 0) {
+          currentMatrix = loaded;
+        } else {
+          currentMatrix = JSON.parse(JSON.stringify(DEFAULT_CATALOG));
+        }
+
+        snapshotInitialMatrix(currentMatrix, true);
+        saveLocal();
+        renderSeriesBar();
+        renderCards();
+        updateStats();
+
+        // Отправляем команду сброса в Telegram бот
+        if (tg && typeof tg.sendData === 'function') {
+          const resetPayload = {
+            action: "reset_resell_profile",
+            reset_to_default: true,
+            region: currentSelectedRegion,
+            active_count: currentMatrix.filter(m => m.enabled !== false).length,
+            total_count: currentMatrix.length
+          };
+          try {
+            tg.sendData(JSON.stringify(resetPayload));
+            tg.close();
+            return;
+          } catch (err) {}
+        }
+
+        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+        showRegionToast("Каталог сброшен");
+      } catch (err) {
+        alert("Ошибка сброса: " + (err.message || err));
+      }
     });
 
     // Сохранение и отправка в Telegram бот
