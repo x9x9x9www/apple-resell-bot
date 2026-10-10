@@ -81,7 +81,7 @@
       color: var(--text-main);
       font-family: var(--font-family);
       padding: 0 16px;
-      padding-top: calc(56px + env(safe-area-inset-top, 0px));
+      padding-top: 12px;
       padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
       min-height: 100vh;
       overflow-x: hidden;
@@ -95,93 +95,38 @@
       font-feature-settings: "tnum" 1, "cv05" 1;
     }
 
-    /* ========================================================
-       iOS Sticky Navigation Bar with Frosted Glass & Large Title Collapse
-       ======================================================== */
+    /* iOS Sticky Navigation Bar hidden to eliminate dead top space */
     .ios-nav-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: calc(50px + env(safe-area-inset-top, 0px));
-      padding-top: env(safe-area-inset-top, 0px);
-      padding-left: 16px;
-      padding-right: 16px;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(25px) saturate(190%);
-      -webkit-backdrop-filter: blur(25px) saturate(190%);
-      border-bottom: 0.5px solid transparent;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      transition: border-color 0.25s ease, background 0.25s ease;
+      display: none !important;
     }
 
-    .ios-nav-bar.scrolled {
-      background: rgba(10, 10, 12, 0.88);
-      border-bottom-color: rgba(255, 255, 255, 0.1);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-    }
-
-    .ios-nav-content {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .ios-nav-inline-title {
-      font-size: 15px;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      opacity: 0;
-      transform: translateY(6px);
-      pointer-events: none;
-      transition: opacity 0.22s var(--spring-smooth), transform 0.22s var(--spring-smooth);
-    }
-
-    .ios-nav-bar.scrolled .ios-nav-inline-title {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
-
-    .ios-nav-right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    /* iOS Large Title Header */
+    /* Header (Clean, raised, single-row layout like normal websites) */
     .ios-large-header {
-      padding-top: 10px;
-      margin-bottom: 16px;
+      padding-top: 0;
+      margin-bottom: 12px;
     }
 
     .ios-large-title-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 12px;
+      gap: 10px;
+      flex-wrap: nowrap;
+      margin-bottom: 10px;
     }
 
     .ios-large-title {
-      font-size: 30px;
+      font-size: 20px;
       font-weight: 800;
-      letter-spacing: -0.7px;
-      line-height: 1.12;
+      letter-spacing: -0.4px;
+      line-height: 1.15;
       color: #fff;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       margin: 0;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
     .ios-large-title .title-accent {
@@ -193,7 +138,8 @@
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
+      flex-shrink: 0;
     }
 
     /* iOS Pill Buttons (Burgundy & Glass) */
@@ -201,7 +147,7 @@
       background: rgba(255, 255, 255, 0.08);
       border: 0.5px solid var(--card-border);
       color: #fff;
-      padding: 7px 14px;
+      padding: 6px 12px;
       border-radius: 20px;
       font-size: 12px;
       font-weight: 600;
@@ -209,7 +155,7 @@
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       box-shadow: var(--card-specular);
       transition: transform 0.15s var(--spring-press), background 0.15s ease;
       white-space: nowrap;
@@ -223,7 +169,7 @@
       background: var(--accent-gradient);
       color: #fff;
       border: none;
-      padding: 7px 15px;
+      padding: 6px 13px;
       border-radius: 20px;
       font-size: 12px;
       font-weight: 700;
@@ -231,7 +177,7 @@
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       box-shadow: var(--card-specular), 0 4px 16px var(--accent-glow);
       transition: transform 0.15s var(--spring-press), filter 0.15s ease;
       white-space: nowrap;
@@ -414,17 +360,18 @@
       background: var(--accent-gradient);
       color: #fff;
       border: none;
-      padding: 8px 14px;
-      border-radius: 14px;
+      padding: 6px 13px;
+      border-radius: 20px;
       font-size: 12px;
       font-weight: 700;
       letter-spacing: -0.2px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       box-shadow: var(--card-specular), 0 4px 16px var(--accent-glow);
       transition: transform 0.15s var(--spring-press), filter 0.15s ease;
+      white-space: nowrap;
     }
 
     .btn-add-deal:active {
@@ -1845,8 +1792,8 @@
     </div>
   </div>
 
-  <!-- iOS Top Sticky Navigation Bar with Frosted Glass -->
-  <header class="ios-nav-bar" id="iosNavBar">
+  <!-- iOS Top Sticky Navigation Bar (hidden to eliminate empty gap) -->
+  <header class="ios-nav-bar" id="iosNavBar" style="display: none;">
     <div class="ios-nav-content">
       <div class="ios-nav-left">
         <div class="ios-nav-inline-title" id="iosNavInlineTitle">
