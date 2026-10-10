@@ -1457,11 +1457,7 @@
           <span>ПЕРЕКУПЕР</span>
         </div>
       </div>
-      <div class="ios-nav-right">
-        <button class="btn-region-badge" id="btnOpenRegionModal" title="Выбрать регион поиска">
-          📍 <span id="currentRegionLabel">Якутск</span> ▾
-        </button>
-      </div>
+      <div class="ios-nav-right"></div>
     </div>
   </header>
 
@@ -3704,9 +3700,12 @@ const POPULAR_TEMPLATES = [
       saveLocal();
     }
 
-    document.getElementById('btnOpenRegionModal').addEventListener('click', () => {
-      condModal.classList.add('active');
-    });
+    const btnOpenRegionModal = document.getElementById('btnOpenRegionModal');
+    if (btnOpenRegionModal) {
+      btnOpenRegionModal.addEventListener('click', () => {
+        condModal.classList.add('active');
+      });
+    }
 
     const settingRegionRow = document.getElementById('settingRegionRow');
     if (settingRegionRow) {
