@@ -897,6 +897,36 @@
       display: flex;
       opacity: 1;
     }
+    #regionModal, #selectTemplateModelsModal {
+      z-index: 2100;
+    }
+    .setting-region-item {
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      border: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+    }
+    .setting-region-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .setting-region-item:active {
+      transform: scale(0.99);
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .settings-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 8px;
+    }
 
     .modal-sheet {
       width: 100%;
@@ -1443,8 +1473,8 @@
         <span>ПЕРЕКУПЕР</span>
       </h1>
       <div class="header-actions">
-        <button class="btn-condition" id="btnOpenConditionModal">
-          <span>⚙️ Состояние</span>
+        <button class="btn-condition" id="btnOpenConditionModal" title="Настройки бота и региона">
+          <span>⚙️ Настройки</span>
         </button>
         <button class="btn-add-model" id="btnOpenAddModal">
           <span>➕ Модель</span>
@@ -1522,8 +1552,29 @@
     <div class="modal-sheet">
       <div class="modal-grabber"></div>
       <div class="modal-header">
-        <h3 class="modal-title">⚙️ Настройка правил состояния</h3>
+        <h3 class="modal-title">⚙️ Настройки бота</h3>
         <button class="btn-close-modal" id="btnCloseConditionModal">✕</button>
+      </div>
+
+      <!-- Секция: Регион поиска -->
+      <div class="settings-section-title" style="color: var(--accent-highlight);">
+        📍 Регион мониторинга
+      </div>
+      <div class="setting-region-item" id="settingRegionRow">
+        <div class="setting-info" style="margin-right: 10px;">
+          <div class="setting-title" style="display: flex; align-items: center; gap: 6px;">
+            <span>Город:</span>
+            <b id="settingCurrentRegionName" style="color: var(--accent-highlight); font-size: 14px;">Якутск</b>
+          </div>
+          <div class="setting-desc">Avito и Юла ищут объявления в этом регионе</div>
+        </div>
+        <button type="button" class="btn-secondary" id="btnChangeRegionInSettings" style="padding: 7px 12px; font-size: 12px; border-radius: 8px; white-space: nowrap;">
+          Изменить ▾
+        </button>
+      </div>
+
+      <div class="settings-section-title" style="color: var(--text-muted);">
+        ⚡️ Правила состояния устройств
       </div>
 
       <div class="setting-item">
@@ -1898,86 +1949,164 @@
 
     const DEFAULT_CATALOG = [
       // MacBooks
-      { key: "MacBook Air M1_256", model: "MacBook Air M1", storage: 256, series: "macbook", price: 42000, market: 52000, enabled: true },
-      { key: "MacBook Air M2 13_256", model: "MacBook Air M2 13", storage: 256, series: "macbook", price: 62000, market: 74000, enabled: true },
-      { key: "MacBook Pro 14 M1 Pro_512", model: "MacBook Pro 14 M1 Pro", storage: 512, series: "macbook", price: 85000, market: 102000, enabled: true },
+      { key: "MacBook Air M1_256", model: "MacBook Air M1", storage: 256, series: "default_macbook", price: 42000, market: 52000, enabled: true },
+      { key: "MacBook Air M2 13_256", model: "MacBook Air M2 13", storage: 256, series: "default_macbook", price: 62000, market: 74000, enabled: true },
+      { key: "MacBook Pro 14 M1 Pro_512", model: "MacBook Pro 14 M1 Pro", storage: 512, series: "default_macbook", price: 85000, market: 102000, enabled: true },
       // iPhones 16
-      { key: "iPhone 16 Pro Max_256", model: "iPhone 16 Pro Max", storage: 256, series: "iphone", price: 105000, market: 125000, enabled: true },
-      { key: "iPhone 16 Pro_128", model: "iPhone 16 Pro", storage: 128, series: "iphone", price: 88000, market: 104000, enabled: true },
-      { key: "iPhone 16_128", model: "iPhone 16", storage: 128, series: "iphone", price: 68000, market: 80000, enabled: true },
+      { key: "iPhone 16 Pro Max_256", model: "iPhone 16 Pro Max", storage: 256, series: "default_iphone", price: 105000, market: 125000, enabled: true },
+      { key: "iPhone 16 Pro_128", model: "iPhone 16 Pro", storage: 128, series: "default_iphone", price: 88000, market: 104000, enabled: true },
+      { key: "iPhone 16_128", model: "iPhone 16", storage: 128, series: "default_iphone", price: 68000, market: 80000, enabled: true },
       // iPhones 15
-      { key: "iPhone 15 Pro Max_256", model: "iPhone 15 Pro Max", storage: 256, series: "iphone", price: 82000, market: 97000, enabled: true },
-      { key: "iPhone 15 Pro_128", model: "iPhone 15 Pro", storage: 128, series: "iphone", price: 65000, market: 78000, enabled: true },
-      { key: "iPhone 15_128", model: "iPhone 15", storage: 128, series: "iphone", price: 50000, market: 60000, enabled: true },
+      { key: "iPhone 15 Pro Max_256", model: "iPhone 15 Pro Max", storage: 256, series: "default_iphone", price: 82000, market: 97000, enabled: true },
+      { key: "iPhone 15 Pro_128", model: "iPhone 15 Pro", storage: 128, series: "default_iphone", price: 65000, market: 78000, enabled: true },
+      { key: "iPhone 15_128", model: "iPhone 15", storage: 128, series: "default_iphone", price: 50000, market: 60000, enabled: true },
       // iPhones 14
-      { key: "iPhone 14 Pro Max_128", model: "iPhone 14 Pro Max", storage: 128, series: "iphone", price: 58000, market: 70000, enabled: true },
-      { key: "iPhone 14 Pro_128", model: "iPhone 14 Pro", storage: 128, series: "iphone", price: 50000, market: 60000, enabled: true },
-      { key: "iPhone 14_128", model: "iPhone 14", storage: 128, series: "iphone", price: 40000, market: 48000, enabled: true },
+      { key: "iPhone 14 Pro Max_128", model: "iPhone 14 Pro Max", storage: 128, series: "default_iphone", price: 58000, market: 70000, enabled: true },
+      { key: "iPhone 14 Pro_128", model: "iPhone 14 Pro", storage: 128, series: "default_iphone", price: 50000, market: 60000, enabled: true },
+      { key: "iPhone 14_128", model: "iPhone 14", storage: 128, series: "default_iphone", price: 40000, market: 48000, enabled: true },
       // iPhones 13
-      { key: "iPhone 13 Pro_128", model: "iPhone 13 Pro", storage: 128, series: "iphone", price: 38000, market: 46000, enabled: true },
-      { key: "iPhone 13_128", model: "iPhone 13", storage: 128, series: "iphone", price: 32000, market: 39000, enabled: true },
+      { key: "iPhone 13 Pro_128", model: "iPhone 13 Pro", storage: 128, series: "default_iphone", price: 38000, market: 46000, enabled: true },
+      { key: "iPhone 13_128", model: "iPhone 13", storage: 128, series: "default_iphone", price: 32000, market: 39000, enabled: true },
       // iPhones 12 / 11
-      { key: "iPhone 12_128", model: "iPhone 12", storage: 128, series: "iphone", price: 23000, market: 28000, enabled: true },
-      { key: "iPhone 11_128", model: "iPhone 11", storage: 128, series: "iphone", price: 16000, market: 20000, enabled: true },
+      { key: "iPhone 12_128", model: "iPhone 12", storage: 128, series: "default_iphone", price: 23000, market: 28000, enabled: true },
+      { key: "iPhone 11_128", model: "iPhone 11", storage: 128, series: "default_iphone", price: 16000, market: 20000, enabled: true },
       // Samsung
-      { key: "Samsung Galaxy S24 Ultra_256", model: "Samsung Galaxy S24 Ultra", storage: 256, series: "samsung", price: 65000, market: 78000, enabled: true },
-      { key: "Samsung Galaxy S23 Ultra_256", model: "Samsung Galaxy S23 Ultra", storage: 256, series: "samsung", price: 48000, market: 58000, enabled: true },
+      { key: "Samsung Galaxy S24 Ultra_256", model: "Samsung Galaxy S24 Ultra", storage: 256, series: "default_samsung", price: 65000, market: 78000, enabled: true },
+      { key: "Samsung Galaxy S23 Ultra_256", model: "Samsung Galaxy S23 Ultra", storage: 256, series: "default_samsung", price: 48000, market: 58000, enabled: true },
       // Pixel
-      { key: "Google Pixel 9 Pro_128", model: "Google Pixel 9 Pro", storage: 128, series: "pixel", price: 58000, market: 70000, enabled: true },
-      { key: "Google Pixel 8 Pro_128", model: "Google Pixel 8 Pro", storage: 128, series: "pixel", price: 42000, market: 50000, enabled: true }
+      { key: "Google Pixel 9 Pro_128", model: "Google Pixel 9 Pro", storage: 128, series: "default_pixel", price: 58000, market: 70000, enabled: true },
+      { key: "Google Pixel 8 Pro_128", model: "Google Pixel 8 Pro", storage: 128, series: "default_pixel", price: 42000, market: 50000, enabled: true }
     ];
 
-    const POPULAR_TEMPLATES = [
+const POPULAR_TEMPLATES = [
       {
-        id: 'iphone',
-        name: 'iPhone',
-        icon: '📱',
+        id: "iphone",
+        name: "iPhone",
+        icon: "📱",
         models: [
-          { model: "iPhone 16 Pro Max", storage: 256, price: 105000, market: 125000 },
-          { model: "iPhone 16 Pro", storage: 128, price: 88000, market: 104000 },
-          { model: "iPhone 16", storage: 128, price: 68000, market: 80000 },
-          { model: "iPhone 15 Pro Max", storage: 256, price: 82000, market: 97000 },
+          { model: "iPhone 16 Pro Max", storage: 256, price: 105000, market: 126000 },
+          { model: "iPhone 16 Pro Max", storage: 512, price: 118000, market: 141600 },
+          { model: "iPhone 16 Pro Max", storage: 1024, price: 132000, market: 158400 },
+          { model: "iPhone 16 Pro", storage: 128, price: 88000, market: 105600 },
+          { model: "iPhone 16 Pro", storage: 256, price: 96000, market: 115200 },
+          { model: "iPhone 16 Pro", storage: 512, price: 108000, market: 129600 },
+          { model: "iPhone 16 Pro", storage: 1024, price: 120000, market: 144000 },
+          { model: "iPhone 16 Plus", storage: 128, price: 72000, market: 86400 },
+          { model: "iPhone 16 Plus", storage: 256, price: 76000, market: 91200 },
+          { model: "iPhone 16 Plus", storage: 512, price: 85000, market: 102000 },
+          { model: "iPhone 16", storage: 128, price: 68000, market: 81600 },
+          { model: "iPhone 16", storage: 256, price: 68000, market: 81600 },
+          { model: "iPhone 16", storage: 512, price: 78000, market: 93600 },
+          { model: "iPhone 15 Pro Max", storage: 256, price: 82000, market: 98400 },
+          { model: "iPhone 15 Pro Max", storage: 512, price: 84000, market: 100800 },
+          { model: "iPhone 15 Pro Max", storage: 1024, price: 94000, market: 112800 },
           { model: "iPhone 15 Pro", storage: 128, price: 65000, market: 78000 },
+          { model: "iPhone 15 Pro", storage: 256, price: 72000, market: 86400 },
+          { model: "iPhone 15 Pro", storage: 512, price: 72000, market: 86400 },
+          { model: "iPhone 15 Pro", storage: 1024, price: 80000, market: 96000 },
+          { model: "iPhone 15 Plus", storage: 128, price: 48000, market: 57600 },
+          { model: "iPhone 15 Plus", storage: 256, price: 54000, market: 64800 },
+          { model: "iPhone 15 Plus", storage: 512, price: 62000, market: 74400 },
           { model: "iPhone 15", storage: 128, price: 50000, market: 60000 },
+          { model: "iPhone 15", storage: 256, price: 50000, market: 60000 },
+          { model: "iPhone 15", storage: 512, price: 58000, market: 69600 },
+          { model: "iPhone 14 Pro Max", storage: 128, price: 58000, market: 69600 },
+          { model: "iPhone 14 Pro Max", storage: 256, price: 62000, market: 74400 },
+          { model: "iPhone 14 Pro Max", storage: 512, price: 69000, market: 82800 },
+          { model: "iPhone 14 Pro Max", storage: 1024, price: 76000, market: 91200 },
           { model: "iPhone 14 Pro", storage: 128, price: 50000, market: 60000 },
-          { model: "iPhone 13", storage: 128, price: 32000, market: 39000 },
-          { model: "iPhone 12", storage: 128, price: 23000, market: 28000 },
-          { model: "iPhone 11", storage: 128, price: 16000, market: 20000 }
+          { model: "iPhone 14 Pro", storage: 256, price: 53000, market: 63600 },
+          { model: "iPhone 14 Pro", storage: 512, price: 59000, market: 70800 },
+          { model: "iPhone 14 Pro", storage: 1024, price: 65000, market: 78000 },
+          { model: "iPhone 14 Plus", storage: 128, price: 38000, market: 45600 },
+          { model: "iPhone 14 Plus", storage: 256, price: 43000, market: 51600 },
+          { model: "iPhone 14 Plus", storage: 512, price: 49000, market: 58800 },
+          { model: "iPhone 14", storage: 128, price: 40000, market: 48000 },
+          { model: "iPhone 14", storage: 256, price: 40000, market: 48000 },
+          { model: "iPhone 14", storage: 512, price: 46000, market: 55200 },
+          { model: "iPhone 13 Pro Max", storage: 128, price: 46000, market: 55200 },
+          { model: "iPhone 13 Pro Max", storage: 256, price: 50000, market: 60000 },
+          { model: "iPhone 13 Pro Max", storage: 512, price: 56000, market: 67200 },
+          { model: "iPhone 13 Pro Max", storage: 1024, price: 62000, market: 74400 },
+          { model: "iPhone 13 Pro", storage: 128, price: 38000, market: 45600 },
+          { model: "iPhone 13 Pro", storage: 256, price: 43000, market: 51600 },
+          { model: "iPhone 13 Pro", storage: 512, price: 48000, market: 57600 },
+          { model: "iPhone 13 Pro", storage: 1024, price: 53000, market: 63600 },
+          { model: "iPhone 13", storage: 128, price: 32000, market: 38400 },
+          { model: "iPhone 13", storage: 256, price: 34000, market: 40800 },
+          { model: "iPhone 13", storage: 512, price: 39000, market: 46800 },
+          { model: "iPhone 13 mini", storage: 128, price: 27000, market: 32400 },
+          { model: "iPhone 13 mini", storage: 256, price: 31000, market: 37200 },
+          { model: "iPhone 13 mini", storage: 512, price: 36000, market: 43200 },
+          { model: "iPhone 12 Pro Max", storage: 128, price: 33000, market: 39600 },
+          { model: "iPhone 12 Pro Max", storage: 256, price: 37000, market: 44400 },
+          { model: "iPhone 12 Pro Max", storage: 512, price: 42000, market: 50400 },
+          { model: "iPhone 12 Pro", storage: 128, price: 27000, market: 32400 },
+          { model: "iPhone 12 Pro", storage: 256, price: 31000, market: 37200 },
+          { model: "iPhone 12 Pro", storage: 512, price: 35000, market: 42000 },
+          { model: "iPhone 12", storage: 64, price: 18000, market: 21600 },
+          { model: "iPhone 12", storage: 128, price: 23000, market: 27600 },
+          { model: "iPhone 12", storage: 256, price: 25000, market: 30000 },
+          { model: "iPhone 12 mini", storage: 64, price: 16000, market: 19200 },
+          { model: "iPhone 12 mini", storage: 128, price: 19000, market: 22800 },
+          { model: "iPhone 12 mini", storage: 256, price: 22000, market: 26400 },
+          { model: "iPhone 11 Pro Max", storage: 64, price: 22000, market: 26400 },
+          { model: "iPhone 11 Pro Max", storage: 256, price: 26000, market: 31200 },
+          { model: "iPhone 11 Pro Max", storage: 512, price: 29000, market: 34800 },
+          { model: "iPhone 11 Pro", storage: 64, price: 18000, market: 21600 },
+          { model: "iPhone 11 Pro", storage: 256, price: 22000, market: 26400 },
+          { model: "iPhone 11 Pro", storage: 512, price: 25000, market: 30000 },
+          { model: "iPhone 11", storage: 64, price: 13000, market: 15600 },
+          { model: "iPhone 11", storage: 128, price: 16000, market: 19200 },
+          { model: "iPhone 11", storage: 256, price: 19000, market: 22800 }
         ]
       },
       {
-        id: 'macbook',
-        name: 'Mac',
-        icon: '💻',
+        id: "macbook",
+        name: "Mac",
+        icon: "💻",
         models: [
-          { model: "MacBook Air M1 13", storage: 256, price: 42000, market: 52000 },
+          { model: "MacBook Air M1", storage: 256, price: 42000, market: 52000 },
+          { model: "MacBook Air M1", storage: 512, price: 55000, market: 66000 },
           { model: "MacBook Air M2 13", storage: 256, price: 62000, market: 74000 },
+          { model: "MacBook Air M2 13", storage: 512, price: 75000, market: 92000 },
           { model: "MacBook Pro 14 M1 Pro", storage: 512, price: 85000, market: 102000 },
-          { model: "MacBook Pro 16 M1 Pro", storage: 512, price: 95000, market: 115000 }
+          { model: "MacBook Pro 14 M1 Pro", storage: 1024, price: 100000, market: 122000 },
+          { model: "MacBook Pro 16 M1 Pro", storage: 512, price: 98000, market: 118000 }
         ]
       },
       {
-        id: 'samsung',
-        name: 'Samsung',
-        icon: '📱',
+        id: "samsung",
+        name: "Samsung",
+        icon: "📱",
         models: [
           { model: "Samsung Galaxy S24 Ultra", storage: 256, price: 65000, market: 78000 },
-          { model: "Samsung Galaxy S24", storage: 128, price: 45000, market: 55000 },
+          { model: "Samsung Galaxy S24 Ultra", storage: 512, price: 74000, market: 88000 },
+          { model: "Samsung Galaxy S24 Ultra", storage: 1024, price: 90000, market: 110000 },
+          { model: "Samsung Galaxy S24", storage: 128, price: 42000, market: 51000 },
+          { model: "Samsung Galaxy S24", storage: 256, price: 47000, market: 58000 },
           { model: "Samsung Galaxy S23 Ultra", storage: 256, price: 48000, market: 58000 },
-          { model: "Samsung Galaxy S23", storage: 128, price: 35000, market: 43000 },
-          { model: "Samsung Galaxy Z Flip 5", storage: 256, price: 38000, market: 46000 },
-          { model: "Samsung Galaxy Z Fold 5", storage: 256, price: 68000, market: 82000 }
+          { model: "Samsung Galaxy S23 Ultra", storage: 512, price: 59000, market: 72000 },
+          { model: "Samsung Galaxy S23", storage: 128, price: 33000, market: 42000 },
+          { model: "Samsung Galaxy S23", storage: 256, price: 37000, market: 47000 },
+          { model: "Samsung Galaxy S24+", storage: 256, price: 50000, market: 60000 },
+          { model: "Samsung Galaxy Z Fold 5", storage: 256, price: 58000, market: 70000 }
         ]
       },
       {
-        id: 'pixel',
-        name: 'Pixel',
-        icon: '📱',
+        id: "pixel",
+        name: "Pixel",
+        icon: "📱",
         models: [
-          { model: "Google Pixel 9 Pro", storage: 128, price: 58000, market: 70000 },
-          { model: "Google Pixel 8 Pro", storage: 128, price: 42000, market: 50000 },
-          { model: "Google Pixel 8", storage: 128, price: 32000, market: 39000 },
-          { model: "Google Pixel 7 Pro", storage: 128, price: 26000, market: 32000 }
+          { model: "Google Pixel 9 Pro", storage: 128, price: 58000, market: 69600 },
+          { model: "Google Pixel 9 Pro", storage: 256, price: 70000, market: 84000 },
+          { model: "Google Pixel 9", storage: 128, price: 45000, market: 54000 },
+          { model: "Google Pixel 9", storage: 256, price: 51000, market: 61200 },
+          { model: "Google Pixel 8 Pro", storage: 128, price: 42000, market: 50400 },
+          { model: "Google Pixel 8 Pro", storage: 256, price: 48000, market: 57600 },
+          { model: "Google Pixel 8", storage: 128, price: 30000, market: 36000 },
+          { model: "Google Pixel 8", storage: 256, price: 35000, market: 42000 },
+          { model: "Google Pixel 7 Pro", storage: 128, price: 27000, market: 32400 }
         ]
       }
     ];
@@ -2003,18 +2132,13 @@
 
     function detectSeries(name) {
       const lower = (name || '').toLowerCase();
-      for (const cat of categories) {
-        if (cat.name && lower.includes(cat.name.toLowerCase())) {
-          return cat.id;
-        }
-      }
-      if (lower.includes('macbook') || lower.includes('mac')) return 'macbook';
-      if (lower.includes('samsung') || lower.includes('galaxy')) return 'samsung';
-      if (lower.includes('pixel')) return 'pixel';
-      if (lower.includes('ipad')) return 'ipad';
-      if (lower.includes('playstation') || lower.includes('ps5') || lower.includes('steam deck')) return 'consoles';
-      if (lower.includes('iphone')) return 'iphone';
-      return 'custom';
+      if (lower.includes('macbook') || lower.includes('mac')) return 'default_macbook';
+      if (lower.includes('samsung') || lower.includes('galaxy')) return 'default_samsung';
+      if (lower.includes('pixel')) return 'default_pixel';
+      if (lower.includes('ipad')) return 'default_ipad';
+      if (lower.includes('playstation') || lower.includes('ps5') || lower.includes('steam deck') || lower.includes('xbox')) return 'default_consoles';
+      if (lower.includes('iphone')) return 'default_iphone';
+      return 'default_custom';
     }
 
     let currentMatrix = [];
@@ -2045,7 +2169,21 @@
         }
         if (parsed.conditionRules) conditionRules = Object.assign(conditionRules, parsed.conditionRules);
         if (Array.isArray(parsed.categories)) {
-          categories = parsed.categories;
+          categories = parsed.categories.map(c => {
+            if (c && c.id && !c.id.startsWith('cat_')) {
+              const oldId = c.id;
+              const newId = 'cat_' + c.id + '_' + Math.random().toString(36).substring(2, 7);
+              if (Array.isArray(parsed.matrix)) {
+                parsed.matrix.forEach(m => {
+                  if (m.series === oldId && m.category === c.name) {
+                    m.series = newId;
+                  }
+                });
+              }
+              c.id = newId;
+            }
+            return c;
+          });
         }
       } else {
         currentMatrix = DEFAULT_CATALOG;
@@ -2353,22 +2491,10 @@
           const cat = categories.find(c => c.id === activeFilter);
           if (!cat) return false;
 
-          const lowerModel = (item.model || '').toLowerCase();
-          const lowerCat = cat.name.toLowerCase();
+          const matchesCat = (item.series === cat.id) || 
+            (item.category && item.category.trim().toLowerCase() === cat.name.trim().toLowerCase());
 
-          const matchesId = item.series === cat.id;
-          const matchesCategoryField = item.category && item.category.toLowerCase() === lowerCat;
-          const matchesModelName = lowerModel.includes(lowerCat);
-          const matchesSpecial = (
-            (cat.id === 'iphone' && lowerModel.includes('iphone')) ||
-            (cat.id === 'macbook' && lowerModel.includes('mac')) ||
-            (cat.id === 'samsung' && (lowerModel.includes('samsung') || lowerModel.includes('galaxy'))) ||
-            (cat.id === 'pixel' && lowerModel.includes('pixel')) ||
-            (cat.id === 'ipad' && lowerModel.includes('ipad')) ||
-            (cat.id === 'consoles' && (lowerModel.includes('playstation') || lowerModel.includes('ps5') || lowerModel.includes('steam deck') || lowerModel.includes('xbox')))
-          );
-
-          if (!matchesId && !matchesCategoryField && !matchesModelName && !matchesSpecial) {
+          if (!matchesCat) {
             return false;
           }
         }
@@ -2394,6 +2520,33 @@
           if (btnAddFirst) {
             btnAddFirst.addEventListener('click', () => {
               document.getElementById('btnOpenAddModal').click();
+            });
+          }
+        } else if (activeFilter !== 'all') {
+          const cat = categories.find(c => c.id === activeFilter);
+          const catName = cat ? cat.name : 'папке';
+          const tpl = POPULAR_TEMPLATES.find(t => t.id === activeFilter || (t.name && cat && t.name.toLowerCase() === cat.name.toLowerCase()));
+          container.innerHTML = `
+            <div style="text-align:center; padding: 40px 15px; color: var(--text-muted)">
+              <p style="font-size: 32px; margin-bottom: 8px">📁</p>
+              <p style="font-size: 15px; font-weight: 700; color: #fff;">Папка «${catName}» пуста</p>
+              <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px; line-height: 1.4;">В этой папке пока нет моделей. Добавьте модель вручную${tpl ? ' или загрузите готовые модели бренда' : ''}.</p>
+              <div style="display: flex; gap: 8px; justify-content: center; margin-top: 14px; flex-wrap: wrap;">
+                <button type="button" class="btn-save" id="btnEmptyFolderAddModel" style="padding: 9px 16px; font-size: 13px;">➕ Добавить модель</button>
+                ${tpl ? `<button type="button" class="btn-secondary" id="btnEmptyFolderAddPreset" style="padding: 9px 16px; font-size: 13px;">⚡️ Добавить из шаблона</button>` : ''}
+              </div>
+            </div>
+          `;
+          const btnAdd = container.querySelector('#btnEmptyFolderAddModel');
+          if (btnAdd) {
+            btnAdd.addEventListener('click', () => {
+              document.getElementById('btnOpenAddModal').click();
+            });
+          }
+          const btnPreset = container.querySelector('#btnEmptyFolderAddPreset');
+          if (btnPreset && tpl) {
+            btnPreset.addEventListener('click', () => {
+              openTemplatePresetModal(tpl);
             });
           }
         } else {
@@ -2808,7 +2961,8 @@
       // Добавляем категорию, если ещё нет
       let cat = categories.find(c => c.id === tpl.id || (c.name && c.name.toLowerCase() === tpl.name.toLowerCase()));
       if (!cat) {
-        cat = { id: tpl.id, name: tpl.name, icon: tpl.icon };
+        const uniqueCatId = 'cat_' + tpl.id + '_' + Date.now();
+        cat = { id: uniqueCatId, name: tpl.name, icon: tpl.icon };
         categories.push(cat);
       }
 
@@ -2824,15 +2978,16 @@
               key,
               model: m.model,
               storage: m.storage || 0,
-              series: tpl.id,
-              category: tpl.name,
+              series: cat.id,
+              category: cat.name,
               price: m.price,
               market: m.market || Math.round(m.price * 1.2 / 500) * 500,
-              enabled: true
+              enabled: true,
+              isCustom: true
             });
           } else {
-            existing.series = tpl.id;
-            existing.category = tpl.name;
+            existing.series = cat.id;
+            existing.category = cat.name;
             existing.enabled = true;
           }
         });
@@ -2841,7 +2996,7 @@
       saveLocal();
       renderSeriesBar();
       updateCategoryDropdown();
-      selectFilter(tpl.id);
+      selectFilter(cat.id);
       presetModal.classList.remove('active');
       createCatModal.classList.remove('active');
       manageCatModal.classList.remove('active');
@@ -3357,6 +3512,8 @@
     function updateRegionUI() {
       const labelEl = document.getElementById('currentRegionLabel');
       if (labelEl) labelEl.textContent = currentSelectedRegion;
+      const settingLabelEl = document.getElementById('settingCurrentRegionName');
+      if (settingLabelEl) settingLabelEl.textContent = currentSelectedRegion;
       localStorage.setItem('resell_selected_region', currentSelectedRegion);
     }
 
@@ -3548,10 +3705,27 @@
     }
 
     document.getElementById('btnOpenRegionModal').addEventListener('click', () => {
-      regionSearchInput.value = '';
-      renderRegionModal();
-      regionModal.classList.add('active');
+      condModal.classList.add('active');
     });
+
+    const settingRegionRow = document.getElementById('settingRegionRow');
+    if (settingRegionRow) {
+      settingRegionRow.addEventListener('click', () => {
+        regionSearchInput.value = '';
+        renderRegionModal();
+        regionModal.classList.add('active');
+      });
+    }
+
+    const btnChangeRegionInSettings = document.getElementById('btnChangeRegionInSettings');
+    if (btnChangeRegionInSettings) {
+      btnChangeRegionInSettings.addEventListener('click', (e) => {
+        e.stopPropagation();
+        regionSearchInput.value = '';
+        renderRegionModal();
+        regionModal.classList.add('active');
+      });
+    }
 
     document.getElementById('btnCloseRegionModal').addEventListener('click', () => {
       regionModal.classList.remove('active');
