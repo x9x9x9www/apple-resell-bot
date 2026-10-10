@@ -271,9 +271,10 @@
       bottom: 0;
       left: 0;
       right: 0;
-      height: calc(56px + env(safe-area-inset-bottom, 0px));
-      padding: 6px 20px env(safe-area-inset-bottom, 0px);
-      background: rgba(12, 12, 14, 0.92);
+      height: calc(58px + env(safe-area-inset-bottom, 0px));
+      padding: 4px 20px calc(4px + env(safe-area-inset-bottom, 0px));
+      box-sizing: border-box;
+      background: rgba(12, 12, 14, 0.94);
       backdrop-filter: blur(28px) saturate(200%);
       -webkit-backdrop-filter: blur(28px) saturate(200%);
       border-top: 0.5px solid rgba(255, 255, 255, 0.12);
@@ -287,6 +288,7 @@
     .tab-item {
       flex: 1;
       max-width: 160px;
+      height: 100%;
       background: transparent;
       border: none;
       color: var(--text-muted);
@@ -294,10 +296,14 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 3px;
-      padding: 5px 12px;
+      gap: 2px;
+      padding: 4px 12px;
       border-radius: 14px;
       cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
       transition: all 0.22s var(--spring-smooth);
       position: relative;
     }
@@ -2424,6 +2430,7 @@
         <button class="btn-cancel-modal" id="btnCancelCatalogManage" style="width: 100%;">✕ Отмена</button>
       </div>
     </div>
+  </div>
   <!-- iOS Native UIAlertController Modal -->
   <div class="ios-alert-overlay" id="iosAlertModal">
     <div class="ios-alert-dialog">
@@ -3286,7 +3293,9 @@ const POPULAR_TEMPLATES = [
         // Удаление модели целиком (всех конфигураций памяти данной модели)
         const delBtn = card.querySelector('.btn-delete');
         if (delBtn) {
-          delBtn.addEventListener('click', async () => {
+          delBtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            e.preventDefault();
             const confirmed = await showIosAlert({
               title: "Удалить модель?",
               message: `Удалить «${group.model}» и все объемы памяти из матрицы?`,
@@ -4205,6 +4214,266 @@ const POPULAR_TEMPLATES = [
     function selectRegion(name, key = "", triggerToast = true) {
       if (!name) return;
       currentSelectedRegion = name;
+    updateRegionUI();
+      regionModal.classList.remove('active');
+
+      if (triggerToast) {
+        showDynamicIsland("Регион поиска изменен", `${name} • Мониторинг настроен ⚡️`, "📍");
+      } else if (tg?.HapticFeedback) {
+        tg.HapticFeedback.selectionChanged();
+      }
+
+      saveLocal();
+    }
+
+    const btnOpenRegionModal = document.getElementById('btnOpenRegionModal');
+    if (btnOpenRegionModal) {
+      btnOpenRegionModal.addEventListener('click', () => {
+        condModal.classList.add('active');
+      });
+    }
+
+    const settingRegionRow = document.getElementById('settingRegionRow');
+    if (settingRegionRow) {
+      settingRegionRow.addEventListener('click', () => {
+        regionSearchInput.value = '';
+        renderRegionModal();
+        regionModal.classList.add('active');
+      });
+    }
+
+    const btnChangeRegionInSettings = document.getElementById('btnChangeRegionInSettings');
+    if (btnChangeRegionInSettings) {
+      btnChangeRegionInSettings.addEventListener('click', (e) => {
+        e.stopPropagation();
+        regionSearchInput.value = '';
+        renderRegionModal();
+        regionModal.classList.add('active');
+      });
+    }
+
+    document.getElementById('btnCloseRegionModal').addEventListener('click', () => {
+      regionModal.classList.remove('active');
+    });
+
+    document.getElementById('btnCancelRegion').addEventListener('click', () => {
+      regionModal.classList.remove('active');
+    });
+
+    regionSearchInput.addEventListener('input', () => {
+      renderRegionModal();
+    });
+
+    // Модалка управления каталогом (Сброс по умолчанию / Полная очистка)
+    const catalogManageModal = document.getElementById('catalogManageModal');
+
+    document.getElementById('btnResetCatalog').addEventListener('click', () => {
+      if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+      catalogManageModal.classList.add('active');
+    });
+
+    document.getElementById('btnCloseCatalogManageModal').addEventListener('click', () => {
+      catalogManageModal.classList.remove('active');
+    });
+
+    document.getElementById('btnCancelCatalogManage').addEventListener('click', () => {
+      catalogManageModal.classList.remove('active');
+    });
+
+    // Опция 1: Восстановление каталога по умолчанию (117 моделей)
+    document.getElementById('btnActionRestoreDefault').addEventListener('click', async () => {
+      catalogManageModal.classList.remove('active');
+      const confirmed = await showIosAlert({
+        title: "Сбросить каталог?",
+        message: "Восстановить заводской каталог и цены по умолчанию?\nВсе стандартные флагманы вернутся к базовым значениям.",
+        confirmText: "Восстановить",
+        cancelText: "Отмена",
+        isDestructive: true,
+        icon: "🔄"
+      });
+      if (!confirmed) return;
+
+      try {
+        localStorage.removeItem('gadget_resell_matrix_clean');
+        deletedKeys.clear();
+
+        let loaded = [];
+        try {
+          const res = await fetch('./pricing_matrix_default.json?t=' + Date.now());
+          if (res.ok) {
+            const data = await res.json();
+            for (const [model, storages] of Object.entries(data)) {
+              const series = detectSeries(model);
+              for (const [storage, cfg] of Object.entries(storages)) {
+                const key = `${model}_${storage}`;
+                const price = Number(cfg.max_buy || cfg.price || 0);
+                const market = Number(cfg.market || Math.round(price * 1.2 / 500) * 500);
+                const enabled = cfg.enabled !== false;
+                loaded.push({
+                  key,
+                  model,
+                  storage: Number(storage) || storage,
+                  series,
+                  category: cfg.category || '',
+                  price,
+                  market,
+                  enabled,
+                  isCustom: series === 'custom' || categories.some(c => c.id === series)
+                });
+              }
+            }
+          }
+        } catch (e) {}
+
+        if (loaded.length === 0) {
+          try {
+            const res2 = await fetch('./pricing_matrix.json?t=' + Date.now());
+            if (res2.ok) {
+              const data2 = await res2.json();
+              for (const [model, storages] of Object.entries(data2)) {
+                const series = detectSeries(model);
+                for (const [storage, cfg] of Object.entries(storages)) {
+                  const key = `${model}_${storage}`;
+                  const price = Number(cfg.max_buy || cfg.price || 0);
+                  const market = Number(cfg.market || Math.round(price * 1.2 / 500) * 500);
+                  const enabled = cfg.enabled !== false;
+                  loaded.push({
+                    key,
+                    model,
+                    storage: Number(storage) || storage,
+                    series,
+                    category: cfg.category || '',
+                    price,
+                    market,
+                    enabled,
+                    isCustom: series === 'custom' || categories.some(c => c.id === series)
+                  });
+                }
+              }
+            }
+          } catch (e) {}
+        }
+
+        if (loaded.length > 0) {
+          currentMatrix = loaded;
+        } else {
+          currentMatrix = JSON.parse(JSON.stringify(DEFAULT_CATALOG));
+        }
+
+        snapshotInitialMatrix(currentMatrix, true);
+        saveLocal();
+        renderSeriesBar();
+        renderCards();
+        updateStats();
+
+        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+        showDynamicIsland("Каталог сброшен", "Заводские цены восстановлены ⚡️", "🔄");
+      } catch (err) {
+        showDynamicIsland("Ошибка сброса", err.message || "Не удалось сбросить", "✕", "error");
+      }
+    });
+
+    // Опция 2: Полная очистка каталога (0 моделей — для настройки с нуля)
+    document.getElementById('btnActionClearAll').addEventListener('click', async () => {
+      catalogManageModal.classList.remove('active');
+      const confirmed = await showIosAlert({
+        title: "Очистить каталог?",
+        message: "Все модели будут удалены (0 шт.), и вы сможете вручную с чистого листа добавить только нужные устройства.",
+        confirmText: "Очистить всё",
+        cancelText: "Отмена",
+        isDestructive: true,
+        icon: "🗑️"
+      });
+      if (!confirmed) return;
+
+      try {
+        // Добавляем все текущие ключи в список удаленных для синхронизации
+        currentMatrix.forEach(m => deletedKeys.add(m.key));
+        currentMatrix = [];
+
+        saveLocal();
+        snapshotInitialMatrix([], true);
+        renderSeriesBar();
+        renderCards();
+        updateStats();
+
+        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
+        showDynamicIsland("Каталог очищен", "Все модели удалены (0 шт.)", "🗑️");
+      } catch (err) {
+        showDynamicIsland("Ошибка очистки", err.message || "Не удалось очистить", "✕", "error");
+      }
+    });
+
+    // Функция сборки данных профиля
+    function buildResellPayload() {
+      const activeCount = currentMatrix.filter(m => m.enabled !== false).length;
+      const totalCount = currentMatrix.length;
+      const remainingKeys = currentMatrix.map(m => m.key);
+
+      const modifiedModels = currentMatrix.filter(m => {
+        if (m.isCustom) return true;
+        const init = initialMatrixMap.get(m.key);
+        if (!init) return true;
+        return Number(m.price) !== Number(init.price) ||
+               Number(m.market) !== Number(init.market) ||
+               Boolean(m.enabled) !== Boolean(init.enabled) ||
+               String(m.category || '') !== String(init.category || '');
+      }).map(m => [
+        m.model,
+        m.storage,
+        Number(m.price || 0),
+        m.enabled !== false ? 1 : 0,
+        m.category || (categories.find(c => c.id === m.series)?.name) || m.series || "",
+        Number(m.market || 0)
+      ]);
+
+      const payload = {
+        action: "save_resell_profile",
+        region: currentSelectedRegion,
+        condition_rules: conditionRules,
+        categories: categories,
+        active_count: activeCount,
+        total_count: totalCount,
+        clear_all: currentMatrix.length === 0,
+        deleted_keys: Array.from(deletedKeys),
+        remaining_keys: remainingKeys,
+        models: modifiedModels
+      };
+
+      let jsonPayload = JSON.stringify(payload);
+
+      // Защитный лимит Telegram: 4096 байт
+      if (new Blob([jsonPayload]).size > 3800) {
+        delete payload.remaining_keys;
+        jsonPayload = JSON.stringify(payload);
+      }
+      if (new Blob([jsonPayload]).size > 3800) {
+        payload.models = modifiedModels.slice(0, 30);
+        jsonPayload = JSON.stringify(payload);
+      }
+      return jsonPayload;
+    }
+
+    // Сохранение и применение цен в бота (БЕЗ закрытия приложения!)
+    document.getElementById('btnSave').addEventListener('click', () => {
+      const saveBtn = document.getElementById('btnSave');
+      const originalSaveHtml = saveBtn.innerHTML;
+      saveBtn.classList.add('success-state');
+      saveBtn.innerHTML = `<span>✨ Цены применены в бота!</span>`;
+      setTimeout(() => {
+        saveBtn.classList.remove('success-state');
+        saveBtn.innerHTML = originalSaveHtml;
+      }, 1800);
+
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+
+      saveLocal();
+      snapshotInitialMatrix(currentMatrix, true);
+
+      const activeCount = currentMatrix.filter(m => m.enabled !== false).length;
+      showDynamicIsland("Цены применены", `${activeCount} активных моделей настроено в боте ⚡️`, "💾");
+    });
+
       // ========================================================
     // Аналитика и учет сделок (CRM)
     // ========================================================
@@ -4814,267 +5083,8 @@ const POPULAR_TEMPLATES = [
       showDynamicIsland("Сделка сохранена", `+${profit.toLocaleString('ru-RU')} ₽ чистая маржа ⚡️`, "💰");
     });
 
+
     loadUserDeals();
-    updateRegionUI();
-      regionModal.classList.remove('active');
-
-      if (triggerToast) {
-        showDynamicIsland("Регион поиска изменен", `${name} • Мониторинг настроен ⚡️`, "📍");
-      } else if (tg?.HapticFeedback) {
-        tg.HapticFeedback.selectionChanged();
-      }
-
-      saveLocal();
-    }
-
-    const btnOpenRegionModal = document.getElementById('btnOpenRegionModal');
-    if (btnOpenRegionModal) {
-      btnOpenRegionModal.addEventListener('click', () => {
-        condModal.classList.add('active');
-      });
-    }
-
-    const settingRegionRow = document.getElementById('settingRegionRow');
-    if (settingRegionRow) {
-      settingRegionRow.addEventListener('click', () => {
-        regionSearchInput.value = '';
-        renderRegionModal();
-        regionModal.classList.add('active');
-      });
-    }
-
-    const btnChangeRegionInSettings = document.getElementById('btnChangeRegionInSettings');
-    if (btnChangeRegionInSettings) {
-      btnChangeRegionInSettings.addEventListener('click', (e) => {
-        e.stopPropagation();
-        regionSearchInput.value = '';
-        renderRegionModal();
-        regionModal.classList.add('active');
-      });
-    }
-
-    document.getElementById('btnCloseRegionModal').addEventListener('click', () => {
-      regionModal.classList.remove('active');
-    });
-
-    document.getElementById('btnCancelRegion').addEventListener('click', () => {
-      regionModal.classList.remove('active');
-    });
-
-    regionSearchInput.addEventListener('input', () => {
-      renderRegionModal();
-    });
-
-    // Модалка управления каталогом (Сброс по умолчанию / Полная очистка)
-    const catalogManageModal = document.getElementById('catalogManageModal');
-
-    document.getElementById('btnResetCatalog').addEventListener('click', () => {
-      if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-      catalogManageModal.classList.add('active');
-    });
-
-    document.getElementById('btnCloseCatalogManageModal').addEventListener('click', () => {
-      catalogManageModal.classList.remove('active');
-    });
-
-    document.getElementById('btnCancelCatalogManage').addEventListener('click', () => {
-      catalogManageModal.classList.remove('active');
-    });
-
-    // Опция 1: Восстановление каталога по умолчанию (117 моделей)
-    document.getElementById('btnActionRestoreDefault').addEventListener('click', async () => {
-      catalogManageModal.classList.remove('active');
-      const confirmed = await showIosAlert({
-        title: "Сбросить каталог?",
-        message: "Восстановить заводской каталог и цены по умолчанию?\nВсе стандартные флагманы вернутся к базовым значениям.",
-        confirmText: "Восстановить",
-        cancelText: "Отмена",
-        isDestructive: true,
-        icon: "🔄"
-      });
-      if (!confirmed) return;
-
-      try {
-        localStorage.removeItem('gadget_resell_matrix_clean');
-        deletedKeys.clear();
-
-        let loaded = [];
-        try {
-          const res = await fetch('./pricing_matrix_default.json?t=' + Date.now());
-          if (res.ok) {
-            const data = await res.json();
-            for (const [model, storages] of Object.entries(data)) {
-              const series = detectSeries(model);
-              for (const [storage, cfg] of Object.entries(storages)) {
-                const key = `${model}_${storage}`;
-                const price = Number(cfg.max_buy || cfg.price || 0);
-                const market = Number(cfg.market || Math.round(price * 1.2 / 500) * 500);
-                const enabled = cfg.enabled !== false;
-                loaded.push({
-                  key,
-                  model,
-                  storage: Number(storage) || storage,
-                  series,
-                  category: cfg.category || '',
-                  price,
-                  market,
-                  enabled,
-                  isCustom: series === 'custom' || categories.some(c => c.id === series)
-                });
-              }
-            }
-          }
-        } catch (e) {}
-
-        if (loaded.length === 0) {
-          try {
-            const res2 = await fetch('./pricing_matrix.json?t=' + Date.now());
-            if (res2.ok) {
-              const data2 = await res2.json();
-              for (const [model, storages] of Object.entries(data2)) {
-                const series = detectSeries(model);
-                for (const [storage, cfg] of Object.entries(storages)) {
-                  const key = `${model}_${storage}`;
-                  const price = Number(cfg.max_buy || cfg.price || 0);
-                  const market = Number(cfg.market || Math.round(price * 1.2 / 500) * 500);
-                  const enabled = cfg.enabled !== false;
-                  loaded.push({
-                    key,
-                    model,
-                    storage: Number(storage) || storage,
-                    series,
-                    category: cfg.category || '',
-                    price,
-                    market,
-                    enabled,
-                    isCustom: series === 'custom' || categories.some(c => c.id === series)
-                  });
-                }
-              }
-            }
-          } catch (e) {}
-        }
-
-        if (loaded.length > 0) {
-          currentMatrix = loaded;
-        } else {
-          currentMatrix = JSON.parse(JSON.stringify(DEFAULT_CATALOG));
-        }
-
-        snapshotInitialMatrix(currentMatrix, true);
-        saveLocal();
-        renderSeriesBar();
-        renderCards();
-        updateStats();
-
-        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-        showDynamicIsland("Каталог сброшен", "Заводские цены восстановлены ⚡️", "🔄");
-      } catch (err) {
-        showDynamicIsland("Ошибка сброса", err.message || "Не удалось сбросить", "✕", "error");
-      }
-    });
-
-    // Опция 2: Полная очистка каталога (0 моделей — для настройки с нуля)
-    document.getElementById('btnActionClearAll').addEventListener('click', async () => {
-      catalogManageModal.classList.remove('active');
-      const confirmed = await showIosAlert({
-        title: "Очистить каталог?",
-        message: "Все модели будут удалены (0 шт.), и вы сможете вручную с чистого листа добавить только нужные устройства.",
-        confirmText: "Очистить всё",
-        cancelText: "Отмена",
-        isDestructive: true,
-        icon: "🗑️"
-      });
-      if (!confirmed) return;
-
-      try {
-        // Добавляем все текущие ключи в список удаленных для синхронизации
-        currentMatrix.forEach(m => deletedKeys.add(m.key));
-        currentMatrix = [];
-
-        saveLocal();
-        snapshotInitialMatrix([], true);
-        renderSeriesBar();
-        renderCards();
-        updateStats();
-
-        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
-        showDynamicIsland("Каталог очищен", "Все модели удалены (0 шт.)", "🗑️");
-      } catch (err) {
-        showDynamicIsland("Ошибка очистки", err.message || "Не удалось очистить", "✕", "error");
-      }
-    });
-
-    // Функция сборки данных профиля
-    function buildResellPayload() {
-      const activeCount = currentMatrix.filter(m => m.enabled !== false).length;
-      const totalCount = currentMatrix.length;
-      const remainingKeys = currentMatrix.map(m => m.key);
-
-      const modifiedModels = currentMatrix.filter(m => {
-        if (m.isCustom) return true;
-        const init = initialMatrixMap.get(m.key);
-        if (!init) return true;
-        return Number(m.price) !== Number(init.price) ||
-               Number(m.market) !== Number(init.market) ||
-               Boolean(m.enabled) !== Boolean(init.enabled) ||
-               String(m.category || '') !== String(init.category || '');
-      }).map(m => [
-        m.model,
-        m.storage,
-        Number(m.price || 0),
-        m.enabled !== false ? 1 : 0,
-        m.category || (categories.find(c => c.id === m.series)?.name) || m.series || "",
-        Number(m.market || 0)
-      ]);
-
-      const payload = {
-        action: "save_resell_profile",
-        region: currentSelectedRegion,
-        condition_rules: conditionRules,
-        categories: categories,
-        active_count: activeCount,
-        total_count: totalCount,
-        clear_all: currentMatrix.length === 0,
-        deleted_keys: Array.from(deletedKeys),
-        remaining_keys: remainingKeys,
-        models: modifiedModels
-      };
-
-      let jsonPayload = JSON.stringify(payload);
-
-      // Защитный лимит Telegram: 4096 байт
-      if (new Blob([jsonPayload]).size > 3800) {
-        delete payload.remaining_keys;
-        jsonPayload = JSON.stringify(payload);
-      }
-      if (new Blob([jsonPayload]).size > 3800) {
-        payload.models = modifiedModels.slice(0, 30);
-        jsonPayload = JSON.stringify(payload);
-      }
-      return jsonPayload;
-    }
-
-    // Сохранение и применение цен в бота (БЕЗ закрытия приложения!)
-    document.getElementById('btnSave').addEventListener('click', () => {
-      const saveBtn = document.getElementById('btnSave');
-      const originalSaveHtml = saveBtn.innerHTML;
-      saveBtn.classList.add('success-state');
-      saveBtn.innerHTML = `<span>✨ Цены применены в бота!</span>`;
-      setTimeout(() => {
-        saveBtn.classList.remove('success-state');
-        saveBtn.innerHTML = originalSaveHtml;
-      }, 1800);
-
-      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-
-      saveLocal();
-      snapshotInitialMatrix(currentMatrix, true);
-
-      const activeCount = currentMatrix.filter(m => m.enabled !== false).length;
-      showDynamicIsland("Цены применены", `${activeCount} активных моделей настроено в боте ⚡️`, "💾");
-    });
-
     updateRegionUI();
     renderSeriesBar();
     renderCards();
