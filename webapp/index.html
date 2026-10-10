@@ -263,6 +263,397 @@
       background: rgba(255, 255, 255, 0.16);
     }
 
+    /* ========================================================
+       iOS Bottom Navigation Tab Bar (Glassmorphism)
+       ======================================================== */
+    .ios-tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: calc(56px + env(safe-area-inset-bottom, 0px));
+      padding: 6px 20px env(safe-area-inset-bottom, 0px);
+      background: rgba(12, 12, 14, 0.92);
+      backdrop-filter: blur(28px) saturate(200%);
+      -webkit-backdrop-filter: blur(28px) saturate(200%);
+      border-top: 0.5px solid rgba(255, 255, 255, 0.12);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 1050;
+      box-shadow: 0 -4px 28px rgba(0, 0, 0, 0.7);
+    }
+
+    .tab-item {
+      flex: 1;
+      max-width: 160px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      padding: 5px 12px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.22s var(--spring-smooth);
+      position: relative;
+    }
+
+    .tab-item:active {
+      transform: scale(0.94);
+    }
+
+    .tab-item .tab-icon {
+      font-size: 19px;
+      line-height: 1;
+      transition: transform 0.22s var(--spring-bounce);
+    }
+
+    .tab-item .tab-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: -0.1px;
+    }
+
+    .tab-item.active {
+      color: #fff;
+    }
+
+    .tab-item.active .tab-icon {
+      transform: scale(1.12);
+    }
+
+    .tab-item.active .tab-label {
+      color: var(--accent-highlight);
+      font-weight: 700;
+    }
+
+    .tab-item.active::after {
+      content: '';
+      position: absolute;
+      bottom: 2px;
+      width: 16px;
+      height: 3px;
+      background: var(--accent-highlight);
+      border-radius: 2px;
+      box-shadow: 0 0 8px var(--accent-highlight);
+    }
+
+    /* Save Bar position adjusted above Tab Bar */
+    .save-bar {
+      position: fixed;
+      bottom: calc(56px + env(safe-area-inset-bottom, 0px)) !important;
+      left: 0;
+      right: 0;
+      padding: 10px 16px;
+      background: rgba(10, 10, 12, 0.88);
+      backdrop-filter: blur(25px) saturate(190%);
+      -webkit-backdrop-filter: blur(25px) saturate(190%);
+      border-top: 0.5px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      gap: 10px;
+      z-index: 1000;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .models-list {
+      padding-bottom: calc(140px + env(safe-area-inset-bottom, 0px)) !important;
+    }
+
+    .analytics-view {
+      padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+    }
+
+    /* Analytics Dashboard & KPI Cards */
+    .analytics-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .period-toggle-group {
+      display: inline-flex;
+      background: rgba(255, 255, 255, 0.06);
+      border: 0.5px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 3px;
+      gap: 2px;
+    }
+
+    .period-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 5px 11px;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .period-btn.active {
+      background: var(--card-bg-elevated);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4), var(--card-specular);
+    }
+
+    .btn-add-deal {
+      background: var(--accent-gradient);
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: var(--card-specular), 0 4px 16px var(--accent-glow);
+      transition: transform 0.15s var(--spring-press), filter 0.15s ease;
+    }
+
+    .btn-add-deal:active {
+      transform: scale(0.95);
+    }
+
+    .kpi-cards-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .kpi-card {
+      background: var(--card-bg);
+      border: 0.5px solid var(--card-border);
+      border-radius: 20px;
+      padding: 16px 18px;
+      box-shadow: var(--card-specular), 0 8px 24px rgba(0, 0, 0, 0.35);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .kpi-card:hover {
+      border-color: var(--card-border-hover);
+    }
+
+    .kpi-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .kpi-title-block {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .kpi-icon-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      border: 0.5px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .kpi-card-title {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 600;
+      letter-spacing: -0.2px;
+    }
+
+    .trend-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      letter-spacing: -0.2px;
+    }
+
+    .trend-badge.up {
+      color: var(--success-color);
+      background: var(--success-subtle);
+      border: 0.5px solid rgba(48, 209, 88, 0.28);
+    }
+
+    .trend-badge.down {
+      color: var(--danger-color);
+      background: var(--danger-subtle);
+      border: 0.5px solid rgba(255, 69, 58, 0.28);
+    }
+
+    .trend-badge.neutral {
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .kpi-main-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .kpi-value-block {
+      flex: 1;
+    }
+
+    .kpi-value {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.7px;
+      color: #fff;
+      line-height: 1.1;
+    }
+
+    .kpi-subtext {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .kpi-sparkline-wrap {
+      width: 110px;
+      height: 42px;
+      flex-shrink: 0;
+    }
+
+    .kpi-sparkline-wrap svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    /* Deals List in Analytics */
+    .deals-section {
+      margin-top: 6px;
+    }
+
+    .deals-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .deals-section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .deals-count-pill {
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 8px;
+      color: var(--text-muted);
+    }
+
+    .deal-item-row {
+      background: var(--card-bg);
+      border: 0.5px solid var(--card-border);
+      border-radius: 16px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .deal-item-row:hover {
+      border-color: var(--card-border-hover);
+    }
+
+    .deal-left {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .deal-model-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .deal-storage-badge {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--accent-highlight);
+      background: var(--accent-subtle);
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    .deal-meta-line {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 3px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .deal-profit-badge {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--success-color);
+      white-space: nowrap;
+      text-align: right;
+    }
+
+    .btn-delete-deal {
+      background: transparent;
+      border: none;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      font-size: 14px;
+      padding: 4px;
+      border-radius: 6px;
+      transition: color 0.15s ease;
+    }
+
+    .btn-delete-deal:hover {
+      color: var(--danger-color);
+    }
+
+    #addDealModal {
+      z-index: 2150;
+    }
+
     /* Stats Bar */
     .stats-bar {
       font-size: 12px;
@@ -1461,53 +1852,179 @@
     </div>
   </header>
 
-  <!-- iOS Large Title Header -->
-  <div class="ios-large-header" id="iosLargeHeader">
-    <div class="ios-large-title-row">
-      <h1 class="ios-large-title">
-        <span>⚡️</span>
-        <span>ПЕРЕКУПЕР</span>
-      </h1>
-      <div class="header-actions">
-        <button class="btn-condition" id="btnOpenConditionModal" title="Настройки бота и региона">
-          <span>⚙️ Настройки</span>
-        </button>
-        <button class="btn-add-model" id="btnOpenAddModal">
-          <span>➕ Модель</span>
+  <!-- ==================== ЭКРАН 1: КАТАЛОГ / ПРАЙС-ЛИСТ ==================== -->
+  <div id="catalogView">
+    <!-- iOS Large Title Header -->
+    <div class="ios-large-header" id="iosLargeHeader">
+      <div class="ios-large-title-row">
+        <h1 class="ios-large-title">
+          <span>⚡️</span>
+          <span>ПЕРЕКУПЕР</span>
+        </h1>
+        <div class="header-actions">
+          <button class="btn-condition" id="btnOpenConditionModal" title="Настройки бота и региона">
+            <span>⚙️ Настройки</span>
+          </button>
+          <button class="btn-add-model" id="btnOpenAddModal">
+            <span>➕ Модель</span>
+          </button>
+        </div>
+      </div>
+      <div class="stats-bar">
+        <span>Всего: <b class="stats-pill" id="statTotal">0</b></span>
+        <span>Активных: <b class="stats-pill" id="statActive">0</b></span>
+        <span>Серия: <span id="statFilter" style="color:var(--accent-highlight); font-weight:700;">Все</span></span>
+        <button class="btn-reset-catalog" id="btnResetCatalog" title="Сбросить все изменения и восстановить каталог по умолчанию">
+          🔄 Сброс
         </button>
       </div>
     </div>
-    <div class="stats-bar">
-      <span>Всего: <b class="stats-pill" id="statTotal">0</b></span>
-      <span>Активных: <b class="stats-pill" id="statActive">0</b></span>
-      <span>Серия: <span id="statFilter" style="color:var(--accent-highlight); font-weight:700;">Все</span></span>
-      <button class="btn-reset-catalog" id="btnResetCatalog" title="Сбросить все изменения и восстановить каталог по умолчанию">
-        🔄 Сброс
-      </button>
+
+    <!-- Поиск -->
+    <div class="search-wrapper">
+      <span class="search-icon">🔍</span>
+      <input type="text" class="search-input" id="searchInput" placeholder="Поиск (MacBook, S24, Pixel, iPad, iPhone...)">
+    </div>
+
+    <!-- Фильтр по сериям -->
+    <div class="series-bar" id="seriesBar">
+      <!-- Генерируется динамически через renderSeriesBar() -->
+    </div>
+
+    <!-- Список моделей -->
+    <div class="models-list" id="modelsList">
+      <!-- Генерируется через JS -->
     </div>
   </div>
 
-  <!-- Поиск -->
-  <div class="search-wrapper">
-    <span class="search-icon">🔍</span>
-    <input type="text" class="search-input" id="searchInput" placeholder="Поиск (MacBook, S24, Pixel, iPad, iPhone...)">
+  <!-- ==================== ЭКРАН 2: АНАЛИТИКА И СДЕЛКИ ==================== -->
+  <div id="analyticsView" class="analytics-view" style="display: none;">
+    <!-- Large Header for Analytics -->
+    <div class="ios-large-header">
+      <div class="ios-large-title-row">
+        <h1 class="ios-large-title">
+          <span>📊</span>
+          <span>АНАЛИТИКА</span>
+        </h1>
+        <div class="header-actions">
+          <button class="btn-add-deal" id="btnOpenAddDealModal">
+            <span>➕ Сделка</span>
+          </button>
+        </div>
+      </div>
+      <div class="analytics-header-row">
+        <div class="period-toggle-group" id="periodToggleGroup">
+          <button type="button" class="period-btn active" data-period="month">Этот месяц</button>
+          <button type="button" class="period-btn" data-period="3months">3 месяца</button>
+          <button type="button" class="period-btn" data-period="all">Всё время</button>
+        </div>
+        <button type="button" class="btn-condition" id="btnResetDealsDemo" style="font-size: 11px; padding: 5px 10px;" title="Сбросить к стартовым демо-сделкам">
+          🔄 Демо
+        </button>
+      </div>
+    </div>
+
+    <!-- Карточки KPI с мини-графиками -->
+    <div class="kpi-cards-grid" id="kpiCardsContainer">
+      <!-- Рендерится через renderAnalyticsDashboard() -->
+    </div>
+
+    <!-- История сделок -->
+    <div class="deals-section">
+      <div class="deals-section-header">
+        <div class="deals-section-title">
+          <span>📝 Недавние продажи</span>
+          <span class="deals-count-pill" id="dealsCountPill">0</span>
+        </div>
+        <button type="button" class="btn-secondary" id="btnQuickAddDeal" style="padding: 5px 10px; font-size: 11px; border-radius: 8px;">
+          ➕ Записать
+        </button>
+      </div>
+      <div id="dealsListContainer">
+        <!-- Список сделок -->
+      </div>
+    </div>
   </div>
 
-  <!-- Фильтр по сериям -->
-  <div class="series-bar" id="seriesBar">
-    <!-- Генерируется динамически через renderSeriesBar() -->
-  </div>
-
-  <!-- Список моделей -->
-  <div class="models-list" id="modelsList">
-    <!-- Генерируется через JS -->
-  </div>
-
-  <!-- Нижняя панель сохранения -->
-  <div class="save-bar">
+  <!-- Нижняя панель сохранения (только для прайса) -->
+  <div class="save-bar" id="saveBar">
     <button class="btn-save" id="btnSave">
       <span>💾 Применить в бота</span>
     </button>
+  </div>
+
+  <!-- iOS Bottom Navigation Tab Bar -->
+  <nav class="ios-tab-bar" id="iosTabBar">
+    <button type="button" class="tab-item active" id="tabCatalog" data-tab="catalog">
+      <span class="tab-icon">🏷️</span>
+      <span class="tab-label">Прайс-лист</span>
+    </button>
+    <button type="button" class="tab-item" id="tabAnalytics" data-tab="analytics">
+      <span class="tab-icon">📊</span>
+      <span class="tab-label">Аналитика</span>
+    </button>
+  </nav>
+
+  <!-- Модалка: Запись продажи (Сделка) -->
+  <div class="modal-overlay" id="addDealModal">
+    <div class="modal-sheet">
+      <div class="modal-grabber"></div>
+      <div class="modal-header">
+        <h3 class="modal-title">💰 Записать сделку</h3>
+        <button class="btn-close-modal" id="btnCloseDealModal">✕</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Модель телефона:</label>
+        <input type="text" class="form-input" id="dealModelName" placeholder="например: iPhone 15 Pro, Samsung S24" autocomplete="off" list="dealModelSuggestions">
+        <datalist id="dealModelSuggestions">
+          <!-- Заполняется JS уникальными моделями из каталога -->
+        </datalist>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Объем памяти (ГБ):</label>
+        <div class="memory-chips-row" id="dealMemoryChips">
+          <button type="button" class="mem-chip" data-val="64">64 GB</button>
+          <button type="button" class="mem-chip active" data-val="128">128 GB</button>
+          <button type="button" class="mem-chip" data-val="256">256 GB</button>
+          <button type="button" class="mem-chip" data-val="512">512 GB</button>
+          <button type="button" class="mem-chip" data-val="1024">1 TB</button>
+        </div>
+        <input type="hidden" id="dealStorage" value="128">
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div class="form-group">
+          <label class="form-label">Цена выкупа (₽):</label>
+          <input type="number" class="form-input" id="dealBuyPrice" placeholder="Куплен за..." min="0" step="500">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Цена продажи (₽):</label>
+          <input type="number" class="form-input" id="dealSellPrice" placeholder="Продан за..." min="0" step="500">
+        </div>
+      </div>
+
+      <!-- Живой расчет маржи -->
+      <div id="dealProfitPreviewBox" style="background: rgba(48, 209, 88, 0.1); border: 1px solid rgba(48, 209, 88, 0.25); border-radius: 12px; padding: 10px 14px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 12px; color: var(--text-muted);">Чистый профит:</span>
+        <b id="dealProfitPreviewVal" style="font-size: 15px; color: var(--success-color);">0 ₽</b>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Дата сделки:</label>
+        <input type="date" class="form-input" id="dealDate">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Заметка / источник (опционально):</label>
+        <input type="text" class="form-input" id="dealNote" placeholder="например: Авито, идеал, полный комплект">
+      </div>
+
+      <button type="button" class="btn-save" id="btnSubmitDeal" style="width: 100%; margin-top: 10px;">
+        <span>✅ Сохранить сделку</span>
+      </button>
+    </div>
   </div>
 
   <!-- Модалка: Выбор региона поиска -->
@@ -3688,7 +4205,617 @@ const POPULAR_TEMPLATES = [
     function selectRegion(name, key = "", triggerToast = true) {
       if (!name) return;
       currentSelectedRegion = name;
-      updateRegionUI();
+      // ========================================================
+    // Аналитика и учет сделок (CRM)
+    // ========================================================
+    let currentAppTab = 'catalog'; // 'catalog' | 'analytics'
+    let currentAnalyticsPeriod = 'month'; // 'month' | '3months' | 'all'
+    let userDeals = [];
+
+    function generateDemoDeals() {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = now.getMonth();
+      const d = Math.min(now.getDate(), 20);
+
+      function fmtD(year, month, day) {
+        const mm = String(month + 1).padStart(2, '0');
+        const dd = String(Math.max(1, Math.min(28, day))).padStart(2, '0');
+        return `${year}-${mm}-${dd}`;
+      }
+
+      const prevM = m === 0 ? 11 : m - 1;
+      const prevY = m === 0 ? y - 1 : y;
+
+      return [
+        {
+          id: 'deal_demo_1',
+          model: 'iPhone 15 Pro',
+          storage: 128,
+          buyPrice: 65000,
+          sellPrice: 78500,
+          profit: 13500,
+          date: fmtD(y, m, d - 1),
+          note: 'Авито, идеал, полный комплект'
+        },
+        {
+          id: 'deal_demo_2',
+          model: 'iPhone 13',
+          storage: 128,
+          buyPrice: 32000,
+          sellPrice: 42000,
+          profit: 10000,
+          date: fmtD(y, m, d - 4),
+          note: 'Юла, батарея 89%, чехол в подарок'
+        },
+        {
+          id: 'deal_demo_3',
+          model: 'Samsung Galaxy S23 Ultra',
+          storage: 256,
+          buyPrice: 48000,
+          sellPrice: 61500,
+          profit: 13500,
+          date: fmtD(y, m, d - 8),
+          note: 'Личная встреча, без царапин'
+        },
+        {
+          id: 'deal_demo_4',
+          model: 'iPhone 14 Pro',
+          storage: 256,
+          buyPrice: 53000,
+          sellPrice: 66000,
+          profit: 13000,
+          date: fmtD(y, m, d - 12),
+          note: 'Срочный выкуп, ушел за 2 дня'
+        },
+        {
+          id: 'deal_demo_prev_1',
+          model: 'iPhone 13',
+          storage: 128,
+          buyPrice: 33000,
+          sellPrice: 41000,
+          profit: 8000,
+          date: fmtD(prevY, prevM, 10),
+          note: 'Авито, быстрый перекуп'
+        },
+        {
+          id: 'deal_demo_prev_2',
+          model: 'iPhone 12',
+          storage: 128,
+          buyPrice: 23000,
+          sellPrice: 31000,
+          profit: 8000,
+          date: fmtD(prevY, prevM, 18),
+          note: 'Хорошее состояние'
+        },
+        {
+          id: 'deal_demo_prev_3',
+          model: 'iPhone 14',
+          storage: 128,
+          buyPrice: 40000,
+          sellPrice: 49500,
+          profit: 9500,
+          date: fmtD(prevY, prevM, 25),
+          note: 'Коробка, кабель'
+        }
+      ];
+    }
+
+    function loadUserDeals() {
+      try {
+        const saved = localStorage.getItem('resell_deals_history');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            userDeals = parsed;
+            return;
+          }
+        }
+      } catch (e) {}
+      userDeals = generateDemoDeals();
+      saveUserDeals();
+    }
+
+    function saveUserDeals() {
+      localStorage.setItem('resell_deals_history', JSON.stringify(userDeals));
+    }
+
+    function switchAppTab(tab) {
+      currentAppTab = tab;
+      const catalogView = document.getElementById('catalogView');
+      const analyticsView = document.getElementById('analyticsView');
+      const saveBar = document.getElementById('saveBar');
+      const tabCatalog = document.getElementById('tabCatalog');
+      const tabAnalytics = document.getElementById('tabAnalytics');
+
+      if (tab === 'catalog') {
+        catalogView.style.display = 'block';
+        analyticsView.style.display = 'none';
+        if (saveBar) saveBar.style.display = 'flex';
+        tabCatalog.classList.add('active');
+        tabAnalytics.classList.remove('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        catalogView.style.display = 'none';
+        analyticsView.style.display = 'block';
+        if (saveBar) saveBar.style.display = 'none';
+        tabCatalog.classList.remove('active');
+        tabAnalytics.classList.add('active');
+        renderAnalyticsDashboard();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+    }
+
+    document.querySelectorAll('.tab-item').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.dataset.tab;
+        if (target) switchAppTab(target);
+      });
+    });
+
+    // Генератор SVG Sparklines
+    function generateSparklineSvg(dataPoints, isPositive = true, svgId = 'spark') {
+      if (!dataPoints || dataPoints.length === 0) {
+        dataPoints = [10, 15, 20, 28, 35];
+      }
+      if (dataPoints.length === 1) {
+        dataPoints = [dataPoints[0] * 0.75, dataPoints[0]];
+      }
+
+      const width = 110;
+      const height = 40;
+      const pad = 4;
+
+      const min = Math.min(...dataPoints);
+      const max = Math.max(...dataPoints);
+      const range = (max - min) === 0 ? 1 : (max - min);
+
+      const pts = dataPoints.map((val, idx) => {
+        const x = pad + (idx / (dataPoints.length - 1)) * (width - pad * 2);
+        const y = height - pad - ((val - min) / range) * (height - pad * 2);
+        return { x, y };
+      });
+
+      const strokeColor = isPositive ? 'var(--success-color)' : 'var(--danger-color)';
+      const gradColor = isPositive ? '#30D158' : '#FF453A';
+      const gradId = `${svgId}_${Math.random().toString(36).substr(2, 6)}`;
+
+      let pathD = `M ${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`;
+      for (let i = 1; i < pts.length; i++) {
+        const prev = pts[i - 1];
+        const curr = pts[i];
+        const cx = (prev.x + curr.x) / 2;
+        pathD += ` C ${cx.toFixed(1)} ${prev.y.toFixed(1)}, ${cx.toFixed(1)} ${curr.y.toFixed(1)}, ${curr.x.toFixed(1)} ${curr.y.toFixed(1)}`;
+      }
+
+      const lastPt = pts[pts.length - 1];
+      const areaD = `${pathD} L ${lastPt.x.toFixed(1)} ${height} L ${pts[0].x.toFixed(1)} ${height} Z`;
+
+      return `
+        <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="${gradColor}" stop-opacity="0.35"/>
+              <stop offset="100%" stop-color="${gradColor}" stop-opacity="0.0"/>
+            </linearGradient>
+          </defs>
+          <path d="${areaD}" fill="url(#${gradId})"/>
+          <path d="${pathD}" fill="none" stroke="${strokeColor}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="${lastPt.x.toFixed(1)}" cy="${lastPt.y.toFixed(1)}" r="3" fill="${strokeColor}"/>
+        </svg>
+      `;
+    }
+
+    function renderAnalyticsDashboard() {
+      const container = document.getElementById('kpiCardsContainer');
+      const dealsListEl = document.getElementById('dealsListContainer');
+      const dealsCountPill = document.getElementById('dealsCountPill');
+      if (!container) return;
+
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      const currentMonth = now.getMonth();
+
+      // Фильтрация сделок по периоду
+      let currentDeals = [];
+      let previousDeals = [];
+
+      if (currentAnalyticsPeriod === 'month') {
+        currentDeals = userDeals.filter(d => {
+          if (!d.date) return false;
+          const dt = new Date(d.date);
+          return dt.getFullYear() === currentYear && dt.getMonth() === currentMonth;
+        });
+
+        const prevM = currentMonth === 0 ? 11 : currentMonth - 1;
+        const prevY = currentMonth === 0 ? currentYear - 1 : currentYear;
+        previousDeals = userDeals.filter(d => {
+          if (!d.date) return false;
+          const dt = new Date(d.date);
+          return dt.getFullYear() === prevY && dt.getMonth() === prevM;
+        });
+      } else if (currentAnalyticsPeriod === '3months') {
+        const threeMonthsAgo = new Date();
+        threeMonthsAgo.setDate(threeMonthsAgo.getDate() - 90);
+        const sixMonthsAgo = new Date();
+        sixMonthsAgo.setDate(sixMonthsAgo.getDate() - 180);
+
+        currentDeals = userDeals.filter(d => {
+          if (!d.date) return false;
+          const dt = new Date(d.date);
+          return dt >= threeMonthsAgo;
+        });
+        previousDeals = userDeals.filter(d => {
+          if (!d.date) return false;
+          const dt = new Date(d.date);
+          return dt >= sixMonthsAgo && dt < threeMonthsAgo;
+        });
+      } else {
+        // Все время
+        currentDeals = [...userDeals];
+        // Сравниваем первую половину и вторую половину
+        const sorted = [...userDeals].sort((a, b) => new Date(a.date) - new Date(b.date));
+        const mid = Math.floor(sorted.length / 2);
+        previousDeals = sorted.slice(0, mid);
+        currentDeals = sorted.slice(mid);
+      }
+
+      // Расчет метрик
+      const curProfit = currentDeals.reduce((sum, d) => sum + (Number(d.profit) || 0), 0);
+      const curCount = currentDeals.length;
+      const curAvgProfit = curCount > 0 ? Math.round(curProfit / curCount) : 0;
+
+      const prevProfit = previousDeals.reduce((sum, d) => sum + (Number(d.profit) || 0), 0);
+      const prevCount = previousDeals.length;
+      const prevAvgProfit = prevCount > 0 ? Math.round(prevProfit / prevCount) : 0;
+
+      function calcTrend(cur, prev) {
+        if (prev === 0) {
+          if (cur > 0) return { pct: 100, isUp: true, text: '▲ +100%' };
+          return { pct: 0, isUp: true, text: '0%' };
+        }
+        const diff = ((cur - prev) / prev) * 100;
+        const rounded = Math.abs(Math.round(diff * 10) / 10);
+        if (diff >= 0) return { pct: rounded, isUp: true, text: `▲ +${rounded}%` };
+        return { pct: rounded, isUp: false, text: `▼ -${rounded}%` };
+      }
+
+      const trendProfit = calcTrend(curProfit, prevProfit);
+      const trendCount = calcTrend(curCount, prevCount);
+      const trendAvg = calcTrend(curAvgProfit, prevAvgProfit);
+
+      // Спарклайны на основе сделок
+      const sortedCurrent = [...currentDeals].sort((a, b) => new Date(a.date) - new Date(b.date));
+      let profitSeries = [];
+      let countSeries = [];
+      let avgSeries = [];
+
+      if (sortedCurrent.length >= 2) {
+        let runningSum = 0;
+        sortedCurrent.forEach((d, idx) => {
+          runningSum += Number(d.profit) || 0;
+          profitSeries.push(runningSum);
+          countSeries.push(idx + 1);
+          avgSeries.push(Math.round(runningSum / (idx + 1)));
+        });
+      } else if (sortedCurrent.length === 1) {
+        profitSeries = [prevProfit || 10000, curProfit];
+        countSeries = [prevCount || 1, curCount];
+        avgSeries = [prevAvgProfit || 10000, curAvgProfit];
+      } else {
+        profitSeries = [0, 0];
+        countSeries = [0, 0];
+        avgSeries = [0, 0];
+      }
+
+      const periodLabel = currentAnalyticsPeriod === 'month' ? 'к прошлому месяцу' : currentAnalyticsPeriod === '3months' ? 'к пред. периоду' : 'динамика роста';
+
+      container.innerHTML = `
+        <!-- Карточка 1: Прибыль -->
+        <div class="kpi-card">
+          <div class="kpi-card-header">
+            <div class="kpi-title-block">
+              <div class="kpi-icon-badge">💰</div>
+              <div class="kpi-card-title">Чистая прибыль ${currentAnalyticsPeriod === 'month' ? 'за месяц' : ''}</div>
+            </div>
+            <div class="trend-badge ${trendProfit.isUp ? 'up' : 'down'}">
+              ${trendProfit.text}
+            </div>
+          </div>
+          <div class="kpi-main-row">
+            <div class="kpi-value-block">
+              <div class="kpi-value">${curProfit >= 0 ? '+' : ''}${curProfit.toLocaleString('ru-RU')} ₽</div>
+              <div class="kpi-subtext">${periodLabel} (${trendProfit.text})</div>
+            </div>
+            <div class="kpi-sparkline-wrap">
+              ${generateSparklineSvg(profitSeries, trendProfit.isUp, 'spark_profit')}
+            </div>
+          </div>
+        </div>
+
+        <!-- Карточка 2: Количество продаж -->
+        <div class="kpi-card">
+          <div class="kpi-card-header">
+            <div class="kpi-title-block">
+              <div class="kpi-icon-badge">📱</div>
+              <div class="kpi-card-title">Объем продаж (всего продано)</div>
+            </div>
+            <div class="trend-badge ${trendCount.isUp ? 'up' : 'down'}">
+              ${trendCount.text}
+            </div>
+          </div>
+          <div class="kpi-main-row">
+            <div class="kpi-value-block">
+              <div class="kpi-value">${curCount} <span style="font-size: 16px; font-weight: 600; color: var(--text-muted);">шт.</span></div>
+              <div class="kpi-subtext">${periodLabel} (${trendCount.text})</div>
+            </div>
+            <div class="kpi-sparkline-wrap">
+              ${generateSparklineSvg(countSeries, trendCount.isUp, 'spark_count')}
+            </div>
+          </div>
+        </div>
+
+        <!-- Карточка 3: Средняя прибыль -->
+        <div class="kpi-card">
+          <div class="kpi-card-header">
+            <div class="kpi-title-block">
+              <div class="kpi-icon-badge">🎯</div>
+              <div class="kpi-card-title">Средняя прибыль за телефон</div>
+            </div>
+            <div class="trend-badge ${trendAvg.isUp ? 'up' : 'down'}">
+              ${trendAvg.text}
+            </div>
+          </div>
+          <div class="kpi-main-row">
+            <div class="kpi-value-block">
+              <div class="kpi-value">${curAvgProfit >= 0 ? '+' : ''}${curAvgProfit.toLocaleString('ru-RU')} ₽</div>
+              <div class="kpi-subtext">Средняя чистая маржа с одной трубки</div>
+            </div>
+            <div class="kpi-sparkline-wrap">
+              ${generateSparklineSvg(avgSeries, trendAvg.isUp, 'spark_avg')}
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Рендер истории сделок
+      if (dealsCountPill) dealsCountPill.textContent = userDeals.length;
+      if (!dealsListEl) return;
+
+      if (userDeals.length === 0) {
+        dealsListEl.innerHTML = `
+          <div style="text-align: center; padding: 30px 10px; color: var(--text-muted); background: var(--card-bg); border-radius: 16px; border: 0.5px solid var(--card-border);">
+            <p style="font-size: 28px; margin-bottom: 6px;">📭</p>
+            <p style="font-size: 14px; font-weight: 600; color: #fff;">Нет записанных продаж</p>
+            <p style="font-size: 12px; margin-top: 4px;">Нажмите «➕ Записать сделку», чтобы вести учет продаж</p>
+          </div>
+        `;
+        return;
+      }
+
+      const sortedAll = [...userDeals].sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+      dealsListEl.innerHTML = sortedAll.map(d => {
+        const dDate = d.date ? new Date(d.date).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' }) : '';
+        const marginPct = d.buyPrice > 0 ? Math.round(((d.profit || 0) / d.buyPrice) * 100) : 0;
+        return `
+          <div class="deal-item-row" data-id="${d.id}">
+            <div class="deal-left">
+              <div class="deal-model-title">
+                <span>📱 ${d.model}</span>
+                ${d.storage ? `<span class="deal-storage-badge">${d.storage} GB</span>` : ''}
+              </div>
+              <div class="deal-meta-line">
+                <span>📅 ${dDate}</span>
+                <span>•</span>
+                <span>Выкуп: ${(d.buyPrice || 0).toLocaleString('ru-RU')} ₽ ➔ ${(d.sellPrice || 0).toLocaleString('ru-RU')} ₽</span>
+                ${d.note ? `<span>• 💬 ${d.note}</span>` : ''}
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div class="deal-profit-badge">
+                +${(d.profit || 0).toLocaleString('ru-RU')} ₽
+                <div style="font-size: 10px; color: var(--text-muted); font-weight: 600;">+${marginPct}% маржа</div>
+              </div>
+              <button type="button" class="btn-delete-deal" data-id="${d.id}" title="Удалить сделку">✕</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Привязка удаления сделки
+      dealsListEl.querySelectorAll('.btn-delete-deal').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          const dealId = btn.dataset.id;
+          const found = userDeals.find(d => d.id === dealId);
+          if (!found) return;
+
+          const confirmed = await showIosAlert({
+            title: "Удалить сделку?",
+            message: `Удалить продажу «${found.model}» на +${(found.profit || 0).toLocaleString('ru-RU')} ₽?`,
+            confirmText: "Удалить",
+            cancelText: "Отмена",
+            isDestructive: true,
+            icon: "🗑️"
+          });
+          if (!confirmed) return;
+
+          userDeals = userDeals.filter(d => d.id !== dealId);
+          saveUserDeals();
+          renderAnalyticsDashboard();
+          showDynamicIsland("Сделка удалена", `«${found.model}» убрана из учета`, "🗑️");
+        });
+      });
+    }
+
+    // Переключение периода в аналитике
+    document.querySelectorAll('#periodToggleGroup .period-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#periodToggleGroup .period-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentAnalyticsPeriod = btn.dataset.period || 'month';
+        renderAnalyticsDashboard();
+        if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+      });
+    });
+
+    // Сброс к стартовым демо-сделкам
+    document.getElementById('btnResetDealsDemo')?.addEventListener('click', async () => {
+      const confirmed = await showIosAlert({
+        title: "Сбросить к демо-данным?",
+        message: "Восстановить стартовые примеры продаж для наглядности графиков?",
+        confirmText: "Восстановить",
+        cancelText: "Отмена",
+        icon: "🔄"
+      });
+      if (!confirmed) return;
+      userDeals = generateDemoDeals();
+      saveUserDeals();
+      renderAnalyticsDashboard();
+      showDynamicIsland("Демо-данные загружены", "Графики и проценты обновлены", "📊");
+    });
+
+    // Модалка добавления сделки
+    const addDealModal = document.getElementById('addDealModal');
+    const dealModelInput = document.getElementById('dealModelName');
+    const dealBuyInput = document.getElementById('dealBuyPrice');
+    const dealSellInput = document.getElementById('dealSellPrice');
+    const dealDateInput = document.getElementById('dealDate');
+    const dealNoteInput = document.getElementById('dealNote');
+    const dealStorageHidden = document.getElementById('dealStorage');
+
+    function openAddDealModal() {
+      // Заполняем datalist предложениями моделей из текущего каталога
+      const dl = document.getElementById('dealModelSuggestions');
+      if (dl && currentMatrix) {
+        const uniqueModels = Array.from(new Set(currentMatrix.map(m => m.model))).slice(0, 30);
+        dl.innerHTML = uniqueModels.map(m => `<option value="${m}">`).join('');
+      }
+
+      dealModelInput.value = '';
+      dealBuyInput.value = '';
+      dealSellInput.value = '';
+      dealNoteInput.value = '';
+      dealStorageHidden.value = '128';
+      document.querySelectorAll('#dealMemoryChips .mem-chip').forEach(c => {
+        c.classList.toggle('active', c.dataset.val === '128');
+      });
+
+      // По умолчанию сегодня
+      const todayStr = new Date().toISOString().split('T')[0];
+      dealDateInput.value = todayStr;
+
+      updateDealProfitPreview();
+      addDealModal.classList.add('active');
+      setTimeout(() => dealModelInput.focus(), 100);
+    }
+
+    document.getElementById('btnOpenAddDealModal')?.addEventListener('click', openAddDealModal);
+    document.getElementById('btnQuickAddDeal')?.addEventListener('click', openAddDealModal);
+    document.getElementById('btnCloseDealModal')?.addEventListener('click', () => {
+      addDealModal.classList.remove('active');
+    });
+
+    // Выбор памяти в модалке сделки
+    document.querySelectorAll('#dealMemoryChips .mem-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('#dealMemoryChips .mem-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        dealStorageHidden.value = chip.dataset.val;
+      });
+    });
+
+    // Живой расчет маржи в модалке сделки
+    function updateDealProfitPreview() {
+      const buy = parseInt(dealBuyInput.value, 10) || 0;
+      const sell = parseInt(dealSellInput.value, 10) || 0;
+      const diff = sell - buy;
+      const valEl = document.getElementById('dealProfitPreviewVal');
+      const box = document.getElementById('dealProfitPreviewBox');
+
+      if (sell > 0 || buy > 0) {
+        const marginPct = buy > 0 ? ` (+${Math.round((diff / buy) * 100)}%)` : '';
+        if (diff >= 0) {
+          valEl.textContent = `+${diff.toLocaleString('ru-RU')} ₽${marginPct}`;
+          valEl.style.color = 'var(--success-color)';
+          box.style.background = 'rgba(48, 209, 88, 0.1)';
+          box.style.borderColor = 'rgba(48, 209, 88, 0.25)';
+        } else {
+          valEl.textContent = `${diff.toLocaleString('ru-RU')} ₽`;
+          valEl.style.color = 'var(--danger-color)';
+          box.style.background = 'rgba(255, 69, 58, 0.1)';
+          box.style.borderColor = 'rgba(255, 69, 58, 0.25)';
+        }
+      } else {
+        valEl.textContent = '0 ₽';
+        valEl.style.color = 'var(--text-muted)';
+        box.style.background = 'rgba(255, 255, 255, 0.05)';
+        box.style.borderColor = 'var(--card-border)';
+      }
+    }
+
+    dealBuyInput.addEventListener('input', updateDealProfitPreview);
+    dealSellInput.addEventListener('input', updateDealProfitPreview);
+
+    // Авто-подстановка цен из каталога при выборе модели
+    dealModelInput.addEventListener('change', () => {
+      const typed = dealModelInput.value.trim().toLowerCase();
+      if (!typed) return;
+      const matched = currentMatrix.find(m => m.model.toLowerCase() === typed || m.model.toLowerCase().includes(typed));
+      if (matched) {
+        if (!dealBuyInput.value) dealBuyInput.value = matched.price || '';
+        if (!dealSellInput.value) dealSellInput.value = matched.market || '';
+        updateDealProfitPreview();
+      }
+    });
+
+    // Сохранение новой сделки
+    document.getElementById('btnSubmitDeal')?.addEventListener('click', () => {
+      const model = dealModelInput.value.trim();
+      const buyPrice = parseInt(dealBuyInput.value, 10);
+      const sellPrice = parseInt(dealSellInput.value, 10);
+      const storage = parseInt(dealStorageHidden.value, 10) || 128;
+      const date = dealDateInput.value || new Date().toISOString().split('T')[0];
+      const note = dealNoteInput.value.trim();
+
+      if (!model) {
+        triggerFieldError(dealModelInput, "Укажите модель телефона");
+        return;
+      }
+      if (isNaN(buyPrice) || buyPrice <= 0) {
+        triggerFieldError(dealBuyInput, "Укажите цену выкупа");
+        return;
+      }
+      if (isNaN(sellPrice) || sellPrice <= 0) {
+        triggerFieldError(dealSellInput, "Укажите цену продажи");
+        return;
+      }
+
+      const profit = sellPrice - buyPrice;
+      const newDeal = {
+        id: 'deal_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+        model,
+        storage,
+        buyPrice,
+        sellPrice,
+        profit,
+        date,
+        note
+      };
+
+      userDeals.unshift(newDeal);
+      saveUserDeals();
+      renderAnalyticsDashboard();
+      addDealModal.classList.remove('active');
+
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      showDynamicIsland("Сделка сохранена", `+${profit.toLocaleString('ru-RU')} ₽ чистая маржа ⚡️`, "💰");
+    });
+
+    loadUserDeals();
+    updateRegionUI();
       regionModal.classList.remove('active');
 
       if (triggerToast) {
