@@ -4669,23 +4669,15 @@ const POPULAR_TEMPLATES = [
           return dt >= sixMonthsAgo && dt < threeMonthsAgo;
         });
       } else {
-        // Все время
+        // Всё время: ВСЕ сделки из истории без исключений
         currentDeals = [...userDeals];
-        // Сравниваем первую половину и вторую половину
-        const sorted = [...userDeals].sort((a, b) => new Date(a.date) - new Date(b.date));
-        const mid = Math.floor(sorted.length / 2);
-        previousDeals = sorted.slice(0, mid);
-        currentDeals = sorted.slice(mid);
+        previousDeals = [];
       }
 
       // Расчет метрик
       const curProfit = currentDeals.reduce((sum, d) => sum + (Number(d.profit) || 0), 0);
       const curCount = currentDeals.length;
       const curAvgProfit = curCount > 0 ? Math.round(curProfit / curCount) : 0;
-
-      const prevProfit = previousDeals.reduce((sum, d) => sum + (Number(d.profit) || 0), 0);
-      const prevCount = previousDeals.length;
-      const prevAvgProfit = prevCount > 0 ? Math.round(prevProfit / prevCount) : 0;
 
       function calcTrend(cur, prev) {
         if (prev === 0) {
@@ -4698,12 +4690,54 @@ const POPULAR_TEMPLATES = [
         return { pct: rounded, isUp: false, text: `▼ -${rounded}%` };
       }
 
-      const trendProfit = calcTrend(curProfit, prevProfit);
-      const trendCount = calcTrend(curCount, prevCount);
-      const trendAvg = calcTrend(curAvgProfit, prevAvgProfit);
+      let trendProfit = { pct: 0, isUp: true, text: '0%' };
+      let trendCount = { pct: 0, isUp: true, text: '0%' };
+      let trendAvg = { pct: 0, isUp: true, text: '0%' };
+
+      if (currentAnalyticsPeriod === 'all') {
+        const sorted = [...userDeals].sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
+        const totalBuy = currentDeals.reduce((sum, d) => sum + (Number(d.buyPrice) || 0), 0);
+        const totalMarginPct = totalBuy > 0 ? Math.round((curProfit / totalBuy) * 100) : 0;
+
+        if (sorted.length >= 2) {
+          const prevTotalProfit = sorted.slice(0, -1).reduce((sum, d) => sum + (Number(d.profit) || 0), 0);
+          const diffProfit = prevTotalProfit > 0 ? Math.round(((curProfit - prevTotalProfit) / prevTotalProfit) * 1000) / 10 : 100;
+          trendProfit = {
+            pct: Math.abs(diffProfit),
+            isUp: diffProfit >= 0,
+            text: diffProfit >= 0 ? `▲ +${diffProfit}%` : `▼ ${diffProfit}%`
+          };
+          trendCount = {
+            pct: 100,
+            isUp: true,
+            text: `▲ +${Math.round((1 / (sorted.length - 1)) * 100)}%`
+          };
+          trendAvg = {
+            pct: totalMarginPct,
+            isUp: totalMarginPct >= 0,
+            text: totalMarginPct >= 0 ? `▲ +${totalMarginPct}% маржа` : `${totalMarginPct}% маржа`
+          };
+        } else if (sorted.length === 1) {
+          trendProfit = { pct: 100, isUp: curProfit >= 0, text: '▲ +100%' };
+          trendCount = { pct: 100, isUp: true, text: '▲ 100%' };
+          trendAvg = {
+            pct: totalMarginPct,
+            isUp: totalMarginPct >= 0,
+            text: totalMarginPct >= 0 ? `▲ +${totalMarginPct}% маржа` : `${totalMarginPct}% маржа`
+          };
+        }
+      } else {
+        const prevProfit = previousDeals.reduce((sum, d) => sum + (Number(d.profit) || 0), 0);
+        const prevCount = previousDeals.length;
+        const prevAvgProfit = prevCount > 0 ? Math.round(prevProfit / prevCount) : 0;
+
+        trendProfit = calcTrend(curProfit, prevProfit);
+        trendCount = calcTrend(curCount, prevCount);
+        trendAvg = calcTrend(curAvgProfit, prevAvgProfit);
+      }
 
       // Спарклайны на основе сделок
-      const sortedCurrent = [...currentDeals].sort((a, b) => new Date(a.date) - new Date(b.date));
+      const sortedCurrent = [...currentDeals].sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
       let profitSeries = [];
       let countSeries = [];
       let avgSeries = [];
@@ -4717,16 +4751,18 @@ const POPULAR_TEMPLATES = [
           avgSeries.push(Math.round(runningSum / (idx + 1)));
         });
       } else if (sortedCurrent.length === 1) {
-        profitSeries = [prevProfit || 10000, curProfit];
-        countSeries = [prevCount || 1, curCount];
-        avgSeries = [prevAvgProfit || 10000, curAvgProfit];
+        profitSeries = [0, curProfit];
+        countSeries = [0, curCount];
+        avgSeries = [0, curAvgProfit];
       } else {
         profitSeries = [0, 0];
         countSeries = [0, 0];
         avgSeries = [0, 0];
       }
 
-      const periodLabel = currentAnalyticsPeriod === 'month' ? 'к прошлому месяцу' : currentAnalyticsPeriod === '3months' ? 'к пред. периоду' : 'динамика роста';
+      const periodLabel = currentAnalyticsPeriod === 'month' ? 'к прошлому месяцу' : currentAnalyticsPeriod === '3months' ? 'к пред. периоду' : 'за всё время';
+      const periodProfitTitle = currentAnalyticsPeriod === 'month' ? 'Чистая прибыль за месяц' : currentAnalyticsPeriod === '3months' ? 'Чистая прибыль за 3 месяца' : 'Чистая прибыль за всё время';
+      const periodCountTitle = currentAnalyticsPeriod === 'all' ? 'Объем продаж (всего продано)' : currentAnalyticsPeriod === 'month' ? 'Объем продаж за месяц' : 'Объем продаж за 3 месяца';
 
       container.innerHTML = `
         <!-- Карточка 1: Прибыль -->
@@ -4734,7 +4770,7 @@ const POPULAR_TEMPLATES = [
           <div class="kpi-card-header">
             <div class="kpi-title-block">
               <div class="kpi-icon-badge">💰</div>
-              <div class="kpi-card-title">Чистая прибыль ${currentAnalyticsPeriod === 'month' ? 'за месяц' : ''}</div>
+              <div class="kpi-card-title">${periodProfitTitle}</div>
             </div>
             <div class="trend-badge ${trendProfit.isUp ? 'up' : 'down'}">
               ${trendProfit.text}
@@ -4756,7 +4792,7 @@ const POPULAR_TEMPLATES = [
           <div class="kpi-card-header">
             <div class="kpi-title-block">
               <div class="kpi-icon-badge">📱</div>
-              <div class="kpi-card-title">Объем продаж (всего продано)</div>
+              <div class="kpi-card-title">${periodCountTitle}</div>
             </div>
             <div class="trend-badge ${trendCount.isUp ? 'up' : 'down'}">
               ${trendCount.text}
