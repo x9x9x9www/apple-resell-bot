@@ -4653,6 +4653,15 @@ const POPULAR_TEMPLATES = [
       }
     }
 
+    function openRegionPicker() {
+      if (regionSearchInput) regionSearchInput.value = '';
+      renderRegionModal();
+      if (regionModal) regionModal.classList.add('active');
+    }
+    const renderRegionsList = renderRegionModal;
+    window.renderRegionModal = renderRegionModal;
+    window.renderRegionsList = renderRegionModal;
+
     function triggerFieldError(inputElement, message) {
       if (inputElement) {
         inputElement.classList.remove('input-error');
@@ -4760,16 +4769,14 @@ const POPULAR_TEMPLATES = [
     const btnOpenRegionModal = document.getElementById('btnOpenRegionModal');
     if (btnOpenRegionModal) {
       btnOpenRegionModal.addEventListener('click', () => {
-        condModal.classList.add('active');
+        openRegionPicker();
       });
     }
 
     const settingRegionRow = document.getElementById('settingRegionRow');
     if (settingRegionRow) {
       settingRegionRow.addEventListener('click', () => {
-        regionSearchInput.value = '';
-        renderRegionModal();
-        regionModal.classList.add('active');
+        openRegionPicker();
       });
     }
 
@@ -4777,9 +4784,7 @@ const POPULAR_TEMPLATES = [
     if (btnChangeRegionInSettings) {
       btnChangeRegionInSettings.addEventListener('click', (e) => {
         e.stopPropagation();
-        regionSearchInput.value = '';
-        renderRegionModal();
-        regionModal.classList.add('active');
+        openRegionPicker();
       });
     }
 
@@ -4833,10 +4838,7 @@ const POPULAR_TEMPLATES = [
 
     document.getElementById('btnRowSelectRegion')?.addEventListener('click', () => {
       if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
-      if (regionModal) {
-        regionModal.classList.add('active');
-        renderRegionsList();
-      }
+      openRegionPicker();
     });
 
     document.getElementById('btnSyncSettingsToBot')?.addEventListener('click', () => {
