@@ -28,6 +28,7 @@ class CustomCategory(BaseModel):
     id: str = Field(description="Уникальный идентификатор категории, e.g. 'xiaomi'")
     name: str = Field(description="Отображаемое имя категории, e.g. 'Xiaomi'")
     icon: str = Field(default="📱", description="Иконка/эмодзи категории")
+    search_link: str = Field(default="", description="Персональная ссылка поиска на Авито/Юле для всей категории")
 
 
 class UserModelConfig(BaseModel):
@@ -39,6 +40,7 @@ class UserModelConfig(BaseModel):
     max_buy: int = Field(default=0, description="Максимальная цена выкупа")
     market: int = Field(default=0, description="Среднерыночная стоимость")
     category: str = Field(default="", description="Категория/бренд гаджета (например: 'xiaomi', 'dyson')")
+    search_link: str = Field(default="", description="Персональная ссылка поиска на Авито/Юле")
 
 
 class UserResellProfile(BaseModel):

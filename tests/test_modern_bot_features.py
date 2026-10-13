@@ -447,6 +447,102 @@ class TestModernBotFeatures(unittest.TestCase):
         # Одно из отправлений (фото или текст) должно быть вызвано
         self.assertTrue(bot_mock.send_message.called or bot_mock.send_photo.called)
 
+    def test_save_resell_profile_with_search_links(self):
+        from core.user_profile import UserProfileManager, CustomCategory, UserModelConfig
+        from core.link_stream import StreamManager
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.NamedTemporaryFile(suffix=".json", delete=False) as f_prof, \
+             tempfile.NamedTemporaryFile(suffix=".json", delete=False) as f_st:
+            prof_path = Path(f_prof.name)
+            st_path = Path(f_st.name)
+
+        try:
+            user_mgr = UserProfileManager(storage_path=prof_path)
+            st_mgr = StreamManager(file_path=st_path)
+
+            raw_payload = {
+                "action": "save_resell_profile",
+                "region": "Москва",
+                "categories": [
+                    {
+                        "id": "xiaomi",
+                        "name": "Xiaomi",
+                        "icon": "📱",
+                        "search_link": "https://www.avito.ru/moskva/telefony/xiaomi?pmax=40000"
+                    }
+                ],
+                "models": [
+                    [
+                        "Xiaomi 14",
+                        256,
+                        42000,
+                        1,
+                        "xiaomi",
+                        52000,
+                        "https://www.avito.ru/moskva/telefony/xiaomi-ASgBAgICAkS0wA3OqzmwwQ2I_Dc?pmax=42000"
+                    ]
+                ]
+            }
+
+            user_id = 999111
+            profile = user_mgr.get_or_create_profile(user_id)
+            for c in raw_payload["categories"]:
+                c_name = str(c.get("name", "")).strip()
+                c_id = str(c.get("id", "")).strip()
+                c_icon = str(c.get("icon", "📱")).strip()
+                c_link = str(c.get("search_link", "")).strip()
+                profile.categories.append(CustomCategory(id=c_id, name=c_name, icon=c_icon, search_link=c_link))
+                if c_link:
+                    st_mgr.create_or_update_stream(chat_id=user_id, url=c_link)
+
+            for item in raw_payload["models"]:
+                m_name = str(item[0]).strip()
+                s_val = int(item[1])
+                m_buy = int(item[2])
+                en = bool(item[3])
+                cat = str(item[4]).strip()
+                mkt = int(item[5])
+                s_link = str(item[6]).strip()
+                if m_name not in profile.models:
+                    profile.models[m_name] = {}
+                profile.models[m_name][str(s_val)] = UserModelConfig(
+                    model=m_name,
+                    storage=s_val,
+                    enabled=en,
+                    max_buy=m_buy,
+                    market=mkt,
+                    category=cat,
+                    search_link=s_link
+                )
+                if en and s_link:
+                    st = st_mgr.create_or_update_stream(chat_id=user_id, url=s_link)
+                    if st and m_buy > 0:
+                        st.pmax = m_buy
+
+            user_mgr.save_profile(profile)
+
+            # Reload and assert
+            reloaded_prof = user_mgr.get_or_create_profile(user_id)
+            self.assertEqual(len(reloaded_prof.categories), 1)
+            self.assertEqual(reloaded_prof.categories[0].search_link, "https://www.avito.ru/moskva/telefony/xiaomi?pmax=40000")
+            cfg = reloaded_prof.get_config("Xiaomi 14", 256)
+            self.assertIsNotNone(cfg)
+            self.assertEqual(cfg.search_link, "https://www.avito.ru/moskva/telefony/xiaomi-ASgBAgICAkS0wA3OqzmwwQ2I_Dc?pmax=42000")
+            self.assertEqual(cfg.max_buy, 42000)
+
+            # Check stream registered
+            user_stream = st_mgr.get_stream(user_id)
+            self.assertIsNotNone(user_stream)
+            self.assertEqual(user_stream.pmax, 42000)
+            self.assertTrue(user_stream.is_active)
+        finally:
+            if prof_path.exists():
+                prof_path.unlink()
+            if st_path.exists():
+                st_path.unlink()
+
 
 if __name__ == "__main__":
     unittest.main()

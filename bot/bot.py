@@ -639,8 +639,11 @@ def create_bot_dispatcher(
                     c_name = str(c.get("name", "")).strip()
                     c_id = str(c.get("id", "")).strip() or c_name.lower().replace(" ", "_")
                     c_icon = str(c.get("icon", "📱")).strip()
+                    c_link = str(c.get("search_link", "")).strip()
                     if c_name:
-                        parsed_categories.append(CustomCategory(id=c_id, name=c_name, icon=c_icon))
+                        parsed_categories.append(CustomCategory(id=c_id, name=c_name, icon=c_icon, search_link=c_link))
+                        if c_link and c_link.startswith(("http://", "https://")):
+                            stream_mgr.create_or_update_stream(chat_id=user_id, url=c_link)
                         # Автоматически регистрируем поисковый запрос бренда на Авито и Юле
                         broadcast_worker_query(c_name)
                 profile.categories = parsed_categories
@@ -689,6 +692,7 @@ def create_bot_dispatcher(
 
                 # 3. Сохранение измененных/добавленных моделей и цен
                 for item in models_data:
+                    s_link = ""
                     if isinstance(item, (list, tuple)) and len(item) >= 3:
                         m_name = str(item[0]).strip()
                         s_val = int(item[1]) if str(item[1]).isdigit() else item[1]
@@ -697,6 +701,7 @@ def create_bot_dispatcher(
                         cat = str(item[4]).strip() if len(item) > 4 else ""
                         mkt = int(item[5]) if len(item) > 5 and (isinstance(item[5], (int, float)) or str(item[5]).isdigit()) else (int(m_buy * 1.2) if m_buy > 0 else 0)
                         min_p = 0
+                        s_link = str(item[6]).strip() if len(item) > 6 else ""
                     elif isinstance(item, dict):
                         m_name = str(item.get("model", "")).strip()
                         s_val = int(item.get("storage", 128)) if str(item.get("storage", "")).isdigit() else 128
@@ -705,6 +710,7 @@ def create_bot_dispatcher(
                         en = bool(item.get("enabled", True))
                         min_p = int(item.get("min_price", 0))
                         cat = str(item.get("category", "")).strip()
+                        s_link = str(item.get("search_link", "")).strip()
                     else:
                         continue
 
@@ -721,7 +727,13 @@ def create_bot_dispatcher(
                         max_buy=m_buy,
                         market=mkt,
                         category=cat,
+                        search_link=s_link,
                     )
+                    if en and s_link and s_link.startswith(("http://", "https://")):
+                        st = stream_mgr.create_or_update_stream(chat_id=user_id, url=s_link)
+                        if st and m_buy > 0:
+                            st.pmax = m_buy
+                            stream_mgr.save()
                     if en:
                         # Добавляем в поисковый цикл воркеров
                         broadcast_worker_query(m_name)

@@ -9,6 +9,7 @@ from core.user_profile import (
     UserResellProfile,
     UserConditionRules,
     UserModelConfig,
+    CustomCategory,
 )
 
 
@@ -200,6 +201,74 @@ class TestUserProfile(unittest.TestCase):
             self.assertEqual(prof2.region, "Санкт-Петербург")
             self.assertEqual(prof2.target_margin, 8500)
             self.assertEqual(prof2.condition_rules.battery_discount, 4500)
+        finally:
+            if tmp_path.exists():
+                tmp_path.unlink()
+
+    def test_search_link_defaults_and_custom_values(self):
+        cat = CustomCategory(id="dyson", name="Dyson")
+        self.assertEqual(cat.search_link, "")
+        cat_with_link = CustomCategory(
+            id="dyson",
+            name="Dyson",
+            icon="💨",
+            search_link="https://www.avito.ru/moskva/bytovaya_tehnika/dyson"
+        )
+        self.assertEqual(cat_with_link.search_link, "https://www.avito.ru/moskva/bytovaya_tehnika/dyson")
+
+        cfg = UserModelConfig(model="iPhone 13", storage=128)
+        self.assertEqual(cfg.search_link, "")
+        cfg_with_link = UserModelConfig(
+            model="iPhone 13",
+            storage=128,
+            max_buy=35000,
+            search_link="https://www.avito.ru/moskva/telefony/apple_iphone_13-ASgBAgICAkS0wA3OqzmwwQ2I_Dc?pmax=35000"
+        )
+        self.assertEqual(cfg_with_link.search_link, "https://www.avito.ru/moskva/telefony/apple_iphone_13-ASgBAgICAkS0wA3OqzmwwQ2I_Dc?pmax=35000")
+
+    def test_profile_persistence_with_search_links(self):
+        import tempfile
+        from pathlib import Path
+        with tempfile.NamedTemporaryFile(suffix=".json", delete=False) as f:
+            tmp_path = Path(f.name)
+
+        try:
+            mgr = UserProfileManager(storage_path=tmp_path)
+            prof = mgr.get_or_create_profile(777123)
+            prof.categories = [
+                CustomCategory(
+                    id="xiaomi",
+                    name="Xiaomi",
+                    icon="📱",
+                    search_link="https://www.avito.ru/moskva/telefony/xiaomi"
+                )
+            ]
+            prof.models = {
+                "Xiaomi 14": {
+                    "256": UserModelConfig(
+                        model="Xiaomi 14",
+                        storage=256,
+                        enabled=True,
+                        max_buy=45000,
+                        market=55000,
+                        category="xiaomi",
+                        search_link="https://www.avito.ru/moskva/telefony/xiaomi_14"
+                    )
+                }
+            }
+            mgr.save_profile(prof)
+
+            # Reload and verify full persistence
+            mgr2 = UserProfileManager(storage_path=tmp_path)
+            prof2 = mgr2.get_or_create_profile(777123)
+            self.assertEqual(len(prof2.categories), 1)
+            self.assertEqual(prof2.categories[0].search_link, "https://www.avito.ru/moskva/telefony/xiaomi")
+
+            cfg = prof2.get_config("Xiaomi 14", 256)
+            self.assertIsNotNone(cfg)
+            self.assertEqual(cfg.search_link, "https://www.avito.ru/moskva/telefony/xiaomi_14")
+            self.assertEqual(cfg.max_buy, 45000)
+            self.assertEqual(cfg.category, "xiaomi")
         finally:
             if tmp_path.exists():
                 tmp_path.unlink()

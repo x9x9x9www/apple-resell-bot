@@ -846,6 +846,50 @@
       border: 0.5px solid var(--accent-border);
     }
 
+    .badge-link-pill {
+      background: rgba(48, 209, 88, 0.12);
+      color: #30d158;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      border: 0.5px solid rgba(48, 209, 88, 0.35);
+      cursor: pointer;
+      transition: transform 0.12s var(--spring-press), background 0.12s ease;
+      white-space: nowrap;
+    }
+    .badge-link-pill:active {
+      transform: scale(0.93);
+      background: rgba(48, 209, 88, 0.22);
+    }
+
+    .badge-link-add {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      border: 0.5px solid rgba(255, 255, 255, 0.09);
+      cursor: pointer;
+      transition: transform 0.12s var(--spring-press), background 0.12s ease, color 0.12s ease;
+      white-space: nowrap;
+    }
+    .badge-link-add:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-primary);
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+    .badge-link-add:active {
+      transform: scale(0.93);
+    }
+
     /* Drag and drop states */
     .series-pill[draggable="true"] { cursor: grab; }
     .series-pill.dragging {
@@ -2120,6 +2164,14 @@
       </div>
 
       <div class="form-group">
+        <label class="form-label">🔗 Ссылка на поиск для всей папки (опционально):</label>
+        <input type="text" class="form-input" id="newCatSearchLink" placeholder="https://avito.ru/... или https://youla.ru/...">
+        <div style="font-size:11px; color:var(--text-muted); margin-top:3px;">
+          💡 Бот будет отслеживать поток объявлений по этой точной ссылке.
+        </div>
+      </div>
+
+      <div class="form-group">
         <label class="form-label">Иконка / Эмодзи:</label>
         <div class="emoji-row" id="createEmojiRow">
           <span class="emoji-chip active">📱</span>
@@ -2266,6 +2318,18 @@
         </div>
       </div>
 
+      <!-- Поле умной вставки ссылки с Авито или Юлы -->
+      <div class="form-group" style="margin-bottom:12px;">
+        <label class="form-label" style="display:flex; justify-content:space-between; align-items:center;">
+          <span>🔗 Ссылка на поиск Авито/Юлы</span>
+          <span style="font-size:11px; color:var(--accent-highlight); font-weight:normal;">Автозаполнение ⚡️</span>
+        </label>
+        <input type="text" class="form-input" id="newModelSearchLink" placeholder="Вставьте ссылку на поиск (например, с фильтрами)...">
+        <div style="font-size:11px; color:var(--text-muted); margin-top:3px;">
+          💡 Опционально. Если вставить ссылку, параметры заполнятся сами, а бот будет мониторить по ней.
+        </div>
+      </div>
+
       <div class="form-group">
         <label class="form-label">Название модели:</label>
         <input type="text" class="form-input" id="newModelName" placeholder="например: Xiaomi 14 Ultra или Dyson Airwrap">
@@ -2337,6 +2401,37 @@
       <button class="btn-save" id="btnSubmitQuickAddStorage" style="width:100%; margin-top:8px">
         <span>✅ Добавить объем в модель</span>
       </button>
+    </div>
+  </div>
+
+  <!-- Модалка: Редактирование ссылки поиска для модели -->
+  <div class="modal-overlay" id="editLinkModal">
+    <div class="modal-sheet">
+      <div class="modal-grabber"></div>
+      <div class="modal-header">
+        <h3 class="modal-title" id="editLinkModalTitle">🔗 Ссылка поиска</h3>
+        <button class="btn-close-modal" id="btnCloseEditLinkModal">✕</button>
+      </div>
+
+      <div style="font-size: 12px; color: var(--text-muted); line-height: 1.4; margin-bottom: 12px;">
+        Вставьте ссылку на поиск Авито или Юлы с вашими фильтрами (частники, город, район, доставка). Бот будет отслеживать объявления строго по этой ссылке.
+      </div>
+
+      <input type="hidden" id="editLinkTargetKey">
+
+      <div class="form-group">
+        <label class="form-label">Ссылка поиска Авито или Юлы:</label>
+        <input type="text" class="form-input" id="editLinkInput" placeholder="https://avito.ru/... или https://youla.ru/...">
+      </div>
+
+      <div style="display: flex; gap: 8px; margin-top: 14px;">
+        <button class="btn-save" id="btnSaveEditLink" style="flex: 2;">
+          <span>💾 Сохранить ссылку</span>
+        </button>
+        <button class="btn-secondary" id="btnDeleteEditLink" style="flex: 1; color: var(--danger-color); border-color: rgba(255, 69, 58, 0.3);">
+          <span>Удалить</span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -2672,7 +2767,8 @@ const POPULAR_TEMPLATES = [
             market: Number(m.market || 0),
             enabled: m.enabled !== false,
             category: String(m.category || ''),
-            isCustom: !!m.isCustom
+            isCustom: !!m.isCustom,
+            search_link: String(m.search_link || '')
           });
         });
       }
@@ -3089,6 +3185,9 @@ const POPULAR_TEMPLATES = [
               <span class="device-icon">${icon}</span>
               <span class="card-title">${group.model}</span>
               ${categoryBadgeHtml}
+              ${activeItem.search_link 
+                ? `<button type="button" class="badge-link-pill btn-edit-model-link" data-key="${activeItem.key}" title="Нажмите, чтобы изменить ссылку: ${activeItem.search_link}">🔗 По ссылке</button>` 
+                : `<button type="button" class="badge-link-add btn-edit-model-link" data-key="${activeItem.key}" title="Привязать ссылку поиска с Авито/Юлы">+ 🔗 ссылка</button>`}
             </div>
             <div class="card-actions">
               <button class="btn-delete" title="Удалить выбранную конфигурацию">✕</button>
@@ -3164,6 +3263,19 @@ const POPULAR_TEMPLATES = [
               btn.classList.toggle('disabled-config', !foundIt.enabled);
             }
           });
+          const linkBtn = card.querySelector('.btn-edit-model-link');
+          if (linkBtn) {
+            linkBtn.dataset.key = activeItem.key;
+            if (activeItem.search_link) {
+              linkBtn.className = 'badge-link-pill btn-edit-model-link';
+              linkBtn.title = `Нажмите, чтобы изменить ссылку: ${activeItem.search_link}`;
+              linkBtn.innerHTML = '🔗 По ссылке';
+            } else {
+              linkBtn.className = 'badge-link-add btn-edit-model-link';
+              linkBtn.title = 'Привязать ссылку поиска с Авито/Юлы';
+              linkBtn.innerHTML = '+ 🔗 ссылка';
+            }
+          }
         }
 
         // Клик по чипам памяти
@@ -3223,6 +3335,14 @@ const POPULAR_TEMPLATES = [
           activeItem.market = parseInt(e.target.value, 10) || 0;
           updateProfitBadge();
           saveLocal();
+        });
+
+        // Привязка клика по кнопке ссылки
+        card.querySelectorAll('.btn-edit-model-link').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openEditLinkModal(btn.dataset.key || activeItem.key);
+          });
         });
 
         // Кнопки -1k / +1k
@@ -3484,6 +3604,7 @@ const POPULAR_TEMPLATES = [
       renderTemplatesGrid();
       createCatModal.classList.add('active');
       document.getElementById('newCatName').value = '';
+      if (document.getElementById('newCatSearchLink')) document.getElementById('newCatSearchLink').value = '';
       document.getElementById('newCatEmoji').value = '📱';
       document.querySelectorAll('#createEmojiRow .emoji-chip').forEach((c, idx) => {
         c.classList.toggle('active', idx === 0);
@@ -3519,8 +3640,9 @@ const POPULAR_TEMPLATES = [
         return;
       }
 
+      const catSearchLink = (document.getElementById('newCatSearchLink')?.value || '').trim();
       const id = 'cat_' + Date.now();
-      categories.push({ id, name, icon });
+      categories.push({ id, name, icon, search_link: catSearchLink });
       saveLocal();
       renderSeriesBar();
       updateCategoryDropdown();
@@ -3748,6 +3870,7 @@ const POPULAR_TEMPLATES = [
         c.classList.toggle('active', c.dataset.val === '128');
       });
       updateAddSubmitButtonText();
+      if (document.getElementById('newModelSearchLink')) document.getElementById('newModelSearchLink').value = '';
 
       addModal.classList.add('active');
       document.getElementById('newModelName').focus();
@@ -3800,6 +3923,8 @@ const POPULAR_TEMPLATES = [
         ? Array.from(selectedAddModalMemories) 
         : [parseInt(document.getElementById('newModelStorage').value, 10) || 128];
 
+      const searchLink = (document.getElementById('newModelSearchLink')?.value || '').trim();
+
       memoriesToAdd.forEach((storage) => {
         const key = `${name}_${storage}`;
         deletedKeys.delete(key);
@@ -3810,6 +3935,7 @@ const POPULAR_TEMPLATES = [
           existing.series = selectedSeries;
           existing.category = categoryName;
           existing.enabled = true;
+          if (searchLink) existing.search_link = searchLink;
         } else {
           currentMatrix.unshift({
             key,
@@ -3819,6 +3945,7 @@ const POPULAR_TEMPLATES = [
             category: categoryName,
             price,
             market,
+            search_link: searchLink,
             enabled: true,
             isCustom: true
           });
@@ -3831,6 +3958,7 @@ const POPULAR_TEMPLATES = [
       document.getElementById('newModelPrice').value = '';
       document.getElementById('newModelMarket').value = '';
       document.getElementById('inlineNewCatName').value = '';
+      if (document.getElementById('newModelSearchLink')) document.getElementById('newModelSearchLink').value = '';
 
       // Переключаем на созданную категорию, если добавили в неё
       if (categories.some(c => c.id === selectedSeries)) {
@@ -3840,6 +3968,142 @@ const POPULAR_TEMPLATES = [
       }
 
       if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+    });
+
+    // Интеллектуальный разбор ссылки поиска Авито / Юлы
+    function parseSearchLink(url) {
+      if (!url || typeof url !== 'string') return null;
+      const raw = url.trim();
+      if (!raw.includes('avito.ru') && !raw.includes('youla.ru')) return null;
+
+      try {
+        let cleanUrl = raw.startsWith('http') ? raw : 'https://' + raw;
+        const parsed = new URL(cleanUrl);
+        const searchParams = parsed.searchParams;
+        let detectedName = '';
+        let detectedPrice = null;
+        let detectedStorage = null;
+
+        // 1. Поисковый запрос (?q=...)
+        if (searchParams.has('q')) {
+          detectedName = searchParams.get('q').trim();
+        }
+
+        // 2. Сегменты пути: avito.ru/moskva/telefony/apple/iphone_15_pro
+        if (!detectedName) {
+          const parts = parsed.pathname.split('/').filter(Boolean);
+          if (parts.length > 2) {
+            const lastPart = decodeURIComponent(parts[parts.length - 1]).split('-')[0].replace(/_/g, ' ');
+            if (!['telefony', 'noutbuki', 'planshety', 'chasy', 'elektronika'].includes(lastPart.toLowerCase())) {
+              detectedName = lastPart;
+            }
+          }
+        }
+
+        // 3. Цены (pmax, price_to)
+        if (searchParams.has('pmax')) {
+          detectedPrice = parseInt(searchParams.get('pmax'), 10);
+        } else if (searchParams.has('price_to')) {
+          detectedPrice = parseInt(searchParams.get('price_to'), 10);
+        }
+
+        // 4. Память из названия
+        if (detectedName) {
+          const memMatch = detectedName.match(/(\d{2,4})\s*(?:gb|гб)/i) || detectedName.match(/\b(64|128|256|512|1024)\b/);
+          if (memMatch) {
+            detectedStorage = parseInt(memMatch[1], 10);
+          }
+        }
+
+        return {
+          url: cleanUrl,
+          name: detectedName,
+          price: detectedPrice,
+          storage: detectedStorage
+        };
+      } catch (e) {
+        return null;
+      }
+    }
+
+    const newModelSearchLinkInput = document.getElementById('newModelSearchLink');
+    if (newModelSearchLinkInput) {
+      newModelSearchLinkInput.addEventListener('input', (e) => {
+        const val = e.target.value.trim();
+        if (!val) return;
+        const detected = parseSearchLink(val);
+        if (detected) {
+          if (detected.name) {
+            document.getElementById('newModelName').value = detected.name;
+          }
+          if (detected.price && detected.price > 0) {
+            document.getElementById('newModelPrice').value = detected.price;
+            document.getElementById('newModelMarket').value = Math.round(detected.price * 1.2 / 500) * 500;
+          }
+          if (detected.storage) {
+            selectedAddModalMemories.clear();
+            selectedAddModalMemories.add(detected.storage);
+            document.getElementById('newModelStorage').value = detected.storage;
+            document.querySelectorAll('#addModelMemoryChips .mem-chip').forEach(c => {
+              c.classList.toggle('active', parseInt(c.dataset.val, 10) === detected.storage);
+            });
+            updateAddSubmitButtonText();
+          }
+          if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+          showDynamicIsland("Ссылка распознана", `${detected.name || 'Параметры подставлены'} ⚡️`, "🔗");
+        }
+      });
+    }
+
+    // Модалка изменения ссылки для существующей модели
+    const editLinkModal = document.getElementById('editLinkModal');
+    const editLinkInput = document.getElementById('editLinkInput');
+    const editLinkTargetKey = document.getElementById('editLinkTargetKey');
+    const editLinkModalTitle = document.getElementById('editLinkModalTitle');
+
+    function openEditLinkModal(itemKey) {
+      const item = currentMatrix.find(m => m.key === itemKey);
+      if (!item) return;
+
+      editLinkTargetKey.value = itemKey;
+      editLinkModalTitle.textContent = `🔗 Ссылка: ${item.model}`;
+      editLinkInput.value = item.search_link || '';
+      editLinkModal.classList.add('active');
+      setTimeout(() => editLinkInput.focus(), 100);
+      if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+    }
+
+    document.getElementById('btnCloseEditLinkModal')?.addEventListener('click', () => {
+      editLinkModal.classList.remove('active');
+    });
+
+    document.getElementById('btnSaveEditLink')?.addEventListener('click', () => {
+      const itemKey = editLinkTargetKey.value;
+      const item = currentMatrix.find(m => m.key === itemKey);
+      if (!item) return;
+
+      const link = editLinkInput.value.trim();
+      item.search_link = link;
+      saveLocal();
+      renderCards();
+      editLinkModal.classList.remove('active');
+
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      showDynamicIsland(link ? "Ссылка сохранена" : "Ссылка очищена", `${item.model} • Нажмите «Применить в бота» ⚡️`, "🔗");
+    });
+
+    document.getElementById('btnDeleteEditLink')?.addEventListener('click', () => {
+      const itemKey = editLinkTargetKey.value;
+      const item = currentMatrix.find(m => m.key === itemKey);
+      if (!item) return;
+
+      item.search_link = '';
+      saveLocal();
+      renderCards();
+      editLinkModal.classList.remove('active');
+
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
+      showDynamicIsland("Ссылка удалена", `${item.model} • Стандартный поиск ⚡️`, "🗑️");
     });
 
     // Модалка быстрого добавления объема памяти в карточку
@@ -4390,14 +4654,16 @@ const POPULAR_TEMPLATES = [
         return Number(m.price) !== Number(init.price) ||
                Number(m.market) !== Number(init.market) ||
                Boolean(m.enabled) !== Boolean(init.enabled) ||
-               String(m.category || '') !== String(init.category || '');
+               String(m.category || '') !== String(init.category || '') ||
+               String(m.search_link || '') !== String(init.search_link || '');
       }).map(m => [
         m.model,
         m.storage,
         Number(m.price || 0),
         m.enabled !== false ? 1 : 0,
         m.category || (categories.find(c => c.id === m.series)?.name) || m.series || "",
-        Number(m.market || 0)
+        Number(m.market || 0),
+        m.search_link || ""
       ]);
 
       const payload = {

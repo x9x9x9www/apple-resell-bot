@@ -7,9 +7,10 @@ from bot.bot import register_worker_query_listener, broadcast_worker_query
 
 class TestCustomCategoriesAndQueries(unittest.TestCase):
     def test_custom_category_profile(self):
-        cat = CustomCategory(id="xiaomi", name="Xiaomi", icon="📱")
+        cat = CustomCategory(id="xiaomi", name="Xiaomi", icon="📱", search_link="https://avito.ru/moskva/telefony/xiaomi")
         self.assertEqual(cat.id, "xiaomi")
         self.assertEqual(cat.name, "Xiaomi")
+        self.assertEqual(cat.search_link, "https://avito.ru/moskva/telefony/xiaomi")
 
         prof = UserResellProfile(
             user_id=123,
@@ -22,6 +23,7 @@ class TestCustomCategoriesAndQueries(unittest.TestCase):
                         max_buy=55000,
                         market=68000,
                         category="xiaomi",
+                        search_link="https://avito.ru/moskva/telefony/xiaomi_14_ultra",
                         enabled=True
                     )
                 }
@@ -29,10 +31,12 @@ class TestCustomCategoriesAndQueries(unittest.TestCase):
         )
         self.assertEqual(len(prof.categories), 1)
         self.assertEqual(prof.categories[0].name, "Xiaomi")
+        self.assertEqual(prof.categories[0].search_link, "https://avito.ru/moskva/telefony/xiaomi")
         cfg = prof.get_config("Xiaomi 14 Ultra", 256)
         self.assertIsNotNone(cfg)
         self.assertEqual(cfg.category, "xiaomi")
         self.assertEqual(cfg.max_buy, 55000)
+        self.assertEqual(cfg.search_link, "https://avito.ru/moskva/telefony/xiaomi_14_ultra")
 
     def test_broadcast_worker_query(self):
         captured = []
