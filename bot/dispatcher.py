@@ -189,6 +189,9 @@ class ItemDispatcher:
         if self.user_profile_manager and target_chat:
             user_prof = self.user_profile_manager.get_or_create_profile(target_chat)
             active_platform = getattr(user_prof, "platforms", "all")
+            if active_platform == "none":
+                logger.debug("[%s] Лот #%s отсеян: мониторинг на паузе (все площадки отключены)", raw_item.platform.value, raw_item.item_id)
+                return
             if active_platform == "avito" and raw_item.platform != Platform.AVITO:
                 logger.debug("[%s] Лот #%s отсеян: активен фильтр только Авито", raw_item.platform.value, raw_item.item_id)
                 return

@@ -682,6 +682,14 @@ class TestModernBotFeatures(unittest.TestCase):
             )
             asyncio.run(dispatcher._process_single_item(avito_item))
             self.assertTrue(bot_mock.send_message.called or bot_mock.send_photo.called)
+
+            # При platforms="none" (пауза) - ни один лот не должен отправляться
+            prof.platforms = "none"
+            user_mgr.save_profile(prof)
+            bot_mock.reset_mock()
+            asyncio.run(dispatcher._process_single_item(avito_item))
+            bot_mock.send_message.assert_not_awaited()
+            bot_mock.send_photo.assert_not_awaited()
         finally:
             if prof_path.exists():
                 prof_path.unlink()

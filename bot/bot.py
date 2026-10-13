@@ -586,7 +586,7 @@ def create_bot_dispatcher(
     async def cb_set_platform(callback: types.CallbackQuery):
         chat_id = callback.message.chat.id if callback.message else 0
         raw_p = callback.data.split(":", 1)[1] if callback.data else "all"
-        if raw_p not in ("all", "avito", "youla"):
+        if raw_p not in ("all", "avito", "youla", "none"):
             raw_p = "all"
         profile = user_profile_mgr.get_or_create_profile(chat_id)
         profile.platforms = raw_p
@@ -596,6 +596,7 @@ def create_bot_dispatcher(
             "all": "⚡️ Все (Авито + Юла)",
             "avito": "🟢 Только Авито",
             "youla": "🟣 Только Юла",
+            "none": "⏸ Пауза (отключены)",
         }
         ans = (
             f"✅ <b>Режим площадок обновлен: {plat_map[raw_p]}</b>\n\n"
@@ -837,7 +838,7 @@ def create_bot_dispatcher(
                 if selected_region and updated_reg:
                     profile.region = updated_reg["name"]
                 raw_platforms = str(raw_payload.get("platforms", "all")).lower().strip()
-                if raw_platforms in ("all", "avito", "youla"):
+                if raw_platforms in ("all", "avito", "youla", "none"):
                     profile.platforms = raw_platforms
 
                 # Сохраняем пользовательские папки/категории
@@ -969,6 +970,7 @@ def create_bot_dispatcher(
                     "avito": "🟢 Только Авито",
                     "youla": "🟣 Только Юла",
                     "all": "⚡️ Авито + Юла",
+                    "none": "⏸ Пауза (отключены)",
                 }
                 plat_label = plat_map.get(getattr(profile, "platforms", "all"), "⚡️ Авито + Юла")
                 text = (
