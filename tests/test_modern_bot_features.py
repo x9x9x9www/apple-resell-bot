@@ -615,6 +615,77 @@ class TestModernBotFeatures(unittest.TestCase):
             if st_path.exists():
                 st_path.unlink()
 
+    def test_platform_filtering_in_dispatcher(self):
+        import asyncio
+        from unittest.mock import AsyncMock, MagicMock
+        from core.models import RawItem, Platform
+        from core.user_profile import UserProfileManager, UserModelConfig
+        from bot.dispatcher import ItemDispatcher
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.NamedTemporaryFile(suffix=".json", delete=False) as f_prof:
+            prof_path = Path(f_prof.name)
+
+        try:
+            user_mgr = UserProfileManager(storage_path=prof_path)
+            chat_id = 987654
+            prof = user_mgr.get_or_create_profile(chat_id)
+            prof.models = {
+                "iPhone 13": {"128": UserModelConfig(model="iPhone 13", storage=128, max_buy=35000, market=45000, enabled=True)}
+            }
+            prof.platforms = "avito"
+            user_mgr.save_profile(prof)
+
+            bot_mock = AsyncMock()
+            bot_mock.send_message = AsyncMock()
+            bot_mock.send_photo = AsyncMock()
+            queue = asyncio.Queue()
+
+            from core.margin_filter import MarginFilter
+            mf = MarginFilter()
+            mf.matrix = {"iPhone 13": {"128": {"max_buy": 35000, "market": 45000, "enabled": True}}}
+
+            dispatcher = ItemDispatcher(
+                bot=bot_mock,
+                queue=queue,
+                margin_filter=mf,
+                user_profile_manager=user_mgr,
+                target_chat_id=chat_id,
+            )
+
+            youla_item = RawItem(
+                platform=Platform.YOULA,
+                item_id="youla_p_1",
+                title="Apple iPhone 13 128 GB",
+                description="",
+                price=30000,
+                url="https://youla.ru/item/youla_p_1",
+                location="Москва",
+                published_at=datetime.now(timezone.utc),
+            )
+            # При platforms="avito", Юла должна быть отсеяна
+            asyncio.run(dispatcher._process_single_item(youla_item))
+            bot_mock.send_message.assert_not_awaited()
+            bot_mock.send_photo.assert_not_awaited()
+
+            # Авито должно пройти
+            avito_item = RawItem(
+                platform=Platform.AVITO,
+                item_id="avito_p_1",
+                title="Apple iPhone 13 128 GB",
+                description="Отличное состояние",
+                price=31000,
+                url="https://avito.ru/item/avito_p_1",
+                location="Москва",
+                published_at=datetime.now(timezone.utc),
+            )
+            asyncio.run(dispatcher._process_single_item(avito_item))
+            self.assertTrue(bot_mock.send_message.called or bot_mock.send_photo.called)
+        finally:
+            if prof_path.exists():
+                prof_path.unlink()
+
 
 if __name__ == "__main__":
     unittest.main()

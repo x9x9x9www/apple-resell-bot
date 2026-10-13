@@ -53,6 +53,7 @@ class UserResellProfile(BaseModel):
     """
     user_id: int
     region: str = Field(default="", description="Выбранный регион поиска")
+    platforms: str = Field(default="all", description="Фильтр площадок: 'all', 'avito', 'youla'")
     target_margin: int = Field(default=5000, description="Желаемая минимальная чистая прибыль (₽)")
     margin_mode: str = Field(default="rub", description="'rub' или 'percent'")
     condition_rules: UserConditionRules = Field(default_factory=UserConditionRules)

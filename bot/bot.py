@@ -502,6 +502,98 @@ def create_bot_dispatcher(
 
         await _show_city_selection_guide(message, reg_manager)
 
+    @dp.message(Command("platform", "platforms", "source"))
+    async def cmd_platform(message: types.Message):
+        await cleanup_user_message(message)
+        chat_id = message.chat.id
+        profile = user_profile_mgr.get_or_create_profile(chat_id)
+        current_p = getattr(profile, "platforms", "all")
+        plat_map = {
+            "all": "⚡️ Все (Авито + Юла)",
+            "avito": "🟢 Только Авито",
+            "youla": "🟣 Только Юла",
+        }
+        text = (
+            "📡 <b>Выбор площадок поиска:</b>\n\n"
+            f"Текущий режим: <b>{plat_map.get(current_p, '⚡️ Все (Авито + Юла)')}</b>\n\n"
+            "Выберите, откуда бот должен присылать объявления:"
+        )
+        kb = InlineKeyboardMarkup(
+            inline_keyboard=[
+                [
+                    InlineKeyboardButton(
+                        text=("✅ " if current_p == "all" else "") + "⚡️ Все (Авито + Юла)",
+                        callback_data="set_platform:all",
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        text=("✅ " if current_p == "avito" else "") + "🟢 Только Авито",
+                        callback_data="set_platform:avito",
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        text=("✅ " if current_p == "youla" else "") + "🟣 Только Юла",
+                        callback_data="set_platform:youla",
+                    )
+                ],
+            ]
+        )
+        bot = message.bot
+        if bot:
+            await send_or_replace_functional_message(chat_id=chat_id, bot=bot, text=text, reply_markup=kb)
+        else:
+            await message.answer(text, reply_markup=kb)
+
+    @dp.callback_query(F.data.startswith("set_platform:"))
+    async def cb_set_platform(callback: types.CallbackQuery):
+        chat_id = callback.message.chat.id if callback.message else 0
+        raw_p = callback.data.split(":", 1)[1] if callback.data else "all"
+        if raw_p not in ("all", "avito", "youla"):
+            raw_p = "all"
+        profile = user_profile_mgr.get_or_create_profile(chat_id)
+        profile.platforms = raw_p
+        user_profile_mgr.save_profile(profile)
+
+        plat_map = {
+            "all": "⚡️ Все (Авито + Юла)",
+            "avito": "🟢 Только Авито",
+            "youla": "🟣 Только Юла",
+        }
+        ans = (
+            f"✅ <b>Режим площадок обновлен: {plat_map[raw_p]}</b>\n\n"
+            "Фильтр мониторинга сразу вступил в силу."
+        )
+        kb = InlineKeyboardMarkup(
+            inline_keyboard=[
+                [
+                    InlineKeyboardButton(
+                        text=("✅ " if raw_p == "all" else "") + "⚡️ Все (Авито + Юла)",
+                        callback_data="set_platform:all",
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        text=("✅ " if raw_p == "avito" else "") + "🟢 Только Авито",
+                        callback_data="set_platform:avito",
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        text=("✅ " if raw_p == "youla" else "") + "🟣 Только Юла",
+                        callback_data="set_platform:youla",
+                    )
+                ],
+            ]
+        )
+        try:
+            await callback.answer(f"Площадка: {plat_map[raw_p]}")
+            if callback.message:
+                await callback.message.edit_text(ans, reply_markup=kb, parse_mode="HTML")
+        except Exception as e:
+            logger.debug("Ошибка обновления сообщения платформы: %s", e)
+
     @dp.message(Command("export_prices"))
     async def cmd_export_prices(message: types.Message):
         await cleanup_user_message(message)
@@ -703,6 +795,9 @@ def create_bot_dispatcher(
                 profile.condition_rules = condition_rules
                 if selected_region and updated_reg:
                     profile.region = updated_reg["name"]
+                raw_platforms = str(raw_payload.get("platforms", "all")).lower().strip()
+                if raw_platforms in ("all", "avito", "youla"):
+                    profile.platforms = raw_platforms
 
                 # Сохраняем пользовательские папки/категории
                 parsed_categories = []
@@ -829,12 +924,19 @@ def create_bot_dispatcher(
                     active_count = filter_instance.get_stats().get("active_configs", 0)
 
                 active_reg_name = reg_manager.current["name"]
+                plat_map = {
+                    "avito": "🟢 Только Авито",
+                    "youla": "🟣 Только Юла",
+                    "all": "⚡️ Авито + Юла",
+                }
+                plat_label = plat_map.get(getattr(profile, "platforms", "all"), "⚡️ Авито + Юла")
                 text = (
                     "⚡️ <b>ПЕРЕКУПЕР</b>\n\n"
                     "✅ <b>Настройки и цены успешно сохранены!</b>\n"
                     f"📍 <b>Активный регион:</b> {active_reg_name}\n"
+                    f"📡 <b>Площадки:</b> {plat_label}\n"
                     f"📱 <b>Активных конфигураций:</b> {active_count}\n\n"
-                    "⚡️ <i>Мониторинг Авито и Юлы обновлен</i>"
+                    "⚡️ <i>Мониторинг обновлен</i>"
                 )
                 bot = message.bot
                 if bot:

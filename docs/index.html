@@ -672,6 +672,59 @@
       background: rgba(255, 69, 58, 0.25);
     }
 
+    /* Platform Segmented Control Bar (Все / Авито / Юла) */
+    .platform-segment-bar {
+      display: flex;
+      background: rgba(255, 255, 255, 0.04);
+      border: 0.5px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 3px;
+      gap: 3px;
+      margin-top: 10px;
+      margin-bottom: 2px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+    }
+    .platform-seg-btn {
+      flex: 1;
+      background: transparent;
+      border: 0.5px solid transparent;
+      border-radius: 11px;
+      padding: 7px 4px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+      white-space: nowrap;
+    }
+    .platform-seg-btn:active {
+      transform: scale(0.96);
+    }
+    .platform-seg-btn.active[data-platform="all"] {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+    }
+    .platform-seg-btn.active[data-platform="avito"] {
+      background: rgba(48, 209, 88, 0.15);
+      border-color: rgba(48, 209, 88, 0.4);
+      color: #30d158;
+      box-shadow: 0 2px 12px rgba(48, 209, 88, 0.25);
+    }
+    .platform-seg-btn.active[data-platform="youla"] {
+      background: rgba(191, 90, 242, 0.15);
+      border-color: rgba(191, 90, 242, 0.4);
+      color: #bf5af2;
+      box-shadow: 0 2px 12px rgba(191, 90, 242, 0.25);
+    }
+
     /* ========================================================
        Design Spells: Dynamic Island (Authentic iOS Spring Physics)
        ======================================================== */
@@ -1914,6 +1967,19 @@
     <div class="search-wrapper">
       <span class="search-icon">🔍</span>
       <input type="text" class="search-input" id="searchInput" placeholder="Поиск (MacBook, S24, Pixel, iPad, iPhone...)">
+    </div>
+
+    <!-- Переключатель площадок: Все / Только Авито / Только Юла -->
+    <div class="platform-segment-bar" id="platformSegmentBar">
+      <button type="button" class="platform-seg-btn active" data-platform="all" id="btnPlatAll">
+        <span>⚡️ Все (Авито + Юла)</span>
+      </button>
+      <button type="button" class="platform-seg-btn" data-platform="avito" id="btnPlatAvito">
+        <span>🟢 Только Авито</span>
+      </button>
+      <button type="button" class="platform-seg-btn" data-platform="youla" id="btnPlatYoula">
+        <span>🟣 Только Юла</span>
+      </button>
     </div>
 
     <!-- Фильтр по сериям -->
@@ -4315,6 +4381,52 @@ const POPULAR_TEMPLATES = [
     }
 
     let currentSelectedRegion = getInitialRegion();
+    let currentPlatformFilter = localStorage.getItem('resell_platform_filter') || 'all';
+
+    function triggerDirty() {
+      const saveBtn = document.getElementById('btnSave');
+      if (saveBtn) {
+        saveBtn.classList.add('pulse-attention');
+        setTimeout(() => saveBtn.classList.remove('pulse-attention'), 1500);
+      }
+    }
+
+    function updatePlatformBarUI() {
+      const segButtons = document.querySelectorAll('.platform-seg-btn');
+      segButtons.forEach(btn => {
+        const plat = btn.getAttribute('data-platform');
+        if (plat === currentPlatformFilter) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    function setPlatformFilter(plat, notify = true) {
+      if (!['all', 'avito', 'youla'].includes(plat)) plat = 'all';
+      currentPlatformFilter = plat;
+      localStorage.setItem('resell_platform_filter', plat);
+      updatePlatformBarUI();
+      triggerDirty();
+      if (notify) {
+        if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+        const platNames = {
+          all: '⚡️ Все площадки (Авито + Юла)',
+          avito: '🟢 Только Авито',
+          youla: '🟣 Только Юла'
+        };
+        showDynamicToast('Площадка обновлена', `${platNames[plat]} • Нажмите «Применить»`, 'info');
+      }
+    }
+
+    document.querySelectorAll('.platform-seg-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const plat = btn.getAttribute('data-platform');
+        setPlatformFilter(plat, true);
+      });
+    });
+    updatePlatformBarUI();
 
     function updateRegionUI() {
       const labelEl = document.getElementById('currentRegionLabel');
@@ -4740,6 +4852,7 @@ const POPULAR_TEMPLATES = [
       const payload = {
         action: "save_resell_profile",
         region: currentSelectedRegion,
+        platforms: currentPlatformFilter,
         condition_rules: conditionRules,
         categories: categories,
         active_count: activeCount,
@@ -4779,6 +4892,7 @@ const POPULAR_TEMPLATES = [
 
       localStorage.setItem('resell_selected_region', currentSelectedRegion);
       localStorage.setItem('resell_last_bot_region', currentSelectedRegion);
+      localStorage.setItem('resell_platform_filter', currentPlatformFilter);
       saveLocal();
       snapshotInitialMatrix(currentMatrix, true);
 
@@ -4792,7 +4906,8 @@ const POPULAR_TEMPLATES = [
       }
 
       const activeCount = currentMatrix.filter(m => m.enabled !== false).length;
-      showDynamicIsland("Настройки применены", `${currentSelectedRegion} • ${activeCount} моделей в боте ⚡️`, "💾");
+      const platLabels = { all: 'Все площадки', avito: 'Авито', youla: 'Юла' };
+      showDynamicIsland("Настройки применены", `${currentSelectedRegion} • ${platLabels[currentPlatformFilter] || 'Все'} • ${activeCount} мод.`, "💾");
     });
 
       // ========================================================

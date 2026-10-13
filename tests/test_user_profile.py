@@ -273,6 +273,34 @@ class TestUserProfile(unittest.TestCase):
             if tmp_path.exists():
                 tmp_path.unlink()
 
+    def test_platforms_setting_persistence(self):
+        import tempfile
+        from pathlib import Path
+        with tempfile.NamedTemporaryFile(suffix=".json", delete=False) as f:
+            tmp_path = Path(f.name)
+
+        try:
+            mgr = UserProfileManager(storage_path=tmp_path)
+            prof = mgr.get_or_create_profile(555444)
+            self.assertEqual(prof.platforms, "all")
+
+            prof.platforms = "avito"
+            mgr.save_profile(prof)
+
+            mgr2 = UserProfileManager(storage_path=tmp_path)
+            prof2 = mgr2.get_or_create_profile(555444)
+            self.assertEqual(prof2.platforms, "avito")
+
+            prof2.platforms = "youla"
+            mgr2.save_profile(prof2)
+
+            mgr3 = UserProfileManager(storage_path=tmp_path)
+            prof3 = mgr3.get_or_create_profile(555444)
+            self.assertEqual(prof3.platforms, "youla")
+        finally:
+            if tmp_path.exists():
+                tmp_path.unlink()
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -7,7 +7,7 @@ from aiogram import Bot
 from aiogram.exceptions import TelegramRetryAfter, TelegramAPIError
 
 from config import settings
-from core.models import RawItem, ParsedIPhone
+from core.models import RawItem, ParsedIPhone, Platform
 from core.parser import IPhoneNLPParser
 from core.margin_filter import MarginFilter
 from core.deduplicator import RedisDeduplicator
@@ -185,7 +185,18 @@ class ItemDispatcher:
         """Обрабатывает одну карточку через конвейер фильтрации и отправляет в чат."""
         target_chat = raw_item.target_chat_id or self.target_chat_id
 
-        # 0. Строгий региональный фильтр (Gatekeeper) или фильтр поискового стрима
+        # 0. Фильтр активной площадки (Авито / Юла / Все)
+        if self.user_profile_manager and target_chat:
+            user_prof = self.user_profile_manager.get_or_create_profile(target_chat)
+            active_platform = getattr(user_prof, "platforms", "all")
+            if active_platform == "avito" and raw_item.platform != Platform.AVITO:
+                logger.debug("[%s] Лот #%s отсеян: активен фильтр только Авито", raw_item.platform.value, raw_item.item_id)
+                return
+            if active_platform == "youla" and raw_item.platform != Platform.YOULA:
+                logger.debug("[%s] Лот #%s отсеян: активен фильтр только Юла", raw_item.platform.value, raw_item.item_id)
+                return
+
+        # 0.1 Строгий региональный фильтр (Gatekeeper) или фильтр поискового стрима
         if raw_item.target_chat_id:
             if self.stream_manager:
                 stream = self.stream_manager.get_stream(raw_item.target_chat_id)
