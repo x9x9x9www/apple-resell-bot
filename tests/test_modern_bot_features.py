@@ -543,6 +543,78 @@ class TestModernBotFeatures(unittest.TestCase):
             if st_path.exists():
                 st_path.unlink()
 
+    def test_pause_and_resume_search(self):
+        from core.user_profile import UserProfileManager, UserModelConfig
+        from core.margin_filter import MarginFilter
+        from core.link_stream import StreamManager
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.NamedTemporaryFile(suffix=".json", delete=False) as f_prof, \
+             tempfile.NamedTemporaryFile(suffix=".json", delete=False) as f_st:
+            prof_path = Path(f_prof.name)
+            st_path = Path(f_st.name)
+
+        try:
+            user_mgr = UserProfileManager(storage_path=prof_path)
+            st_mgr = StreamManager(file_path=st_path)
+            mf = MarginFilter()
+            mf.matrix = {
+                "iPhone 15 Pro": {"128": {"max_buy": 65000, "market": 78000, "enabled": True}},
+                "Xiaomi 14": {"256": {"max_buy": 45000, "market": 55000, "enabled": True}}
+            }
+
+            user_id = 123456
+            prof = user_mgr.get_or_create_profile(user_id)
+            prof.models = {
+                "iPhone 15 Pro": {
+                    "128": UserModelConfig(model="iPhone 15 Pro", storage=128, max_buy=65000, enabled=True)
+                }
+            }
+            user_mgr.save_profile(prof)
+
+            st = st_mgr.create_or_update_stream(chat_id=user_id, url="https://avito.ru/moskva/telefony/apple")
+            self.assertTrue(st.is_active)
+
+            # PAUSE: все модели и стримы отключаются
+            for m_name, storages in prof.models.items():
+                for s_key, cfg in storages.items():
+                    cfg.enabled = False
+            for m_name, storages in mf.matrix.items():
+                for s_key, cfg in storages.items():
+                    cfg["enabled"] = False
+            st.is_active = False
+
+            user_mgr.save_profile(prof)
+            st_mgr.save()
+
+            stats_paused = mf.get_stats()
+            self.assertEqual(stats_paused["active_configs"], 0)
+            self.assertFalse(st.is_active)
+            self.assertFalse(prof.get_config("iPhone 15 Pro", 128).enabled)
+
+            # RESUME: все модели и стримы включаются обратно
+            for m_name, storages in prof.models.items():
+                for s_key, cfg in storages.items():
+                    cfg.enabled = True
+            for m_name, storages in mf.matrix.items():
+                for s_key, cfg in storages.items():
+                    cfg["enabled"] = True
+            st.is_active = True
+
+            user_mgr.save_profile(prof)
+            st_mgr.save()
+
+            stats_resumed = mf.get_stats()
+            self.assertEqual(stats_resumed["active_configs"], 2)
+            self.assertTrue(st.is_active)
+            self.assertTrue(prof.get_config("iPhone 15 Pro", 128).enabled)
+        finally:
+            if prof_path.exists():
+                prof_path.unlink()
+            if st_path.exists():
+                st_path.unlink()
+
 
 if __name__ == "__main__":
     unittest.main()

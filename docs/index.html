@@ -624,8 +624,36 @@
       color: var(--text-main);
       box-shadow: var(--card-specular);
     }
-    .btn-reset-catalog {
+    .stats-actions {
       margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-toggle-all-search {
+      background: rgba(255, 159, 10, 0.12);
+      border: 0.5px solid rgba(255, 159, 10, 0.35);
+      color: #ff9f0a;
+      border-radius: 12px;
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: transform 0.15s var(--spring-press), background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    }
+    .btn-toggle-all-search:active {
+      transform: scale(0.94);
+      background: rgba(255, 159, 10, 0.25);
+    }
+    .btn-toggle-all-search.is-all-off {
+      background: rgba(48, 209, 88, 0.12);
+      border-color: rgba(48, 209, 88, 0.35);
+      color: #30d158;
+    }
+    .btn-reset-catalog {
       background: rgba(255, 69, 58, 0.12);
       border: 0.5px solid rgba(255, 69, 58, 0.32);
       color: #ff453a;
@@ -1871,9 +1899,14 @@
         <span>Всего: <b class="stats-pill" id="statTotal">0</b></span>
         <span>Активных: <b class="stats-pill" id="statActive">0</b></span>
         <span>Серия: <span id="statFilter" style="color:var(--accent-highlight); font-weight:700;">Все</span></span>
-        <button class="btn-reset-catalog" id="btnResetCatalog" title="Сбросить все изменения и восстановить каталог по умолчанию">
-          🔄 Сброс
-        </button>
+        <div class="stats-actions">
+          <button class="btn-toggle-all-search" id="btnToggleAllSearch" title="Включить или выключить поиск всех моделей (сохранив цены и настройки)">
+            ⏸ Выкл. всё
+          </button>
+          <button class="btn-reset-catalog" id="btnResetCatalog" title="Сбросить все изменения и восстановить каталог по умолчанию">
+            🔄 Сброс
+          </button>
+        </div>
       </div>
     </div>
 
@@ -2855,14 +2888,29 @@ const POPULAR_TEMPLATES = [
     let searchQuery = '';
 
     function updateStats() {
-      document.getElementById('statTotal').textContent = currentMatrix.length;
-      document.getElementById('statActive').textContent = currentMatrix.filter(m => m.enabled).length;
+      const total = currentMatrix.length;
+      const active = currentMatrix.filter(m => m.enabled !== false).length;
+      document.getElementById('statTotal').textContent = total;
+      document.getElementById('statActive').textContent = active;
       const filterPill = document.querySelector(`.series-pill[data-series="${activeFilter}"]`);
       if (filterPill) {
         const textSpan = filterPill.querySelector('span:first-child') || filterPill;
         document.getElementById('statFilter').textContent = (textSpan?.textContent || '').trim() || 'Все';
       } else {
         document.getElementById('statFilter').textContent = 'Все';
+      }
+
+      const btnToggle = document.getElementById('btnToggleAllSearch');
+      if (btnToggle) {
+        if (active > 0) {
+          btnToggle.innerHTML = '⏸ Выкл. всё';
+          btnToggle.classList.remove('is-all-off');
+          btnToggle.title = 'Выключить поиск всех моделей (сохранив цены и настройки)';
+        } else {
+          btnToggle.innerHTML = '▶️ Вкл. всё';
+          btnToggle.classList.add('is-all-off');
+          btnToggle.title = 'Включить поиск всех моделей';
+        }
       }
     }
 
@@ -4503,6 +4551,29 @@ const POPULAR_TEMPLATES = [
 
     // Модалка управления каталогом (Сброс по умолчанию / Полная очистка)
     const catalogManageModal = document.getElementById('catalogManageModal');
+
+    // Кнопка: Мастер-переключатель "Выключить / Включить поиск всего"
+    const btnToggleAllEl = document.getElementById('btnToggleAllSearch');
+    if (btnToggleAllEl) {
+      btnToggleAllEl.addEventListener('click', () => {
+        if (!currentMatrix || currentMatrix.length === 0) return;
+        const anyActive = currentMatrix.some(m => m.enabled !== false);
+        const newState = !anyActive;
+        currentMatrix.forEach(m => {
+          m.enabled = newState;
+        });
+        saveLocal();
+        updateStats();
+        renderCards();
+        triggerDirty();
+        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+        if (newState) {
+          showDynamicToast('▶️ Поиск включен', `Активировано моделей: ${currentMatrix.length}. Нажмите «Применить»`, 'success');
+        } else {
+          showDynamicToast('⏸ Поиск выключен', 'Все модели отключены. Нажмите «Применить»', 'warning');
+        }
+      });
+    }
 
     document.getElementById('btnResetCatalog').addEventListener('click', () => {
       if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');

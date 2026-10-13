@@ -378,6 +378,76 @@ def create_bot_dispatcher(
         else:
             await message.answer(text)
 
+    @dp.message(Command("pause", "stop_search", "mute"))
+    async def cmd_pause(message: types.Message):
+        """Приостанавливает отправку уведомлений и мониторинг лотов."""
+        await cleanup_user_message(message)
+        chat_id = message.chat.id
+        bot = message.bot
+
+        profile = user_profile_mgr.get_or_create_profile(chat_id)
+        for m_name, storages in profile.models.items():
+            for s_key, cfg in storages.items():
+                cfg.enabled = False
+        user_profile_mgr.save_profile(profile)
+
+        for m_name, storages in filter_instance.matrix.items():
+            for s_key, cfg in storages.items():
+                cfg["enabled"] = False
+        filter_instance.save_matrix()
+        filter_instance.reload_matrix()
+
+        st = stream_mgr.get_stream(chat_id)
+        if st and st.is_active:
+            st.is_active = False
+            stream_mgr.save()
+
+        text = (
+            "⏸ <b>Поиск всех лотов приостановлен!</b>\n\n"
+            "• Все модели, ваши цены и ссылки сохранены в безопасности.\n"
+            "• Уведомления о новых объявлениях временно приходить не будут.\n\n"
+            "▶️ Чтобы возобновить поиск, отправьте команду /resume или включите поиск в Mini App."
+        )
+        if bot:
+            await send_or_replace_functional_message(chat_id=chat_id, bot=bot, text=text)
+        else:
+            await message.answer(text)
+
+    @dp.message(Command("resume", "start_search", "unmute"))
+    async def cmd_resume(message: types.Message):
+        """Возобновляет поиск по всем моделям."""
+        await cleanup_user_message(message)
+        chat_id = message.chat.id
+        bot = message.bot
+
+        profile = user_profile_mgr.get_or_create_profile(chat_id)
+        for m_name, storages in profile.models.items():
+            for s_key, cfg in storages.items():
+                cfg.enabled = True
+        user_profile_mgr.save_profile(profile)
+
+        for m_name, storages in filter_instance.matrix.items():
+            for s_key, cfg in storages.items():
+                cfg["enabled"] = True
+        filter_instance.save_matrix()
+        filter_instance.reload_matrix()
+
+        st = stream_mgr.get_stream(chat_id)
+        if st and not st.is_active:
+            st.is_active = True
+            stream_mgr.save()
+
+        text = (
+            "▶️ <b>Поиск всех лотов возобновлен!</b>\n\n"
+            "• Мониторинг снова активен.\n"
+            "• Воркеры Авито и Юлы отслеживают свежие объявления в реальном времени.\n\n"
+            "⏸ Приостановить поиск в любой момент: /pause"
+        )
+        if bot:
+            await send_or_replace_functional_message(chat_id=chat_id, bot=bot, text=text)
+        else:
+            await message.answer(text)
+
     @dp.message(Command("city", "region"))
     async def cmd_city(message: types.Message):
         await cleanup_user_message(message)
