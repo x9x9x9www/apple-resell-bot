@@ -3679,8 +3679,10 @@ const POPULAR_TEMPLATES = [
       condModal.classList.remove('active');
     });
     document.getElementById('btnSaveConditionModal').addEventListener('click', () => {
+      saveLocal();
       condModal.classList.remove('active');
       if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      showDynamicIsland("Настройки сохранены", `Регион: ${currentSelectedRegion} • Нажмите «Применить в бота» ⚡️`, "⚙️");
     });
 
     // Модалка добавления модели
@@ -3965,14 +3967,38 @@ const POPULAR_TEMPLATES = [
     const POPULAR_KEYS = ["yakutsk", "moskva", "spb", "ekaterinburg", "novosibirsk", "kazan", "krasnodar", "all_russia"];
 
     function getInitialRegion() {
+      let hashRegion = null;
       if (window.location.hash) {
         const m = window.location.hash.match(/region=([^&]+)/);
-        if (m) return decodeURIComponent(m[1]);
+        if (m) hashRegion = decodeURIComponent(m[1]).trim();
       }
       const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.has('region')) return urlParams.get('region');
+      const queryRegion = urlParams.get('region') ? decodeURIComponent(urlParams.get('region')).trim() : null;
+      const incomingBotRegion = hashRegion || queryRegion;
+
       const saved = localStorage.getItem('resell_selected_region');
-      if (saved) return saved;
+      const lastBotRegion = localStorage.getItem('resell_last_bot_region');
+
+      // 1. Если бот передал новый регион, отличающийся от предыдущего известного региона бота
+      // (например, пользователь набрал /city Москва в чате бота):
+      if (incomingBotRegion && incomingBotRegion !== lastBotRegion) {
+        localStorage.setItem('resell_selected_region', incomingBotRegion);
+        localStorage.setItem('resell_last_bot_region', incomingBotRegion);
+        return incomingBotRegion;
+      }
+
+      // 2. Если у пользователя уже сохранен регион в localStorage:
+      if (saved && saved.trim()) {
+        return saved.trim();
+      }
+
+      // 3. Fallback к переданному региону бота или дефолту
+      if (incomingBotRegion) {
+        localStorage.setItem('resell_selected_region', incomingBotRegion);
+        localStorage.setItem('resell_last_bot_region', incomingBotRegion);
+        return incomingBotRegion;
+      }
+
       return "Якутск";
     }
 
@@ -4161,11 +4187,11 @@ const POPULAR_TEMPLATES = [
     function selectRegion(name, key = "", triggerToast = true) {
       if (!name) return;
       currentSelectedRegion = name;
-    updateRegionUI();
+      updateRegionUI();
       regionModal.classList.remove('active');
 
       if (triggerToast) {
-        showDynamicIsland("Регион поиска изменен", `${name} • Мониторинг настроен ⚡️`, "📍");
+        showDynamicIsland("Регион изменен", `${name} • Нажмите «Применить в бота» ⚡️`, "📍");
       } else if (tg?.HapticFeedback) {
         tg.HapticFeedback.selectionChanged();
       }
@@ -4394,19 +4420,19 @@ const POPULAR_TEMPLATES = [
         delete payload.remaining_keys;
         jsonPayload = JSON.stringify(payload);
       }
-      if (new Blob([jsonPayload]).size > 3800) {
-        payload.models = modifiedModels.slice(0, 30);
+      while (new Blob([jsonPayload]).size > 3800 && payload.models && payload.models.length > 0) {
+        payload.models = payload.models.slice(0, Math.max(0, payload.models.length - 10));
         jsonPayload = JSON.stringify(payload);
       }
       return jsonPayload;
     }
 
-    // Сохранение и применение цен в бота (БЕЗ закрытия приложения!)
+    // Сохранение и применение настроек и цен в бота
     document.getElementById('btnSave').addEventListener('click', () => {
       const saveBtn = document.getElementById('btnSave');
       const originalSaveHtml = saveBtn.innerHTML;
       saveBtn.classList.add('success-state');
-      saveBtn.innerHTML = `<span>✨ Цены применены в бота!</span>`;
+      saveBtn.innerHTML = `<span>✨ Настройки применены в бота!</span>`;
       setTimeout(() => {
         saveBtn.classList.remove('success-state');
         saveBtn.innerHTML = originalSaveHtml;
@@ -4414,11 +4440,22 @@ const POPULAR_TEMPLATES = [
 
       if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
 
+      localStorage.setItem('resell_selected_region', currentSelectedRegion);
+      localStorage.setItem('resell_last_bot_region', currentSelectedRegion);
       saveLocal();
       snapshotInitialMatrix(currentMatrix, true);
 
+      const jsonPayload = buildResellPayload();
+      if (tg && typeof tg.sendData === 'function') {
+        try {
+          tg.sendData(jsonPayload);
+        } catch (err) {
+          console.error("sendData error:", err);
+        }
+      }
+
       const activeCount = currentMatrix.filter(m => m.enabled !== false).length;
-      showDynamicIsland("Цены применены", `${activeCount} активных моделей настроено в боте ⚡️`, "💾");
+      showDynamicIsland("Настройки применены", `${currentSelectedRegion} • ${activeCount} моделей в боте ⚡️`, "💾");
     });
 
       // ========================================================

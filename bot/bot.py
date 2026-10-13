@@ -391,6 +391,9 @@ def create_bot_dispatcher(
             city_query = text_parts[1].strip()
             updated = reg_manager.set_region(city_query)
             if updated:
+                profile = user_profile_mgr.get_or_create_profile(chat_id)
+                profile.region = updated["name"]
+                user_profile_mgr.save_profile(profile)
                 ans = (
                     f"✅ <b>Регион поиска успешно изменен!</b>\n\n"
                     f"📍 Новый активный регион: <b>{updated['name']}</b>\n\n"
@@ -539,6 +542,9 @@ def create_bot_dispatcher(
                 if not updated:
                     updated = reg_manager.set_region(region_name)
                 if updated:
+                    profile = user_profile_mgr.get_or_create_profile(user_id)
+                    profile.region = updated["name"]
+                    user_profile_mgr.save_profile(profile)
                     ans = (
                         "⚡️ <b>ПЕРЕКУПЕР</b>\n\n"
                         f"✅ <b>Регион поиска успешно переключен:</b> {updated['name']}\n"
@@ -624,6 +630,8 @@ def create_bot_dispatcher(
 
                 profile = user_profile_mgr.get_or_create_profile(user_id)
                 profile.condition_rules = condition_rules
+                if selected_region and updated_reg:
+                    profile.region = updated_reg["name"]
 
                 # Сохраняем пользовательские папки/категории
                 parsed_categories = []
@@ -1212,6 +1220,10 @@ def create_bot_dispatcher(
         region_key = callback.data.split(":")[1]
         updated = reg_manager.set_region(region_key)
         if updated:
+            if callback.from_user:
+                profile = user_profile_mgr.get_or_create_profile(callback.from_user.id)
+                profile.region = updated["name"]
+                user_profile_mgr.save_profile(profile)
             await callback.answer(f"Регион изменен на {updated['name']} ✅")
             if callback.message:
                 try:

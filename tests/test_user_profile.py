@@ -189,6 +189,7 @@ class TestUserProfile(unittest.TestCase):
         try:
             mgr = UserProfileManager(storage_path=tmp_path)
             prof = mgr.get_or_create_profile(999888)
+            prof.region = "Санкт-Петербург"
             prof.target_margin = 8500
             prof.condition_rules.battery_discount = 4500
             mgr.save_profile(prof)
@@ -196,6 +197,7 @@ class TestUserProfile(unittest.TestCase):
             # Перезагружаем менеджер из того же файла
             mgr2 = UserProfileManager(storage_path=tmp_path)
             prof2 = mgr2.get_or_create_profile(999888)
+            self.assertEqual(prof2.region, "Санкт-Петербург")
             self.assertEqual(prof2.target_margin, 8500)
             self.assertEqual(prof2.condition_rules.battery_discount, 4500)
         finally:
