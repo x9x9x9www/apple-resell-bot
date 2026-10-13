@@ -282,10 +282,15 @@ class TestModernBotFeatures(unittest.TestCase):
 
         button_texts = [b.text for row in reply_kb.keyboard for b in row]
         self.assertIn("ℹ️ Информация", button_texts)
-        self.assertIn("📥 Скачать/загрузить Excel", button_texts)
-        self.assertIn("ПЕРЕКУПЕР", button_texts)
+        self.assertIn("⭐️ Избранное", button_texts)
+        self.assertIn("⚡️ Бредли Перекупер", button_texts)
+        self.assertNotIn("📥 Скачать/загрузить Excel", button_texts)
         # Проверяем, что бесполезная кнопка скрытия клавиатуры удалена
         self.assertNotIn("❌ Скрыть клавиатуру", button_texts)
+
+        # Проверяем структуру: 1-я строка во всю ширину (Mini App), 2-я строка с 2 кнопками
+        self.assertEqual(len(reply_kb.keyboard[0]), 1)
+        self.assertEqual(len(reply_kb.keyboard[1]), 2)
 
         # Проверяем убирание клавиатуры
         hide_kb = get_hide_keyboard()
@@ -695,30 +700,16 @@ class TestModernBotFeatures(unittest.TestCase):
                 prof_path.unlink()
 
     def test_setup_bot_commands(self):
-        """Проверяет регистрацию нативного меню команд Telegram."""
+        """Проверяет скрытие нативного меню слэш-команд Telegram."""
         import asyncio
         from unittest.mock import AsyncMock, MagicMock
         from bot.bot import setup_bot_commands
 
         bot_mock = MagicMock()
-        bot_mock.set_my_commands = AsyncMock(return_value=True)
+        bot_mock.delete_my_commands = AsyncMock(return_value=True)
 
         asyncio.run(setup_bot_commands(bot_mock))
-        bot_mock.set_my_commands.assert_awaited_once()
-        args, kwargs = bot_mock.set_my_commands.call_args
-        commands = args[0]
-        cmd_names = [c.command for c in commands]
-        self.assertIn("start", cmd_names)
-        self.assertIn("menu", cmd_names)
-        self.assertIn("platform", cmd_names)
-        self.assertIn("city", cmd_names)
-        self.assertIn("status", cmd_names)
-        self.assertIn("pause", cmd_names)
-        self.assertIn("resume", cmd_names)
-        self.assertIn("favorites", cmd_names)
-        self.assertIn("stream", cmd_names)
-        self.assertIn("export_prices", cmd_names)
-        self.assertIn("help", cmd_names)
+        bot_mock.delete_my_commands.assert_awaited_once()
 
     def test_enhanced_dashboard_text_with_platform_modes(self):
         """Проверяет отображение режима площадок и статистики в расширенном дашборде."""

@@ -191,8 +191,8 @@ def get_reply_keyboard(
 ) -> ReplyKeyboardMarkup:
     """
     Всплывающая клавиатура быстрого доступа (Reply Keyboard) внизу экрана:
-    - [ ℹ️ Информация ] [ 📥 Скачать/загрузить Excel ]
-    - [ ПЕРЕКУПЕР ] (открывает Mini App)
+    - [ ⚡️ Бредли Перекупер ] (открывает Mini App, растянута на всю ширину)
+    - [ ℹ️ Информация ] [ ⭐️ Избранное ]
     """
     if current_region.startswith(("http://", "https://")):
         webapp_url = current_region
@@ -210,19 +210,18 @@ def get_reply_keyboard(
         final_webapp_url = f"{clean_url}?v={int(time.time())}&region={quote(current_region)}{reg_part}"
 
     app_btn = (
-        KeyboardButton(text="ПЕРЕКУПЕР", web_app=WebAppInfo(url=final_webapp_url))
+        KeyboardButton(text="⚡️ Бредли Перекупер", web_app=WebAppInfo(url=final_webapp_url))
         if final_webapp_url
-        else KeyboardButton(text="ПЕРЕКУПЕР")
+        else KeyboardButton(text="⚡️ Бредли Перекупер")
     )
 
     keyboard = [
         [
-            KeyboardButton(text="ℹ️ Информация"),
-            KeyboardButton(text="⭐️ Избранное"),
+            app_btn,
         ],
         [
-            app_btn,
-            KeyboardButton(text="📥 Скачать/загрузить Excel"),
+            KeyboardButton(text="ℹ️ Информация"),
+            KeyboardButton(text="⭐️ Избранное"),
         ],
     ]
 

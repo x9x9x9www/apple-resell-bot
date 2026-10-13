@@ -91,6 +91,7 @@ def broadcast_worker_query(query: str) -> None:
 
 # Тексты кнопок всплывающей клавиатуры, которые нельзя воспринимать как названия городов
 KNOWN_BUTTON_TEXTS = {
+    "⚡️ Бредли Перекупер", "Бредли Перекупер", "⚡️ Бредли", "Бредли",
     "ℹ️ Информация", "ℹ️ Инфо", "Информация", "О боте",
     "⭐️ Избранное", "Избранное",
     "⚡️ Меню", "⚡️ Главное меню", "Меню",
@@ -134,7 +135,7 @@ async def send_or_replace_functional_message(
     with_banner: bool = True,
 ) -> types.Message:
     """
-    Отправляет сервисное/функциональное сообщение бота с баннером 'ПЕРЕКУПЕР', предварительно
+    Отправляет сервисное/функциональное сообщение бота с баннером 'БРЕДЛИ ПЕРЕКУПЕР', предварительно
     удаляя предыдущее функциональное сообщение в этом чате.
     Благодаря этому чат не захламляется дублирующимися меню и статусами
     (функционал всегда представлен ровно одним актуальным сообщением, без спама).
@@ -155,9 +156,16 @@ async def send_or_replace_functional_message(
             current_reg_name = _active_region_manager.current["name"] if _active_region_manager else "Москва"
             reply_markup = get_reply_keyboard(current_region=current_reg_name)
 
-    # Прикрепляем баннер 'ПЕРЕКУПЕР' на всех служебных/функциональных сообщениях бота
-    if photo is None and with_banner and BANNER_FILE_PATH.exists():
-        photo = FSInputFile(str(BANNER_FILE_PATH))
+    # При отправке с баннером без явного указания фото используем карточку Telegram Rich Message:
+    # (Структура: Заголовок -> Баннер -> Текст сообщения как единое целое)
+    if photo is None and with_banner and link_preview_options is None:
+        webapp_base = getattr(settings, "WEBAPP_URL", "https://x9x9x9www.github.io/apple-resell-bot").rstrip("/")
+        article_url = f"{webapp_base}/article.html"
+        link_preview_options = LinkPreviewOptions(
+            url=article_url,
+            prefer_large_media=True,
+            show_above_text=True,
+        )
 
     if photo:
         photo_obj = FSInputFile(photo) if isinstance(photo, str) else photo
@@ -168,6 +176,7 @@ async def send_or_replace_functional_message(
                 caption=text,
                 parse_mode="HTML",
                 reply_markup=reply_markup,
+                show_caption_above_media=True,
             )
         except Exception as photo_err:
             logger.warning("Не удалось отправить фото баннера (%s): %s. Отправка текстом...", photo, photo_err)
@@ -198,13 +207,25 @@ async def send_rich_message(
     article_url: Optional[str] = None,
 ) -> types.Message:
     """
-    Отправляет главное меню / сервисное сообщение с гарантированным показом баннера 'ПЕРЕКУПЕР'.
+    Отправляет главное меню / сервисное сообщение через Telegram Rich Message:
+    Название -> Баннер -> Текст сообщения (в одном целом сообщении с WebPage preview).
     """
+    if article_url is None:
+        webapp_base = getattr(settings, "WEBAPP_URL", "https://x9x9x9www.github.io/apple-resell-bot").rstrip("/")
+        article_url = f"{webapp_base}/article.html"
+
+    link_preview = LinkPreviewOptions(
+        url=article_url,
+        prefer_large_media=True,
+        show_above_text=True,
+    )
+
     return await send_or_replace_functional_message(
         chat_id=chat_id,
         bot=bot,
         text=text,
         reply_markup=reply_markup,
+        link_preview_options=link_preview,
         with_banner=True,
     )
 
@@ -215,7 +236,7 @@ async def _show_city_selection_guide(message: types.Message, reg_manager: Region
     text = (
         "📍 <b>Настройка региона поиска (Авито & Юла):</b>\n\n"
         f"Текущий активный регион: <b>{current_reg['name']}</b>\n\n"
-        "Чтобы изменить регион, просто <b>напишите название города прямо в этот чат</b> (или отправьте команду <code>/city Название</code>):\n"
+        "Чтобы изменить регион, просто <b>напишите название города прямо в этот чат</b>:\n"
         "• <code>Якутск</code> (или <code>якт</code>, <code>саха</code>)\n"
         "• <code>Санкт-Петербург</code> (или <code>спб</code>, <code>питер</code>)\n"
         "• <code>Екатеринбург</code> (или <code>екб</code>)\n"
@@ -242,25 +263,12 @@ def create_bot() -> Bot:
 
 
 async def setup_bot_commands(bot: Bot) -> None:
-    """Регистрирует список команд бота в Telegram API для нативного меню подсказок."""
-    commands = [
-        BotCommand(command="start", description="⚡️ Главное меню и запуск радара"),
-        BotCommand(command="menu", description="📱 Открыть панель управления"),
-        BotCommand(command="platform", description="📡 Выбор площадок (Авито / Юла)"),
-        BotCommand(command="city", description="📍 Сменить регион поиска"),
-        BotCommand(command="status", description="🔄 Статус воркеров и мониторинга"),
-        BotCommand(command="pause", description="⏸ Приостановить мониторинг"),
-        BotCommand(command="resume", description="▶️ Возобновить мониторинг"),
-        BotCommand(command="favorites", description="⭐️ Избранные объявления"),
-        BotCommand(command="stream", description="🔗 Мониторинг по своей ссылке"),
-        BotCommand(command="export_prices", description="📊 Выгрузить прайс в Excel"),
-        BotCommand(command="help", description="ℹ️ Инструкция и горячие клавиши"),
-    ]
+    """Удаляет список системных слэш-команд из Telegram API, чтобы панель была полностью кнопочной."""
     try:
-        await bot.set_my_commands(commands, scope=BotCommandScopeDefault())
-        logger.info("Команды бота успешно зарегистрированы в Telegram API.")
+        await bot.delete_my_commands(scope=BotCommandScopeDefault())
+        logger.info("Системное меню слэш-команд успешно скрыто в Telegram API.")
     except Exception as e:
-        logger.debug("Не удалось зарегистрировать BotCommands: %s", e)
+        logger.debug("Не удалось очистить команды бота: %s", e)
 
 
 def create_bot_dispatcher(
@@ -354,7 +362,7 @@ def create_bot_dispatcher(
         text = (
             "📴 <b>Клавиатура скрыта!</b>\n\n"
             "Чтобы кнопки снова появились:\n"
-            "• Напишите команду <code>/keyboard</code> или <code>/info</code>."
+            "• Напишите в этот чат: <b>Кнопки</b> или <b>Меню</b>."
         )
         bot = message.bot
         if bot:
@@ -519,16 +527,16 @@ def create_bot_dispatcher(
             else:
                 matches = reg_manager.find_cities(city_query)
                 if matches:
-                    hints = "\n".join(f"• <code>/city {m[1]['name']}</code>" for m in matches[:5])
+                    hints = "\n".join(f"• <b>{m[1]['name']}</b>" for m in matches[:5])
                     ans = (
                         f"🔍 Город «{city_query}» не найден точно. Возможно, вы имели в виду:\n\n"
                         f"{hints}\n\n"
-                        "<i>Отправьте команду <code>/city Название</code> или напишите город в чат.</i>"
+                        "<i>Просто напишите название города прямо в этот чат.</i>"
                     )
                 else:
                     ans = (
                         f"❌ Город «{city_query}» не найден в базе.\n\n"
-                        "<i>Напишите точное название города (например: <code>/city Якутск</code>, <code>/city Казань</code>, <code>/city Омск</code>).</i>"
+                        "<i>Напишите название города прямо в этот чат (например: <code>Якутск</code>, <code>Казань</code>, <code>Омск</code>).</i>"
                     )
                 if bot:
                     await send_or_replace_functional_message(chat_id=chat_id, bot=bot, text=ans)
@@ -735,6 +743,7 @@ def create_bot_dispatcher(
     @dp.message(F.web_app_data)
     async def handle_webapp_data(message: types.Message):
         """Принимает измененные настройки матрицы цен и новые модели из Telegram Mini App."""
+        await cleanup_user_message(message)
         try:
             raw_payload = json.loads(message.web_app_data.data)
             action = raw_payload.get("action")
@@ -751,7 +760,7 @@ def create_bot_dispatcher(
                     profile.region = updated["name"]
                     user_profile_mgr.save_profile(profile)
                     ans = (
-                        "⚡️ <b>ПЕРЕКУПЕР</b>\n\n"
+                        "⚡️ <b>БРЕДЛИ ПЕРЕКУПЕР</b>\n\n"
                         f"✅ <b>Регион поиска успешно переключен:</b> {updated['name']}\n"
                         "📡 <b>Мониторинг:</b> Авито + Юла ⚡️\n\n"
                         "<i>Воркеры мгновенно переключились на поиск в новом регионе.</i>"
@@ -789,7 +798,7 @@ def create_bot_dispatcher(
                 active_count = stats.get("active_configs", 115)
                 active_reg_name = reg_manager.current["name"]
                 text = (
-                    "⚡️ <b>ПЕРЕКУПЕР</b>\n\n"
+                    "⚡️ <b>БРЕДЛИ ПЕРЕКУПЕР</b>\n\n"
                     "🔄 <b>Каталог успешно сброшен к базовым настройкам!</b>\n"
                     f"📍 <b>Активный регион:</b> {active_reg_name}\n"
                     f"📱 <b>Активных конфигураций:</b> {active_count}\n\n"
@@ -974,7 +983,7 @@ def create_bot_dispatcher(
                 }
                 plat_label = plat_map.get(getattr(profile, "platforms", "all"), "⚡️ Авито + Юла")
                 text = (
-                    "⚡️ <b>ПЕРЕКУПЕР</b>\n\n"
+                    "⚡️ <b>БРЕДЛИ ПЕРЕКУПЕР</b>\n\n"
                     "✅ <b>Настройки и цены успешно сохранены!</b>\n"
                     f"📍 <b>Активный регион:</b> {active_reg_name}\n"
                     f"📡 <b>Площадки:</b> {plat_label}\n"
@@ -1258,6 +1267,7 @@ def create_bot_dispatcher(
         await cmd_status(message)
 
     @dp.message(F.text.in_({
+        "⚡️ Бредли Перекупер", "Бредли Перекупер", "⚡️ Бредли", "Бредли",
         "ПЕРЕКУПЕР", "😎 ПЕРЕКУПЕР", "📱 ПЕРЕКУПЕР",
         "📱 Матрица цен", "Матрица цен", "😎 Матрица цен"
     }))
@@ -1266,16 +1276,16 @@ def create_bot_dispatcher(
         webapp_url = getattr(settings, "WEBAPP_URL", "")
         if webapp_url:
             text = (
-                "📱 <b>ПЕРЕКУПЕР (Telegram Mini App)</b>\n\n"
-                "Вы можете управлять порогами цен, добавлять новые модели, папки и менять статусы выкупа со смартфона.\n\n"
-                f"🔗 <b>Открыть в браузере или Telegram:</b>\n{webapp_url}\n\n"
-                "<i>💡 Кнопка «ПЕРЕКУПЕР» доступна на клавиатуре и по иконке «😎» в строке ввода сообщения.</i>"
+                "📱 <b>Бредли Перекупер (Telegram Mini App)</b>\n\n"
+                "Вы можете управлять порогами цен, фильтрами, переключать площадки (Авито / Юла) и добавлять новые модели со смартфона.\n\n"
+                f"🔗 <b>Открыть Mini App:</b>\n{webapp_url}\n\n"
+                "<i>💡 Кнопка «⚡️ Бредли Перекупер» всегда доступна на нижней клавиатуре.</i>"
             )
         else:
             text = (
-                "📱 <b>ПЕРЕКУПЕР (Mini App):</b>\n\n"
+                "📱 <b>Бредли Перекупер (Mini App):</b>\n\n"
                 "URL веб-приложения не задан в конфигурации (.env WEBAPP_URL).\n"
-                "Вы можете выгрузить прайс-лист в Excel командой <code>/export_prices</code>."
+                "Вы можете управлять фильтрами и параметрами через интерактивное меню бота."
             )
         bot = message.bot
         if bot:
@@ -1392,15 +1402,15 @@ def create_bot_dispatcher(
         # Если прямого совпадения нет, ищем подсказки
         matches = reg_manager.find_cities(query)
         if matches:
-            hints = "\n".join(f"• <code>/city {m[1]['name']}</code>" for m in matches[:5])
+            hints = "\n".join(f"• <b>{m[1]['name']}</b>" for m in matches[:5])
             ans = (
                 f"🔍 По запросу «{query}» найдены города:\n\n{hints}\n\n"
-                "<i>Напишите точный город из списка выше.</i>"
+                "<i>Напишите точный город из списка выше прямо в этот чат.</i>"
             )
         else:
             ans = (
                 f"❌ Город «{query}» не найден в базе.\n\n"
-                "<i>Напишите точное название города (например: <code>Якутск</code>, <code>Казань</code>, <code>Омск</code>) или <code>/city Россия</code>.</i>"
+                "<i>Напишите точное название города прямо в чат (например: <code>Якутск</code>, <code>Казань</code>, <code>Омск</code>) или <code>Россия</code> для поиска по всей РФ.</i>"
             )
         if bot:
             await send_or_replace_functional_message(chat_id=chat_id, bot=bot, text=ans)
@@ -1437,7 +1447,7 @@ def create_bot_dispatcher(
         text = (
             "📍 <b>Выбор региона поиска (Авито & Юла):</b>\n\n"
             f"Текущий активный регион: <b>{current_reg['name']}</b>\n\n"
-            "Выберите город из популярных ниже или отправьте команду <code>/city Название</code> (например, <code>/city Казань</code> или <code>/city спб</code>):"
+            "Выберите город из популярных ниже или напишите название города прямо в чат (например: <code>Казань</code>, <code>спб</code>, <code>Якутск</code>):"
         )
         if callback.message:
             try:
@@ -1485,7 +1495,7 @@ def create_bot_dispatcher(
         await callback.answer()
         text = (
             "🔍 <b>Поиск города по названию:</b>\n\n"
-            "Напишите в чат команду <code>/city Название</code> (например: <code>/city Самара</code>, <code>/city Тюмень</code>, <code>/city спб</code>).\n\n"
+            "Напишите прямо в этот чат название города (например: <code>Самара</code>, <code>Тюмень</code>, <code>спб</code>).\n\n"
             "Или выберите один из популярных городов ниже:"
         )
         if callback.message:
@@ -1746,7 +1756,7 @@ def create_bot_dispatcher(
                 text=(
                     "📴 <b>Клавиатура скрыта!</b>\n\n"
                     "Чтобы кнопки снова всплыли:\n"
-                    "• Напишите команду <code>/keyboard</code> или <code>/menu</code>."
+                    "• Напишите в этот чат: <b>Кнопки</b> или <b>Меню</b>."
                 ),
                 reply_markup=get_hide_keyboard(),
             )
@@ -1754,7 +1764,7 @@ def create_bot_dispatcher(
             await callback.message.answer(
                 "📴 <b>Клавиатура скрыта!</b>\n\n"
                 "Чтобы кнопки снова всплыли:\n"
-                "• Напишите команду <code>/keyboard</code> или <code>/menu</code>.",
+                "• Напишите в этот чат: <b>Кнопки</b> или <b>Меню</b>.",
                 reply_markup=get_hide_keyboard(),
             )
 
@@ -2025,18 +2035,16 @@ def _build_dashboard_text(
             pass
 
     return (
-        "⚡️ <b>ПЕРЕКУПЕР | ЦЕНТР УПРАВЛЕНИЯ</b>\n\n"
+        "⚡️ <b>БРЕДЛИ ПЕРЕКУПЕР | ЦЕНТР УПРАВЛЕНИЯ</b>\n\n"
         f"📍 <b>Текущий регион:</b> {current_reg['name']}\n"
         f"📡 <b>Мониторинг:</b> Авито + Юла ({platform_label})\n"
         f"🎯 <b>Конфигураций в радаре:</b> {active_configs} из {total_configs}\n"
         "⚡️ <b>Скорость реакции:</b> до 2.5 сек (Real-time)\n\n"
-        "<i>💡 Быстрые команды:</i>\n"
-        "• <code>/platform</code> — выбор площадки (Авито / Юла)\n"
-        "• <code>/city</code> Название — мгновенная смена региона\n"
-        "• <code>/status</code> — статус воркеров и дедупликации\n"
-        "• <code>/pause</code> / <code>/resume</code> — пауза / запуск поиска\n"
-        "• <code>/favorites</code> — список сохраненных лотов\n"
-        "• <code>/export_prices</code> — выгрузка прайса в Excel"
+        "<i>💡 Управление ботом:</i>\n"
+        "• <b>⚡️ Бредли Перекупер</b> — открыть панель управления и матрицу цен\n"
+        "• <b>Название города в чат</b> — мгновенная смена региона поиска\n"
+        "• <b>⭐️ Избранное</b> — просмотр сохраненных предложений\n"
+        "• <b>Ссылка на поиск в чат</b> — персональный поток мониторинга"
     )
 
 
@@ -2057,7 +2065,7 @@ def _build_status_text(
         "• Фотокарточки объявлений: <b>АКТИВНЫ 📸</b>\n"
         f"• Активных конфигураций гаджетов: <b>{stats['active_configs']} из {stats['total_configs']}</b>\n"
         "• Скорость реакции: <b>до 2.5 сек</b>\n\n"
-        "<i>💡 Чтобы сменить регион, просто напишите название города в чат или используйте команду /city.</i>"
+        "<i>💡 Чтобы сменить регион, просто напишите название города прямо в этот чат (например: <code>Якутск</code>, <code>Спб</code>, <code>Казань</code>).</i>"
     )
 
 
