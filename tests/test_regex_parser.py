@@ -62,6 +62,19 @@ class TestIPhoneNLPParser(unittest.TestCase):
             reason = IPhoneNLPParser.check_blacklist(title, desc)
             self.assertIsNotNone(reason, f"Should reject bad item: {title}")
 
+    def test_smart_context_allows_valid_items(self):
+        # Реальные выгодные объявления, которые раньше могли ошибочно отсекаться:
+        good_cases = [
+            ("iPhone 14 Pro 128GB", "В идеале, родная коробка оригинал в комплекте, провод, чехол в подарок"),
+            ("iPhone 13 128GB", "Телефон в идеале, iCloud чистый, без паролей, любые проверки"),
+            ("iPhone 15 Pro Max 256GB", "Полный комплект, выйду из айклауда при вас, сброшен до заводских настроек"),
+            ("iPhone 12 64GB", "Оригинал 100%, не копия, не реплика, не люкс, любые проверки на месте"),
+            ("iPhone 13 Pro 128GB", "Телефон полностью рабочий, трещина на стекле, экран оригинал"),
+        ]
+        for title, desc in good_cases:
+            reason = IPhoneNLPParser.check_blacklist(title, desc)
+            self.assertIsNone(reason, f"Should NOT reject valid bargain item: '{title}' with desc: '{desc}'. Got reason: {reason}")
+
     def test_full_pipeline_valid_item(self):
         raw = RawItem(
             platform=Platform.AVITO,

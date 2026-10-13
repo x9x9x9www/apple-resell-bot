@@ -210,6 +210,21 @@ class TestLinkStreamSystem(unittest.TestCase):
         self.assertFalse(ok)
         self.assertIn("копия", reason.lower())
 
+        # 4.1. Пропуск объявления с отрицанием стоп-слова ("не копия")
+        negated_fake_item = RawItem(
+            platform=Platform.AVITO,
+            item_id="115_neg",
+            title="iPhone 13 128GB оригинал",
+            description="100% оригинал, не копия, любые проверки",
+            price=38000,
+            url="https://avito.ru/115_neg",
+            location="Москва",
+            published_at=datetime.now(timezone.utc),
+            image_url="https://avito.st/img.jpg",
+        )
+        ok_neg, _ = sm.evaluate_item_for_stream(stream, negated_fake_item)
+        self.assertTrue(ok_neg, "Должен пропускать лоты с отрицанием стоп-слова ('не копия')")
+
         # 5. Отсев по цене выше лимита
         expensive_item = RawItem(
             platform=Platform.AVITO,

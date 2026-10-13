@@ -55,8 +55,7 @@ AVITO_CATEGORY_TITLES: dict[str, str] = {
 
 DEFAULT_BLACKLIST_WORDS: list[str] = [
     "копия", "реплика", "донор", "на запчасти", "заблокирован",
-    "icloud", "байпас", "bypass", "пароль", "разбит экран",
-    "витринный", "восстановленный", "не работает", "муляж", "обман",
+    "байпас", "bypass", "муляж", "обман", "скупка", "аренда", "только коробка",
 ]
 
 
@@ -577,10 +576,18 @@ class StreamManager:
 
         combined_text = f"{item.title} {item.description}".lower()
 
-        # 6. Черный список стоп-слов
+        # 6. Черный список стоп-слов с учетом контекста отрицания
         for bw in stream.blacklist_words:
-            if bw and bw in combined_text:
-                return False, f"Стоп-слово: '{bw}'"
+            clean_bw = (bw or "").strip().lower()
+            if not clean_bw:
+                continue
+            pattern = rf"\b{re.escape(clean_bw)}\b"
+            for match in re.finditer(pattern, combined_text):
+                start_pos = max(0, match.start() - 20)
+                preceding = combined_text[start_pos:match.start()].strip()
+                if preceding.endswith(("не", "без", "никаких", "никакой", "не является", "отсутствует", "нет")):
+                    continue
+                return False, f"Стоп-слово: '{clean_bw}'"
 
         # 7. Белый список слов
         if stream.whitelist_words:
