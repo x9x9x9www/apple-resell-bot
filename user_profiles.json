@@ -1,0 +1,656 @@
+{
+  "1212593604": {
+    "user_id": 1212593604,
+    "region": "Москва",
+    "platforms": "all",
+    "target_margin": 5000,
+    "margin_mode": "rub",
+    "condition_rules": {
+      "battery_threshold": 81,
+      "battery_discount": 3000,
+      "allow_defects": false,
+      "defect_discount": 8000,
+      "ignore_no_face_id": true,
+      "ignore_mdm_rsim": true,
+      "ignore_replicas": true
+    },
+    "categories": [
+      {
+        "id": "cat_iphone_1791646220755",
+        "name": "iPhone",
+        "icon": "📱",
+        "search_link": ""
+      },
+      {
+        "id": "cat_samsung_1791646232956",
+        "name": "Samsung",
+        "icon": "📱",
+        "search_link": ""
+      }
+    ],
+    "models": {}
+  },
+  "888": {
+    "user_id": 888,
+    "region": "Якутск",
+    "platforms": "all",
+    "target_margin": 5000,
+    "margin_mode": "rub",
+    "condition_rules": {
+      "battery_threshold": 80,
+      "battery_discount": 3000,
+      "allow_defects": false,
+      "defect_discount": 8000,
+      "ignore_no_face_id": true,
+      "ignore_mdm_rsim": true,
+      "ignore_replicas": true
+    },
+    "categories": [],
+    "models": {
+      "iPhone 11": {
+        "1024": {
+          "model": "iPhone 11",
+          "storage": 1024,
+          "enabled": true,
+          "min_price": 22750,
+          "max_buy": 60000,
+          "market": 65000,
+          "category": "",
+          "search_link": ""
+        },
+        "512": {
+          "model": "iPhone 11",
+          "storage": 512,
+          "enabled": true,
+          "min_price": 22750,
+          "max_buy": 60000,
+          "market": 65000,
+          "category": "",
+          "search_link": ""
+        },
+        "256": {
+          "model": "iPhone 11",
+          "storage": 256,
+          "enabled": true,
+          "min_price": 22750,
+          "max_buy": 60000,
+          "market": 65000,
+          "category": "",
+          "search_link": ""
+        },
+        "128": {
+          "model": "iPhone 11",
+          "storage": 128,
+          "enabled": true,
+          "min_price": 22750,
+          "max_buy": 60000,
+          "market": 65000,
+          "category": "",
+          "search_link": ""
+        }
+      },
+      "iPhone 16 Pro Max": {
+        "256": {
+          "model": "iPhone 16 Pro Max",
+          "storage": 256,
+          "enabled": true,
+          "min_price": 44100,
+          "max_buy": 123000,
+          "market": 126000,
+          "category": "",
+          "search_link": ""
+        },
+        "512": {
+          "model": "iPhone 16 Pro Max",
+          "storage": 512,
+          "enabled": true,
+          "min_price": 49560,
+          "max_buy": 137000,
+          "market": 141600,
+          "category": "",
+          "search_link": ""
+        },
+        "1024": {
+          "model": "iPhone 16 Pro Max",
+          "storage": 1024,
+          "enabled": true,
+          "min_price": 55440,
+          "max_buy": 145000,
+          "market": 158400,
+          "category": "",
+          "search_link": ""
+        }
+      },
+      "iPhone 16 Pro": {
+        "128": {
+          "model": "iPhone 16 Pro",
+          "storage": 128,
+          "enabled": true,
+          "min_price": 36960,
+          "max_buy": 105000,
+          "market": 105600,
+          "category": "",
+          "search_link": ""
+        },
+        "256": {
+          "model": "iPhone 16 Pro",
+          "storage": 256,
+          "enabled": true,
+          "min_price": 40320,
+          "max_buy": 106000,
+          "market": 115200,
+          "category": "",
+          "search_link": ""
+        },
+        "512": {
+          "model": "iPhone 16 Pro",
+          "storage": 512,
+          "enabled": true,
+          "min_price": 45360,
+          "max_buy": 123000,
+          "market": 129600,
+          "category": "",
+          "search_link": ""
+        },
+        "1024": {
+          "model": "iPhone 16 Pro",
+          "storage": 1024,
+          "enabled": true,
+          "min_price": 50400,
+          "max_buy": 130000,
+          "market": 144000,
+          "category": "",
+          "search_link": ""
+        }
+      },
+      "iPhone 16 Plus": {
+        "128": {
+          "model": "iPhone 16 Plus",
+          "storage": 128,
+          "enabled": true,
+          "min_price": 30239,
+          "max_buy": 72000,
+          "market": 86400,
+          "category": "",
+          "search_link": ""
+        },
+        "256": {
+          "model": "iPhone 16 Plus",
+          "storage": 256,
+          "enabled": true,
+          "min_price": 31919,
+          "max_buy": 76000,
+          "market": 91200,
+          "category": "",
+          "search_link": ""
+        },
+        "512": {
+          "model": "iPhone 16 Plus",
+          "storage": 512,
+          "enabled": true,
+          "min_price": 35700,
+          "max_buy": 85000,
+          "market": 102000,
+          "category": "",
+          "search_link": ""
+        }
+      },
+      "iPhone 16": {
+        "128": {
+          "model": "iPhone 16",
+          "storage": 128,
+          "enabled": true,
+          "min_price": 28560,
+          "max_buy": 80000,
+          "market": 81600,
+          "category": "",
+          "search_link": ""
+        },
+        "256": {
+          "model": "iPhone 16",
+          "storage": 256,
+          "enabled": true,
+          "min_price": 28560,
+          "max_buy": 82000,
+          "market": 81600,
+          "category": "",
+          "search_link": ""
+        },
+        "512": {
+          "model": "iPhone 16",
+          "storage": 512,
+          "enabled": true,
+          "min_price": 32759,
+          "max_buy": 89000,
+          "market": 93600,
+          "category": "",
+          "search_link": ""
+        }
+      },
+      "iPhone 15 Pro Max": {
+        "256": {
+          "model": "iPhone 15 Pro Max",
+          "storage": 256,
+          "enabled": true,
+          "min_price": 34440,
+          "max_buy": 82000,
+          "market": 98400,
+          "category": "",
+          "search_link": ""
+        },
+        "512": {
+          "model": "iPhone 15 Pro Max",
+          "storage": 512,
+          "enabled": true,
+          "min_price": 35280,
+          "max_buy": 84000,
+          "market": 100800,
+          "category": "",
+          "search_link": ""
+        },
+        "1024": {
+          "model": "iPhone 15 Pro Max",
+          "storage": 1024,
+          "enabled": true,
+          "min_price": 39480,
+          "max_buy": 94000,
+          "market": 112800,
+          "category": "",
+          "search_link": ""
+        }
+      },
+      "iPhone 15 Pro": {
+        "128": {
+          "model": "iPhone 15 Pro",
+          "storage": 128,
+          "enabled": true,
+          "min_price": 27300,
+          "max_buy": 65000,
+          "market": 78000,
+          "category": "",
+          "search_link": ""
+        },
+        "256": {
+          "model": "iPhone 15 Pro",
+          "storage": 256,
+          "enabled": true,
+          "min_price": 30239,
+          "max_buy": 72000,
+          "market": 86400,
+          "category": "",
+          "search_link": ""
+        },
+        "512": {
+          "model": "iPhone 15 Pro",
+          "storage": 512,
+          "enabled": true,
+          "min_price": 30239,
+          "max_buy": 72000,
+          "market": 86400,
+          "category": "",
+          "search_link": ""
+        },
+        "1024": {
+          "model": "iPhone 15 Pro",
+          "storage": 1024,
+          "enabled": true,
+          "min_price": 33600,
+          "max_buy": 80000,
+          "market": 96000,
+          "category": "",
+          "search_link": ""
+        }
+      },
+      "iPhone 15 Plus": {
+        "128": {
+          "model": "iPhone 15 Plus",
+          "storage": 128,
+          "enabled": true,
+          "min_price": 20160,
+          "max_buy": 48000,
+          "market": 57600,
+          "category": "",
+          "search_link": ""
+        },
+        "256": {
+          "model": "iPhone 15 Plus",
+          "storage": 256,
+          "enabled": true,
+          "min_price": 22680,
+          "max_buy": 54000,
+          "market": 64800,
+          "category": "",
+          "search_link": ""
+        },
+        "512": {
+          "model": "iPhone 15 Plus",
+          "storage": 512,
+          "enabled": true,
+          "min_price": 26040,
+          "max_buy": 62000,
+          "market": 74400,
+          "category": "",
+          "search_link": ""
+        }
+      },
+      "iPhone 15": {
+        "128": {
+          "model": "iPhone 15",
+          "storage": 128,
+          "enabled": true,
+          "min_price": 21000,
+          "max_buy": 50000,
+          "market": 60000,
+          "category": "",
+          "search_link": ""
+        },
+        "256": {
+          "model": "iPhone 15",
+          "storage": 256,
+          "enabled": true,
+          "min_price": 21000,
+          "max_buy": 50000,
+          "market": 60000,
+          "category": "",
+          "search_link": ""
+        },
+        "512": {
+          "model": "iPhone 15",
+          "storage": 512,
+          "enabled": true,
+          "min_price": 24360,
+          "max_buy": 58000,
+          "market": 69600,
+          "category": "",
+          "search_link": ""
+        }
+      },
+      "iPhone 14 Pro Max": {
+        "128": {
+          "model": "iPhone 14 Pro Max",
+          "storage": 128,
+          "enabled": true,
+          "min_price": 24360,
+          "max_buy": 58000,
+          "market": 69600,
+          "category": "",
+          "search_link": ""
+        },
+        "256": {
+          "model": "iPhone 14 Pro Max",
+          "storage": 256,
+          "enabled": true,
+          "min_price": 26040,
+          "max_buy": 62000,
+          "market": 74400,
+          "category": "",
+          "search_link": ""
+        },
+        "512": {
+          "model": "iPhone 14 Pro Max",
+          "storage": 512,
+          "enabled": true,
+          "min_price": 28979,
+          "max_buy": 69000,
+          "market": 82800,
+          "category": "",
+          "search_link": ""
+        },
+        "1024": {
+          "model": "iPhone 14 Pro Max",
+          "storage": 1024,
+          "enabled": true,
+          "min_price": 31919,
+          "max_buy": 76000,
+          "market": 91200,
+          "category": "",
+          "search_link": ""
+        }
+      },
+      "iPhone 14 Pro": {
+        "128": {
+          "model": "iPhone 14 Pro",
+          "storage": 128,
+          "enabled": true,
+          "min_price": 21000,
+          "max_buy": 50000,
+          "market": 60000,
+          "category": "",
+          "search_link": ""
+        },
+        "256": {
+          "model": "iPhone 14 Pro",
+          "storage": 256,
+          "enabled": true,
+          "min_price": 22260,
+          "max_buy": 53000,
+          "market": 63600,
+          "category": "",
+          "search_link": ""
+        },
+        "512": {
+          "model": "iPhone 14 Pro",
+          "storage": 512,
+          "enabled": true,
+          "min_price": 24780,
+          "max_buy": 59000,
+          "market": 70800,
+          "category": "",
+          "search_link": ""
+        },
+        "1024": {
+          "model": "iPhone 14 Pro",
+          "storage": 1024,
+          "enabled": true,
+          "min_price": 27300,
+          "max_buy": 65000,
+          "market": 78000,
+          "category": "",
+          "search_link": ""
+        }
+      },
+      "iPhone 14 Plus": {
+        "128": {
+          "model": "iPhone 14 Plus",
+          "storage": 128,
+          "enabled": true,
+          "min_price": 15959,
+          "max_buy": 38000,
+          "market": 45600,
+          "category": "",
+          "search_link": ""
+        },
+        "256": {
+          "model": "iPhone 14 Plus",
+          "storage": 256,
+          "enabled": true,
+          "min_price": 18060,
+          "max_buy": 43000,
+          "market": 51600,
+          "category": "",
+          "search_link": ""
+        },
+        "512": {
+          "model": "iPhone 14 Plus",
+          "storage": 512,
+          "enabled": true,
+          "min_price": 20580,
+          "max_buy": 49000,
+          "market": 58800,
+          "category": "",
+          "search_link": ""
+        }
+      },
+      "iPhone 14": {
+        "128": {
+          "model": "iPhone 14",
+          "storage": 128,
+          "enabled": true,
+          "min_price": 16800,
+          "max_buy": 40000,
+          "market": 48000,
+          "category": "",
+          "search_link": ""
+        },
+        "256": {
+          "model": "iPhone 14",
+          "storage": 256,
+          "enabled": true,
+          "min_price": 16800,
+          "max_buy": 40000,
+          "market": 48000,
+          "category": "",
+          "search_link": ""
+        },
+        "512": {
+          "model": "iPhone 14",
+          "storage": 512,
+          "enabled": true,
+          "min_price": 19320,
+          "max_buy": 46000,
+          "market": 55200,
+          "category": "",
+          "search_link": ""
+        }
+      },
+      "iPhone 13 Pro Max": {
+        "128": {
+          "model": "iPhone 13 Pro Max",
+          "storage": 128,
+          "enabled": true,
+          "min_price": 19320,
+          "max_buy": 46000,
+          "market": 55200,
+          "category": "",
+          "search_link": ""
+        },
+        "256": {
+          "model": "iPhone 13 Pro Max",
+          "storage": 256,
+          "enabled": true,
+          "min_price": 21000,
+          "max_buy": 50000,
+          "market": 60000,
+          "category": "",
+          "search_link": ""
+        },
+        "512": {
+          "model": "iPhone 13 Pro Max",
+          "storage": 512,
+          "enabled": true,
+          "min_price": 23520,
+          "max_buy": 56000,
+          "market": 67200,
+          "category": "",
+          "search_link": ""
+        },
+        "1024": {
+          "model": "iPhone 13 Pro Max",
+          "storage": 1024,
+          "enabled": true,
+          "min_price": 26040,
+          "max_buy": 62000,
+          "market": 74400,
+          "category": "",
+          "search_link": ""
+        }
+      },
+      "iPhone 13 Pro": {
+        "128": {
+          "model": "iPhone 13 Pro",
+          "storage": 128,
+          "enabled": true,
+          "min_price": 15959,
+          "max_buy": 38000,
+          "market": 45600,
+          "category": "",
+          "search_link": ""
+        },
+        "256": {
+          "model": "iPhone 13 Pro",
+          "storage": 256,
+          "enabled": true,
+          "min_price": 18060,
+          "max_buy": 43000,
+          "market": 51600,
+          "category": "",
+          "search_link": ""
+        },
+        "512": {
+          "model": "iPhone 13 Pro",
+          "storage": 512,
+          "enabled": true,
+          "min_price": 20160,
+          "max_buy": 48000,
+          "market": 57600,
+          "category": "",
+          "search_link": ""
+        },
+        "1024": {
+          "model": "iPhone 13 Pro",
+          "storage": 1024,
+          "enabled": true,
+          "min_price": 22260,
+          "max_buy": 53000,
+          "market": 63600,
+          "category": "",
+          "search_link": ""
+        }
+      },
+      "iPhone 13": {
+        "128": {
+          "model": "iPhone 13",
+          "storage": 128,
+          "enabled": true,
+          "min_price": 13440,
+          "max_buy": 32000,
+          "market": 38400,
+          "category": "",
+          "search_link": ""
+        },
+        "256": {
+          "model": "iPhone 13",
+          "storage": 256,
+          "enabled": true,
+          "min_price": 14280,
+          "max_buy": 34000,
+          "market": 40800,
+          "category": "",
+          "search_link": ""
+        },
+        "512": {
+          "model": "iPhone 13",
+          "storage": 512,
+          "enabled": true,
+          "min_price": 16379,
+          "max_buy": 39000,
+          "market": 46800,
+          "category": "",
+          "search_link": ""
+        }
+      },
+      "iPhone 13 mini": {
+        "128": {
+          "model": "iPhone 13 mini",
+          "storage": 128,
+          "enabled": true,
+          "min_price": 11340,
+          "max_buy": 27000,
+          "market": 32400,
+          "category": "",
+          "search_link": ""
+        },
+        "256": {
+          "model": "iPhone 13 mini",
+          "storage": 256,
+          "enabled": true,
+          "min_price": 13020,
+          "max_buy": 31000,
+          "market": 37200,
+          "category": "",
+          "search_link": ""
+        }
+      }
+    }
+  }
+}
