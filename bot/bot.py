@@ -20,6 +20,7 @@ from aiogram.types import (
     WebAppInfo,
     InlineKeyboardMarkup,
     InlineKeyboardButton,
+    ErrorEvent,
 )
 
 from config import settings
@@ -1748,6 +1749,19 @@ def create_bot_dispatcher(
             except Exception:
                 pass
 
+    @dp.errors()
+    async def global_error_handler(event: ErrorEvent):
+        """Глобальный перехватчик исключений для предотвращения сбоев бота."""
+        logger.error("Необработанная ошибка в хэндлере Telegram бота: %s", event.exception, exc_info=True)
+        if event.update and event.update.message:
+            try:
+                await event.update.message.answer(
+                    "⚠️ Произошла непредвиденная ошибка при обработке запроса. Пожалуйста, попробуйте снова или отправьте /start."
+                )
+            except Exception:
+                pass
+        return True
+
     return dp
 
 
@@ -1867,6 +1881,12 @@ async def _send_excel_file(message: types.Message, filter_instance: MarginFilter
         if now - _last_excel_send_time.get(chat_id, 0.0) < 2.5:
             return
         _last_excel_send_time[chat_id] = now
+
+        if bot:
+            try:
+                await bot.send_chat_action(chat_id=chat_id, action="upload_document")
+            except Exception:
+                pass
 
         old_msg_id = _last_functional_messages.get(chat_id)
         if old_msg_id and bot:
