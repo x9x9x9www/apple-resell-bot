@@ -15,7 +15,7 @@ from core.user_profile import UserProfileManager
 from parsers.network import StealthHttpClient, ProxyPool
 from parsers.avito import AvitoWorker
 from parsers.youla import YoulaWorker
-from bot.bot import create_bot, create_bot_dispatcher, register_worker_query_listener
+from bot.bot import create_bot, create_bot_dispatcher, register_worker_query_listener, setup_bot_commands
 from bot.dispatcher import ItemDispatcher
 
 # Конфигурация логирования
@@ -119,8 +119,12 @@ async def main() -> None:
         asyncio.create_task(youla_worker.run(), name="YoulaWorker"),
     ]
 
-    # Если токен настроен, запускаем polling команд бота (/start, /status)
+    # Если токен настроен, регистрируем команды и запускаем polling бота
     if settings.BOT_TOKEN and settings.BOT_TOKEN != "YOUR_BOT_TOKEN_HERE":
+        try:
+            await setup_bot_commands(bot)
+        except Exception as e:
+            logger.debug("Не удалось зарегистрировать команды бота: %s", e)
         tasks.append(
             asyncio.create_task(
                 bot_dp.start_polling(bot, handle_signals=False),

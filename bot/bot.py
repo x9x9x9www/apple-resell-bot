@@ -21,7 +21,10 @@ from aiogram.types import (
     InlineKeyboardMarkup,
     InlineKeyboardButton,
     ErrorEvent,
+    BotCommand,
+    BotCommandScopeDefault,
 )
+from typing import Optional, Callable
 
 from config import settings
 from core.margin_filter import MarginFilter
@@ -56,8 +59,11 @@ logger = logging.getLogger(__name__)
 _last_functional_messages: dict[int, int] = {}
 # Пользователи, явно скрывшие клавиатуру кнопкой или /hide_keyboard
 _keyboard_hidden_users: dict[int, bool] = {}
-# Ссылка на активный экземпляр RegionManager для динамических кнопок
+# Ссылка на активные менеджеры для динамических компонентов
 _active_region_manager: Optional[RegionManager] = None
+_active_margin_filter: Optional[MarginFilter] = None
+_active_stream_manager: Optional[StreamManager] = None
+_active_user_profile_manager: Optional[UserProfileManager] = None
 # Время последней выгрузки Excel для защиты от многократных случайных нажатий
 _last_excel_send_time: dict[int, float] = {}
 # Хранилище ID последнего сообщения с избранным в чате
@@ -235,6 +241,28 @@ def create_bot() -> Bot:
     )
 
 
+async def setup_bot_commands(bot: Bot) -> None:
+    """Регистрирует список команд бота в Telegram API для нативного меню подсказок."""
+    commands = [
+        BotCommand(command="start", description="⚡️ Главное меню и запуск радара"),
+        BotCommand(command="menu", description="📱 Открыть панель управления"),
+        BotCommand(command="platform", description="📡 Выбор площадок (Авито / Юла)"),
+        BotCommand(command="city", description="📍 Сменить регион поиска"),
+        BotCommand(command="status", description="🔄 Статус воркеров и мониторинга"),
+        BotCommand(command="pause", description="⏸ Приостановить мониторинг"),
+        BotCommand(command="resume", description="▶️ Возобновить мониторинг"),
+        BotCommand(command="favorites", description="⭐️ Избранные объявления"),
+        BotCommand(command="stream", description="🔗 Мониторинг по своей ссылке"),
+        BotCommand(command="export_prices", description="📊 Выгрузить прайс в Excel"),
+        BotCommand(command="help", description="ℹ️ Инструкция и горячие клавиши"),
+    ]
+    try:
+        await bot.set_my_commands(commands, scope=BotCommandScopeDefault())
+        logger.info("Команды бота успешно зарегистрированы в Telegram API.")
+    except Exception as e:
+        logger.debug("Не удалось зарегистрировать BotCommands: %s", e)
+
+
 def create_bot_dispatcher(
     margin_filter: Optional[MarginFilter] = None,
     region_manager: Optional[RegionManager] = None,
@@ -248,8 +276,11 @@ def create_bot_dispatcher(
     stream_mgr = stream_manager if stream_manager is not None else StreamManager()
     user_profile_mgr = user_profile_manager if user_profile_manager is not None else UserProfileManager()
 
-    global _active_region_manager
+    global _active_region_manager, _active_margin_filter, _active_stream_manager, _active_user_profile_manager
     _active_region_manager = reg_manager
+    _active_margin_filter = filter_instance
+    _active_stream_manager = stream_mgr
+    _active_user_profile_manager = user_profile_mgr
 
     # ---------------------------------------------------------
     # КОМАНДЫ БОТА
@@ -368,8 +399,13 @@ def create_bot_dispatcher(
     async def cmd_status(message: types.Message):
         await cleanup_user_message(message)
         chat_id = message.chat.id
-        text = _build_status_text(filter_instance, reg_manager)
         bot = message.bot
+        if bot:
+            try:
+                await bot.send_chat_action(chat_id=chat_id, action="typing")
+            except Exception:
+                pass
+        text = _build_status_text(filter_instance, reg_manager)
         if bot:
             await send_or_replace_functional_message(
                 chat_id=chat_id,
@@ -603,8 +639,13 @@ def create_bot_dispatcher(
     async def cmd_stream(message: types.Message):
         await cleanup_user_message(message)
         chat_id = message.chat.id
-        stream = stream_mgr.get_stream(chat_id)
         bot = message.bot
+        if bot:
+            try:
+                await bot.send_chat_action(chat_id=chat_id, action="typing")
+            except Exception:
+                pass
+        stream = stream_mgr.get_stream(chat_id)
         if stream:
             text = _build_stream_dashboard_text(stream)
             kb = get_stream_control_keyboard(stream)
@@ -1107,6 +1148,11 @@ def create_bot_dispatcher(
         if not (file_name.endswith(".xlsx") or file_name.endswith(".xls")):
             return
 
+        try:
+            await bot.send_chat_action(chat_id=message.chat.id, action="typing")
+        except Exception:
+            pass
+
         status_msg = await message.answer("⏳ <i>Обработка таблицы Excel... Пожалуйста, подождите.</i>")
 
         try:
@@ -1174,9 +1220,14 @@ def create_bot_dispatcher(
     async def cmd_favorites(message: types.Message):
         await cleanup_user_message(message)
         chat_id = message.chat.id
+        bot = message.bot
+        if bot:
+            try:
+                await bot.send_chat_action(chat_id=chat_id, action="typing")
+            except Exception:
+                pass
         user_id = message.from_user.id if message.from_user else chat_id
         text, kb = _build_favorites_view(user_id)
-        bot = message.bot
         if bot:
             old_fav_id = _last_favorites_messages.get(chat_id)
             if old_fav_id:
@@ -1261,6 +1312,11 @@ def create_bot_dispatcher(
         await cleanup_user_message(message)
         chat_id = message.chat.id
         bot = message.bot
+        if bot:
+            try:
+                await bot.send_chat_action(chat_id=chat_id, action="typing")
+            except Exception:
+                pass
         raw_text = (message.text or "").strip()
 
         # Извлекаем URL регулярным выражением
@@ -1313,6 +1369,9 @@ def create_bot_dispatcher(
         # Пробуем распознать город или алиас
         updated = reg_manager.set_region(query)
         if updated:
+            profile = user_profile_mgr.get_or_create_profile(chat_id)
+            profile.region = updated["name"]
+            user_profile_mgr.save_profile(profile)
             ans = (
                 f"✅ <b>Регион поиска успешно переключен на: {updated['name']}!</b>\n\n"
                 "Воркеры мгновенно начали мониторинг в новом регионе ⚡️"
@@ -1945,10 +2004,37 @@ def _build_dashboard_text(
 ) -> str:
     """Единое информативное сообщение панели управления (дашборд без спама)."""
     current_reg = reg_manager.current
+    stats = filter_instance.get_stats()
+    active_configs = stats.get("active_configs", 0)
+    total_configs = stats.get("total_configs", 0)
+
+    # Определяем режим площадок, если доступен менеджер профилей
+    platform_label = "Все площадки"
+    if _active_user_profile_manager and chat_id:
+        try:
+            cid = int(chat_id)
+            prof = _active_user_profile_manager.get_or_create_profile(cid)
+            plat = getattr(prof, "platforms", "all")
+            if plat == "avito":
+                platform_label = "Только Авито"
+            elif plat == "youla":
+                platform_label = "Только Юла"
+        except Exception:
+            pass
+
     return (
-        "⚡️ <b>ПЕРЕКУПЕР</b>\n\n"
+        "⚡️ <b>ПЕРЕКУПЕР | ЦЕНТР УПРАВЛЕНИЯ</b>\n\n"
         f"📍 <b>Текущий регион:</b> {current_reg['name']}\n"
-        "📡 <b>Мониторинг:</b> Авито + Юла"
+        f"📡 <b>Мониторинг:</b> Авито + Юла ({platform_label})\n"
+        f"🎯 <b>Конфигураций в радаре:</b> {active_configs} из {total_configs}\n"
+        "⚡️ <b>Скорость реакции:</b> до 2.5 сек (Real-time)\n\n"
+        "<i>💡 Быстрые команды:</i>\n"
+        "• <code>/platform</code> — выбор площадки (Авито / Юла)\n"
+        "• <code>/city</code> Название — мгновенная смена региона\n"
+        "• <code>/status</code> — статус воркеров и дедупликации\n"
+        "• <code>/pause</code> / <code>/resume</code> — пауза / запуск поиска\n"
+        "• <code>/favorites</code> — список сохраненных лотов\n"
+        "• <code>/export_prices</code> — выгрузка прайса в Excel"
     )
 
 

@@ -686,6 +686,103 @@ class TestModernBotFeatures(unittest.TestCase):
             if prof_path.exists():
                 prof_path.unlink()
 
+    def test_setup_bot_commands(self):
+        """Проверяет регистрацию нативного меню команд Telegram."""
+        import asyncio
+        from unittest.mock import AsyncMock, MagicMock
+        from bot.bot import setup_bot_commands
+
+        bot_mock = MagicMock()
+        bot_mock.set_my_commands = AsyncMock(return_value=True)
+
+        asyncio.run(setup_bot_commands(bot_mock))
+        bot_mock.set_my_commands.assert_awaited_once()
+        args, kwargs = bot_mock.set_my_commands.call_args
+        commands = args[0]
+        cmd_names = [c.command for c in commands]
+        self.assertIn("start", cmd_names)
+        self.assertIn("menu", cmd_names)
+        self.assertIn("platform", cmd_names)
+        self.assertIn("city", cmd_names)
+        self.assertIn("status", cmd_names)
+        self.assertIn("pause", cmd_names)
+        self.assertIn("resume", cmd_names)
+        self.assertIn("favorites", cmd_names)
+        self.assertIn("stream", cmd_names)
+        self.assertIn("export_prices", cmd_names)
+        self.assertIn("help", cmd_names)
+
+    def test_enhanced_dashboard_text_with_platform_modes(self):
+        """Проверяет отображение режима площадок и статистики в расширенном дашборде."""
+        from pathlib import Path
+        import tempfile
+        from bot.bot import _build_dashboard_text, create_bot_dispatcher
+        from core.margin_filter import MarginFilter
+        from core.regions import RegionManager
+        from core.user_profile import UserProfileManager
+
+        tmp_dir = tempfile.mkdtemp()
+        prof_path = Path(tmp_dir) / "test_prof_dash.json"
+        try:
+            upm = UserProfileManager(storage_path=prof_path)
+            rm = RegionManager()
+            mf = MarginFilter(matrix={"iPhone 15": {"128": {"max_buy": 50000, "market": 65000, "enabled": True}}})
+            
+            # Регистрируем в глобальных переменных
+            create_bot_dispatcher(margin_filter=mf, region_manager=rm, user_profile_manager=upm)
+
+            # Пользователь с режимом avito
+            prof = upm.get_or_create_profile(777)
+            prof.platforms = "avito"
+            upm.save_profile(prof)
+
+            dash_text = _build_dashboard_text(mf, rm, chat_id=777)
+            self.assertIn("Только Авито", dash_text)
+            self.assertIn("Конфигураций в радаре", dash_text)
+            self.assertIn("Скорость реакции:", dash_text)
+        finally:
+            if prof_path.exists():
+                prof_path.unlink()
+
+    def test_city_text_search_persists_user_profile(self):
+        """Проверяет, что ввод города текстом в чат сохраняет город в профиле пользователя."""
+        import asyncio
+        from pathlib import Path
+        import tempfile
+        from unittest.mock import AsyncMock, MagicMock
+        from bot.bot import create_bot_dispatcher
+        from core.regions import RegionManager
+        from core.user_profile import UserProfileManager
+        from aiogram.types import Message, Chat, User, Update
+
+        tmp_dir = tempfile.mkdtemp()
+        prof_path = Path(tmp_dir) / "test_prof_city.json"
+        try:
+            upm = UserProfileManager(storage_path=prof_path)
+            rm = RegionManager()
+            dp = create_bot_dispatcher(region_manager=rm, user_profile_manager=upm)
+
+            bot_mock = MagicMock()
+            bot_mock.send_message = AsyncMock(return_value=MagicMock(message_id=101))
+            bot_mock.delete_message = AsyncMock(return_value=True)
+
+            msg = Message(
+                message_id=55,
+                date=datetime.now(timezone.utc),
+                chat=Chat(id=888, type="private"),
+                from_user=User(id=888, is_bot=False, first_name="Tester"),
+                text="Якутск",
+            ).as_(bot_mock)
+
+            asyncio.run(dp.feed_update(bot_mock, Update(update_id=1, message=msg)))
+
+            # Проверяем, что в профиле пользователя теперь Якутск
+            saved_prof = upm.get_or_create_profile(888)
+            self.assertEqual(saved_prof.region, "Якутск")
+        finally:
+            if prof_path.exists():
+                prof_path.unlink()
+
 
 if __name__ == "__main__":
     unittest.main()
