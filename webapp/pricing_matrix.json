@@ -1,1 +1,57 @@
-{}
+{
+  "Google Pixel 9 Pro": {
+    "128": {
+      "max_buy": 58000,
+      "market": 69600,
+      "enabled": true
+    },
+    "256": {
+      "max_buy": 70000,
+      "market": 84000,
+      "enabled": true
+    }
+  },
+  "Google Pixel 9": {
+    "128": {
+      "max_buy": 45000,
+      "market": 54000,
+      "enabled": true
+    },
+    "256": {
+      "max_buy": 51000,
+      "market": 61200,
+      "enabled": true
+    }
+  },
+  "Google Pixel 8 Pro": {
+    "128": {
+      "max_buy": 42000,
+      "market": 50400,
+      "enabled": true
+    },
+    "256": {
+      "max_buy": 48000,
+      "market": 57600,
+      "enabled": true
+    }
+  },
+  "Google Pixel 8": {
+    "128": {
+      "max_buy": 30000,
+      "market": 36000,
+      "enabled": true
+    },
+    "256": {
+      "max_buy": 35000,
+      "market": 42000,
+      "enabled": true
+    }
+  },
+  "Google Pixel 7 Pro": {
+    "128": {
+      "max_buy": 27000,
+      "market": 32400,
+      "enabled": true
+    }
+  }
+}

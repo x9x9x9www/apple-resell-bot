@@ -18,22 +18,22 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
-      /* Apple iPhone 18 Pro Cosmic Titanium Palette */
-      --bg-color: #050507;
-      --card-bg: rgba(18, 18, 22, 0.78);
-      --card-bg-elevated: rgba(28, 28, 34, 0.94);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --card-border-hover: rgba(255, 255, 255, 0.18);
-      --card-specular: inset 0 0.5px 0 rgba(255, 255, 255, 0.22);
+      /* Apple iPhone 18 Pro: Liquid Obsidian & Amber Gold Palette (Keynote Gold) */
+      --bg-color: #000000;
+      --card-bg: rgba(14, 13, 10, 0.82);
+      --card-bg-elevated: rgba(24, 21, 15, 0.94);
+      --card-border: rgba(251, 191, 36, 0.14);
+      --card-border-hover: rgba(251, 191, 36, 0.32);
+      --card-specular: inset 0 0.5px 0 rgba(255, 240, 200, 0.28);
 
-      /* iPhone 18 Pro Deep Burgundy Wine Accent */
-      --accent-color: #B81D4C;
-      --accent-highlight: #FF3B70;
-      --accent-glow: rgba(255, 59, 112, 0.40);
-      --accent-subtle: rgba(184, 29, 76, 0.16);
-      --accent-border: rgba(255, 59, 112, 0.38);
-      --accent-gradient: linear-gradient(135deg, #E62865 0%, #7D0E32 100%);
-      --accent-gradient-hover: linear-gradient(135deg, #F03875 0%, #941740 100%);
+      /* Amber Gold Accent (Warm Keynote Presentation Gold) */
+      --accent-color: #F59E0B;
+      --accent-highlight: #FBBF24;
+      --accent-glow: rgba(245, 158, 11, 0.40);
+      --accent-subtle: rgba(245, 158, 11, 0.14);
+      --accent-border: rgba(251, 191, 36, 0.36);
+      --accent-gradient: linear-gradient(135deg, #FBBF24 0%, #D97706 55%, #92400E 100%);
+      --accent-gradient-hover: linear-gradient(135deg, #FDE68A 0%, #F59E0B 50%, #B45309 100%);
 
       /* Apple System Colors */
       --success-color: #30D158;
@@ -46,8 +46,8 @@
 
       /* Typography & Neutral Shades */
       --text-main: #FFFFFF;
-      --text-muted: #98989E;
-      --text-tertiary: #636366;
+      --text-muted: #A3A3A8;
+      --text-tertiary: #6E6E73;
       --tag-bg: rgba(255, 255, 255, 0.08);
       --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', system-ui, sans-serif;
 
@@ -82,7 +82,7 @@
     }
 
     body {
-      background: radial-gradient(130% 70% at 50% -12%, rgba(184, 29, 76, 0.16) 0%, rgba(5, 5, 7, 1) 75%), #050507;
+      background: radial-gradient(130% 70% at 50% -12%, rgba(245, 158, 11, 0.18) 0%, rgba(217, 119, 6, 0.06) 40%, rgba(0, 0, 0, 1) 85%), #000000;
       background-attachment: fixed;
       color: var(--text-main);
       font-family: var(--font-family);
@@ -136,9 +136,10 @@
     }
 
     .ios-large-title .title-accent {
-      background: var(--accent-gradient);
+      background: linear-gradient(135deg, #FFFFFF 0%, #FDE68A 35%, #F59E0B 75%, #D97706 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 16px rgba(245, 158, 11, 0.3));
     }
 
     .header-actions {
@@ -148,7 +149,7 @@
       flex-shrink: 0;
     }
 
-    /* iOS Pill Buttons (Burgundy & Glass) */
+    /* iOS Pill Buttons (Amber Gold & Glass) */
     .btn-condition {
       background: rgba(255, 255, 255, 0.08);
       border: 0.5px solid var(--card-border);
@@ -173,18 +174,18 @@
 
     .btn-add-model {
       background: var(--accent-gradient);
-      color: #fff;
+      color: #000;
+      font-weight: 800;
       border: none;
       padding: 6px 13px;
       border-radius: 20px;
       font-size: 12px;
-      font-weight: 700;
       letter-spacing: -0.2px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      box-shadow: var(--card-specular), 0 4px 16px var(--accent-glow);
+      box-shadow: var(--card-specular), 0 4px 18px var(--accent-glow);
       transition: transform 0.15s var(--spring-press), filter 0.15s ease;
       white-space: nowrap;
     }
@@ -243,9 +244,9 @@
       top: 5px;
       height: 48px;
       border-radius: 14px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 0.5px solid rgba(255, 255, 255, 0.16);
-      box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.22), 0 2px 10px rgba(0, 0, 0, 0.35);
+      background: rgba(245, 158, 11, 0.12);
+      border: 0.5px solid rgba(251, 191, 36, 0.28);
+      box-shadow: inset 0 0.5px 0 rgba(255, 240, 200, 0.32), 0 2px 14px rgba(245, 158, 11, 0.22);
       z-index: 1;
       pointer-events: none;
       transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
@@ -293,7 +294,7 @@
     }
 
     .tab-item.active {
-      color: #fff;
+      color: #FBBF24;
     }
 
     .tab-item.active .tab-icon {
@@ -301,8 +302,9 @@
     }
 
     .tab-item.active .tab-label {
-      color: #fff;
+      color: #FBBF24;
       font-weight: 700;
+      text-shadow: 0 0 10px rgba(245, 158, 11, 0.35);
     }
 
     /* Save Bar position adjusted above Tab Bar */
@@ -753,13 +755,13 @@
 
     .dynamic-island {
       pointer-events: auto;
-      background: rgba(10, 10, 14, 0.92);
+      background: rgba(12, 11, 8, 0.94);
       backdrop-filter: blur(32px) saturate(210%);
       -webkit-backdrop-filter: blur(32px) saturate(210%);
-      border: 0.5px solid rgba(255, 255, 255, 0.16);
-      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.7),
-                  inset 0 0.5px 0 rgba(255, 255, 255, 0.25),
-                  0 0 20px rgba(184, 29, 76, 0.18);
+      border: 0.5px solid rgba(251, 191, 36, 0.24);
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.8),
+                  inset 0 0.5px 0 rgba(255, 240, 200, 0.3),
+                  0 0 24px rgba(245, 158, 11, 0.25);
       border-radius: 28px;
       padding: 0 14px;
       height: 38px;
@@ -813,8 +815,8 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: #30D158;
-      box-shadow: 0 0 8px #30D158;
+      background: #F59E0B;
+      box-shadow: 0 0 10px #F59E0B;
     }
 
     .radar-ping {
@@ -822,7 +824,7 @@
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      border: 1.5px solid #30D158;
+      border: 1.5px solid #F59E0B;
       animation: radarRipple 1.8s cubic-bezier(0, 0.2, 0.8, 1) infinite;
     }
 
@@ -862,9 +864,9 @@
     .pulse-live {
       font-size: 9px;
       font-weight: 800;
-      background: rgba(48, 209, 88, 0.18);
-      color: #30D158;
-      border: 0.5px solid rgba(48, 209, 88, 0.4);
+      background: rgba(245, 158, 11, 0.18);
+      color: #FBBF24;
+      border: 0.5px solid rgba(245, 158, 11, 0.4);
       padding: 1px 5px;
       border-radius: 6px;
       letter-spacing: 0.5px;
@@ -884,9 +886,9 @@
     .island-region-badge {
       font-size: 9px;
       font-weight: 700;
-      color: var(--accent-highlight);
-      background: rgba(255, 59, 112, 0.15);
-      border: 0.5px solid rgba(255, 59, 112, 0.3);
+      color: #FBBF24;
+      background: rgba(245, 158, 11, 0.16);
+      border: 0.5px solid rgba(251, 191, 36, 0.35);
       padding: 2px 7px;
       border-radius: 10px;
       text-transform: uppercase;
@@ -914,10 +916,10 @@
       min-width: 290px;
       max-width: 92vw;
       border-radius: 26px;
-      border-color: rgba(255, 59, 112, 0.45);
-      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85),
-                  0 0 28px var(--accent-glow),
-                  inset 0 0.5px 0 rgba(255, 255, 255, 0.3);
+      border-color: rgba(251, 191, 36, 0.5);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.9),
+                  0 0 32px var(--accent-glow),
+                  inset 0 0.5px 0 rgba(255, 240, 200, 0.35);
     }
 
     .dynamic-island.expanded .island-collapsed-view {
@@ -1062,7 +1064,8 @@
     }
     .series-pill.active {
       background: var(--accent-gradient);
-      color: #fff;
+      color: #000;
+      font-weight: 800;
       border-color: transparent;
       box-shadow: var(--card-specular), 0 4px 18px var(--accent-glow);
     }
@@ -1091,7 +1094,7 @@
     }
     .series-pill.btn-add-pill:active {
       transform: scale(0.95);
-      background: rgba(184, 29, 76, 0.25);
+      background: rgba(245, 158, 11, 0.25);
     }
 
     .badge-category {
@@ -1176,7 +1179,7 @@
     @keyframes keynoteEntrance {
       from {
         opacity: 0;
-        transform: translateY(14px) scale(0.985);
+        transform: translateY(16px) scale(0.98);
       }
       to {
         opacity: 1;
@@ -1194,23 +1197,24 @@
       display: flex;
       flex-direction: column;
       gap: 11px;
-      box-shadow: var(--card-specular), 0 8px 26px rgba(0, 0, 0, 0.45);
-      transition: transform 0.22s var(--spring-press), border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
-      animation: keynoteEntrance 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+      box-shadow: var(--card-specular), 0 8px 26px rgba(0, 0, 0, 0.55), 0 0 16px rgba(245, 158, 11, 0.04);
+      transition: transform 0.22s var(--spring-press), border-color 0.25s ease, box-shadow 0.25s ease, opacity 0.2s ease;
+      animation: keynoteEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
       will-change: transform, opacity;
+      position: relative;
     }
     .model-card:hover {
-      border-color: rgba(255, 255, 255, 0.16);
-      box-shadow: var(--card-specular), 0 12px 32px rgba(0, 0, 0, 0.55);
+      border-color: var(--card-border-hover);
+      box-shadow: var(--card-specular), 0 12px 36px rgba(0, 0, 0, 0.65), 0 0 24px rgba(245, 158, 11, 0.14);
     }
     .model-card:active {
       transform: scale(0.988);
     }
     .model-card.custom-card {
-      border-color: rgba(184, 29, 76, 0.35);
+      border-color: rgba(251, 191, 36, 0.38);
     }
     .model-card.disabled {
-      opacity: 0.46;
+      opacity: 0.44;
     }
 
     .card-top {
@@ -1337,7 +1341,8 @@
     .storage-chip-btn.active {
       background: var(--accent-gradient);
       border-color: transparent;
-      color: #fff;
+      color: #000;
+      font-weight: 800;
       box-shadow: var(--card-specular), 0 3px 12px var(--accent-glow);
     }
     .storage-chip-btn.disabled-config {
@@ -1516,30 +1521,50 @@
       box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.6);
     }
 
+    @keyframes keynoteGleam {
+      0% {
+        transform: translateX(-100%);
+      }
+      50%, 100% {
+        transform: translateX(200%);
+      }
+    }
+
     .btn-save {
       flex: 1;
       background: var(--accent-gradient);
-      color: #fff;
+      color: #000;
       border: none;
       padding: 14px;
       border-radius: 16px;
       font-size: 15px;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: -0.3px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      box-shadow: var(--card-specular), 0 4px 20px var(--accent-glow);
+      box-shadow: var(--card-specular), 0 6px 24px var(--accent-glow);
       transition: transform 0.15s var(--spring-press), filter 0.15s ease, background 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-save::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      animation: keynoteGleam 3.2s infinite ease-in-out;
+      pointer-events: none;
     }
     .btn-save:active {
       transform: scale(0.96);
-      filter: brightness(1.15);
+      filter: brightness(1.1);
     }
     .btn-save.success-state {
       background: var(--success-gradient) !important;
+      color: #fff;
       box-shadow: 0 4px 20px rgba(48, 209, 88, 0.45);
     }
 
