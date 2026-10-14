@@ -1,0 +1,436 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Emotion-to-animation parameter mapping. Maps emotional intent to Disney principles, timing, and dynamics.",
+
+  "$role": "modifier-layer",
+  "$role-description": "Emotions MODIFY recipe base values. They do not define absolute values. Resolution order: Recipe (base) → Emotion (modifier) → Brand (constraint) → Platform (adaptation).",
+
+  "$merge-behavior": {
+    "$description": "How emotion parameters combine with recipe base values during resolution",
+    "duration-multiplier": {
+      "type": "multiply",
+      "description": "Recipe duration × emotion multiplier. Multiple emotions blend via weighted average BEFORE applying."
+    },
+    "exaggeration": {
+      "type": "multiply-then-cap",
+      "description": "Recipe exaggeration × emotion boost, then capped by brand constraint."
+    },
+    "easing": {
+      "type": "override",
+      "description": "Emotion easing overrides recipe easing when specified. For blends, use dominant emotion."
+    },
+    "spring-ref": {
+      "type": "override",
+      "description": "Emotion spring overrides recipe spring when specified. For blends, use dominant emotion."
+    },
+    "squash-stretch": {
+      "type": "minimum",
+      "description": "Use the more conservative value between emotion and brand constraint."
+    },
+    "secondary-effects": {
+      "type": "union-then-filter",
+      "description": "Combine recipe + emotion effects, then filter out brand-forbidden types."
+    }
+  },
+
+  "$disambiguation": {
+    "emotions-vs-brands": "Emotions MODIFY parameters (celebratory adds 1.2× duration). Brands CONSTRAIN parameters (elegant caps exaggeration at 'subtle'). They operate at different pipeline stages.",
+    "blending": "Multiple emotions blend via weighted average for numeric values. Discrete values (easing, spring) use the dominant emotion's value."
+  },
+
+  "$token-references": {
+    "$description": "W3C DTCG token reference paths",
+    "spring": "tokens/spring.tokens.json",
+    "easing": "tokens/easing.tokens.json",
+    "duration": "tokens/duration.tokens.json"
+  },
+
+  "$token-aliases": {
+    "$description": "Maps spring and easing names to W3C DTCG paths",
+    "spring": {
+      "celebratory": "{motion.spring.legacy.celebratory}",
+      "calming": "{motion.spring.legacy.calming}",
+      "urgent": "{motion.spring.legacy.urgent}",
+      "bouncy": "{motion.spring.legacy.bouncy}",
+      "standard": "{motion.spring.default.spatial}",
+      "mysterious": "{motion.spring.legacy.mysterious}",
+      "energetic": "{motion.spring.legacy.energetic}",
+      "snappy": "{motion.spring.fast.spatial}",
+      "gentle": "{motion.spring.slow.spatial}",
+      "enter": "{motion.spring.default.spatial}"
+    },
+    "easing": {
+      "spring-bouncy": "{motion.spring.legacy.bouncy}",
+      "spring-snappy": "{motion.spring.fast.spatial}",
+      "emphasized-accelerate": "{motion.easing.emphasized-accelerate}",
+      "standard": "{motion.easing.standard}",
+      "standard-decelerate": "{motion.easing.standard-decelerate}",
+      "emphasized-decelerate": "{motion.easing.emphasized-decelerate}",
+      "linear": "{motion.easing.linear}"
+    }
+  },
+
+  "emotions": {
+    "$description": "Core emotional states with complete animation parameter sets. Spring references use W3C DTCG {motion.spring.*} syntax.",
+
+    "celebratory": {
+      "$description": "Achievement, success, milestone moments",
+      "arousal": "high",
+      "valence": "positive",
+      "parameters": {
+        "exaggeration": "expressive",
+        "duration-multiplier": 1.2,
+        "anticipation": "medium",
+        "squash-stretch": "medium",
+        "follow-through": "loose",
+        "secondary-intensity": 0.6,
+        "easing": "spring-bouncy",
+        "spring-ref": "{motion.spring.legacy.bouncy}"
+      },
+      "secondary-effects": {
+        "particles": true,
+        "glow": true,
+        "color-shift": "warm"
+      },
+      "recommended-recipes": ["success-notification", "celebration", "hero-reveal"]
+    },
+
+    "calming": {
+      "$description": "Relaxation, reassurance, gentle guidance",
+      "arousal": "low",
+      "valence": "positive",
+      "parameters": {
+        "exaggeration": "subtle",
+        "duration-multiplier": 1.4,
+        "anticipation": "micro",
+        "squash-stretch": "none",
+        "follow-through": "fluid",
+        "secondary-intensity": 0.2,
+        "easing": "ease-in-out-gentle",
+        "spring-ref": "{motion.spring.slow.spatial}"
+      },
+      "secondary-effects": {
+        "particles": false,
+        "glow": false,
+        "color-shift": "cool"
+      },
+      "recommended-recipes": ["modal-entrance", "tooltip-appear", "input-focus"]
+    },
+
+    "urgent": {
+      "$description": "Time-sensitive actions, warnings, critical paths",
+      "arousal": "high",
+      "valence": "neutral",
+      "parameters": {
+        "exaggeration": "moderate",
+        "duration-multiplier": 0.8,
+        "anticipation": "none",
+        "squash-stretch": "none",
+        "follow-through": "snappy",
+        "secondary-intensity": 0.5,
+        "easing": "emphasized-accelerate",
+        "spring-ref": "{motion.spring.fast.spatial}"
+      },
+      "secondary-effects": {
+        "particles": false,
+        "glow": false,
+        "pulse": true,
+        "color-shift": "none"
+      },
+      "accessibility-note": "Avoid rapid flashing; use color/border indicators instead",
+      "recommended-recipes": ["error-shake", "button-press"]
+    },
+
+    "playful": {
+      "$description": "Fun, lighthearted, engaging interactions",
+      "arousal": "medium-high",
+      "valence": "positive",
+      "parameters": {
+        "exaggeration": "expressive",
+        "duration-multiplier": 1.1,
+        "anticipation": "small",
+        "squash-stretch": "medium",
+        "follow-through": "bouncy",
+        "secondary-intensity": 0.5,
+        "easing": "spring-bouncy",
+        "spring-ref": "{motion.spring.legacy.bouncy}"
+      },
+      "secondary-effects": {
+        "particles": "optional",
+        "glow": false,
+        "wobble": true,
+        "color-shift": "vibrant"
+      },
+      "recommended-recipes": ["button-press", "card-hover", "checkbox-toggle", "switch-toggle"]
+    },
+
+    "professional": {
+      "$description": "Business contexts, credibility, trust",
+      "arousal": "low",
+      "valence": "neutral",
+      "parameters": {
+        "exaggeration": "subtle",
+        "duration-multiplier": 1.0,
+        "anticipation": "micro",
+        "squash-stretch": "none",
+        "follow-through": "precise",
+        "secondary-intensity": 0.2,
+        "easing": "standard",
+        "spring-ref": "{motion.spring.default.spatial}"
+      },
+      "secondary-effects": {
+        "particles": false,
+        "glow": false,
+        "color-shift": "none"
+      },
+      "recommended-recipes": ["modal-entrance", "page-transition", "list-stagger", "dropdown-open"]
+    },
+
+    "mysterious": {
+      "$description": "Intrigue, discovery, reveal moments",
+      "arousal": "medium",
+      "valence": "neutral",
+      "parameters": {
+        "exaggeration": "moderate",
+        "duration-multiplier": 1.5,
+        "anticipation": "medium",
+        "squash-stretch": "none",
+        "follow-through": "lingering",
+        "secondary-intensity": 0.4,
+        "easing": "ease-in-out-slow",
+        "spring-ref": "{motion.spring.slow.spatial}"
+      },
+      "secondary-effects": {
+        "particles": false,
+        "glow": true,
+        "blur": true,
+        "color-shift": "dark"
+      },
+      "recommended-recipes": ["hero-reveal", "modal-entrance", "accordion-expand"]
+    },
+
+    "energetic": {
+      "$description": "Dynamic, active, high-energy experiences",
+      "arousal": "high",
+      "valence": "positive",
+      "parameters": {
+        "exaggeration": "expressive",
+        "duration-multiplier": 0.9,
+        "anticipation": "small",
+        "squash-stretch": "medium",
+        "follow-through": "snappy",
+        "secondary-intensity": 0.6,
+        "easing": "spring-snappy",
+        "spring-ref": "{motion.spring.fast.spatial}"
+      },
+      "secondary-effects": {
+        "particles": true,
+        "glow": false,
+        "trail": true,
+        "color-shift": "vibrant"
+      },
+      "recommended-recipes": ["button-press", "swipe-dismiss", "pull-to-refresh", "celebration"]
+    },
+
+    "frustrated": {
+      "$description": "Error states, blocked actions (use sparingly)",
+      "arousal": "medium-high",
+      "valence": "negative",
+      "parameters": {
+        "exaggeration": "moderate",
+        "duration-multiplier": 0.9,
+        "anticipation": "none",
+        "squash-stretch": "none",
+        "follow-through": "abrupt",
+        "secondary-intensity": 0.3,
+        "easing": "standard",
+        "spring-ref": "{motion.spring.fast.spatial}"
+      },
+      "secondary-effects": {
+        "particles": false,
+        "glow": false,
+        "shake": true,
+        "color-shift": "error"
+      },
+      "accessibility-note": "Never use anxiety-inducing patterns; provide clear resolution path",
+      "recommended-recipes": ["error-shake"]
+    },
+
+    "trustworthy": {
+      "$description": "Security, reliability, data handling",
+      "arousal": "low",
+      "valence": "positive",
+      "parameters": {
+        "exaggeration": "subtle",
+        "duration-multiplier": 1.1,
+        "anticipation": "micro",
+        "squash-stretch": "none",
+        "follow-through": "smooth",
+        "secondary-intensity": 0.2,
+        "easing": "standard-decelerate",
+        "spring-ref": "{motion.spring.slow.spatial}"
+      },
+      "secondary-effects": {
+        "particles": false,
+        "glow": false,
+        "lock-icon": true,
+        "color-shift": "none"
+      },
+      "recommended-recipes": ["modal-entrance", "input-focus", "success-notification"]
+    },
+
+    "anticipatory": {
+      "$description": "Loading, waiting, something coming",
+      "arousal": "medium",
+      "valence": "neutral",
+      "parameters": {
+        "exaggeration": "subtle",
+        "duration-multiplier": 1.0,
+        "anticipation": "sustained",
+        "squash-stretch": "none",
+        "follow-through": "continuous",
+        "secondary-intensity": 0.3,
+        "easing": "linear",
+        "spring-ref": null
+      },
+      "secondary-effects": {
+        "particles": false,
+        "glow": false,
+        "pulse": true,
+        "shimmer": true
+      },
+      "recommended-recipes": ["loading-skeleton", "pull-to-refresh"]
+    },
+
+    "delightful": {
+      "$description": "Unexpected positive moments, Easter eggs",
+      "arousal": "medium-high",
+      "valence": "positive",
+      "parameters": {
+        "exaggeration": "expressive",
+        "duration-multiplier": 1.3,
+        "anticipation": "small",
+        "squash-stretch": "expressive",
+        "follow-through": "bouncy",
+        "secondary-intensity": 0.7,
+        "easing": "spring-bouncy",
+        "spring-ref": "{motion.spring.legacy.bouncy}"
+      },
+      "secondary-effects": {
+        "particles": true,
+        "glow": true,
+        "sparkle": true,
+        "color-shift": "rainbow"
+      },
+      "recommended-recipes": ["celebration", "success-notification"]
+    },
+
+    "focused": {
+      "$description": "Deep work, concentration, minimal distraction",
+      "arousal": "low",
+      "valence": "neutral",
+      "parameters": {
+        "exaggeration": "minimal",
+        "duration-multiplier": 0.9,
+        "anticipation": "none",
+        "squash-stretch": "none",
+        "follow-through": "instant",
+        "secondary-intensity": 0.1,
+        "easing": "standard",
+        "spring-ref": "{motion.spring.fast.spatial}"
+      },
+      "secondary-effects": {
+        "particles": false,
+        "glow": false,
+        "color-shift": "none"
+      },
+      "recommended-recipes": ["input-focus", "tab-switch", "dropdown-open"]
+    },
+
+    "welcoming": {
+      "$description": "Onboarding, first-time experiences",
+      "arousal": "medium",
+      "valence": "positive",
+      "parameters": {
+        "exaggeration": "moderate",
+        "duration-multiplier": 1.2,
+        "anticipation": "small",
+        "squash-stretch": "subtle",
+        "follow-through": "gentle",
+        "secondary-intensity": 0.4,
+        "easing": "emphasized-decelerate",
+        "spring-ref": "{motion.spring.default.spatial}"
+      },
+      "secondary-effects": {
+        "particles": "subtle",
+        "glow": true,
+        "wave": true,
+        "color-shift": "warm"
+      },
+      "recommended-recipes": ["hero-reveal", "list-stagger", "modal-entrance"]
+    }
+  },
+
+  "arousal-valence-model": {
+    "$description": "Russell's circumplex model of affect for emotion interpolation",
+    "quadrants": {
+      "high-arousal-positive": ["celebratory", "energetic", "delightful", "playful"],
+      "high-arousal-negative": ["frustrated", "urgent"],
+      "low-arousal-positive": ["calming", "trustworthy", "welcoming"],
+      "low-arousal-negative": ["focused"]
+    },
+    "interpolation": {
+      "$description": "Blend emotions by averaging parameters based on arousal/valence position",
+      "formula": "result = emotion1.params * weight1 + emotion2.params * weight2"
+    }
+  },
+
+  "emotion-combinations": {
+    "$description": "Pre-defined emotion blends for common scenarios",
+    "confident-celebration": {
+      "blend": ["celebratory", "trustworthy"],
+      "weights": [0.7, 0.3],
+      "use-case": "Payment success, account verification"
+    },
+    "gentle-playful": {
+      "blend": ["playful", "calming"],
+      "weights": [0.6, 0.4],
+      "use-case": "Children's apps, casual games"
+    },
+    "professional-welcoming": {
+      "blend": ["professional", "welcoming"],
+      "weights": [0.5, 0.5],
+      "use-case": "B2B onboarding, enterprise dashboards"
+    },
+    "urgent-trustworthy": {
+      "blend": ["urgent", "trustworthy"],
+      "weights": [0.6, 0.4],
+      "use-case": "Security alerts, 2FA prompts"
+    }
+  },
+
+  "context-modifiers": {
+    "$description": "Adjustments based on user context",
+    "first-visit": {
+      "duration-multiplier": 1.2,
+      "exaggeration-boost": 1.1,
+      "secondary-intensity-boost": 0.2
+    },
+    "repeat-user": {
+      "duration-multiplier": 0.9,
+      "exaggeration-boost": 0.9,
+      "secondary-intensity-boost": -0.1
+    },
+    "reduced-motion": {
+      "duration-multiplier": 0.5,
+      "exaggeration-boost": 0,
+      "squash-stretch": "none",
+      "particles": false
+    },
+    "low-power-mode": {
+      "duration-multiplier": 0.8,
+      "secondary-intensity-boost": -0.3,
+      "particles": false
+    }
+  }
+}

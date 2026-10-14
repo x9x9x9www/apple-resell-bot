@@ -1,0 +1,125 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "State layer tokens for interactive feedback. Defines opacity values for hover, focus, press, and drag states per Google Material Design 3 specifications.",
+
+  "motion": {
+    "state-layer": {
+      "$description": "M3 state layer opacity values for surface color overlays",
+
+      "opacity": {
+        "$description": "State-specific opacity percentages applied to surface color",
+
+        "hover": {
+          "$value": 0.08,
+          "$type": "number",
+          "$description": "8% opacity on hover. Subtle acknowledgment of pointer presence."
+        },
+        "focus": {
+          "$value": 0.12,
+          "$type": "number",
+          "$description": "12% opacity on keyboard focus. More prominent for accessibility."
+        },
+        "press": {
+          "$value": 0.12,
+          "$type": "number",
+          "$description": "12% opacity on press/active. Same as focus for consistency."
+        },
+        "drag": {
+          "$value": 0.16,
+          "$type": "number",
+          "$description": "16% opacity during drag. Highest prominence for active manipulation."
+        },
+        "disabled": {
+          "$value": 0.38,
+          "$type": "number",
+          "$description": "38% opacity for disabled state. M3 disabled content opacity."
+        },
+        "selected": {
+          "$value": 0.08,
+          "$type": "number",
+          "$description": "8% opacity for selected items. Same as hover but persistent."
+        },
+        "activated": {
+          "$value": 0.12,
+          "$type": "number",
+          "$description": "12% opacity for activated/active navigation items."
+        }
+      },
+
+      "ripple": {
+        "$description": "Ink ripple effect specifications",
+
+        "opacity-start": {
+          "$value": 0.12,
+          "$type": "number",
+          "$description": "Initial ripple opacity on press."
+        },
+        "opacity-end": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "Final ripple opacity (fades out)."
+        },
+        "scale-start": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "Initial ripple scale (point of origin)."
+        },
+        "scale-end": {
+          "$value": 2.5,
+          "$type": "number",
+          "$description": "Final ripple scale (covers container)."
+        },
+        "duration": {
+          "$value": "450ms",
+          "$type": "duration",
+          "$description": "Total ripple animation duration. Scale + fade out."
+        },
+        "scale-duration": {
+          "$value": "225ms",
+          "$type": "duration",
+          "$description": "Ripple scale expansion duration (first half)."
+        },
+        "fade-duration": {
+          "$value": "225ms",
+          "$type": "duration",
+          "$description": "Ripple fade out duration (second half)."
+        }
+      },
+
+      "transition": {
+        "$description": "State transition timings",
+
+        "enter": {
+          "$value": "75ms",
+          "$type": "duration",
+          "$description": "State layer enter duration. Fast response to interaction."
+        },
+        "exit": {
+          "$value": "150ms",
+          "$type": "duration",
+          "$description": "State layer exit duration. Slightly slower for smooth departure."
+        },
+        "easing": {
+          "$value": [0.2, 0, 0, 1],
+          "$type": "cubicBezier",
+          "$description": "Standard M3 easing for state transitions."
+        }
+      },
+
+      "color-blend": {
+        "$description": "How state layer blends with surface",
+
+        "mode": {
+          "$value": "source-over",
+          "$type": "string",
+          "$description": "Standard alpha compositing. State layer on top of surface."
+        },
+        "inherit-from": {
+          "$value": "on-surface",
+          "$type": "string",
+          "$description": "State layer uses on-surface color (adapts to light/dark theme)."
+        }
+      }
+    }
+  }
+}

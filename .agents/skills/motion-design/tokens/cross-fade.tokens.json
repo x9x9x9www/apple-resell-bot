@@ -1,0 +1,157 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Cross-fade timing tokens for container transform and content transitions. Implements M3 nested timing specifications.",
+
+  "motion": {
+    "cross-fade": {
+      "$description": "Content cross-fade timing for transitions. Old content fades before new content appears.",
+
+      "container-transform": {
+        "$description": "Cross-fade timing for container transform pattern (300ms total)",
+
+        "old-content": {
+          "$value": {
+            "start": "0ms",
+            "end": "100ms",
+            "duration": "100ms"
+          },
+          "$type": "object",
+          "$description": "Old content fades out in first 100ms (0-33% of transition)."
+        },
+        "new-content": {
+          "$value": {
+            "start": "100ms",
+            "end": "300ms",
+            "duration": "200ms"
+          },
+          "$type": "object",
+          "$description": "New content fades in during remaining 200ms (33-100% of transition)."
+        },
+        "overlap": {
+          "$value": "0ms",
+          "$type": "duration",
+          "$description": "No overlap. Old fully fades before new starts (nested timing)."
+        },
+        "easing": {
+          "$value": "linear",
+          "$type": "string",
+          "$description": "Content cross-fade uses linear easing (not emphasized)."
+        }
+      },
+
+      "shared-axis": {
+        "$description": "Cross-fade timing for shared axis transitions (400ms total)",
+
+        "outgoing": {
+          "$value": {
+            "start": "0ms",
+            "end": "133ms",
+            "duration": "133ms"
+          },
+          "$type": "object",
+          "$description": "Outgoing content fades and moves out (first 33%)."
+        },
+        "incoming": {
+          "$value": {
+            "start": "133ms",
+            "end": "400ms",
+            "duration": "267ms"
+          },
+          "$type": "object",
+          "$description": "Incoming content fades and moves in (remaining 67%)."
+        },
+        "overlap": {
+          "$value": "0ms",
+          "$type": "duration",
+          "$description": "Sequential, no overlap."
+        }
+      },
+
+      "fade-through": {
+        "$description": "Cross-fade timing for fade through pattern (300ms total)",
+
+        "fade-out": {
+          "$value": {
+            "start": "0ms",
+            "end": "150ms",
+            "duration": "150ms"
+          },
+          "$type": "object",
+          "$description": "Old content fades out (first half)."
+        },
+        "fade-in": {
+          "$value": {
+            "start": "150ms",
+            "end": "300ms",
+            "duration": "150ms"
+          },
+          "$type": "object",
+          "$description": "New content fades in (second half)."
+        },
+        "overlap": {
+          "$value": "0ms",
+          "$type": "duration",
+          "$description": "No overlap. Sequential fade."
+        }
+      },
+
+      "simple-crossfade": {
+        "$description": "Simple overlapping crossfade (non-M3, for video/media)",
+
+        "duration": {
+          "$value": "200ms",
+          "$type": "duration",
+          "$description": "Total crossfade duration."
+        },
+        "overlap": {
+          "$value": "100%",
+          "$type": "string",
+          "$description": "Full overlap. Both content visible during transition."
+        },
+        "out-easing": {
+          "$value": [0, 0, 1, 1],
+          "$type": "cubicBezier",
+          "$description": "Linear fade out."
+        },
+        "in-easing": {
+          "$value": [0, 0, 1, 1],
+          "$type": "cubicBezier",
+          "$description": "Linear fade in."
+        }
+      }
+    },
+
+    "scrim-timing": {
+      "$description": "Scrim animation timing during transitions",
+
+      "container-transform": {
+        "$value": {
+          "start": "0ms",
+          "peak": "150ms",
+          "end": "300ms",
+          "peak-opacity": 0.32
+        },
+        "$type": "object",
+        "$description": "Scrim fades in to peak at midpoint, then fades with transition."
+      },
+      "modal-enter": {
+        "$value": {
+          "start": "0ms",
+          "end": "150ms",
+          "final-opacity": 0.32
+        },
+        "$type": "object",
+        "$description": "Scrim fades in quickly as modal enters."
+      },
+      "modal-exit": {
+        "$value": {
+          "start": "0ms",
+          "end": "100ms",
+          "final-opacity": 0
+        },
+        "$type": "object",
+        "$description": "Scrim fades out faster than it appeared (30% rule)."
+      }
+    }
+  }
+}

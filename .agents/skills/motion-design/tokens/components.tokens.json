@@ -1,0 +1,1220 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "UI component animation presets. Complete animation specs for all interaction states across common UI components.",
+
+  "$token-references": {
+    "$description": "W3C DTCG token reference paths",
+    "easing": "tokens/easing.tokens.json",
+    "spring": "tokens/spring.tokens.json",
+    "duration": "tokens/duration.tokens.json",
+    "recipes": "tokens/recipes.tokens.json"
+  },
+
+  "$token-aliases": {
+    "$description": "Maps shorthand token names to full W3C DTCG paths. Use {alias} syntax to reference.",
+    "duration": {
+      "short-1": "{motion.duration.short-1}",
+      "short-2": "{motion.duration.short-2}",
+      "short-3": "{motion.duration.short-3}",
+      "short-4": "{motion.duration.short-4}",
+      "medium-1": "{motion.duration.medium-1}",
+      "medium-2": "{motion.duration.medium-2}",
+      "medium-3": "{motion.duration.medium-3}",
+      "medium-4": "{motion.duration.medium-4}",
+      "long-1": "{motion.duration.long-1}",
+      "long-2": "{motion.duration.long-2}",
+      "long-3": "{motion.duration.long-3}",
+      "long-4": "{motion.duration.long-4}"
+    },
+    "easing": {
+      "standard": "{motion.easing.standard}",
+      "emphasized": "{motion.easing.emphasized}",
+      "emphasized-decelerate": "{motion.easing.emphasized-decelerate}",
+      "emphasized-accelerate": "{motion.easing.emphasized-accelerate}",
+      "standard-decelerate": "{motion.easing.standard-decelerate}",
+      "standard-accelerate": "{motion.easing.standard-accelerate}",
+      "linear": "{motion.easing.linear}"
+    },
+    "spring": {
+      "spring-bouncy": "{motion.spring.legacy.bouncy}",
+      "spring-snappy": "{motion.spring.fast.spatial}",
+      "spring-standard": "{motion.spring.default.spatial}",
+      "spring-gentle": "{motion.spring.slow.spatial}",
+      "spring-enter": "{motion.spring.default.spatial}"
+    }
+  },
+
+  "$easing-convention": {
+    "$description": "How to interpret easing values",
+    "bezier": "Values like 'standard', 'emphasized-decelerate' resolve to {motion.easing.*}",
+    "spring": "Values prefixed with 'spring-' resolve to {motion.spring.*}",
+    "resolution": {
+      "spring-bouncy": "{motion.spring.legacy.bouncy}",
+      "spring-snappy": "{motion.spring.fast.spatial}",
+      "spring-standard": "{motion.spring.default.spatial}",
+      "spring-gentle": "{motion.spring.slow.spatial}",
+      "spring-enter": "{motion.spring.default.spatial}"
+    }
+  },
+
+  "components": {
+    "$description": "Animation presets organized by component type. When 'easing' starts with 'spring-', use spring physics instead of bezier curves.",
+
+    "button": {
+      "$description": "Interactive button animations",
+      "states": {
+        "idle": {
+          "transform": "none",
+          "shadow": "elevation-0"
+        },
+        "hover": {
+          "duration": "short-3",
+          "easing": "standard-decelerate",
+          "transform": "translateY(-2px)",
+          "shadow": "elevation-1",
+          "recipe": null
+        },
+        "press": {
+          "duration": "short-4",
+          "easing": "emphasized-decelerate",
+          "transform": "scale(0.95)",
+          "recipe": "button-press"
+        },
+        "focus": {
+          "duration": "short-2",
+          "ring": {
+            "width": 3,
+            "offset": 2,
+            "animation": "pulse"
+          }
+        },
+        "disabled": {
+          "opacity": 0.5,
+          "duration": 0,
+          "cursor": "not-allowed"
+        },
+        "loading": {
+          "recipe": "loading-skeleton",
+          "spinner": {
+            "size": "inline",
+            "position": "replace-text"
+          }
+        }
+      },
+      "variations": {
+        "elegant": {
+          "hover": { "transform": "none", "shadow": "elevation-1" },
+          "press": { "transform": "scale(0.98)" }
+        },
+        "professional": {
+          "hover": { "transform": "translateY(-1px)", "shadow": "elevation-1" },
+          "press": { "transform": "scale(0.97)" }
+        },
+        "friendly": {
+          "hover": { "transform": "translateY(-3px)", "shadow": "elevation-1" },
+          "press": { "transform": "scale(0.96)" }
+        },
+        "playful": {
+          "hover": { "transform": "translateY(-4px) rotate(1deg)" },
+          "press": { "transform": "scale(0.92)", "easing": "spring-bouncy" }
+        },
+        "bold": {
+          "hover": { "transform": "scale(1.02)" },
+          "press": { "transform": "scale(0.95)" }
+        }
+      }
+    },
+
+    "card": {
+      "$description": "Card/tile component animations",
+      "states": {
+        "idle": {
+          "transform": "none",
+          "shadow": "elevation-1"
+        },
+        "hover": {
+          "duration": "short-3",
+          "easing": "standard-decelerate",
+          "transform": "translateY(-4px)",
+          "shadow": "elevation-2",
+          "recipe": "card-hover"
+        },
+        "press": {
+          "duration": "short-2",
+          "transform": "scale(0.98)"
+        },
+        "selected": {
+          "duration": "short-3",
+          "border": "primary",
+          "shadow": "elevation-2"
+        },
+        "dragging": {
+          "duration": "short-2",
+          "transform": "scale(1.02) rotate(2deg)",
+          "shadow": "elevation-3",
+          "opacity": 0.9
+        }
+      },
+      "entrance": {
+        "duration": "medium-1",
+        "easing": "emphasized-decelerate",
+        "from": { "opacity": 0, "y": 16, "scale": 0.98 },
+        "to": { "opacity": 1, "y": 0, "scale": 1 }
+      },
+      "variations": {
+        "elegant": {
+          "hover": { "transform": "none", "shadow": "elevation-2" }
+        },
+        "professional": {
+          "hover": { "transform": "translateY(-2px)", "shadow": "elevation-2" }
+        },
+        "friendly": {
+          "hover": { "transform": "translateY(-4px)", "shadow": "elevation-2" }
+        },
+        "playful": {
+          "hover": { "transform": "translateY(-8px) rotate(1deg)", "shadow": "elevation-3" }
+        },
+        "bold": {
+          "hover": { "transform": "scale(1.02)", "shadow": "elevation-3" }
+        }
+      }
+    },
+
+    "modal": {
+      "$description": "Dialog/overlay animations",
+      "states": {
+        "closed": {
+          "opacity": 0,
+          "visibility": "hidden"
+        },
+        "opening": {
+          "recipe": "modal-entrance"
+        },
+        "open": {
+          "opacity": 1,
+          "transform": "none"
+        },
+        "closing": {
+          "recipe": "modal-exit"
+        }
+      },
+      "backdrop": {
+        "duration": "medium-1",
+        "easing": "standard",
+        "opacity": { "from": 0, "to": 0.5 },
+        "blur": { "from": 0, "to": 4 }
+      },
+      "content": {
+        "entrance": {
+          "duration": "medium-1",
+          "easing": "emphasized-decelerate",
+          "from": { "opacity": 0, "scale": 0.95, "y": 16 },
+          "to": { "opacity": 1, "scale": 1, "y": 0 }
+        },
+        "exit": {
+          "duration": "short-4",
+          "easing": "emphasized-accelerate",
+          "from": { "opacity": 1, "scale": 1 },
+          "to": { "opacity": 0, "scale": 0.95 }
+        }
+      },
+      "variations": {
+        "elegant": {
+          "content": {
+            "entrance": { "from": { "opacity": 0, "scale": 0.98 } }
+          }
+        },
+        "professional": {
+          "content": {
+            "entrance": { "from": { "opacity": 0, "scale": 0.96, "y": 8 } }
+          }
+        },
+        "friendly": {
+          "content": {
+            "entrance": { "from": { "opacity": 0, "scale": 0.94, "y": 12 } }
+          }
+        },
+        "playful": {
+          "content": {
+            "entrance": { "easing": "spring-bouncy", "from": { "scale": 0.9, "y": 24 } }
+          }
+        },
+        "bold": {
+          "content": {
+            "entrance": { "from": { "scale": 0.85 }, "duration": "short-4" }
+          }
+        }
+      }
+    },
+
+    "toast": {
+      "$description": "Notification/snackbar animations",
+      "states": {
+        "entering": {
+          "duration": "medium-1",
+          "easing": "emphasized-decelerate",
+          "from": { "opacity": 0, "y": 20, "scale": 0.95 },
+          "to": { "opacity": 1, "y": 0, "scale": 1 }
+        },
+        "idle": {
+          "opacity": 1
+        },
+        "exiting": {
+          "duration": "short-4",
+          "easing": "emphasized-accelerate",
+          "to": { "opacity": 0, "y": -10, "scale": 0.95 }
+        }
+      },
+      "success": {
+        "recipe": "success-notification",
+        "icon-animation": {
+          "type": "checkmark-draw",
+          "duration": "short-4"
+        }
+      },
+      "error": {
+        "entrance": "standard",
+        "attention": {
+          "recipe": "error-shake",
+          "delay": "short-2"
+        }
+      },
+      "info": {
+        "entrance": "standard"
+      },
+      "variations": {
+        "elegant": {
+          "entering": { "from": { "opacity": 0 }, "easing": "standard-decelerate" }
+        },
+        "professional": {
+          "entering": { "from": { "opacity": 0, "y": 12 }, "easing": "standard-decelerate" }
+        },
+        "friendly": {
+          "entering": { "from": { "opacity": 0, "y": 16, "scale": 0.96 } }
+        },
+        "playful": {
+          "entering": { "easing": "spring-bouncy", "from": { "scale": 0.8 } }
+        },
+        "bold": {
+          "entering": { "duration": "short-4" }
+        }
+      }
+    },
+
+    "input": {
+      "$description": "Form input field animations",
+      "states": {
+        "idle": {
+          "border-color": "neutral",
+          "label-position": "inside"
+        },
+        "focus": {
+          "duration": "short-3",
+          "easing": "standard-decelerate",
+          "border-color": "primary",
+          "ring": true,
+          "label-position": "floating",
+          "recipe": "input-focus"
+        },
+        "filled": {
+          "label-position": "floating"
+        },
+        "error": {
+          "border-color": "error",
+          "shake": {
+            "recipe": "error-shake",
+            "intensity": "subtle"
+          }
+        },
+        "success": {
+          "border-color": "success",
+          "icon-animation": "checkmark-appear"
+        },
+        "disabled": {
+          "opacity": 0.5
+        }
+      },
+      "label-float": {
+        "duration": "short-3",
+        "easing": "standard-decelerate",
+        "transform": "translateY(-100%) scale(0.85)"
+      }
+    },
+
+    "checkbox": {
+      "$description": "Checkbox toggle animations",
+      "states": {
+        "unchecked": {
+          "background": "transparent",
+          "border": "neutral"
+        },
+        "checking": {
+          "recipe": "checkbox-toggle",
+          "check-draw": {
+            "duration": "short-3",
+            "easing": "emphasized-decelerate",
+            "stroke-dashoffset": { "from": 24, "to": 0 }
+          }
+        },
+        "checked": {
+          "background": "primary",
+          "border": "primary"
+        },
+        "unchecking": {
+          "duration": "short-2",
+          "check-fade": true
+        },
+        "indeterminate": {
+          "dash-animation": true
+        },
+        "focus": {
+          "ring": true
+        },
+        "disabled": {
+          "opacity": 0.5
+        }
+      },
+      "variations": {
+        "elegant": {
+          "checking": { "type": "fade", "scale-bounce": 1.0 }
+        },
+        "professional": {
+          "checking": { "type": "fade", "scale-bounce": 1.0 }
+        },
+        "friendly": {
+          "checking": { "type": "draw", "scale-bounce": 1.05 }
+        },
+        "playful": {
+          "checking": { "type": "draw-bounce", "scale-bounce": 1.15 }
+        },
+        "bold": {
+          "checking": { "type": "fill", "scale-bounce": 1.05 }
+        }
+      }
+    },
+
+    "switch": {
+      "$description": "Toggle switch animations",
+      "states": {
+        "off": {
+          "knob-position": 0,
+          "track-color": "neutral"
+        },
+        "toggling": {
+          "recipe": "switch-toggle",
+          "knob": {
+            "duration": "short-4",
+            "easing": "spring-snappy",
+            "squash-at-end": true
+          }
+        },
+        "on": {
+          "knob-position": "100%",
+          "track-color": "primary"
+        },
+        "focus": {
+          "ring": true
+        },
+        "disabled": {
+          "opacity": 0.5
+        }
+      },
+      "track": {
+        "color-transition": {
+          "duration": "short-3",
+          "easing": "standard"
+        }
+      },
+      "variations": {
+        "elegant": {
+          "toggling": { "squash": "none", "easing": "standard" }
+        },
+        "professional": {
+          "toggling": { "squash": "none", "easing": "standard" }
+        },
+        "friendly": {
+          "toggling": { "squash": "subtle", "easing": "spring-standard" }
+        },
+        "playful": {
+          "toggling": { "squash": "medium", "overshoot": true }
+        },
+        "bold": {
+          "toggling": { "squash": "subtle", "snap": true }
+        }
+      }
+    },
+
+    "dropdown": {
+      "$description": "Dropdown/select menu animations",
+      "states": {
+        "closed": {
+          "opacity": 0,
+          "scale": { "y": 0.95 },
+          "visibility": "hidden"
+        },
+        "opening": {
+          "recipe": "dropdown-open",
+          "duration": "short-4",
+          "easing": "emphasized-decelerate",
+          "origin": "top"
+        },
+        "open": {
+          "opacity": 1,
+          "scale": 1
+        },
+        "closing": {
+          "duration": "short-3",
+          "easing": "emphasized-accelerate"
+        }
+      },
+      "items": {
+        "stagger": 25,
+        "fade-in": true,
+        "hover": {
+          "duration": "short-2",
+          "background": "highlight"
+        },
+        "selected": {
+          "background": "selected",
+          "check-animation": true
+        }
+      },
+      "variations": {
+        "elegant": {
+          "items": { "stagger": 0 }
+        },
+        "professional": {
+          "items": { "stagger": 15 }
+        },
+        "friendly": {
+          "items": { "stagger": 30 }
+        },
+        "playful": {
+          "opening": { "easing": "spring-bouncy" },
+          "items": { "stagger": 40 }
+        },
+        "bold": {
+          "opening": { "duration": "short-3" },
+          "items": { "stagger": 20 }
+        }
+      }
+    },
+
+    "accordion": {
+      "$description": "Collapsible section animations",
+      "states": {
+        "collapsed": {
+          "content-height": 0,
+          "content-opacity": 0,
+          "icon-rotation": 0
+        },
+        "expanding": {
+          "recipe": "accordion-expand",
+          "content": {
+            "duration": "medium-1",
+            "easing": "emphasized-decelerate",
+            "height": "auto",
+            "opacity-delay": 0.1
+          },
+          "icon": {
+            "duration": "short-3",
+            "rotation": 180
+          }
+        },
+        "expanded": {
+          "content-height": "auto",
+          "content-opacity": 1,
+          "icon-rotation": 180
+        },
+        "collapsing": {
+          "content": {
+            "duration": "short-4",
+            "easing": "emphasized-accelerate"
+          }
+        }
+      }
+    },
+
+    "tabs": {
+      "$description": "Tab navigation animations",
+      "states": {
+        "inactive": {
+          "opacity": 0.7
+        },
+        "activating": {
+          "recipe": "tab-switch",
+          "duration": "short-3"
+        },
+        "active": {
+          "opacity": 1
+        }
+      },
+      "indicator": {
+        "type": "sliding",
+        "duration": "short-4",
+        "easing": "standard",
+        "match-width": true
+      },
+      "content": {
+        "crossfade": true,
+        "slide-distance": 16,
+        "duration": "short-4"
+      },
+      "variations": {
+        "elegant": {
+          "indicator": { "type": "fade" },
+          "content": { "slide-distance": 0 }
+        },
+        "professional": {
+          "indicator": { "type": "fade" },
+          "content": { "slide-distance": 8 }
+        },
+        "friendly": {
+          "indicator": { "type": "sliding" },
+          "content": { "slide-distance": 12 }
+        },
+        "playful": {
+          "indicator": { "easing": "spring-bouncy" },
+          "content": { "slide-distance": 24 }
+        },
+        "bold": {
+          "indicator": { "width": "fixed" },
+          "content": { "slide-distance": 20 }
+        }
+      }
+    },
+
+    "list-item": {
+      "$description": "List item animations",
+      "entrance": {
+        "recipe": "list-stagger",
+        "duration": "medium-1",
+        "stagger": 50
+      },
+      "states": {
+        "idle": {},
+        "hover": {
+          "duration": "short-2",
+          "background": "highlight"
+        },
+        "selected": {
+          "background": "selected"
+        },
+        "swiping": {
+          "transform": "translateX(var(--swipe-x))",
+          "reveal-actions": true
+        },
+        "dismissing": {
+          "recipe": "swipe-dismiss"
+        },
+        "reordering": {
+          "transform": "scale(1.02)",
+          "shadow": "elevation-2"
+        }
+      }
+    },
+
+    "avatar": {
+      "$description": "Avatar/profile image animations",
+      "entrance": {
+        "duration": "short-4",
+        "easing": "emphasized-decelerate",
+        "from": { "scale": 0.9, "opacity": 0 },
+        "to": { "scale": 1, "opacity": 1 }
+      },
+      "states": {
+        "loading": {
+          "type": "pulse",
+          "background": "skeleton"
+        },
+        "error": {
+          "fallback-icon": true
+        },
+        "online": {
+          "badge-pulse": {
+            "duration": "long-2",
+            "scale": [1, 1.2, 1],
+            "loop": true
+          }
+        }
+      }
+    },
+
+    "badge": {
+      "$description": "Badge/chip animations",
+      "entrance": {
+        "duration": "short-3",
+        "easing": "spring-bouncy",
+        "from": { "scale": 0, "opacity": 0 },
+        "to": { "scale": 1, "opacity": 1 }
+      },
+      "states": {
+        "updating": {
+          "pulse": true,
+          "scale-bounce": 1.1
+        },
+        "dismissing": {
+          "duration": "short-2",
+          "to": { "scale": 0, "opacity": 0 }
+        }
+      }
+    },
+
+    "tooltip": {
+      "$description": "Tooltip/popover animations",
+      "states": {
+        "hidden": {
+          "opacity": 0,
+          "scale": 0.95
+        },
+        "appearing": {
+          "recipe": "tooltip-appear",
+          "delay": "short-4",
+          "duration": "short-3"
+        },
+        "visible": {
+          "opacity": 1,
+          "scale": 1
+        },
+        "hiding": {
+          "duration": "short-2",
+          "delay": 0
+        }
+      },
+      "positions": {
+        "top": { "origin": "bottom center", "offset-y": -4 },
+        "bottom": { "origin": "top center", "offset-y": 4 },
+        "left": { "origin": "right center", "offset-x": -4 },
+        "right": { "origin": "left center", "offset-x": 4 }
+      }
+    },
+
+    "progress": {
+      "$description": "Progress indicator animations",
+      "linear": {
+        "bar": {
+          "duration": "medium-2",
+          "easing": "standard"
+        },
+        "indeterminate": {
+          "duration": "long-4",
+          "easing": "linear",
+          "loop": true
+        }
+      },
+      "circular": {
+        "determinate": {
+          "duration": "medium-2",
+          "easing": "standard",
+          "stroke-dashoffset": "animated"
+        },
+        "indeterminate": {
+          "rotation": {
+            "duration": "long-4",
+            "loop": true
+          },
+          "stroke": {
+            "duration": "long-2",
+            "dasharray-animation": true
+          }
+        }
+      }
+    },
+
+    "skeleton": {
+      "$description": "Loading skeleton animations",
+      "shimmer": {
+        "recipe": "loading-skeleton",
+        "duration": "long-3",
+        "easing": "linear",
+        "loop": true,
+        "gradient-width": "200%"
+      },
+      "pulse": {
+        "duration": "long-2",
+        "opacity": [0.4, 0.7, 0.4],
+        "loop": true
+      }
+    },
+
+    "carousel": {
+      "$description": "Carousel/slider animations",
+      "slide": {
+        "duration": "medium-2",
+        "easing": "emphasized-decelerate"
+      },
+      "indicators": {
+        "active-scale": 1.2,
+        "duration": "short-3"
+      },
+      "autoplay": {
+        "progress-bar": true,
+        "pause-on-hover": true
+      }
+    },
+
+    "navigation": {
+      "$description": "Navigation menu animations",
+      "mobile-menu": {
+        "opening": {
+          "duration": "medium-1",
+          "easing": "emphasized-decelerate",
+          "type": "slide-in",
+          "from": "left"
+        },
+        "closing": {
+          "duration": "short-4",
+          "easing": "emphasized-accelerate"
+        },
+        "backdrop": {
+          "opacity": 0.5,
+          "blur": 4
+        }
+      },
+      "hamburger": {
+        "duration": "short-3",
+        "type": "morph-to-x"
+      },
+      "breadcrumb": {
+        "separator-fade": true
+      }
+    },
+
+    "radio": {
+      "$description": "Radio button animations",
+      "states": {
+        "unchecked": {
+          "inner-circle": { "scale": 0, "opacity": 0 }
+        },
+        "checking": {
+          "duration": "short-3",
+          "easing": "emphasized-decelerate",
+          "inner-circle": {
+            "scale": { "from": 0, "to": 1 },
+            "opacity": { "from": 0, "to": 1 }
+          }
+        },
+        "checked": {
+          "inner-circle": { "scale": 1, "opacity": 1 }
+        },
+        "focus": {
+          "ring": true
+        },
+        "disabled": {
+          "opacity": 0.5
+        }
+      },
+      "variations": {
+        "elegant": {
+          "checking": { "easing": "standard" }
+        },
+        "professional": {
+          "checking": { "easing": "standard" }
+        },
+        "friendly": {
+          "checking": { "scale-bounce": 1.1 }
+        },
+        "playful": {
+          "checking": { "easing": "spring-bouncy", "scale-bounce": 1.2 }
+        },
+        "bold": {
+          "checking": { "duration": "short-2" }
+        }
+      }
+    },
+
+    "slider": {
+      "$description": "Range slider animations",
+      "states": {
+        "idle": {
+          "thumb": { "scale": 1 }
+        },
+        "hover": {
+          "duration": "short-2",
+          "thumb": { "scale": 1.1 }
+        },
+        "dragging": {
+          "thumb": { "scale": 1.15 },
+          "track-highlight": true
+        },
+        "focus": {
+          "ring": true,
+          "thumb": { "scale": 1.05 }
+        },
+        "disabled": {
+          "opacity": 0.5
+        }
+      },
+      "thumb": {
+        "duration": "short-3",
+        "easing": "spring-snappy"
+      },
+      "track": {
+        "fill-animation": {
+          "duration": "short-2",
+          "easing": "standard"
+        }
+      },
+      "variations": {
+        "elegant": {
+          "thumb": { "scale-hover": 1.05 }
+        },
+        "professional": {
+          "thumb": { "scale-hover": 1.08 }
+        },
+        "friendly": {
+          "thumb": { "scale-hover": 1.12 }
+        },
+        "playful": {
+          "thumb": { "scale-hover": 1.2, "easing": "spring-bouncy" }
+        },
+        "bold": {
+          "thumb": { "scale-hover": 1.15 }
+        }
+      }
+    },
+
+    "drawer": {
+      "$description": "Side drawer/sheet animations",
+      "states": {
+        "closed": {
+          "transform": "translateX(-100%)",
+          "visibility": "hidden"
+        },
+        "opening": {
+          "duration": "medium-2",
+          "easing": "emphasized-decelerate",
+          "from": { "x": "-100%" },
+          "to": { "x": 0 }
+        },
+        "open": {
+          "transform": "translateX(0)"
+        },
+        "closing": {
+          "duration": "short-4",
+          "easing": "emphasized-accelerate"
+        }
+      },
+      "backdrop": {
+        "duration": "medium-1",
+        "opacity": { "from": 0, "to": 0.5 },
+        "blur": { "from": 0, "to": 4 }
+      },
+      "positions": {
+        "left": { "from": "-100%", "to": 0, "axis": "x" },
+        "right": { "from": "100%", "to": 0, "axis": "x" },
+        "top": { "from": "-100%", "to": 0, "axis": "y" },
+        "bottom": { "from": "100%", "to": 0, "axis": "y" }
+      },
+      "variations": {
+        "elegant": {
+          "opening": { "duration": "medium-3" }
+        },
+        "professional": {
+          "opening": { "duration": "medium-1" }
+        },
+        "friendly": {
+          "opening": { "duration": "medium-2" }
+        },
+        "playful": {
+          "opening": { "easing": "spring-standard" }
+        },
+        "bold": {
+          "opening": { "duration": "short-4" }
+        }
+      }
+    },
+
+    "fab": {
+      "$description": "Floating action button animations",
+      "states": {
+        "idle": {
+          "transform": "scale(1)",
+          "shadow": "elevation-2"
+        },
+        "hover": {
+          "duration": "short-3",
+          "transform": "scale(1.05)",
+          "shadow": "elevation-3"
+        },
+        "press": {
+          "duration": "short-2",
+          "transform": "scale(0.95)"
+        },
+        "extended": {
+          "duration": "short-4",
+          "width": "auto",
+          "label-fade-in": true
+        },
+        "collapsed": {
+          "duration": "short-3",
+          "width": "56px",
+          "label-fade-out": true
+        }
+      },
+      "entrance": {
+        "duration": "medium-1",
+        "easing": "emphasized-decelerate",
+        "from": { "scale": 0, "opacity": 0 },
+        "to": { "scale": 1, "opacity": 1 }
+      },
+      "variations": {
+        "elegant": {
+          "hover": { "transform": "scale(1.02)" }
+        },
+        "professional": {
+          "hover": { "transform": "scale(1.03)" }
+        },
+        "friendly": {
+          "hover": { "transform": "scale(1.05)" }
+        },
+        "playful": {
+          "hover": { "transform": "scale(1.08) rotate(5deg)" },
+          "entrance": { "easing": "spring-bouncy" }
+        },
+        "bold": {
+          "hover": { "transform": "scale(1.06)" }
+        }
+      }
+    },
+
+    "popover": {
+      "$description": "Popover/menu animations",
+      "states": {
+        "hidden": {
+          "opacity": 0,
+          "scale": 0.95
+        },
+        "appearing": {
+          "duration": "short-4",
+          "easing": "emphasized-decelerate",
+          "from": { "opacity": 0, "scale": 0.95 },
+          "to": { "opacity": 1, "scale": 1 }
+        },
+        "visible": {
+          "opacity": 1,
+          "scale": 1
+        },
+        "hiding": {
+          "duration": "short-3",
+          "easing": "emphasized-accelerate"
+        }
+      },
+      "positions": {
+        "top": { "origin": "bottom center", "offset-y": -8 },
+        "bottom": { "origin": "top center", "offset-y": 8 },
+        "left": { "origin": "right center", "offset-x": -8 },
+        "right": { "origin": "left center", "offset-x": 8 }
+      },
+      "variations": {
+        "elegant": {
+          "appearing": { "from": { "opacity": 0 } }
+        },
+        "professional": {
+          "appearing": { "from": { "opacity": 0, "y": 4 } }
+        },
+        "friendly": {
+          "appearing": { "from": { "opacity": 0, "scale": 0.96 } }
+        },
+        "playful": {
+          "appearing": { "easing": "spring-snappy" }
+        },
+        "bold": {
+          "appearing": { "duration": "short-3" }
+        }
+      }
+    },
+
+    "stepper": {
+      "$description": "Step indicator animations",
+      "states": {
+        "inactive": {
+          "opacity": 0.5,
+          "scale": 1
+        },
+        "active": {
+          "duration": "short-3",
+          "opacity": 1,
+          "scale": 1.1
+        },
+        "completed": {
+          "duration": "short-4",
+          "check-draw": true,
+          "color": "success"
+        }
+      },
+      "connector": {
+        "fill-animation": {
+          "duration": "medium-1",
+          "easing": "standard"
+        }
+      },
+      "step-transition": {
+        "duration": "short-4",
+        "easing": "emphasized-decelerate"
+      },
+      "variations": {
+        "elegant": {
+          "active": { "scale": 1.05 }
+        },
+        "professional": {
+          "active": { "scale": 1.05 }
+        },
+        "friendly": {
+          "active": { "scale": 1.1 }
+        },
+        "playful": {
+          "active": { "scale": 1.15, "easing": "spring-bouncy" }
+        },
+        "bold": {
+          "active": { "scale": 1.12 }
+        }
+      }
+    },
+
+    "pagination": {
+      "$description": "Pagination controls animations",
+      "states": {
+        "idle": {},
+        "hover": {
+          "duration": "short-2",
+          "background": "highlight"
+        },
+        "active": {
+          "duration": "short-3",
+          "background": "primary",
+          "scale": 1.05
+        },
+        "disabled": {
+          "opacity": 0.5
+        }
+      },
+      "page-transition": {
+        "indicator-slide": {
+          "duration": "short-4",
+          "easing": "standard"
+        }
+      },
+      "variations": {
+        "elegant": {
+          "active": { "scale": 1.0 }
+        },
+        "professional": {
+          "active": { "scale": 1.02 }
+        },
+        "friendly": {
+          "active": { "scale": 1.05 }
+        },
+        "playful": {
+          "active": { "scale": 1.1, "easing": "spring-snappy" }
+        },
+        "bold": {
+          "active": { "scale": 1.08 }
+        }
+      }
+    }
+  },
+
+  "global-state-transitions": {
+    "$description": "Default transition for state changes",
+    "hover": {
+      "duration": "short-3",
+      "easing": "standard-decelerate"
+    },
+    "focus": {
+      "duration": "short-2",
+      "easing": "standard"
+    },
+    "active": {
+      "duration": "short-2",
+      "easing": "emphasized-decelerate"
+    },
+    "disabled": {
+      "duration": 0
+    }
+  },
+
+  "video-typography": {
+    "$description": "Typography constraints for video content. Ensures readable text at all resolutions.",
+
+    "title": {
+      "base-size": 80,
+      "min-size": 48,
+      "scale-with-width": true,
+      "baseline-width": 1920,
+      "$description": "Main title/headline. Scales proportionally but never below 48px."
+    },
+    "subtitle": {
+      "base-size": 32,
+      "min-size": 24,
+      "scale-with-width": true,
+      "baseline-width": 1920,
+      "$description": "Secondary title/subtitle. Scales but never below 24px."
+    },
+    "lower-third-name": {
+      "base-size": 28,
+      "min-size": 20,
+      "scale-with-width": true,
+      "baseline-width": 1920,
+      "$description": "Name text in lower thirds. Never below 20px for readability."
+    },
+    "lower-third-title": {
+      "base-size": 18,
+      "min-size": 14,
+      "scale-with-width": true,
+      "baseline-width": 1920,
+      "$description": "Title/role text in lower thirds. Never below 14px."
+    },
+    "body": {
+      "base-size": 24,
+      "min-size": 18,
+      "scale-with-width": true,
+      "baseline-width": 1920,
+      "$description": "Body text for descriptions. Never below 18px."
+    },
+    "caption": {
+      "base-size": 16,
+      "min-size": 14,
+      "scale-with-width": false,
+      "$description": "Captions and small text. Fixed size, never scales below 14px."
+    },
+
+    "scaling-formula": {
+      "$description": "How to calculate responsive sizes",
+      "formula": "max(minSize, round(baseSize * (videoWidth / baselineWidth)))",
+      "example": {
+        "1920-width": "title = max(48, round(80 * 1)) = 80px",
+        "1280-width": "title = max(48, round(80 * 0.67)) = 54px",
+        "960-width": "title = max(48, round(80 * 0.5)) = 48px (min)"
+      }
+    }
+  },
+
+  "video-scene-timing": {
+    "$description": "Scene timing guidelines for video content",
+
+    "content-start": {
+      "immediate": {
+        "frames": 0,
+        "ms": 0,
+        "$description": "Default. Content starts immediately. No dead air."
+      },
+      "short": {
+        "frames-at-30fps": 6,
+        "ms": 200,
+        "$description": "Brief pause. Use only for dramatic effect after audio cue."
+      },
+      "standard": {
+        "frames-at-30fps": 15,
+        "ms": 500,
+        "$description": "Maximum pause. Use sparingly for major section breaks."
+      }
+    },
+
+    "guidelines": {
+      "first-scene": "Always use 'immediate' unless there's a specific audio cue",
+      "between-scenes": "Use 100-150ms crossfade, not pixel dissolve",
+      "max-dead-air": "Never exceed 500ms before visible content"
+    }
+  }
+}

@@ -1,0 +1,322 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Intent tokens for semantic motion purpose. Maps WHY something animates to HOW it should move.",
+
+  "$token-references": {
+    "$description": "W3C DTCG token reference paths",
+    "easing": "tokens/easing.tokens.json",
+    "duration": "tokens/duration.tokens.json",
+    "emotion": "tokens/emotion.tokens.json"
+  },
+
+  "intent": {
+    "$description": "Semantic intent layer for motion design - the WHY behind animation",
+
+    "primary-intents": {
+      "$description": "Core motion purposes that drive animation selection",
+
+      "clarify": {
+        "$description": "Make something understood - reveals, explanations, state changes",
+        "speed": {
+          "$value": "measured",
+          "$type": "string",
+          "$description": "Measured pace allows comprehension"
+        },
+        "intensity": {
+          "$value": 0.4,
+          "$type": "number",
+          "$description": "Moderate intensity - clear but not overwhelming"
+        },
+        "duration-multiplier": {
+          "$value": 1.2,
+          "$type": "number",
+          "$description": "Slightly longer for understanding"
+        },
+        "easing-ref": {
+          "$value": "{motion.easing.standard-decelerate}",
+          "$type": "string"
+        },
+        "patterns": {
+          "$value": ["fade-in", "reveal", "highlight", "expand-detail"],
+          "$type": "array",
+          "$description": "Motion patterns appropriate for clarification"
+        },
+        "emotion-affinity": {
+          "$value": ["calming", "trustworthy", "professional"],
+          "$type": "array"
+        }
+      },
+
+      "guide": {
+        "$description": "Direct attention - navigation, onboarding, tutorials",
+        "speed": {
+          "$value": "deliberate",
+          "$type": "string",
+          "$description": "Purposeful pace that leads the eye"
+        },
+        "intensity": {
+          "$value": 0.5,
+          "$type": "number"
+        },
+        "duration-multiplier": {
+          "$value": 1.1,
+          "$type": "number"
+        },
+        "easing-ref": {
+          "$value": "{motion.easing.emphasized-decelerate}",
+          "$type": "string"
+        },
+        "patterns": {
+          "$value": ["slide-to", "spotlight", "path-trace", "pointer-follow"],
+          "$type": "array"
+        },
+        "attention-priority": {
+          "$value": "high",
+          "$type": "string",
+          "$description": "Guide animations demand attention"
+        },
+        "emotion-affinity": {
+          "$value": ["welcoming", "professional", "trustworthy"],
+          "$type": "array"
+        }
+      },
+
+      "confirm": {
+        "$description": "Acknowledge action - feedback, validation, completion",
+        "speed": {
+          "$value": "responsive",
+          "$type": "string",
+          "$description": "Quick response to user action"
+        },
+        "intensity": {
+          "$value": 0.6,
+          "$type": "number"
+        },
+        "duration-multiplier": {
+          "$value": 0.9,
+          "$type": "number",
+          "$description": "Slightly faster for responsiveness"
+        },
+        "easing-ref": {
+          "$value": "{motion.spring.default.spatial}",
+          "$type": "string"
+        },
+        "patterns": {
+          "$value": ["scale-pulse", "checkmark", "color-flash", "ripple"],
+          "$type": "array"
+        },
+        "haptic-pair": {
+          "$value": "light-impact",
+          "$type": "string",
+          "$description": "Suggested haptic feedback pairing"
+        },
+        "emotion-affinity": {
+          "$value": ["celebratory", "trustworthy", "professional"],
+          "$type": "array"
+        }
+      },
+
+      "warn": {
+        "$description": "Alert to danger - errors, destructive actions, limits",
+        "speed": {
+          "$value": "urgent",
+          "$type": "string",
+          "$description": "Immediate attention required"
+        },
+        "intensity": {
+          "$value": 0.8,
+          "$type": "number"
+        },
+        "duration-multiplier": {
+          "$value": 0.85,
+          "$type": "number"
+        },
+        "easing-ref": {
+          "$value": "{motion.easing.emphasized-accelerate}",
+          "$type": "string"
+        },
+        "patterns": {
+          "$value": ["shake", "pulse-ring", "flash-border", "bounce-reject"],
+          "$type": "array"
+        },
+        "repetition": {
+          "$value": 2,
+          "$type": "number",
+          "$description": "Number of repetitions for emphasis"
+        },
+        "accessibility-note": {
+          "$value": "Never rely on motion alone for warnings; pair with color, icon, and text",
+          "$type": "string"
+        },
+        "emotion-affinity": {
+          "$value": ["urgent", "frustrated"],
+          "$type": "array"
+        }
+      },
+
+      "celebrate": {
+        "$description": "Mark achievement - success, milestones, rewards",
+        "speed": {
+          "$value": "expressive",
+          "$type": "string",
+          "$description": "Full expression of positive moment"
+        },
+        "intensity": {
+          "$value": 1.0,
+          "$type": "number"
+        },
+        "duration-multiplier": {
+          "$value": 1.3,
+          "$type": "number",
+          "$description": "Extended for savoring the moment"
+        },
+        "easing-ref": {
+          "$value": "{motion.spring.legacy.bouncy}",
+          "$type": "string"
+        },
+        "patterns": {
+          "$value": ["burst", "confetti", "scale-bounce", "glow-pulse", "particle-shower"],
+          "$type": "array"
+        },
+        "secondary-effects": {
+          "$value": true,
+          "$type": "boolean",
+          "$description": "Enable particles, glows, etc."
+        },
+        "emotion-affinity": {
+          "$value": ["celebratory", "delightful", "energetic"],
+          "$type": "array"
+        }
+      },
+
+      "reveal": {
+        "$description": "Unveil something new - content reveal, surprise, discovery",
+        "speed": {
+          "$value": "theatrical",
+          "$type": "string",
+          "$description": "Dramatic pacing for impact"
+        },
+        "intensity": {
+          "$value": 0.7,
+          "$type": "number"
+        },
+        "duration-multiplier": {
+          "$value": 1.4,
+          "$type": "number"
+        },
+        "easing-ref": {
+          "$value": "{motion.easing.standard-decelerate}",
+          "$type": "string",
+          "$description": "Slow easing for theatrical reveals"
+        },
+        "patterns": {
+          "$value": ["curtain-pull", "mask-reveal", "blur-to-sharp", "emerge-from-depth"],
+          "$type": "array"
+        },
+        "anticipation": {
+          "$value": 0.25,
+          "$type": "number",
+          "$description": "Anticipation phase duration ratio"
+        },
+        "emotion-affinity": {
+          "$value": ["mysterious", "delightful", "welcoming"],
+          "$type": "array"
+        }
+      }
+    },
+
+    "secondary-intents": {
+      "$description": "Supporting motion purposes",
+
+      "connect": {
+        "$description": "Show relationship between elements",
+        "patterns": { "$value": ["morph", "shared-element", "path-connect"], "$type": "array" },
+        "intensity": { "$value": 0.5, "$type": "number" }
+      },
+
+      "orient": {
+        "$description": "Establish spatial context",
+        "patterns": { "$value": ["parallax", "perspective-shift", "spatial-zoom"], "$type": "array" },
+        "intensity": { "$value": 0.4, "$type": "number" }
+      },
+
+      "indicate": {
+        "$description": "Show state or status without demanding attention",
+        "patterns": { "$value": ["subtle-pulse", "color-shift", "icon-morph"], "$type": "array" },
+        "intensity": { "$value": 0.25, "$type": "number" }
+      },
+
+      "dismiss": {
+        "$description": "Remove from focus or context",
+        "patterns": { "$value": ["fade-out", "slide-away", "shrink-collapse"], "$type": "array" },
+        "intensity": { "$value": 0.35, "$type": "number" }
+      },
+
+      "group": {
+        "$description": "Show elements belong together",
+        "patterns": { "$value": ["synchronized-motion", "boundary-draw", "collect-gather"], "$type": "array" },
+        "intensity": { "$value": 0.4, "$type": "number" }
+      },
+
+      "separate": {
+        "$description": "Show elements are distinct",
+        "patterns": { "$value": ["explode-apart", "stagger-diverge", "color-differentiate"], "$type": "array" },
+        "intensity": { "$value": 0.5, "$type": "number" }
+      }
+    },
+
+    "intent-combinations": {
+      "$description": "Common intent pairings",
+
+      "guide-then-confirm": {
+        "$value": ["guide", "confirm"],
+        "$type": "array",
+        "$description": "Lead user to action, then acknowledge"
+      },
+
+      "reveal-then-clarify": {
+        "$value": ["reveal", "clarify"],
+        "$type": "array",
+        "$description": "Show new content, then explain it"
+      },
+
+      "warn-then-guide": {
+        "$value": ["warn", "guide"],
+        "$type": "array",
+        "$description": "Alert to problem, then show solution path"
+      },
+
+      "confirm-then-celebrate": {
+        "$value": ["confirm", "celebrate"],
+        "$type": "array",
+        "$description": "Acknowledge action, then reward achievement"
+      }
+    },
+
+    "context-modifiers": {
+      "$description": "How context affects intent expression",
+
+      "first-time": {
+        "intensity-boost": { "$value": 0.15, "$type": "number" },
+        "duration-boost": { "$value": 1.15, "$type": "number" },
+        "$description": "Enhanced expression for new users"
+      },
+
+      "repeat-action": {
+        "intensity-reduction": { "$value": 0.2, "$type": "number" },
+        "duration-reduction": { "$value": 0.85, "$type": "number" },
+        "$description": "Reduced expression for familiar actions"
+      },
+
+      "high-stakes": {
+        "intensity-boost": { "$value": 0.2, "$type": "number" },
+        "$description": "Enhanced for important moments (checkout, delete)"
+      },
+
+      "background-task": {
+        "intensity-reduction": { "$value": 0.5, "$type": "number" },
+        "$description": "Minimal distraction for secondary processes"
+      }
+    }
+  }
+}

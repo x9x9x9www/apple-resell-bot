@@ -1,0 +1,322 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Emotional journey state machine tokens. Defines user emotional states and valid transitions for journey-coherent motion design.",
+
+  "$token-references": {
+    "$description": "W3C DTCG token reference paths",
+    "emotion": "tokens/emotion.tokens.json",
+    "intent": "tokens/intent.tokens.json"
+  },
+
+  "emotional-journey": {
+    "$description": "State machine for user emotional journey through an experience",
+
+    "journey-states": {
+      "$description": "Discrete emotional states a user can occupy",
+
+      "neutral": {
+        "$description": "Default resting state - no strong emotion",
+        "arousal": { "$value": "low", "$type": "string" },
+        "valence": { "$value": "neutral", "$type": "string" },
+        "motion-profile": {
+          "$value": "minimal",
+          "$type": "string",
+          "$description": "Subtle, non-distracting motion"
+        },
+        "valid-transitions": {
+          "$value": ["curious", "confused", "engaged"],
+          "$type": "array"
+        },
+        "is-stable": { "$value": true, "$type": "boolean" }
+      },
+
+      "curious": {
+        "$description": "Interested, exploring - wants to learn more",
+        "arousal": { "$value": "medium", "$type": "string" },
+        "valence": { "$value": "positive", "$type": "string" },
+        "motion-profile": {
+          "$value": "inviting",
+          "$type": "string",
+          "$description": "Gentle reveals, encouraging motion"
+        },
+        "valid-transitions": {
+          "$value": ["engaged", "confused", "neutral"],
+          "$type": "array"
+        },
+        "intent-affinity": { "$value": ["reveal", "clarify", "guide"], "$type": "array" }
+      },
+
+      "engaged": {
+        "$description": "Actively participating - focused on task",
+        "arousal": { "$value": "medium-high", "$type": "string" },
+        "valence": { "$value": "positive", "$type": "string" },
+        "motion-profile": {
+          "$value": "responsive",
+          "$type": "string",
+          "$description": "Quick feedback, clear confirmations"
+        },
+        "valid-transitions": {
+          "$value": ["accomplished", "frustrated", "curious", "focused"],
+          "$type": "array"
+        },
+        "intent-affinity": { "$value": ["confirm", "guide"], "$type": "array" }
+      },
+
+      "focused": {
+        "$description": "Deep concentration - minimal interruption desired",
+        "arousal": { "$value": "medium", "$type": "string" },
+        "valence": { "$value": "neutral", "$type": "string" },
+        "motion-profile": {
+          "$value": "minimal",
+          "$type": "string",
+          "$description": "Reduced motion, no distractions"
+        },
+        "valid-transitions": {
+          "$value": ["engaged", "accomplished", "frustrated"],
+          "$type": "array"
+        },
+        "intent-affinity": { "$value": ["confirm", "indicate"], "$type": "array" },
+        "motion-reduction": { "$value": 0.5, "$type": "number" }
+      },
+
+      "confused": {
+        "$description": "Lost, uncertain - needs guidance",
+        "arousal": { "$value": "medium", "$type": "string" },
+        "valence": { "$value": "negative", "$type": "string" },
+        "motion-profile": {
+          "$value": "clarifying",
+          "$type": "string",
+          "$description": "Clear, explanatory motion"
+        },
+        "valid-transitions": {
+          "$value": ["curious", "engaged", "frustrated", "clarified"],
+          "$type": "array"
+        },
+        "intent-affinity": { "$value": ["clarify", "guide"], "$type": "array" },
+        "requires-resolution": { "$value": true, "$type": "boolean" }
+      },
+
+      "clarified": {
+        "$description": "Just understood something - moment of clarity",
+        "arousal": { "$value": "medium", "$type": "string" },
+        "valence": { "$value": "positive", "$type": "string" },
+        "motion-profile": {
+          "$value": "affirming",
+          "$type": "string"
+        },
+        "valid-transitions": {
+          "$value": ["engaged", "curious", "neutral"],
+          "$type": "array"
+        },
+        "intent-affinity": { "$value": ["confirm"], "$type": "array" },
+        "is-transient": { "$value": true, "$type": "boolean" }
+      },
+
+      "frustrated": {
+        "$description": "Blocked, annoyed - error state or obstacle",
+        "arousal": { "$value": "high", "$type": "string" },
+        "valence": { "$value": "negative", "$type": "string" },
+        "motion-profile": {
+          "$value": "recovery",
+          "$type": "string",
+          "$description": "Clear paths forward, calming presence"
+        },
+        "valid-transitions": {
+          "$value": ["neutral", "engaged", "clarified"],
+          "$type": "array"
+        },
+        "intent-affinity": { "$value": ["warn", "guide", "clarify"], "$type": "array" },
+        "requires-resolution": { "$value": true, "$type": "boolean" },
+        "max-dwell-time": { "$value": "3000ms", "$type": "duration" }
+      },
+
+      "accomplished": {
+        "$description": "Completed a task - satisfaction",
+        "arousal": { "$value": "medium-high", "$type": "string" },
+        "valence": { "$value": "positive", "$type": "string" },
+        "motion-profile": {
+          "$value": "rewarding",
+          "$type": "string"
+        },
+        "valid-transitions": {
+          "$value": ["engaged", "delighted", "neutral", "curious"],
+          "$type": "array"
+        },
+        "intent-affinity": { "$value": ["confirm", "celebrate"], "$type": "array" }
+      },
+
+      "delighted": {
+        "$description": "Exceeded expectations - joy, surprise",
+        "arousal": { "$value": "high", "$type": "string" },
+        "valence": { "$value": "positive", "$type": "string" },
+        "motion-profile": {
+          "$value": "celebratory",
+          "$type": "string"
+        },
+        "valid-transitions": {
+          "$value": ["accomplished", "engaged", "neutral"],
+          "$type": "array"
+        },
+        "intent-affinity": { "$value": ["celebrate", "reveal"], "$type": "array" },
+        "is-transient": { "$value": true, "$type": "boolean" }
+      },
+
+      "anticipating": {
+        "$description": "Expecting something - waiting state",
+        "arousal": { "$value": "medium", "$type": "string" },
+        "valence": { "$value": "neutral", "$type": "string" },
+        "motion-profile": {
+          "$value": "progressive",
+          "$type": "string",
+          "$description": "Loading indicators, progress feedback"
+        },
+        "valid-transitions": {
+          "$value": ["engaged", "frustrated", "delighted", "accomplished"],
+          "$type": "array"
+        },
+        "intent-affinity": { "$value": ["indicate"], "$type": "array" }
+      }
+    },
+
+    "transition-events": {
+      "$description": "Events that trigger emotional state transitions",
+
+      "action-success": {
+        "from": { "$value": ["engaged", "focused", "anticipating"], "$type": "array" },
+        "to": { "$value": "accomplished", "$type": "string" },
+        "motion-response": { "$value": "confirm", "$type": "string" }
+      },
+
+      "action-failure": {
+        "from": { "$value": ["engaged", "focused", "anticipating"], "$type": "array" },
+        "to": { "$value": "frustrated", "$type": "string" },
+        "motion-response": { "$value": "warn", "$type": "string" }
+      },
+
+      "milestone-reached": {
+        "from": { "$value": ["accomplished"], "$type": "array" },
+        "to": { "$value": "delighted", "$type": "string" },
+        "motion-response": { "$value": "celebrate", "$type": "string" }
+      },
+
+      "help-requested": {
+        "from": { "$value": ["confused", "frustrated"], "$type": "array" },
+        "to": { "$value": "clarified", "$type": "string" },
+        "motion-response": { "$value": "clarify", "$type": "string" }
+      },
+
+      "new-content-discovered": {
+        "from": { "$value": ["neutral", "engaged"], "$type": "array" },
+        "to": { "$value": "curious", "$type": "string" },
+        "motion-response": { "$value": "reveal", "$type": "string" }
+      },
+
+      "task-started": {
+        "from": { "$value": ["neutral", "curious"], "$type": "array" },
+        "to": { "$value": "engaged", "$type": "string" },
+        "motion-response": { "$value": "guide", "$type": "string" }
+      },
+
+      "deep-work-entered": {
+        "from": { "$value": ["engaged"], "$type": "array" },
+        "to": { "$value": "focused", "$type": "string" },
+        "motion-response": { "$value": "indicate", "$type": "string" }
+      },
+
+      "loading-started": {
+        "from": { "$value": ["engaged", "neutral"], "$type": "array" },
+        "to": { "$value": "anticipating", "$type": "string" },
+        "motion-response": { "$value": "indicate", "$type": "string" }
+      },
+
+      "recovery-offered": {
+        "from": { "$value": ["frustrated"], "$type": "array" },
+        "to": { "$value": "engaged", "$type": "string" },
+        "motion-response": { "$value": "guide", "$type": "string" }
+      }
+    },
+
+    "journey-archetypes": {
+      "$description": "Common emotional journeys through experiences",
+
+      "onboarding": {
+        "typical-path": {
+          "$value": ["neutral", "curious", "engaged", "accomplished", "delighted"],
+          "$type": "array"
+        },
+        "motion-strategy": {
+          "$value": "progressive-revelation",
+          "$type": "string"
+        }
+      },
+
+      "checkout": {
+        "typical-path": {
+          "$value": ["engaged", "focused", "anticipating", "accomplished"],
+          "$type": "array"
+        },
+        "motion-strategy": {
+          "$value": "clear-confirmation",
+          "$type": "string"
+        }
+      },
+
+      "error-recovery": {
+        "typical-path": {
+          "$value": ["engaged", "frustrated", "clarified", "engaged", "accomplished"],
+          "$type": "array"
+        },
+        "motion-strategy": {
+          "$value": "calm-guide",
+          "$type": "string"
+        }
+      },
+
+      "discovery": {
+        "typical-path": {
+          "$value": ["neutral", "curious", "engaged", "curious", "delighted"],
+          "$type": "array"
+        },
+        "motion-strategy": {
+          "$value": "reward-exploration",
+          "$type": "string"
+        }
+      },
+
+      "deep-work": {
+        "typical-path": {
+          "$value": ["engaged", "focused", "accomplished"],
+          "$type": "array"
+        },
+        "motion-strategy": {
+          "$value": "minimal-distraction",
+          "$type": "string"
+        }
+      }
+    },
+
+    "transition-motion": {
+      "$description": "Motion parameters for state transitions",
+
+      "positive-transition": {
+        "$description": "Moving to a more positive state",
+        "easing": { "$value": "{motion.easing.emphasized-decelerate}", "$type": "string" },
+        "duration-multiplier": { "$value": 1.1, "$type": "number" },
+        "secondary-effects": { "$value": true, "$type": "boolean" }
+      },
+
+      "negative-transition": {
+        "$description": "Moving to a more negative state",
+        "easing": { "$value": "{motion.easing.emphasized-accelerate}", "$type": "string" },
+        "duration-multiplier": { "$value": 0.9, "$type": "number" },
+        "secondary-effects": { "$value": false, "$type": "boolean" }
+      },
+
+      "neutral-transition": {
+        "$description": "Returning to neutral or lateral movement",
+        "easing": { "$value": "{motion.easing.standard}", "$type": "string" },
+        "duration-multiplier": { "$value": 1.0, "$type": "number" }
+      }
+    }
+  }
+}

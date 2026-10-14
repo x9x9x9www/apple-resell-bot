@@ -1,0 +1,268 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "3D Transform and Depth tokens for perspective, z-positioning, and spatial motion effects.",
+
+  "perspective": {
+    "$description": "CSS perspective values defining the viewer distance from the z-plane",
+
+    "shallow": {
+      "$type": "dimension",
+      "$value": "1200px",
+      "$description": "Minimal 3D effect. Subtle depth perception. Safe for most UI."
+    },
+
+    "medium": {
+      "$type": "dimension",
+      "$value": "800px",
+      "$description": "Standard 3D perspective. Card flips, page turns, rotations."
+    },
+
+    "deep": {
+      "$type": "dimension",
+      "$value": "500px",
+      "$description": "Pronounced 3D effect. Dramatic transforms, immersive experiences."
+    },
+
+    "extreme": {
+      "$type": "dimension",
+      "$value": "300px",
+      "$description": "Maximum depth distortion. Hero animations, showcase moments."
+    },
+
+    "flat": {
+      "$type": "dimension",
+      "$value": "none",
+      "$description": "No perspective. 2D transforms only. Use for simple rotations."
+    }
+  },
+
+  "z-offset": {
+    "$description": "translateZ values for layering and depth positioning",
+
+    "subtle": {
+      "$type": "dimension",
+      "$value": "10px",
+      "$description": "Barely perceptible depth. Hover states, subtle lifts."
+    },
+
+    "small": {
+      "$type": "dimension",
+      "$value": "20px",
+      "$description": "Noticeable lift. Card hovers, focused elements."
+    },
+
+    "medium": {
+      "$type": "dimension",
+      "$value": "40px",
+      "$description": "Clear depth separation. Modal dialogs, overlays."
+    },
+
+    "large": {
+      "$type": "dimension",
+      "$value": "80px",
+      "$description": "Dramatic depth. Hero elements, featured content."
+    },
+
+    "extreme": {
+      "$type": "dimension",
+      "$value": "150px",
+      "$description": "Maximum depth. Breakthrough effects, dramatic reveals."
+    }
+  },
+
+  "rotation-3d": {
+    "$description": "Common 3D rotation presets",
+
+    "flip-horizontal": {
+      "$type": "object",
+      "$value": {
+        "axis": "Y",
+        "degrees": 180,
+        "use": "card-flip"
+      },
+      "$description": "Full horizontal flip around Y axis. Card flip reveals."
+    },
+
+    "flip-vertical": {
+      "$type": "object",
+      "$value": {
+        "axis": "X",
+        "degrees": 180,
+        "use": "panel-flip"
+      },
+      "$description": "Full vertical flip around X axis. Panel transitions."
+    },
+
+    "tilt-forward": {
+      "$type": "object",
+      "$value": {
+        "axis": "X",
+        "degrees": -10,
+        "use": "hover-state"
+      },
+      "$description": "Slight forward tilt. 3D hover effect."
+    },
+
+    "tilt-back": {
+      "$type": "object",
+      "$value": {
+        "axis": "X",
+        "degrees": 10,
+        "use": "press-state"
+      },
+      "$description": "Slight backward tilt. Press feedback."
+    },
+
+    "swing-in": {
+      "$type": "object",
+      "$value": {
+        "axis": "Y",
+        "degrees": -90,
+        "direction": "to-visible"
+      },
+      "$description": "Door-swing entrance. From -90deg to 0deg."
+    },
+
+    "swing-out": {
+      "$type": "object",
+      "$value": {
+        "axis": "Y",
+        "degrees": 90,
+        "direction": "to-hidden"
+      },
+      "$description": "Door-swing exit. From 0deg to 90deg."
+    }
+  },
+
+  "transform-origin": {
+    "$description": "Transform origin presets for 3D rotations",
+
+    "center": {
+      "$type": "string",
+      "$value": "center center",
+      "$description": "Default center origin. Symmetric rotations."
+    },
+
+    "top": {
+      "$type": "string",
+      "$value": "center top",
+      "$description": "Hinge at top. Dropdown, fold-down effects."
+    },
+
+    "bottom": {
+      "$type": "string",
+      "$value": "center bottom",
+      "$description": "Hinge at bottom. Fold-up effects."
+    },
+
+    "left": {
+      "$type": "string",
+      "$value": "left center",
+      "$description": "Hinge at left edge. Door swing from left."
+    },
+
+    "right": {
+      "$type": "string",
+      "$value": "right center",
+      "$description": "Hinge at right edge. Door swing from right."
+    },
+
+    "top-left": {
+      "$type": "string",
+      "$value": "top left",
+      "$description": "Corner hinge. Page peel from corner."
+    },
+
+    "back": {
+      "$type": "string",
+      "$value": "center center -50px",
+      "$description": "Origin behind element. For inward rotations."
+    }
+  },
+
+  "layer-depth": {
+    "$description": "Semantic depth layers for z-ordering",
+
+    "background": {
+      "$type": "object",
+      "$value": {
+        "z": -100,
+        "scale": 0.9,
+        "blur": "2px"
+      },
+      "$description": "Far background layer. Parallax, depth of field."
+    },
+
+    "base": {
+      "$type": "object",
+      "$value": {
+        "z": 0,
+        "scale": 1.0,
+        "blur": "0px"
+      },
+      "$description": "Primary content plane. Normal z-position."
+    },
+
+    "elevated": {
+      "$type": "object",
+      "$value": {
+        "z": 30,
+        "scale": 1.0,
+        "blur": "0px"
+      },
+      "$description": "Slightly elevated. Cards, interactive elements."
+    },
+
+    "floating": {
+      "$type": "object",
+      "$value": {
+        "z": 60,
+        "scale": 1.02,
+        "blur": "0px"
+      },
+      "$description": "Floating above content. Modals, dialogs."
+    },
+
+    "overlay": {
+      "$type": "object",
+      "$value": {
+        "z": 100,
+        "scale": 1.05,
+        "blur": "0px"
+      },
+      "$description": "Top layer. Tooltips, popovers, focus elements."
+    }
+  },
+
+  "backface-visibility": {
+    "$description": "Backface visibility settings for 3D transforms",
+
+    "hidden": {
+      "$type": "string",
+      "$value": "hidden",
+      "$description": "Hide element when rotated away. Card flips with different front/back."
+    },
+
+    "visible": {
+      "$type": "string",
+      "$value": "visible",
+      "$description": "Show element backface (mirrored). Single-sided elements."
+    }
+  },
+
+  "preserve-3d": {
+    "$description": "Transform-style settings for nested 3D",
+
+    "preserve": {
+      "$type": "string",
+      "$value": "preserve-3d",
+      "$description": "Children maintain 3D positioning. Nested 3D transforms."
+    },
+
+    "flat": {
+      "$type": "string",
+      "$value": "flat",
+      "$description": "Children flattened to parent plane. Default, safer."
+    }
+  }
+}

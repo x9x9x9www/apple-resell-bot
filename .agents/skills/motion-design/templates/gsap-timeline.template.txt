@@ -1,0 +1,171 @@
+/**
+ * ===========================================
+ * GSAP Timeline Animation Template
+ * Generated from Motion Design Agent v2
+ * ===========================================
+ */
+
+import { gsap } from 'gsap';
+
+/**
+ * Animation: {{ANIMATION_NAME}}
+ * Duration: {{DURATION}}s ({{DURATION_TOKEN}})
+ * Easing: {{EASING_GSAP}}
+ * Principles: {{PRINCIPLES}}
+ */
+
+// Duration tokens (seconds)
+const duration = {
+  'short-1': 0.05,
+  'short-2': 0.1,
+  'short-3': 0.15,
+  'short-4': 0.2,
+  'medium-1': 0.25,
+  'medium-2': 0.3,
+  'medium-3': 0.35,
+  'medium-4': 0.4,
+  'long-1': 0.45,
+  'long-2': 0.5,
+};
+
+// Easing tokens
+const easing = {
+  standard: 'power2.out',
+  'emphasized-decelerate': 'power3.out',
+  'emphasized-accelerate': 'power2.in',
+  'standard-decelerate': 'power2.out',
+  linear: 'none',
+};
+
+// Check for reduced motion preference
+const prefersReducedMotion =
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/**
+ * {{ANIMATION_DESCRIPTION}}
+ * @param {HTMLElement|string} target - Element or selector to animate
+ * @param {Object} options - Animation options
+ * @returns {gsap.core.Timeline}
+ */
+export function {{FUNCTION_NAME}}(target, options = {}) {
+  const {
+    duration: dur = duration['{{DURATION_TOKEN}}'],
+    ease = easing['{{EASING_TOKEN}}'],
+    delay = 0,
+    onComplete,
+    {{#if HAS_STAGGER}}stagger = {{STAGGER_DEFAULT}},{{/if}}
+  } = options;
+
+  // Handle reduced motion
+  if (prefersReducedMotion) {
+    return gsap.to(target, {
+      opacity: 1,
+      duration: 0.1,
+      delay,
+      onComplete,
+    });
+  }
+
+  const tl = gsap.timeline({
+    delay,
+    onComplete,
+  });
+
+  {{#if IS_FROM_ANIMATION}}
+  // Animate FROM initial state
+  tl.from(target, {
+    {{FROM_PROPERTIES}}
+    duration: dur,
+    ease,
+    {{#if HAS_STAGGER}}stagger,{{/if}}
+  });
+  {{/if}}
+
+  {{#if IS_TO_ANIMATION}}
+  // Animate TO target state
+  tl.to(target, {
+    {{TO_PROPERTIES}}
+    duration: dur,
+    ease,
+    {{#if HAS_STAGGER}}stagger,{{/if}}
+  });
+  {{/if}}
+
+  {{#if HAS_SEQUENCE}}
+  // Sequence animation
+  {{SEQUENCE_TWEENS}}
+  {{/if}}
+
+  return tl;
+}
+
+/**
+ * Reverse/exit version of the animation
+ */
+export function {{FUNCTION_NAME}}Exit(target, options = {}) {
+  const {
+    duration: dur = duration['short-4'],
+    ease = easing['emphasized-accelerate'],
+    delay = 0,
+    onComplete,
+  } = options;
+
+  if (prefersReducedMotion) {
+    return gsap.to(target, {
+      opacity: 0,
+      duration: 0.1,
+      delay,
+      onComplete,
+    });
+  }
+
+  return gsap.to(target, {
+    {{EXIT_PROPERTIES}}
+    duration: dur,
+    ease,
+    delay,
+    onComplete,
+  });
+}
+
+{{#if HAS_STAGGER}}
+/**
+ * Staggered version for multiple elements
+ */
+export function {{FUNCTION_NAME}}Stagger(targets, options = {}) {
+  const {
+    stagger = {{STAGGER_DEFAULT}},
+    ...rest
+  } = options;
+
+  return {{FUNCTION_NAME}}(targets, { stagger, ...rest });
+}
+{{/if}}
+
+/* ===========================================
+   Usage Examples:
+
+   // Basic usage
+   {{FUNCTION_NAME}}('.element');
+
+   // With options
+   {{FUNCTION_NAME}}('.element', {
+     duration: 0.3,
+     delay: 0.1,
+     onComplete: () => console.log('done')
+   });
+
+   // Exit animation
+   {{FUNCTION_NAME}}Exit('.element');
+
+   {{#if HAS_STAGGER}}
+   // Staggered animation
+   {{FUNCTION_NAME}}Stagger('.items', { stagger: 0.05 });
+   {{/if}}
+   =========================================== */
+
+/* Token References:
+   Duration: {{DURATION_TOKEN}}
+   Easing: {{EASING_TOKEN}}
+   Recipe: {{RECIPE_REF}}
+*/

@@ -1,0 +1,235 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Scale transform tokens for sizing animations. Includes uniform scale, squash-stretch, and transform origin configurations.",
+
+  "motion": {
+    "scale": {
+      "$description": "Scale transform tokens",
+
+      "values": {
+        "$description": "Uniform scale multipliers",
+
+        "none": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "Zero scale (invisible). Use for scale-from-nothing entrances."
+        },
+        "tiny": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "50% scale. Use for dramatic shrink effects."
+        },
+        "small": {
+          "$value": 0.8,
+          "$type": "number",
+          "$description": "80% scale. Use for pressed states, recede effects."
+        },
+        "reduced": {
+          "$value": 0.9,
+          "$type": "number",
+          "$description": "90% scale. Use for subtle shrink on press."
+        },
+        "micro": {
+          "$value": 0.95,
+          "$type": "number",
+          "$description": "95% scale. Use for micro-feedback, button press. M3: container press."
+        },
+        "normal": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "100% scale (default). Rest state."
+        },
+        "emphasis": {
+          "$value": 1.02,
+          "$type": "number",
+          "$description": "102% scale. Subtle emphasis on hover/focus."
+        },
+        "slight": {
+          "$value": 1.05,
+          "$type": "number",
+          "$description": "105% scale. Noticeable but restrained emphasis."
+        },
+        "medium": {
+          "$value": 1.1,
+          "$type": "number",
+          "$description": "110% scale. Clear emphasis, hover state."
+        },
+        "large": {
+          "$value": 1.2,
+          "$type": "number",
+          "$description": "120% scale. Pop effect, celebration."
+        },
+        "xlarge": {
+          "$value": 1.5,
+          "$type": "number",
+          "$description": "150% scale. Dramatic emphasis, hero zoom."
+        },
+        "xxlarge": {
+          "$value": 2,
+          "$type": "number",
+          "$description": "200% scale. Extreme zoom, explosion effect."
+        }
+      },
+
+      "squash-stretch": {
+        "$description": "Non-uniform scale for organic motion (Disney Principle #1)",
+
+        "squash-subtle": {
+          "$value": { "x": 1.05, "y": 0.95 },
+          "$type": "object",
+          "$description": "Subtle squash. Gentle compression on impact."
+        },
+        "squash-medium": {
+          "$value": { "x": 1.15, "y": 0.85 },
+          "$type": "object",
+          "$description": "Medium squash. Visible compression on landing."
+        },
+        "squash-pronounced": {
+          "$value": { "x": 1.3, "y": 0.7 },
+          "$type": "object",
+          "$description": "Pronounced squash. Cartoon-style impact."
+        },
+        "squash-extreme": {
+          "$value": { "x": 1.5, "y": 0.5 },
+          "$type": "object",
+          "$description": "Extreme squash. Exaggerated cartoon impact."
+        },
+        "stretch-subtle": {
+          "$value": { "x": 0.95, "y": 1.05 },
+          "$type": "object",
+          "$description": "Subtle stretch. Gentle elongation during motion."
+        },
+        "stretch-medium": {
+          "$value": { "x": 0.85, "y": 1.15 },
+          "$type": "object",
+          "$description": "Medium stretch. Visible elongation during fast motion."
+        },
+        "stretch-pronounced": {
+          "$value": { "x": 0.7, "y": 1.3 },
+          "$type": "object",
+          "$description": "Pronounced stretch. Cartoon-style motion blur."
+        },
+        "stretch-extreme": {
+          "$value": { "x": 0.5, "y": 1.5 },
+          "$type": "object",
+          "$description": "Extreme stretch. Exaggerated cartoon motion."
+        }
+      },
+
+      "origin": {
+        "$description": "Transform origin presets",
+
+        "center": {
+          "$value": "center center",
+          "$type": "string",
+          "$description": "Scale from center. Default, most common."
+        },
+        "top": {
+          "$value": "center top",
+          "$type": "string",
+          "$description": "Scale from top edge. Use for dropdown menus."
+        },
+        "bottom": {
+          "$value": "center bottom",
+          "$type": "string",
+          "$description": "Scale from bottom edge. Use for tooltips, popovers."
+        },
+        "left": {
+          "$value": "left center",
+          "$type": "string",
+          "$description": "Scale from left edge. Use for side panel reveals."
+        },
+        "right": {
+          "$value": "right center",
+          "$type": "string",
+          "$description": "Scale from right edge. Use for side panel reveals."
+        },
+        "top-left": {
+          "$value": "left top",
+          "$type": "string",
+          "$description": "Scale from top-left corner. Use for corner-anchored menus."
+        },
+        "top-right": {
+          "$value": "right top",
+          "$type": "string",
+          "$description": "Scale from top-right corner. Use for corner-anchored menus."
+        },
+        "bottom-left": {
+          "$value": "left bottom",
+          "$type": "string",
+          "$description": "Scale from bottom-left corner."
+        },
+        "bottom-right": {
+          "$value": "right bottom",
+          "$type": "string",
+          "$description": "Scale from bottom-right corner. Common for FAB menus."
+        }
+      },
+
+      "pulse": {
+        "$description": "Pulsing scale animation parameters",
+
+        "amplitude-subtle": {
+          "$value": 0.02,
+          "$type": "number",
+          "$description": "2% pulse range (0.98-1.02). Subtle breathing effect."
+        },
+        "amplitude-gentle": {
+          "$value": 0.05,
+          "$type": "number",
+          "$description": "5% pulse range (0.95-1.05). Gentle pulse."
+        },
+        "amplitude-noticeable": {
+          "$value": 0.1,
+          "$type": "number",
+          "$description": "10% pulse range (0.9-1.1). Noticeable attention pulse."
+        },
+        "amplitude-dramatic": {
+          "$value": 0.2,
+          "$type": "number",
+          "$description": "20% pulse range (0.8-1.2). Dramatic heartbeat effect."
+        },
+        "period-slow": {
+          "$value": "3s",
+          "$type": "duration",
+          "$description": "Slow pulse cycle. Calm breathing."
+        },
+        "period-medium": {
+          "$value": "1.5s",
+          "$type": "duration",
+          "$description": "Medium pulse cycle. Natural heartbeat."
+        },
+        "period-fast": {
+          "$value": "0.75s",
+          "$type": "duration",
+          "$description": "Fast pulse cycle. Urgent attention."
+        }
+      },
+
+      "bounce": {
+        "$description": "Bounce scale parameters for spring-like effects",
+
+        "overshoot-subtle": {
+          "$value": 1.05,
+          "$type": "number",
+          "$description": "5% overshoot on bounce. Subtle spring."
+        },
+        "overshoot-medium": {
+          "$value": 1.15,
+          "$type": "number",
+          "$description": "15% overshoot on bounce. Noticeable spring."
+        },
+        "overshoot-pronounced": {
+          "$value": 1.3,
+          "$type": "number",
+          "$description": "30% overshoot on bounce. Playful spring."
+        },
+        "settle-duration": {
+          "$value": "400ms",
+          "$type": "duration",
+          "$description": "Time for bounce to settle. Matches M3 long-1."
+        }
+      }
+    }
+  }
+}

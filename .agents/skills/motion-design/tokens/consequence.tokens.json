@@ -1,0 +1,354 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Consequence tokens for cause-effect animation chains. Defines how actions propagate visually through the interface.",
+
+  "$token-references": {
+    "$description": "W3C DTCG token reference paths",
+    "sequencing": "tokens/sequencing.tokens.json",
+    "easing": "tokens/easing.tokens.json"
+  },
+
+  "consequence": {
+    "$description": "Cause-effect animation patterns - how one motion triggers another",
+
+    "chain-types": {
+      "$description": "Types of consequence chains between animations",
+
+      "direct": {
+        "$description": "Immediate, single-target consequence",
+        "delay": {
+          "$value": "0ms",
+          "$type": "duration",
+          "$description": "No delay - consequence is immediate"
+        },
+        "targets": {
+          "$value": 1,
+          "$type": "number"
+        },
+        "intensity-transfer": {
+          "$value": 1.0,
+          "$type": "number",
+          "$description": "Full intensity preserved in consequence"
+        },
+        "example": {
+          "$value": "button-press → modal-open",
+          "$type": "string"
+        }
+      },
+
+      "ripple": {
+        "$description": "Radiating outward from source",
+        "delay": {
+          "$value": "30ms",
+          "$type": "duration",
+          "$description": "Delay per distance unit"
+        },
+        "delay-formula": {
+          "$value": "distance * 30ms",
+          "$type": "string"
+        },
+        "targets": {
+          "$value": "multiple",
+          "$type": "string"
+        },
+        "intensity-decay": {
+          "$value": 0.15,
+          "$type": "number",
+          "$description": "Intensity reduction per step"
+        },
+        "max-distance": {
+          "$value": 5,
+          "$type": "number",
+          "$description": "Maximum propagation steps"
+        },
+        "example": {
+          "$value": "card-select → nearby-cards-react",
+          "$type": "string"
+        }
+      },
+
+      "cascade": {
+        "$description": "Sequential chain through connected elements",
+        "delay": {
+          "$value": "50ms",
+          "$type": "duration",
+          "$description": "Delay between cascade steps"
+        },
+        "targets": {
+          "$value": "sequential",
+          "$type": "string"
+        },
+        "intensity-transfer": {
+          "$value": 0.85,
+          "$type": "number",
+          "$description": "Some intensity preserved in each step"
+        },
+        "direction": {
+          "$value": "forward",
+          "$type": "string"
+        },
+        "example": {
+          "$value": "submit → field-validate → button-transform → success-reveal",
+          "$type": "string"
+        }
+      },
+
+      "echo": {
+        "$description": "Delayed repeat of original motion at reduced intensity",
+        "delay": {
+          "$value": "200ms",
+          "$type": "duration"
+        },
+        "intensity-transfer": {
+          "$value": 0.3,
+          "$type": "number"
+        },
+        "repetitions": {
+          "$value": 1,
+          "$type": "number"
+        },
+        "example": {
+          "$value": "notification-arrive → subtle-pulse-reminder",
+          "$type": "string"
+        }
+      },
+
+      "branch": {
+        "$description": "Single cause triggers multiple parallel consequences",
+        "delay": {
+          "$value": "0ms",
+          "$type": "duration"
+        },
+        "targets": {
+          "$value": "parallel-multiple",
+          "$type": "string"
+        },
+        "intensity-split": {
+          "$value": 0.7,
+          "$type": "number",
+          "$description": "Each branch receives this proportion of intensity"
+        },
+        "example": {
+          "$value": "form-submit → (loading-start + button-disable + scroll-top)",
+          "$type": "string"
+        }
+      },
+
+      "convergent": {
+        "$description": "Multiple causes combine into single consequence",
+        "wait-for": {
+          "$value": "all",
+          "$type": "string",
+          "$description": "Consequence fires when all causes complete"
+        },
+        "intensity-merge": {
+          "$value": "max",
+          "$type": "string",
+          "$description": "Merged intensity calculation (max/sum/average)"
+        },
+        "example": {
+          "$value": "(all-fields-valid + payment-verified) → submit-enabled",
+          "$type": "string"
+        }
+      }
+    },
+
+    "propagation-timing": {
+      "$description": "Timing parameters for consequence propagation",
+
+      "instant": {
+        "$value": "0ms",
+        "$type": "duration",
+        "$description": "Immediate consequence (same frame)"
+      },
+
+      "linked": {
+        "$value": "16ms",
+        "$type": "duration",
+        "$description": "Next frame - perceptually connected"
+      },
+
+      "followup": {
+        "$value": "100ms",
+        "$type": "duration",
+        "$description": "Clear follow-up - distinct but related"
+      },
+
+      "delayed": {
+        "$value": "300ms",
+        "$type": "duration",
+        "$description": "Noticeable delay - builds anticipation"
+      },
+
+      "deferred": {
+        "$value": "600ms",
+        "$type": "duration",
+        "$description": "Significant delay - separate moment"
+      }
+    },
+
+    "intensity-profiles": {
+      "$description": "How intensity changes through consequence chains",
+
+      "preserve": {
+        "$value": 1.0,
+        "$type": "number",
+        "$description": "Full intensity maintained"
+      },
+
+      "amplify": {
+        "$value": 1.3,
+        "$type": "number",
+        "$description": "Consequence is more intense than cause"
+      },
+
+      "diminish": {
+        "$value": 0.6,
+        "$type": "number",
+        "$description": "Consequence is less intense than cause"
+      },
+
+      "transform": {
+        "$value": "mapped",
+        "$type": "string",
+        "$description": "Intensity maps to different property (scale → opacity)"
+      }
+    },
+
+    "chain-patterns": {
+      "$description": "Common consequence chain configurations",
+
+      "button-to-modal": {
+        "chain": { "$value": ["direct"], "$type": "array" },
+        "sequence": [
+          {
+            "trigger": "button-press",
+            "consequence": "modal-entrance",
+            "type": "direct",
+            "delay": "0ms"
+          }
+        ]
+      },
+
+      "form-submission": {
+        "chain": { "$value": ["branch", "cascade"], "$type": "array" },
+        "sequence": [
+          {
+            "trigger": "submit-click",
+            "consequence": ["button-loading", "inputs-disable"],
+            "type": "branch",
+            "delay": "0ms"
+          },
+          {
+            "trigger": "api-success",
+            "consequence": "success-state",
+            "type": "direct",
+            "delay": "async"
+          }
+        ]
+      },
+
+      "notification-dismiss": {
+        "chain": { "$value": ["direct", "ripple"], "$type": "array" },
+        "sequence": [
+          {
+            "trigger": "swipe-complete",
+            "consequence": "notification-exit",
+            "type": "direct",
+            "delay": "0ms"
+          },
+          {
+            "trigger": "notification-exit",
+            "consequence": "list-reorder",
+            "type": "ripple",
+            "delay": "50ms"
+          }
+        ]
+      },
+
+      "accordion-expand": {
+        "chain": { "$value": ["direct", "cascade"], "$type": "array" },
+        "sequence": [
+          {
+            "trigger": "header-click",
+            "consequence": "content-reveal",
+            "type": "direct"
+          },
+          {
+            "trigger": "content-reveal",
+            "consequence": "siblings-collapse",
+            "type": "cascade",
+            "delay": "30ms"
+          }
+        ]
+      },
+
+      "drag-reorder": {
+        "chain": { "$value": ["direct", "ripple"], "$type": "array" },
+        "sequence": [
+          {
+            "trigger": "drag-over-target",
+            "consequence": "target-highlight",
+            "type": "direct"
+          },
+          {
+            "trigger": "drag-over-target",
+            "consequence": "neighbors-shift",
+            "type": "ripple",
+            "delay": "20ms"
+          }
+        ]
+      }
+    },
+
+    "spatial-propagation": {
+      "$description": "How consequences spread spatially",
+
+      "radial": {
+        "origin": { "$value": "center", "$type": "string" },
+        "spread": { "$value": "circular", "$type": "string" },
+        "delay-per-unit": { "$value": "30ms", "$type": "duration" }
+      },
+
+      "linear-horizontal": {
+        "origin": { "$value": "left", "$type": "string" },
+        "spread": { "$value": "linear", "$type": "string" },
+        "delay-per-unit": { "$value": "40ms", "$type": "duration" }
+      },
+
+      "linear-vertical": {
+        "origin": { "$value": "top", "$type": "string" },
+        "spread": { "$value": "linear", "$type": "string" },
+        "delay-per-unit": { "$value": "50ms", "$type": "duration" }
+      },
+
+      "diagonal": {
+        "origin": { "$value": "top-left", "$type": "string" },
+        "spread": { "$value": "diagonal", "$type": "string" },
+        "delay-per-unit": { "$value": "35ms", "$type": "duration" }
+      }
+    },
+
+    "termination": {
+      "$description": "When consequence chains stop",
+
+      "max-depth": {
+        "$value": 5,
+        "$type": "number",
+        "$description": "Maximum chain length before forced termination"
+      },
+
+      "min-intensity": {
+        "$value": 0.1,
+        "$type": "number",
+        "$description": "Chain stops when intensity falls below threshold"
+      },
+
+      "boundary-stop": {
+        "$value": true,
+        "$type": "boolean",
+        "$description": "Stop at container boundaries"
+      }
+    }
+  }
+}

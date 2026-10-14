@@ -1,0 +1,281 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Dramaturgy tokens for scene and act composition in motion design. Defines theatrical structure, pacing profiles, and rhythm patterns.",
+
+  "$token-references": {
+    "$description": "W3C DTCG token reference paths",
+    "narrative-arc": "tokens/narrative-arc.tokens.json",
+    "duration": "tokens/duration.tokens.json",
+    "sequencing": "tokens/sequencing.tokens.json"
+  },
+
+  "dramaturgy": {
+    "$description": "Theatrical structure for motion choreography",
+
+    "scene-structure": {
+      "$description": "Scene composition - discrete motion sequences",
+
+      "scene-types": {
+        "establishing": {
+          "$description": "Set context, introduce environment",
+          "typical-duration": { "$value": "800ms", "$type": "duration" },
+          "intensity": { "$value": 0.4, "$type": "number" },
+          "motion-density": { "$value": "low", "$type": "string" },
+          "purpose": { "$value": "orient-user", "$type": "string" }
+        },
+
+        "development": {
+          "$description": "Build complexity, reveal details",
+          "typical-duration": { "$value": "1200ms", "$type": "duration" },
+          "intensity": { "$value": 0.6, "$type": "number" },
+          "motion-density": { "$value": "medium", "$type": "string" },
+          "purpose": { "$value": "engage-user", "$type": "string" }
+        },
+
+        "confrontation": {
+          "$description": "Challenge or decision point",
+          "typical-duration": { "$value": "600ms", "$type": "duration" },
+          "intensity": { "$value": 0.8, "$type": "number" },
+          "motion-density": { "$value": "high", "$type": "string" },
+          "purpose": { "$value": "demand-action", "$type": "string" }
+        },
+
+        "resolution": {
+          "$description": "Conclude, show result",
+          "typical-duration": { "$value": "500ms", "$type": "duration" },
+          "intensity": { "$value": 0.5, "$type": "number" },
+          "motion-density": { "$value": "low", "$type": "string" },
+          "purpose": { "$value": "confirm-outcome", "$type": "string" }
+        },
+
+        "transition": {
+          "$description": "Bridge between scenes",
+          "typical-duration": { "$value": "300ms", "$type": "duration" },
+          "intensity": { "$value": 0.3, "$type": "number" },
+          "motion-density": { "$value": "minimal", "$type": "string" },
+          "purpose": { "$value": "connect-moments", "$type": "string" }
+        }
+      },
+
+      "scene-elements": {
+        "entrance": {
+          "position-in-scene": { "$value": "start", "$type": "string" },
+          "duration-weight": { "$value": 0.3, "$type": "number" }
+        },
+        "action": {
+          "position-in-scene": { "$value": "middle", "$type": "string" },
+          "duration-weight": { "$value": 0.5, "$type": "number" }
+        },
+        "exit": {
+          "position-in-scene": { "$value": "end", "$type": "string" },
+          "duration-weight": { "$value": 0.2, "$type": "number" }
+        }
+      }
+    },
+
+    "act-composition": {
+      "$description": "Multi-scene acts for extended experiences",
+
+      "three-act-structure": {
+        "act-1-setup": {
+          "scenes": { "$value": ["establishing", "development"], "$type": "array" },
+          "duration-weight": { "$value": 0.25, "$type": "number" },
+          "purpose": { "$value": "introduce-context", "$type": "string" }
+        },
+        "act-2-confrontation": {
+          "scenes": { "$value": ["development", "confrontation", "development"], "$type": "array" },
+          "duration-weight": { "$value": 0.50, "$type": "number" },
+          "purpose": { "$value": "main-interaction", "$type": "string" }
+        },
+        "act-3-resolution": {
+          "scenes": { "$value": ["resolution", "transition"], "$type": "array" },
+          "duration-weight": { "$value": 0.25, "$type": "number" },
+          "purpose": { "$value": "conclude-experience", "$type": "string" }
+        }
+      },
+
+      "micro-act": {
+        "$description": "Condensed structure for single interactions",
+        "phases": { "$value": ["setup", "payoff"], "$type": "array" },
+        "total-duration": { "$value": "400ms", "$type": "duration" }
+      }
+    },
+
+    "pacing-profiles": {
+      "$description": "Rhythm and tempo patterns",
+
+      "measured": {
+        "$description": "Steady, predictable rhythm",
+        "tempo": { "$value": "consistent", "$type": "string" },
+        "beat-interval": { "$value": "400ms", "$type": "duration" },
+        "variation": { "$value": 0.1, "$type": "number" },
+        "use-case": { "$value": "tutorials, data-displays", "$type": "string" }
+      },
+
+      "accelerating": {
+        "$description": "Building momentum",
+        "tempo": { "$value": "increasing", "$type": "string" },
+        "start-interval": { "$value": "500ms", "$type": "duration" },
+        "end-interval": { "$value": "200ms", "$type": "duration" },
+        "curve": { "$value": "ease-in", "$type": "string" },
+        "use-case": { "$value": "countdowns, progress, urgency", "$type": "string" }
+      },
+
+      "decelerating": {
+        "$description": "Coming to rest",
+        "tempo": { "$value": "decreasing", "$type": "string" },
+        "start-interval": { "$value": "200ms", "$type": "duration" },
+        "end-interval": { "$value": "600ms", "$type": "duration" },
+        "curve": { "$value": "ease-out", "$type": "string" },
+        "use-case": { "$value": "completion, settling, resolution", "$type": "string" }
+      },
+
+      "staccato": {
+        "$description": "Quick, punctuated beats",
+        "tempo": { "$value": "rapid-pause", "$type": "string" },
+        "beat-duration": { "$value": "100ms", "$type": "duration" },
+        "pause-duration": { "$value": "200ms", "$type": "duration" },
+        "use-case": { "$value": "alerts, errors, emphasis", "$type": "string" }
+      },
+
+      "legato": {
+        "$description": "Smooth, connected flow",
+        "tempo": { "$value": "continuous", "$type": "string" },
+        "overlap": { "$value": 0.3, "$type": "number" },
+        "use-case": { "$value": "transitions, morphs, reveals", "$type": "string" }
+      },
+
+      "rubato": {
+        "$description": "Flexible, expressive timing",
+        "tempo": { "$value": "variable", "$type": "string" },
+        "base-interval": { "$value": "350ms", "$type": "duration" },
+        "variation": { "$value": 0.4, "$type": "number" },
+        "use-case": { "$value": "organic, playful, artistic", "$type": "string" }
+      }
+    },
+
+    "rhythm-patterns": {
+      "$description": "Beat patterns for motion sequences",
+
+      "regular": {
+        "pattern": { "$value": [1, 1, 1, 1], "$type": "array" },
+        "description": { "$value": "Equal beats", "$type": "string" }
+      },
+
+      "waltz": {
+        "pattern": { "$value": [1.5, 0.75, 0.75], "$type": "array" },
+        "description": { "$value": "Emphasized first beat (3/4)", "$type": "string" }
+      },
+
+      "march": {
+        "pattern": { "$value": [1.2, 0.8, 1.2, 0.8], "$type": "array" },
+        "description": { "$value": "Strong-weak alternation", "$type": "string" }
+      },
+
+      "syncopated": {
+        "pattern": { "$value": [0.75, 1.25, 0.75, 1.25], "$type": "array" },
+        "description": { "$value": "Off-beat emphasis", "$type": "string" }
+      },
+
+      "crescendo": {
+        "pattern": { "$value": [0.5, 0.75, 1.0, 1.5], "$type": "array" },
+        "description": { "$value": "Building intensity", "$type": "string" }
+      },
+
+      "diminuendo": {
+        "pattern": { "$value": [1.5, 1.0, 0.75, 0.5], "$type": "array" },
+        "description": { "$value": "Fading intensity", "$type": "string" }
+      }
+    },
+
+    "pause-beats": {
+      "$description": "Strategic pauses in motion",
+
+      "breath": {
+        "$value": "200ms",
+        "$type": "duration",
+        "$description": "Brief pause for visual breathing room"
+      },
+
+      "beat": {
+        "$value": "400ms",
+        "$type": "duration",
+        "$description": "Standard pause for emphasis"
+      },
+
+      "hold": {
+        "$value": "800ms",
+        "$type": "duration",
+        "$description": "Extended pause for absorption"
+      },
+
+      "fermata": {
+        "$value": "1200ms",
+        "$type": "duration",
+        "$description": "Dramatic pause for impact"
+      }
+    },
+
+    "ensemble-patterns": {
+      "$description": "Coordination patterns for multiple animated elements",
+
+      "unison": {
+        "$description": "All elements move together",
+        "stagger": { "$value": "0ms", "$type": "duration" },
+        "synchronization": { "$value": "exact", "$type": "string" }
+      },
+
+      "canon": {
+        "$description": "Same motion, staggered start",
+        "stagger": { "$value": "100ms", "$type": "duration" },
+        "motion-identity": { "$value": "identical", "$type": "string" }
+      },
+
+      "counterpoint": {
+        "$description": "Different but complementary motions",
+        "synchronization": { "$value": "rhythmic", "$type": "string" },
+        "motion-identity": { "$value": "contrasting", "$type": "string" }
+      },
+
+      "call-response": {
+        "$description": "One element leads, others follow",
+        "leader-delay": { "$value": "0ms", "$type": "duration" },
+        "follower-delay": { "$value": "150ms", "$type": "duration" }
+      },
+
+      "wave": {
+        "$description": "Flowing motion across elements",
+        "propagation-delay": { "$value": "40ms", "$type": "duration" },
+        "direction": { "$value": "configurable", "$type": "string" }
+      }
+    },
+
+    "scene-templates": {
+      "$description": "Pre-configured scene compositions",
+
+      "modal-scene": {
+        "structure": { "$value": ["establishing", "action", "resolution"], "$type": "array" },
+        "total-duration": { "$value": "600ms", "$type": "duration" },
+        "elements": { "$value": ["scrim-in", "modal-entrance", "content-reveal"], "$type": "array" }
+      },
+
+      "notification-scene": {
+        "structure": { "$value": ["entrance", "hold", "exit"], "$type": "array" },
+        "total-duration": { "$value": "3500ms", "$type": "duration" },
+        "elements": { "$value": ["slide-in", "attention-pulse", "fade-out"], "$type": "array" }
+      },
+
+      "page-transition-scene": {
+        "structure": { "$value": ["exit", "transition", "entrance"], "$type": "array" },
+        "total-duration": { "$value": "500ms", "$type": "duration" },
+        "elements": { "$value": ["content-exit", "crossfade", "content-entrance"], "$type": "array" }
+      },
+
+      "success-scene": {
+        "structure": { "$value": ["action", "resolution", "celebration"], "$type": "array" },
+        "total-duration": { "$value": "800ms", "$type": "duration" },
+        "elements": { "$value": ["button-confirm", "checkmark-draw", "particle-burst"], "$type": "array" }
+      }
+    }
+  }
+}

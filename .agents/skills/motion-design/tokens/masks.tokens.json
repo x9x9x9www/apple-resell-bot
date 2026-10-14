@@ -1,0 +1,449 @@
+{
+  "$schema": "https://design-tokens.org/schema.json",
+  "motion": {
+    "masks": {
+      "$description": "Mask animation tokens for reveals, transitions, and clipping effects",
+
+      "reveal-speed": {
+        "$description": "Mask reveal animation durations",
+        "instant": {
+          "$value": "100ms",
+          "$type": "duration",
+          "$description": "Instant reveal"
+        },
+        "fast": {
+          "$value": "300ms",
+          "$type": "duration",
+          "$description": "Fast mask reveal"
+        },
+        "normal": {
+          "$value": "600ms",
+          "$type": "duration",
+          "$description": "Standard reveal speed"
+        },
+        "slow": {
+          "$value": "1200ms",
+          "$type": "duration",
+          "$description": "Slow reveal"
+        },
+        "dramatic": {
+          "$value": "2000ms",
+          "$type": "duration",
+          "$description": "Dramatic slow reveal"
+        }
+      },
+
+      "easing": {
+        "$description": "Mask animation easing curves",
+        "standard": {
+          "$value": [0.4, 0, 0.2, 1],
+          "$type": "cubicBezier",
+          "$description": "Standard mask ease"
+        },
+        "sharp": {
+          "$value": [0.4, 0, 0.6, 1],
+          "$type": "cubicBezier",
+          "$description": "Sharp mask transition"
+        },
+        "smooth": {
+          "$value": [0.2, 0, 0.1, 1],
+          "$type": "cubicBezier",
+          "$description": "Smooth mask reveal"
+        }
+      },
+
+      "shape": {
+        "$description": "Mask shape types",
+        "circle": {
+          "$value": "circle",
+          "$type": "string",
+          "$description": "Circular mask"
+        },
+        "ellipse": {
+          "$value": "ellipse",
+          "$type": "string",
+          "$description": "Elliptical mask"
+        },
+        "rectangle": {
+          "$value": "rectangle",
+          "$type": "string",
+          "$description": "Rectangular mask"
+        },
+        "polygon": {
+          "$value": "polygon",
+          "$type": "string",
+          "$description": "Custom polygon mask"
+        },
+        "path": {
+          "$value": "path",
+          "$type": "string",
+          "$description": "SVG path mask"
+        }
+      },
+
+      "direction": {
+        "$description": "Mask reveal directions",
+        "center-out": {
+          "$value": "center-out",
+          "$type": "string",
+          "$description": "Expand from center"
+        },
+        "edge-in": {
+          "$value": "edge-in",
+          "$type": "string",
+          "$description": "Collapse to center"
+        },
+        "top": {
+          "$value": "top",
+          "$type": "string",
+          "$description": "Reveal from top"
+        },
+        "bottom": {
+          "$value": "bottom",
+          "$type": "string",
+          "$description": "Reveal from bottom"
+        },
+        "left": {
+          "$value": "left",
+          "$type": "string",
+          "$description": "Reveal from left"
+        },
+        "right": {
+          "$value": "right",
+          "$type": "string",
+          "$description": "Reveal from right"
+        },
+        "diagonal-tl": {
+          "$value": "diagonal-tl",
+          "$type": "string",
+          "$description": "Diagonal from top-left"
+        },
+        "diagonal-br": {
+          "$value": "diagonal-br",
+          "$type": "string",
+          "$description": "Diagonal from bottom-right"
+        }
+      },
+
+      "feather": {
+        "$description": "Mask edge softness/feathering",
+        "none": {
+          "$value": "0px",
+          "$type": "dimension",
+          "$description": "Hard edge"
+        },
+        "subtle": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Subtle feather"
+        },
+        "soft": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Soft feather"
+        },
+        "heavy": {
+          "$value": "20px",
+          "$type": "dimension",
+          "$description": "Heavy feather"
+        },
+        "gradient": {
+          "$value": "50px",
+          "$type": "dimension",
+          "$description": "Gradient-like feather"
+        }
+      },
+
+      "circle-reveal": {
+        "$description": "Circle reveal specific tokens",
+        "origin": {
+          "center": {
+            "$value": "50% 50%",
+            "$type": "string",
+            "$description": "Center origin"
+          },
+          "top-left": {
+            "$value": "0% 0%",
+            "$type": "string",
+            "$description": "Top-left origin"
+          },
+          "top-right": {
+            "$value": "100% 0%",
+            "$type": "string",
+            "$description": "Top-right origin"
+          },
+          "bottom-left": {
+            "$value": "0% 100%",
+            "$type": "string",
+            "$description": "Bottom-left origin"
+          },
+          "bottom-right": {
+            "$value": "100% 100%",
+            "$type": "string",
+            "$description": "Bottom-right origin"
+          },
+          "cursor": {
+            "$value": "cursor",
+            "$type": "string",
+            "$description": "From cursor position"
+          }
+        },
+        "start-radius": {
+          "zero": {
+            "$value": "0%",
+            "$type": "dimension",
+            "$description": "Start from nothing"
+          },
+          "small": {
+            "$value": "5%",
+            "$type": "dimension",
+            "$description": "Start small"
+          }
+        },
+        "end-radius": {
+          "cover": {
+            "$value": "150%",
+            "$type": "dimension",
+            "$description": "Cover entire element"
+          },
+          "contain": {
+            "$value": "100%",
+            "$type": "dimension",
+            "$description": "Fit to element"
+          }
+        }
+      },
+
+      "wipe": {
+        "$description": "Wipe mask transition tokens",
+        "angle": {
+          "horizontal": {
+            "$value": "0deg",
+            "$type": "dimension",
+            "$description": "Horizontal wipe"
+          },
+          "vertical": {
+            "$value": "90deg",
+            "$type": "dimension",
+            "$description": "Vertical wipe"
+          },
+          "diagonal-down": {
+            "$value": "45deg",
+            "$type": "dimension",
+            "$description": "Diagonal wipe down"
+          },
+          "diagonal-up": {
+            "$value": "-45deg",
+            "$type": "dimension",
+            "$description": "Diagonal wipe up"
+          }
+        },
+        "gradient-width": {
+          "hard": {
+            "$value": "0%",
+            "$type": "dimension",
+            "$description": "Hard edge wipe"
+          },
+          "soft": {
+            "$value": "10%",
+            "$type": "dimension",
+            "$description": "Soft edge wipe"
+          },
+          "gradient": {
+            "$value": "30%",
+            "$type": "dimension",
+            "$description": "Gradient wipe"
+          }
+        }
+      },
+
+      "iris": {
+        "$description": "Iris/aperture reveal tokens",
+        "blades": {
+          "circular": {
+            "$value": "0",
+            "$type": "number",
+            "$description": "Smooth circular"
+          },
+          "hexagonal": {
+            "$value": "6",
+            "$type": "number",
+            "$description": "6-blade aperture"
+          },
+          "octagonal": {
+            "$value": "8",
+            "$type": "number",
+            "$description": "8-blade aperture"
+          },
+          "star": {
+            "$value": "5",
+            "$type": "number",
+            "$description": "5-point star"
+          }
+        },
+        "rotation": {
+          "none": {
+            "$value": "0deg",
+            "$type": "dimension",
+            "$description": "No rotation"
+          },
+          "slight": {
+            "$value": "15deg",
+            "$type": "dimension",
+            "$description": "Slight rotation"
+          },
+          "quarter": {
+            "$value": "90deg",
+            "$type": "dimension",
+            "$description": "Quarter rotation"
+          }
+        }
+      },
+
+      "split": {
+        "$description": "Split/barn door mask tokens",
+        "gap": {
+          "none": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "No gap"
+          },
+          "small": {
+            "$value": "4px",
+            "$type": "dimension",
+            "$description": "Small gap"
+          },
+          "medium": {
+            "$value": "12px",
+            "$type": "dimension",
+            "$description": "Medium gap"
+          }
+        },
+        "offset": {
+          "symmetric": {
+            "$value": "0",
+            "$type": "number",
+            "$description": "Symmetric split"
+          },
+          "asymmetric-left": {
+            "$value": "-0.2",
+            "$type": "number",
+            "$description": "Offset left"
+          },
+          "asymmetric-right": {
+            "$value": "0.2",
+            "$type": "number",
+            "$description": "Offset right"
+          }
+        }
+      },
+
+      "text-mask": {
+        "$description": "Text as mask tokens",
+        "reveal-mode": {
+          "all-at-once": {
+            "$value": "simultaneous",
+            "$type": "string",
+            "$description": "All text at once"
+          },
+          "per-character": {
+            "$value": "character",
+            "$type": "string",
+            "$description": "Character by character"
+          },
+          "per-word": {
+            "$value": "word",
+            "$type": "string",
+            "$description": "Word by word"
+          },
+          "per-line": {
+            "$value": "line",
+            "$type": "string",
+            "$description": "Line by line"
+          }
+        },
+        "stagger": {
+          "tight": {
+            "$value": "20ms",
+            "$type": "duration",
+            "$description": "Tight stagger"
+          },
+          "normal": {
+            "$value": "50ms",
+            "$type": "duration",
+            "$description": "Normal stagger"
+          },
+          "relaxed": {
+            "$value": "100ms",
+            "$type": "duration",
+            "$description": "Relaxed stagger"
+          }
+        }
+      },
+
+      "gradient-mask": {
+        "$description": "Gradient-based mask tokens",
+        "type": {
+          "linear": {
+            "$value": "linear",
+            "$type": "string",
+            "$description": "Linear gradient mask"
+          },
+          "radial": {
+            "$value": "radial",
+            "$type": "string",
+            "$description": "Radial gradient mask"
+          },
+          "conic": {
+            "$value": "conic",
+            "$type": "string",
+            "$description": "Conic/sweep gradient mask"
+          }
+        },
+        "stops": {
+          "sharp": {
+            "$value": "0%, 100%",
+            "$type": "string",
+            "$description": "Sharp transition"
+          },
+          "smooth": {
+            "$value": "0%, 50%, 100%",
+            "$type": "string",
+            "$description": "Smooth gradient"
+          },
+          "multi": {
+            "$value": "0%, 25%, 75%, 100%",
+            "$type": "string",
+            "$description": "Multi-stop gradient"
+          }
+        }
+      },
+
+      "composite": {
+        "$description": "Mask composite operations",
+        "operation": {
+          "add": {
+            "$value": "add",
+            "$type": "string",
+            "$description": "Add masks together"
+          },
+          "subtract": {
+            "$value": "subtract",
+            "$type": "string",
+            "$description": "Subtract from mask"
+          },
+          "intersect": {
+            "$value": "intersect",
+            "$type": "string",
+            "$description": "Intersection of masks"
+          },
+          "exclude": {
+            "$value": "exclude",
+            "$type": "string",
+            "$description": "Exclusive OR of masks"
+          }
+        }
+      }
+    }
+  }
+}

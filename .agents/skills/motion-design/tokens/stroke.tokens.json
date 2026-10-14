@@ -1,0 +1,322 @@
+{
+  "$schema": "https://design-tokens.org/schema.json",
+  "motion": {
+    "stroke": {
+      "$description": "Stroke animation tokens for line drawing and path effects",
+
+      "draw-speed": {
+        "$description": "Stroke draw-on animation speeds",
+        "instant": {
+          "$value": "100ms",
+          "$type": "duration",
+          "$description": "Instant stroke appearance"
+        },
+        "fast": {
+          "$value": "400ms",
+          "$type": "duration",
+          "$description": "Fast stroke draw"
+        },
+        "normal": {
+          "$value": "800ms",
+          "$type": "duration",
+          "$description": "Standard draw speed"
+        },
+        "slow": {
+          "$value": "1500ms",
+          "$type": "duration",
+          "$description": "Slow, deliberate drawing"
+        },
+        "dramatic": {
+          "$value": "3000ms",
+          "$type": "duration",
+          "$description": "Very slow dramatic draw"
+        }
+      },
+
+      "easing": {
+        "$description": "Stroke animation easing curves",
+        "linear": {
+          "$value": [0, 0, 1, 1],
+          "$type": "cubicBezier",
+          "$description": "Constant speed drawing"
+        },
+        "ease-out": {
+          "$value": [0, 0, 0.2, 1],
+          "$type": "cubicBezier",
+          "$description": "Start fast, slow at end"
+        },
+        "ease-in": {
+          "$value": [0.4, 0, 1, 1],
+          "$type": "cubicBezier",
+          "$description": "Start slow, speed up"
+        },
+        "ease-in-out": {
+          "$value": [0.4, 0, 0.2, 1],
+          "$type": "cubicBezier",
+          "$description": "Slow start and end"
+        }
+      },
+
+      "dasharray": {
+        "$description": "Stroke dash patterns",
+        "solid": {
+          "$value": "none",
+          "$type": "string",
+          "$description": "Solid stroke"
+        },
+        "dotted": {
+          "$value": "2, 4",
+          "$type": "string",
+          "$description": "Dotted pattern"
+        },
+        "dashed": {
+          "$value": "8, 6",
+          "$type": "string",
+          "$description": "Standard dashed"
+        },
+        "long-dash": {
+          "$value": "20, 8",
+          "$type": "string",
+          "$description": "Long dash pattern"
+        },
+        "dash-dot": {
+          "$value": "12, 4, 2, 4",
+          "$type": "string",
+          "$description": "Dash-dot pattern"
+        }
+      },
+
+      "width": {
+        "$description": "Stroke width values",
+        "hairline": {
+          "$value": "0.5px",
+          "$type": "dimension",
+          "$description": "Ultra-thin stroke"
+        },
+        "thin": {
+          "$value": "1px",
+          "$type": "dimension",
+          "$description": "Thin stroke"
+        },
+        "normal": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Standard stroke width"
+        },
+        "medium": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Medium stroke"
+        },
+        "thick": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Thick stroke"
+        },
+        "heavy": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Very thick stroke"
+        }
+      },
+
+      "linecap": {
+        "$description": "Stroke end cap styles",
+        "butt": {
+          "$value": "butt",
+          "$type": "string",
+          "$description": "Flat end cap"
+        },
+        "round": {
+          "$value": "round",
+          "$type": "string",
+          "$description": "Rounded end cap"
+        },
+        "square": {
+          "$value": "square",
+          "$type": "string",
+          "$description": "Square end cap"
+        }
+      },
+
+      "linejoin": {
+        "$description": "Stroke corner join styles",
+        "miter": {
+          "$value": "miter",
+          "$type": "string",
+          "$description": "Sharp corner join"
+        },
+        "round": {
+          "$value": "round",
+          "$type": "string",
+          "$description": "Rounded corner join"
+        },
+        "bevel": {
+          "$value": "bevel",
+          "$type": "string",
+          "$description": "Beveled corner join"
+        }
+      },
+
+      "trim": {
+        "$description": "Stroke trim/clip values",
+        "start-hidden": {
+          "$value": "0",
+          "$type": "number",
+          "$description": "Start position (0%)"
+        },
+        "end-full": {
+          "$value": "1",
+          "$type": "number",
+          "$description": "End position (100%)"
+        },
+        "quarter": {
+          "$value": "0.25",
+          "$type": "number",
+          "$description": "25% position"
+        },
+        "half": {
+          "$value": "0.5",
+          "$type": "number",
+          "$description": "50% position"
+        },
+        "three-quarter": {
+          "$value": "0.75",
+          "$type": "number",
+          "$description": "75% position"
+        }
+      },
+
+      "offset": {
+        "$description": "Dash offset animation values",
+        "cycle-slow": {
+          "$value": "5000ms",
+          "$type": "duration",
+          "$description": "Slow dash cycle"
+        },
+        "cycle-normal": {
+          "$value": "2000ms",
+          "$type": "duration",
+          "$description": "Normal dash cycle"
+        },
+        "cycle-fast": {
+          "$value": "800ms",
+          "$type": "duration",
+          "$description": "Fast dash cycle"
+        }
+      },
+
+      "taper": {
+        "$description": "Stroke taper (variable width) settings",
+        "start": {
+          "none": {
+            "$value": "0",
+            "$type": "number",
+            "$description": "No start taper"
+          },
+          "subtle": {
+            "$value": "10",
+            "$type": "number",
+            "$description": "Subtle start taper"
+          },
+          "moderate": {
+            "$value": "30",
+            "$type": "number",
+            "$description": "Moderate start taper"
+          },
+          "full": {
+            "$value": "100",
+            "$type": "number",
+            "$description": "Full start taper (point)"
+          }
+        },
+        "end": {
+          "none": {
+            "$value": "0",
+            "$type": "number",
+            "$description": "No end taper"
+          },
+          "subtle": {
+            "$value": "10",
+            "$type": "number",
+            "$description": "Subtle end taper"
+          },
+          "moderate": {
+            "$value": "30",
+            "$type": "number",
+            "$description": "Moderate end taper"
+          },
+          "full": {
+            "$value": "100",
+            "$type": "number",
+            "$description": "Full end taper (point)"
+          }
+        }
+      },
+
+      "handwritten": {
+        "$description": "Handwritten stroke effect parameters",
+        "speed-variation": {
+          "subtle": {
+            "$value": "0.1",
+            "$type": "number",
+            "$description": "Subtle speed variation"
+          },
+          "natural": {
+            "$value": "0.3",
+            "$type": "number",
+            "$description": "Natural hand movement"
+          },
+          "expressive": {
+            "$value": "0.5",
+            "$type": "number",
+            "$description": "Expressive variation"
+          }
+        },
+        "wobble": {
+          "minimal": {
+            "$value": "1px",
+            "$type": "dimension",
+            "$description": "Minimal wobble"
+          },
+          "natural": {
+            "$value": "3px",
+            "$type": "dimension",
+            "$description": "Natural hand wobble"
+          },
+          "sketchy": {
+            "$value": "6px",
+            "$type": "dimension",
+            "$description": "Sketchy look"
+          }
+        }
+      },
+
+      "multi-stroke": {
+        "$description": "Multi-path stroke stagger",
+        "stagger": {
+          "simultaneous": {
+            "$value": "0ms",
+            "$type": "duration",
+            "$description": "All strokes at once"
+          },
+          "slight": {
+            "$value": "50ms",
+            "$type": "duration",
+            "$description": "Slight stagger"
+          },
+          "sequential": {
+            "$value": "150ms",
+            "$type": "duration",
+            "$description": "Sequential stagger"
+          },
+          "dramatic": {
+            "$value": "300ms",
+            "$type": "duration",
+            "$description": "Dramatic stagger"
+          }
+        }
+      }
+    }
+  }
+}

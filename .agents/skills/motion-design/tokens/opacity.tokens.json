@@ -1,0 +1,260 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Opacity tokens for fade animations, flash effects, and visibility transitions.",
+
+  "motion": {
+    "opacity": {
+      "$description": "Opacity animation tokens",
+
+      "levels": {
+        "$description": "Standard opacity values",
+
+        "invisible": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "Fully transparent. Hidden state."
+        },
+        "barely-visible": {
+          "$value": 0.05,
+          "$type": "number",
+          "$description": "5% opacity. Hint of presence."
+        },
+        "ghost": {
+          "$value": 0.1,
+          "$type": "number",
+          "$description": "10% opacity. Ghosted/disabled appearance."
+        },
+        "faint": {
+          "$value": 0.2,
+          "$type": "number",
+          "$description": "20% opacity. Very subtle presence."
+        },
+        "subtle": {
+          "$value": 0.3,
+          "$type": "number",
+          "$description": "30% opacity. Understated but visible."
+        },
+        "muted": {
+          "$value": 0.4,
+          "$type": "number",
+          "$description": "40% opacity. Clearly muted."
+        },
+        "half": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "50% opacity. Semi-transparent."
+        },
+        "moderate": {
+          "$value": 0.6,
+          "$type": "number",
+          "$description": "60% opacity. Moderately visible."
+        },
+        "prominent": {
+          "$value": 0.7,
+          "$type": "number",
+          "$description": "70% opacity. Prominent but not full."
+        },
+        "strong": {
+          "$value": 0.8,
+          "$type": "number",
+          "$description": "80% opacity. Strong presence."
+        },
+        "near-opaque": {
+          "$value": 0.9,
+          "$type": "number",
+          "$description": "90% opacity. Almost fully visible."
+        },
+        "almost-opaque": {
+          "$value": 0.95,
+          "$type": "number",
+          "$description": "95% opacity. Slight transparency."
+        },
+        "visible": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Fully opaque. Default visible state."
+        }
+      },
+
+      "fade": {
+        "$description": "Fade animation parameters",
+
+        "start-hidden": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "Fade in from invisible."
+        },
+        "start-subtle": {
+          "$value": 0.3,
+          "$type": "number",
+          "$description": "Fade in from subtle (reduced motion alternative)."
+        },
+        "crossfade-midpoint": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "Midpoint for crossfade overlap."
+        },
+        "duration-instant": {
+          "$value": "0ms",
+          "$type": "duration",
+          "$description": "Instant opacity change. No animation."
+        },
+        "duration-micro": {
+          "$value": "50ms",
+          "$type": "duration",
+          "$description": "Micro fade. Perception threshold."
+        },
+        "duration-fast": {
+          "$value": "100ms",
+          "$type": "duration",
+          "$description": "Fast fade. Quick feedback."
+        },
+        "duration-standard": {
+          "$value": "200ms",
+          "$type": "duration",
+          "$description": "Standard fade duration. M3 short-4."
+        },
+        "duration-smooth": {
+          "$value": "300ms",
+          "$type": "duration",
+          "$description": "Smooth fade. Comfortable pace."
+        },
+        "duration-gentle": {
+          "$value": "500ms",
+          "$type": "duration",
+          "$description": "Gentle fade. Leisurely transition."
+        }
+      },
+
+      "flash": {
+        "$description": "Flash/blink animation parameters",
+
+        "peak": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Flash peak opacity."
+        },
+        "trough": {
+          "$value": 0.3,
+          "$type": "number",
+          "$description": "Flash minimum opacity."
+        },
+        "duration-rapid": {
+          "$value": "50ms",
+          "$type": "duration",
+          "$description": "Rapid flash. Strobe-like."
+        },
+        "duration-quick": {
+          "$value": "100ms",
+          "$type": "duration",
+          "$description": "Quick flash. Alert notification."
+        },
+        "duration-standard": {
+          "$value": "150ms",
+          "$type": "duration",
+          "$description": "Standard flash. Clear but not harsh."
+        },
+        "count-single": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Single flash."
+        },
+        "count-double": {
+          "$value": 2,
+          "$type": "number",
+          "$description": "Double flash. Emphasis."
+        },
+        "count-triple": {
+          "$value": 3,
+          "$type": "number",
+          "$description": "Triple flash. Strong attention."
+        }
+      },
+
+      "pulse": {
+        "$description": "Pulsing opacity animation parameters",
+
+        "min-subtle": {
+          "$value": 0.7,
+          "$type": "number",
+          "$description": "Subtle pulse minimum (0.7-1.0 range)."
+        },
+        "min-noticeable": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "Noticeable pulse minimum (0.5-1.0 range)."
+        },
+        "min-dramatic": {
+          "$value": 0.2,
+          "$type": "number",
+          "$description": "Dramatic pulse minimum (0.2-1.0 range)."
+        },
+        "period-slow": {
+          "$value": "3s",
+          "$type": "duration",
+          "$description": "Slow pulse cycle. Ambient, calming."
+        },
+        "period-medium": {
+          "$value": "1.5s",
+          "$type": "duration",
+          "$description": "Medium pulse cycle. Breathing pace."
+        },
+        "period-fast": {
+          "$value": "0.75s",
+          "$type": "duration",
+          "$description": "Fast pulse cycle. Attention-grabbing."
+        }
+      },
+
+      "flicker": {
+        "$description": "Flicker/unstable opacity parameters",
+
+        "variance": {
+          "$value": 0.1,
+          "$type": "number",
+          "$description": "Random opacity variance range (+/- 10%)."
+        },
+        "frequency-slow": {
+          "$value": 2,
+          "$type": "number",
+          "$description": "2 flickers per second. Candle-like."
+        },
+        "frequency-medium": {
+          "$value": 5,
+          "$type": "number",
+          "$description": "5 flickers per second. Unstable light."
+        },
+        "frequency-fast": {
+          "$value": 10,
+          "$type": "number",
+          "$description": "10 flickers per second. Electrical flicker."
+        }
+      },
+
+      "layer": {
+        "$description": "Layered/overlay opacity tokens",
+
+        "scrim-light": {
+          "$value": 0.3,
+          "$type": "number",
+          "$description": "Light scrim overlay. Subtle dimming."
+        },
+        "scrim-medium": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "Medium scrim overlay. Modal backdrop."
+        },
+        "scrim-dark": {
+          "$value": 0.7,
+          "$type": "number",
+          "$description": "Dark scrim overlay. Focus on foreground."
+        },
+        "scrim-heavy": {
+          "$value": 0.85,
+          "$type": "number",
+          "$description": "Heavy scrim overlay. Near-black backdrop."
+        }
+      }
+    }
+  }
+}

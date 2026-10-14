@@ -1,0 +1,280 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Easing curve tokens (subset of motion.tokens.json)",
+  "motion": {
+    "easing": {
+      "$description": "Easing curves in W3C DTCG cubicBezier format",
+      "standard": {
+        "$value": [
+          0.2,
+          0,
+          0,
+          1
+        ],
+        "$type": "cubicBezier",
+        "$description": "Standard easing for most animations. M3: standard, Fluent: decelerate, Carbon: standard"
+      },
+      "emphasized": {
+        "$value": [0.2, 0, 0, 1],
+        "$type": "cubicBezier",
+        "$description": "Single-bezier APPROXIMATION of M3 emphasized. Use emphasized-path for exact M3 behavior on supporting platforms.",
+        "$extensions": {
+          "com.material.m3": {
+            "isApproximation": true,
+            "exactPath": "M 0,0 C 0.05, 0, 0.133333, 0.06, 0.166666, 0.4 C 0.208333, 0.82, 0.25, 1, 1, 1"
+          }
+        }
+      },
+      "emphasized-path": {
+        "$value": {
+          "type": "path",
+          "d": "M 0,0 C 0.05, 0, 0.133333, 0.06, 0.166666, 0.4 C 0.208333, 0.82, 0.25, 1, 1, 1",
+          "segments": [
+            {"control1": [0.05, 0], "control2": [0.133333, 0.06], "end": [0.166666, 0.4]},
+            {"control1": [0.208333, 0.82], "control2": [0.25, 1], "end": [1, 1]}
+          ]
+        },
+        "$type": "object",
+        "$description": "Exact M3 emphasized easing as two-segment cubic bezier path. Use with Android PathInterpolator or custom JS implementation."
+      },
+      "emphasized-linear": {
+        "$value": "linear(0, 0.006, 0.025 2.8%, 0.101 6.1%, 0.539 18.9%, 0.721 25.3%, 0.849 31.5%, 0.937 38.1%, 0.968 41.8%, 0.991 47.3%, 1)",
+        "$type": "string",
+        "$description": "CSS linear() function for exact M3 emphasized easing. Requires modern browser support (Chrome 113+, Safari 17.2+)."
+      },
+      "emphasized-decelerate": {
+        "$value": [
+          0.05,
+          0.7,
+          0.1,
+          1
+        ],
+        "$type": "cubicBezier",
+        "$description": "For elements ENTERING the screen. Fast start, gentle settle. M3: emphasized-decelerate"
+      },
+      "emphasized-accelerate": {
+        "$value": [
+          0.3,
+          0,
+          0.8,
+          0.15
+        ],
+        "$type": "cubicBezier",
+        "$description": "For elements EXITING the screen. Slow start, fast exit. M3: emphasized-accelerate"
+      },
+      "standard-decelerate": {
+        "$value": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "$type": "cubicBezier",
+        "$description": "Simple deceleration for basic entrances. M3: standard-decelerate"
+      },
+      "standard-accelerate": {
+        "$value": [
+          0.3,
+          0,
+          1,
+          1
+        ],
+        "$type": "cubicBezier",
+        "$description": "Simple acceleration for basic exits. M3: standard-accelerate"
+      },
+      "linear": {
+        "$value": [
+          0,
+          0,
+          1,
+          1
+        ],
+        "$type": "cubicBezier",
+        "$description": "Linear motion for continuous animations (spinners, progress). All systems: linear"
+      },
+      "ease-in-out-gentle": {
+        "$value": [
+          0.4,
+          0,
+          0.2,
+          1
+        ],
+        "$type": "cubicBezier",
+        "$description": "Gentle ease-in-out for calming, relaxed animations"
+      },
+      "ease-in-out-slow": {
+        "$value": [
+          0.45,
+          0.05,
+          0.15,
+          0.95
+        ],
+        "$type": "cubicBezier",
+        "$description": "Slow ease-in-out for mysterious, lingering animations"
+      },
+      "bounce-out": {
+        "$value": [
+          0.34,
+          1.56,
+          0.64,
+          1
+        ],
+        "$type": "cubicBezier",
+        "$description": "Overshoot easing that simulates bounce without spring physics"
+      }
+    },
+    "spring": {
+      "$description": "M3 spring physics. See tokens/spring.tokens.json for the canonical source. Spatial springs (damping 0.9) allow overshoot for position/scale/rotation. Effects springs (damping 1.0) are critically damped for opacity/color.",
+
+      "fast": {
+        "spatial": {
+          "$value": { "damping": 0.9, "stiffness": 1400, "mass": 1 },
+          "$type": "object",
+          "$description": "M3 fast spatial spring. Position, scale, rotation for small elements."
+        },
+        "effects": {
+          "$value": { "damping": 1.0, "stiffness": 3800, "mass": 1 },
+          "$type": "object",
+          "$description": "M3 fast effects spring. Opacity, color for small elements."
+        }
+      },
+
+      "default": {
+        "spatial": {
+          "$value": { "damping": 0.9, "stiffness": 700, "mass": 1 },
+          "$type": "object",
+          "$description": "M3 default spatial spring. Position, scale, rotation for standard UI."
+        },
+        "effects": {
+          "$value": { "damping": 1.0, "stiffness": 1600, "mass": 1 },
+          "$type": "object",
+          "$description": "M3 default effects spring. Opacity, color for standard UI."
+        }
+      },
+
+      "slow": {
+        "spatial": {
+          "$value": { "damping": 0.9, "stiffness": 300, "mass": 1 },
+          "$type": "object",
+          "$description": "M3 slow spatial spring. Position, scale, rotation for large elements."
+        },
+        "effects": {
+          "$value": { "damping": 1.0, "stiffness": 800, "mass": 1 },
+          "$type": "object",
+          "$description": "M3 slow effects spring. Opacity, color for large elements."
+        }
+      },
+
+      "legacy": {
+        "$description": "DEPRECATED: Use M3 springs (fast/default/slow × spatial/effects). These legacy tokens are kept for backward compatibility.",
+        "bouncy": {
+          "$value": { "damping": 10, "stiffness": 180, "mass": 1 },
+          "$type": "object",
+          "$description": "Custom bouncy spring for playful overshoot."
+        }
+      }
+    },
+    "cross-reference": {
+      "$description": "Equivalent curves in other design systems",
+      "fluent-decelerate": {
+        "$value": [
+          0.1,
+          0.9,
+          0.2,
+          1
+        ],
+        "$type": "cubicBezier",
+        "$description": "Fluent 2 decelerate curve"
+      },
+      "fluent-accelerate": {
+        "$value": [
+          0.9,
+          0.1,
+          1,
+          0.2
+        ],
+        "$type": "cubicBezier",
+        "$description": "Fluent 2 accelerate curve"
+      },
+      "carbon-standard": {
+        "$value": [
+          0.2,
+          0,
+          0.38,
+          0.9
+        ],
+        "$type": "cubicBezier",
+        "$description": "Carbon productive-standard curve"
+      },
+      "carbon-entrance": {
+        "$value": [
+          0,
+          0,
+          0.38,
+          0.9
+        ],
+        "$type": "cubicBezier",
+        "$description": "Carbon productive-entrance curve"
+      },
+      "carbon-exit": {
+        "$value": [
+          0.2,
+          0,
+          1,
+          0.9
+        ],
+        "$type": "cubicBezier",
+        "$description": "Carbon productive-exit curve"
+      },
+      "carbon-expressive-standard": {
+        "$value": [
+          0.4,
+          0.14,
+          0.3,
+          1
+        ],
+        "$type": "cubicBezier",
+        "$description": "Carbon expressive-standard curve"
+      },
+      "apple-default": {
+        "$value": [
+          0.25,
+          0.1,
+          0.25,
+          1
+        ],
+        "$type": "cubicBezier",
+        "$description": "Apple HIG default ease (ease-in-out). Used for most UI transitions."
+      },
+      "apple-ease-in": {
+        "$value": [
+          0.42,
+          0,
+          1,
+          1
+        ],
+        "$type": "cubicBezier",
+        "$description": "Apple HIG ease-in. Elements leaving view or accelerating."
+      },
+      "apple-ease-out": {
+        "$value": [
+          0,
+          0,
+          0.58,
+          1
+        ],
+        "$type": "cubicBezier",
+        "$description": "Apple HIG ease-out. Elements entering view or decelerating."
+      },
+      "apple-spring": {
+        "$value": {
+          "damping": 20,
+          "stiffness": 300,
+          "mass": 1
+        },
+        "$type": "spring",
+        "$description": "Apple HIG spring animation. Fluid, natural motion for iOS/macOS."
+      }
+    }
+  }
+}

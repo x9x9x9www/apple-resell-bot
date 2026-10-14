@@ -1,0 +1,275 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Reveal animation tokens for wipes, masks, and progressive disclosure effects.",
+
+  "motion": {
+    "reveal": {
+      "$description": "Reveal and wipe animation tokens",
+
+      "direction": {
+        "$description": "Reveal direction presets",
+
+        "left-to-right": {
+          "$value": { "start": "left", "end": "right" },
+          "$type": "object",
+          "$description": "Reveal from left to right. Reading direction (LTR)."
+        },
+        "right-to-left": {
+          "$value": { "start": "right", "end": "left" },
+          "$type": "object",
+          "$description": "Reveal from right to left. RTL reading direction."
+        },
+        "top-to-bottom": {
+          "$value": { "start": "top", "end": "bottom" },
+          "$type": "object",
+          "$description": "Reveal from top to bottom. Waterfall effect."
+        },
+        "bottom-to-top": {
+          "$value": { "start": "bottom", "end": "top" },
+          "$type": "object",
+          "$description": "Reveal from bottom to top. Rising effect."
+        },
+        "center-out-horizontal": {
+          "$value": { "start": "center", "end": "horizontal" },
+          "$type": "object",
+          "$description": "Reveal from center outward horizontally."
+        },
+        "center-out-vertical": {
+          "$value": { "start": "center", "end": "vertical" },
+          "$type": "object",
+          "$description": "Reveal from center outward vertically."
+        },
+        "center-out-radial": {
+          "$value": { "start": "center", "end": "radial" },
+          "$type": "object",
+          "$description": "Reveal from center outward in all directions (iris)."
+        },
+        "edges-in-horizontal": {
+          "$value": { "start": "edges", "end": "center-horizontal" },
+          "$type": "object",
+          "$description": "Reveal from edges to center horizontally."
+        },
+        "edges-in-vertical": {
+          "$value": { "start": "edges", "end": "center-vertical" },
+          "$type": "object",
+          "$description": "Reveal from edges to center vertically."
+        },
+        "clockwise": {
+          "$value": { "start": "12-oclock", "end": "clockwise" },
+          "$type": "object",
+          "$description": "Clock wipe, clockwise from top."
+        },
+        "counter-clockwise": {
+          "$value": { "start": "12-oclock", "end": "counter-clockwise" },
+          "$type": "object",
+          "$description": "Clock wipe, counter-clockwise from top."
+        }
+      },
+
+      "edge": {
+        "$description": "Edge softness for reveal transitions",
+
+        "hard": {
+          "$value": "0px",
+          "$type": "dimension",
+          "$description": "Hard edge. Sharp, clean wipe line."
+        },
+        "slight": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Slight softness. Anti-aliased edge."
+        },
+        "soft": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Soft edge. Gentle gradient transition."
+        },
+        "medium": {
+          "$value": "20px",
+          "$type": "dimension",
+          "$description": "Medium gradient. Visible feathering."
+        },
+        "wide": {
+          "$value": "50px",
+          "$type": "dimension",
+          "$description": "Wide gradient. Pronounced feathering."
+        },
+        "extra-wide": {
+          "$value": "100px",
+          "$type": "dimension",
+          "$description": "Extra wide gradient. Dramatic fade zone."
+        }
+      },
+
+      "shape": {
+        "$description": "Reveal mask shapes",
+
+        "linear": {
+          "$value": "linear",
+          "$type": "string",
+          "$description": "Straight line wipe."
+        },
+        "radial": {
+          "$value": "radial",
+          "$type": "string",
+          "$description": "Circular/iris wipe."
+        },
+        "elliptical": {
+          "$value": "elliptical",
+          "$type": "string",
+          "$description": "Oval-shaped reveal."
+        },
+        "rectangular": {
+          "$value": "rectangular",
+          "$type": "string",
+          "$description": "Box/rectangle reveal."
+        },
+        "diamond": {
+          "$value": "diamond",
+          "$type": "string",
+          "$description": "Diamond/rhombus shape reveal."
+        },
+        "star": {
+          "$value": "star",
+          "$type": "string",
+          "$description": "Star shape reveal."
+        },
+        "heart": {
+          "$value": "heart",
+          "$type": "string",
+          "$description": "Heart shape reveal."
+        }
+      },
+
+      "pattern": {
+        "$description": "Multi-element reveal patterns",
+
+        "venetian-horizontal": {
+          "$value": { "type": "blinds", "orientation": "horizontal", "count": 10 },
+          "$type": "object",
+          "$description": "Horizontal venetian blinds reveal."
+        },
+        "venetian-vertical": {
+          "$value": { "type": "blinds", "orientation": "vertical", "count": 10 },
+          "$type": "object",
+          "$description": "Vertical venetian blinds reveal."
+        },
+        "checkerboard": {
+          "$value": { "type": "grid", "size": 50 },
+          "$type": "object",
+          "$description": "Checkerboard pattern reveal."
+        },
+        "dissolve-random": {
+          "$value": { "type": "dissolve", "pattern": "random" },
+          "$type": "object",
+          "$description": "Random pixel/block dissolve."
+        },
+        "dissolve-dither": {
+          "$value": { "type": "dissolve", "pattern": "dither" },
+          "$type": "object",
+          "$description": "Ordered dither dissolve pattern."
+        }
+      },
+
+      "duration": {
+        "$description": "Reveal animation durations",
+
+        "instant": {
+          "$value": "0ms",
+          "$type": "duration",
+          "$description": "Instant reveal. No animation."
+        },
+        "fast": {
+          "$value": "200ms",
+          "$type": "duration",
+          "$description": "Fast reveal. Quick transition."
+        },
+        "standard": {
+          "$value": "400ms",
+          "$type": "duration",
+          "$description": "Standard reveal. Comfortable pace."
+        },
+        "slow": {
+          "$value": "600ms",
+          "$type": "duration",
+          "$description": "Slow reveal. Dramatic effect."
+        },
+        "dramatic": {
+          "$value": "1000ms",
+          "$type": "duration",
+          "$description": "Dramatic reveal. Theatrical pace."
+        },
+        "cinematic": {
+          "$value": "2000ms",
+          "$type": "duration",
+          "$description": "Cinematic reveal. Film-style transition."
+        }
+      },
+
+      "progress": {
+        "$description": "Reveal progress keyframes",
+
+        "start": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "Reveal start (0% visible)."
+        },
+        "quarter": {
+          "$value": 0.25,
+          "$type": "number",
+          "$description": "25% revealed."
+        },
+        "half": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "50% revealed."
+        },
+        "three-quarter": {
+          "$value": 0.75,
+          "$type": "number",
+          "$description": "75% revealed."
+        },
+        "complete": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Reveal complete (100% visible)."
+        }
+      },
+
+      "draw-on": {
+        "$description": "Draw-on/write-on effect parameters",
+
+        "stroke-width-thin": {
+          "$value": "1px",
+          "$type": "dimension",
+          "$description": "Thin stroke for fine drawing."
+        },
+        "stroke-width-medium": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Medium stroke for general drawing."
+        },
+        "stroke-width-thick": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Thick stroke for bold drawing."
+        },
+        "speed-slow": {
+          "$value": "100px/s",
+          "$type": "string",
+          "$description": "Slow drawing speed. Careful strokes."
+        },
+        "speed-medium": {
+          "$value": "300px/s",
+          "$type": "string",
+          "$description": "Medium drawing speed. Natural pace."
+        },
+        "speed-fast": {
+          "$value": "600px/s",
+          "$type": "string",
+          "$description": "Fast drawing speed. Quick sketch."
+        }
+      }
+    }
+  }
+}

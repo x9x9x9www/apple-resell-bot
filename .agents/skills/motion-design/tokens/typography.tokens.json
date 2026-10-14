@@ -1,0 +1,367 @@
+{
+  "$schema": "https://design-tokens.org/schema.json",
+  "motion": {
+    "typography": {
+      "$description": "Typography animation tokens for text effects and kinetic type",
+
+      "character-stagger": {
+        "$description": "Per-character animation delays",
+        "fast": {
+          "$value": "20ms",
+          "$type": "duration",
+          "$description": "Fast character stagger"
+        },
+        "normal": {
+          "$value": "50ms",
+          "$type": "duration",
+          "$description": "Standard character stagger"
+        },
+        "slow": {
+          "$value": "100ms",
+          "$type": "duration",
+          "$description": "Slow character stagger"
+        },
+        "dramatic": {
+          "$value": "200ms",
+          "$type": "duration",
+          "$description": "Dramatic character reveal"
+        }
+      },
+
+      "word-stagger": {
+        "$description": "Per-word animation delays",
+        "fast": {
+          "$value": "80ms",
+          "$type": "duration",
+          "$description": "Fast word stagger"
+        },
+        "normal": {
+          "$value": "150ms",
+          "$type": "duration",
+          "$description": "Standard word stagger"
+        },
+        "slow": {
+          "$value": "300ms",
+          "$type": "duration",
+          "$description": "Slow word stagger"
+        }
+      },
+
+      "line-stagger": {
+        "$description": "Per-line animation delays",
+        "fast": {
+          "$value": "100ms",
+          "$type": "duration",
+          "$description": "Fast line stagger"
+        },
+        "normal": {
+          "$value": "200ms",
+          "$type": "duration",
+          "$description": "Standard line stagger"
+        },
+        "slow": {
+          "$value": "400ms",
+          "$type": "duration",
+          "$description": "Slow line stagger"
+        }
+      },
+
+      "reveal-duration": {
+        "$description": "Text reveal animation durations",
+        "instant": {
+          "$value": "100ms",
+          "$type": "duration",
+          "$description": "Instant reveal"
+        },
+        "fast": {
+          "$value": "300ms",
+          "$type": "duration",
+          "$description": "Fast text reveal"
+        },
+        "normal": {
+          "$value": "500ms",
+          "$type": "duration",
+          "$description": "Standard text reveal"
+        },
+        "slow": {
+          "$value": "800ms",
+          "$type": "duration",
+          "$description": "Slow text reveal"
+        }
+      },
+
+      "typewriter": {
+        "$description": "Typewriter effect parameters",
+        "speed": {
+          "fast": {
+            "$value": "30ms",
+            "$type": "duration",
+            "$description": "Fast typing speed"
+          },
+          "normal": {
+            "$value": "80ms",
+            "$type": "duration",
+            "$description": "Natural typing speed"
+          },
+          "slow": {
+            "$value": "150ms",
+            "$type": "duration",
+            "$description": "Slow typing"
+          }
+        },
+        "cursor-blink": {
+          "$value": "530ms",
+          "$type": "duration",
+          "$description": "Cursor blink rate"
+        },
+        "pause-comma": {
+          "$value": "200ms",
+          "$type": "duration",
+          "$description": "Pause after comma"
+        },
+        "pause-period": {
+          "$value": "500ms",
+          "$type": "duration",
+          "$description": "Pause after period"
+        }
+      },
+
+      "scramble": {
+        "$description": "Text scramble/decode effect",
+        "iterations": {
+          "minimal": {
+            "$value": "3",
+            "$type": "number",
+            "$description": "Minimal scramble iterations"
+          },
+          "normal": {
+            "$value": "8",
+            "$type": "number",
+            "$description": "Standard scramble"
+          },
+          "heavy": {
+            "$value": "15",
+            "$type": "number",
+            "$description": "Heavy scramble effect"
+          }
+        },
+        "speed": {
+          "fast": {
+            "$value": "30ms",
+            "$type": "duration",
+            "$description": "Fast scramble speed"
+          },
+          "normal": {
+            "$value": "60ms",
+            "$type": "duration",
+            "$description": "Standard scramble"
+          },
+          "slow": {
+            "$value": "100ms",
+            "$type": "duration",
+            "$description": "Slow scramble"
+          }
+        }
+      },
+
+      "wave": {
+        "$description": "Wave/bounce text effect",
+        "amplitude": {
+          "subtle": {
+            "$value": "5px",
+            "$type": "dimension",
+            "$description": "Subtle wave height"
+          },
+          "normal": {
+            "$value": "10px",
+            "$type": "dimension",
+            "$description": "Standard wave height"
+          },
+          "dramatic": {
+            "$value": "20px",
+            "$type": "dimension",
+            "$description": "Dramatic wave height"
+          }
+        },
+        "frequency": {
+          "slow": {
+            "$value": "2000ms",
+            "$type": "duration",
+            "$description": "Slow wave cycle"
+          },
+          "normal": {
+            "$value": "1000ms",
+            "$type": "duration",
+            "$description": "Standard wave cycle"
+          },
+          "fast": {
+            "$value": "500ms",
+            "$type": "duration",
+            "$description": "Fast wave cycle"
+          }
+        },
+        "offset": {
+          "tight": {
+            "$value": "0.1",
+            "$type": "number",
+            "$description": "Tight wave offset"
+          },
+          "normal": {
+            "$value": "0.2",
+            "$type": "number",
+            "$description": "Standard wave offset"
+          },
+          "wide": {
+            "$value": "0.4",
+            "$type": "number",
+            "$description": "Wide wave offset"
+          }
+        }
+      },
+
+      "counter": {
+        "$description": "Number counter animation",
+        "duration": {
+          "fast": {
+            "$value": "500ms",
+            "$type": "duration",
+            "$description": "Fast count"
+          },
+          "normal": {
+            "$value": "1500ms",
+            "$type": "duration",
+            "$description": "Standard count"
+          },
+          "slow": {
+            "$value": "3000ms",
+            "$type": "duration",
+            "$description": "Slow count"
+          }
+        },
+        "easing": {
+          "$value": [0.16, 1, 0.3, 1],
+          "$type": "cubicBezier",
+          "$description": "Counter easing (fast start, slow end)"
+        }
+      },
+
+      "split": {
+        "$description": "Text split animation modes",
+        "mode": {
+          "characters": {
+            "$value": "chars",
+            "$type": "string",
+            "$description": "Split by character"
+          },
+          "words": {
+            "$value": "words",
+            "$type": "string",
+            "$description": "Split by word"
+          },
+          "lines": {
+            "$value": "lines",
+            "$type": "string",
+            "$description": "Split by line"
+          }
+        }
+      },
+
+      "gradient-animation": {
+        "$description": "Animated text gradients",
+        "speed": {
+          "slow": {
+            "$value": "5000ms",
+            "$type": "duration",
+            "$description": "Slow gradient animation"
+          },
+          "normal": {
+            "$value": "3000ms",
+            "$type": "duration",
+            "$description": "Standard gradient speed"
+          },
+          "fast": {
+            "$value": "1500ms",
+            "$type": "duration",
+            "$description": "Fast gradient animation"
+          }
+        }
+      },
+
+      "highlight": {
+        "$description": "Text highlight/underline animation",
+        "duration": {
+          "fast": {
+            "$value": "200ms",
+            "$type": "duration",
+            "$description": "Fast highlight"
+          },
+          "normal": {
+            "$value": "400ms",
+            "$type": "duration",
+            "$description": "Standard highlight"
+          },
+          "slow": {
+            "$value": "800ms",
+            "$type": "duration",
+            "$description": "Slow highlight reveal"
+          }
+        },
+        "thickness": {
+          "thin": {
+            "$value": "2px",
+            "$type": "dimension",
+            "$description": "Thin highlight"
+          },
+          "normal": {
+            "$value": "4px",
+            "$type": "dimension",
+            "$description": "Standard highlight"
+          },
+          "thick": {
+            "$value": "8px",
+            "$type": "dimension",
+            "$description": "Thick highlight"
+          }
+        }
+      },
+
+      "glitch-text": {
+        "$description": "Text glitch effect parameters",
+        "offset": {
+          "subtle": {
+            "$value": "2px",
+            "$type": "dimension",
+            "$description": "Subtle glitch offset"
+          },
+          "medium": {
+            "$value": "5px",
+            "$type": "dimension",
+            "$description": "Medium glitch offset"
+          },
+          "heavy": {
+            "$value": "10px",
+            "$type": "dimension",
+            "$description": "Heavy glitch offset"
+          }
+        },
+        "frequency": {
+          "rare": {
+            "$value": "3000ms",
+            "$type": "duration",
+            "$description": "Rare glitch occurrence"
+          },
+          "occasional": {
+            "$value": "1500ms",
+            "$type": "duration",
+            "$description": "Occasional glitch"
+          },
+          "frequent": {
+            "$value": "500ms",
+            "$type": "duration",
+            "$description": "Frequent glitch"
+          }
+        }
+      }
+    }
+  }
+}

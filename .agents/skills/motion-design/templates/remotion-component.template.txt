@@ -1,0 +1,300 @@
+/**
+ * ===========================================
+ * Remotion Animation Component Template
+ * Generated from Motion Design Agent v2
+ * ===========================================
+ */
+
+import React from 'react';
+import {
+  useCurrentFrame,
+  useVideoConfig,
+  interpolate,
+  spring,
+  Easing,
+  Sequence,
+} from 'remotion';
+
+/**
+ * Animation: {{ANIMATION_NAME}}
+ * Duration: {{DURATION_FRAMES}} frames at {{FPS}}fps ({{DURATION_MS}}ms)
+ * Easing: {{EASING_TYPE}}
+ * Principles: {{PRINCIPLES}}
+ */
+
+// Duration tokens (frames at 30fps)
+export const durationFrames = {
+  'short-1': 2,   // 50ms
+  'short-2': 3,   // 100ms
+  'short-3': 5,   // 150ms
+  'short-4': 6,   // 200ms
+  'medium-1': 8,  // 250ms
+  'medium-2': 9,  // 300ms
+  'medium-3': 11, // 350ms
+  'medium-4': 12, // 400ms
+  'long-1': 14,   // 450ms
+  'long-2': 15,   // 500ms
+} as const;
+
+// Convert ms to frames
+export const msToFrames = (ms: number, fps: number = 30): number => {
+  return Math.round((ms / 1000) * fps);
+};
+
+// Easing functions
+export const easingFunctions = {
+  standard: Easing.bezier(0.2, 0, 0, 1),
+  'emphasized-decelerate': Easing.bezier(0.05, 0.7, 0.1, 1),
+  'emphasized-accelerate': Easing.bezier(0.3, 0, 0.8, 0.15),
+  'standard-decelerate': Easing.bezier(0, 0, 0, 1),
+  linear: Easing.bezier(0, 0, 1, 1),
+} as const;
+
+// Spring configurations
+export const springConfigs = {
+  standard: { damping: 15, stiffness: 150, mass: 1 },
+  snappy: { damping: 25, stiffness: 300, mass: 0.5 },
+  bouncy: { damping: 10, stiffness: 180, mass: 1 },
+  gentle: { damping: 25, stiffness: 100, mass: 1.2 },
+} as const;
+
+interface {{COMPONENT_NAME}}Props {
+  children: React.ReactNode;
+  delay?: number;
+  {{#if HAS_CUSTOM_PROPS}}
+  {{CUSTOM_PROPS}}
+  {{/if}}
+}
+
+/**
+ * {{ANIMATION_DESCRIPTION}}
+ */
+export const {{COMPONENT_NAME}}: React.FC<{{COMPONENT_NAME}}Props> = ({
+  children,
+  delay = 0,
+  {{#if HAS_CUSTOM_PROPS}}{{CUSTOM_PROPS_DEFAULTS}}{{/if}}
+}) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+
+  const localFrame = Math.max(0, frame - delay);
+  const animationDuration = durationFrames['{{DURATION_TOKEN}}'];
+
+  {{#if USE_INTERPOLATE}}
+  // Interpolate-based animation
+  const opacity = interpolate(
+    localFrame,
+    [0, animationDuration],
+    [{{FROM_OPACITY}}, {{TO_OPACITY}}],
+    {
+      easing: easingFunctions['{{EASING_TOKEN}}'],
+      extrapolateLeft: 'clamp',
+      extrapolateRight: 'clamp',
+    }
+  );
+
+  {{#if HAS_TRANSFORM_Y}}
+  const translateY = interpolate(
+    localFrame,
+    [0, animationDuration],
+    [{{FROM_Y}}, {{TO_Y}}],
+    {
+      easing: easingFunctions['{{EASING_TOKEN}}'],
+      extrapolateLeft: 'clamp',
+      extrapolateRight: 'clamp',
+    }
+  );
+  {{/if}}
+
+  {{#if HAS_SCALE}}
+  const scale = interpolate(
+    localFrame,
+    [0, animationDuration],
+    [{{FROM_SCALE}}, {{TO_SCALE}}],
+    {
+      easing: easingFunctions['{{EASING_TOKEN}}'],
+      extrapolateLeft: 'clamp',
+      extrapolateRight: 'clamp',
+    }
+  );
+  {{/if}}
+  {{/if}}
+
+  {{#if USE_SPRING}}
+  // Spring-based animation
+  const progress = spring({
+    frame: localFrame,
+    fps,
+    config: springConfigs['{{SPRING_CONFIG}}'],
+  });
+
+  const opacity = interpolate(progress, [0, 1], [{{FROM_OPACITY}}, {{TO_OPACITY}}]);
+  {{#if HAS_TRANSFORM_Y}}
+  const translateY = interpolate(progress, [0, 1], [{{FROM_Y}}, {{TO_Y}}]);
+  {{/if}}
+  {{#if HAS_SCALE}}
+  const scale = interpolate(progress, [0, 1], [{{FROM_SCALE}}, {{TO_SCALE}}]);
+  {{/if}}
+  {{/if}}
+
+  const style: React.CSSProperties = {
+    opacity,
+    transform: [
+      {{#if HAS_TRANSFORM_Y}}`translateY(${translateY}px)`,{{/if}}
+      {{#if HAS_SCALE}}`scale(${scale})`,{{/if}}
+    ].filter(Boolean).join(' ') || undefined,
+    willChange: 'transform, opacity',
+  };
+
+  return (
+    <div style={style}>
+      {children}
+    </div>
+  );
+};
+
+{{#if HAS_STAGGER}}
+interface {{COMPONENT_NAME}}ListProps {
+  items: React.ReactNode[];
+  staggerDelay?: number;
+}
+
+/**
+ * Staggered version for multiple elements
+ */
+export const {{COMPONENT_NAME}}List: React.FC<{{COMPONENT_NAME}}ListProps> = ({
+  items,
+  staggerDelay = msToFrames({{STAGGER_MS}}),
+}) => {
+  return (
+    <>
+      {items.map((item, index) => (
+        <{{COMPONENT_NAME}} key={index} delay={index * staggerDelay}>
+          {item}
+        </{{COMPONENT_NAME}}>
+      ))}
+    </>
+  );
+};
+
+/**
+ * Get adaptive stagger delay based on item count
+ */
+export const getAdaptiveStagger = (
+  itemCount: number,
+  maxTotalMs: number = 800,
+  fps: number = 30
+): number => {
+  const minDelayMs = 25;
+  const maxDelayMs = 50;
+  const calculatedMs = maxTotalMs / itemCount;
+  const delayMs = Math.max(minDelayMs, Math.min(maxDelayMs, calculatedMs));
+  return msToFrames(delayMs, fps);
+};
+{{/if}}
+
+{{#if HAS_EXIT}}
+interface {{COMPONENT_NAME}}ExitProps {
+  children: React.ReactNode;
+  startFrame?: number;
+}
+
+/**
+ * Exit/reverse animation
+ */
+export const {{COMPONENT_NAME}}Exit: React.FC<{{COMPONENT_NAME}}ExitProps> = ({
+  children,
+  startFrame = 0,
+}) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+
+  const localFrame = Math.max(0, frame - startFrame);
+  const exitDuration = durationFrames['short-4'];
+
+  const opacity = interpolate(
+    localFrame,
+    [0, exitDuration],
+    [1, 0],
+    {
+      easing: easingFunctions['emphasized-accelerate'],
+      extrapolateLeft: 'clamp',
+      extrapolateRight: 'clamp',
+    }
+  );
+
+  {{#if HAS_SCALE}}
+  const scale = interpolate(
+    localFrame,
+    [0, exitDuration],
+    [1, {{EXIT_SCALE}}],
+    {
+      easing: easingFunctions['emphasized-accelerate'],
+      extrapolateLeft: 'clamp',
+      extrapolateRight: 'clamp',
+    }
+  );
+  {{/if}}
+
+  return (
+    <div style={{
+      opacity,
+      {{#if HAS_SCALE}}transform: `scale(${scale})`,{{/if}}
+    }}>
+      {children}
+    </div>
+  );
+};
+{{/if}}
+
+/* ===========================================
+   Usage Example:
+
+   import { Composition } from 'remotion';
+   import { {{COMPONENT_NAME}}{{#if HAS_STAGGER}}, {{COMPONENT_NAME}}List{{/if}} } from './{{FILE_NAME}}';
+
+   // In your composition
+   export const MyVideo: React.FC = () => {
+     return (
+       <{{COMPONENT_NAME}} delay={0}>
+         <h1>Animated Title</h1>
+       </{{COMPONENT_NAME}}>
+     );
+   };
+
+   // With Sequence for timing
+   export const SequencedVideo: React.FC = () => {
+     return (
+       <>
+         <Sequence from={0} durationInFrames={30}>
+           <{{COMPONENT_NAME}}>
+             <h1>First</h1>
+           </{{COMPONENT_NAME}}>
+         </Sequence>
+         <Sequence from={15} durationInFrames={30}>
+           <{{COMPONENT_NAME}}>
+             <h2>Second</h2>
+           </{{COMPONENT_NAME}}>
+         </Sequence>
+       </>
+     );
+   };
+   {{#if HAS_STAGGER}}
+
+   // Staggered list
+   export const StaggeredList: React.FC = () => {
+     const items = ['Item 1', 'Item 2', 'Item 3'].map(
+       text => <div>{text}</div>
+     );
+
+     return <{{COMPONENT_NAME}}List items={items} staggerDelay={2} />;
+   };
+   {{/if}}
+   =========================================== */
+
+/* Token References:
+   Duration: {{DURATION_TOKEN}} ({{DURATION_FRAMES}} frames)
+   Easing: {{EASING_TOKEN}}
+   {{#if USE_SPRING}}Spring: {{SPRING_CONFIG}}{{/if}}
+   Recipe: {{RECIPE_REF}}
+*/

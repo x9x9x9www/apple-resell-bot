@@ -1,0 +1,330 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Blur effect tokens for motion blur, depth of field, and focus animations.",
+
+  "motion": {
+    "blur": {
+      "$description": "Blur animation tokens",
+
+      "radius": {
+        "$description": "Gaussian blur radius values",
+
+        "none": {
+          "$value": "0px",
+          "$type": "dimension",
+          "$description": "No blur. Sharp, in-focus."
+        },
+        "micro": {
+          "$value": "1px",
+          "$type": "dimension",
+          "$description": "Micro blur. Anti-aliasing level."
+        },
+        "subtle": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Subtle blur. Slight softening."
+        },
+        "light": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Light blur. Noticeable softening."
+        },
+        "medium": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Medium blur. Clear defocus."
+        },
+        "strong": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Strong blur. Pronounced defocus."
+        },
+        "heavy": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Heavy blur. Very soft."
+        },
+        "extreme": {
+          "$value": "32px",
+          "$type": "dimension",
+          "$description": "Extreme blur. Abstract softness."
+        },
+        "maximum": {
+          "$value": "48px",
+          "$type": "dimension",
+          "$description": "Maximum blur. Completely obscured."
+        }
+      },
+
+      "motion-blur": {
+        "$description": "Motion blur for moving elements",
+
+        "samples-low": {
+          "$value": 4,
+          "$type": "number",
+          "$description": "Low sample count. Fast but stepped."
+        },
+        "samples-medium": {
+          "$value": 8,
+          "$type": "number",
+          "$description": "Medium sample count. Balanced quality."
+        },
+        "samples-high": {
+          "$value": 16,
+          "$type": "number",
+          "$description": "High sample count. Smooth blur."
+        },
+        "samples-ultra": {
+          "$value": 32,
+          "$type": "number",
+          "$description": "Ultra sample count. Film quality."
+        },
+        "angle-horizontal": {
+          "$value": "0deg",
+          "$type": "dimension",
+          "$description": "Horizontal motion blur direction."
+        },
+        "angle-vertical": {
+          "$value": "90deg",
+          "$type": "dimension",
+          "$description": "Vertical motion blur direction."
+        },
+        "angle-diagonal-down": {
+          "$value": "45deg",
+          "$type": "dimension",
+          "$description": "Diagonal down motion blur."
+        },
+        "angle-diagonal-up": {
+          "$value": "-45deg",
+          "$type": "dimension",
+          "$description": "Diagonal up motion blur."
+        },
+        "distance-subtle": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Subtle motion blur distance."
+        },
+        "distance-medium": {
+          "$value": "12px",
+          "$type": "dimension",
+          "$description": "Medium motion blur distance."
+        },
+        "distance-strong": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Strong motion blur distance."
+        },
+        "distance-extreme": {
+          "$value": "48px",
+          "$type": "dimension",
+          "$description": "Extreme motion blur distance."
+        }
+      },
+
+      "radial": {
+        "$description": "Radial blur (spin/zoom) parameters",
+
+        "spin-amount-subtle": {
+          "$value": "2deg",
+          "$type": "dimension",
+          "$description": "Subtle radial spin blur."
+        },
+        "spin-amount-medium": {
+          "$value": "5deg",
+          "$type": "dimension",
+          "$description": "Medium radial spin blur."
+        },
+        "spin-amount-strong": {
+          "$value": "10deg",
+          "$type": "dimension",
+          "$description": "Strong radial spin blur."
+        },
+        "zoom-amount-subtle": {
+          "$value": 1.02,
+          "$type": "number",
+          "$description": "Subtle zoom blur (2% expansion)."
+        },
+        "zoom-amount-medium": {
+          "$value": 1.1,
+          "$type": "number",
+          "$description": "Medium zoom blur (10% expansion)."
+        },
+        "zoom-amount-strong": {
+          "$value": 1.3,
+          "$type": "number",
+          "$description": "Strong zoom blur (30% expansion)."
+        },
+        "center-x": {
+          "$value": "50%",
+          "$type": "dimension",
+          "$description": "Default radial center X position."
+        },
+        "center-y": {
+          "$value": "50%",
+          "$type": "dimension",
+          "$description": "Default radial center Y position."
+        }
+      },
+
+      "depth": {
+        "$description": "Depth of field blur parameters",
+
+        "near-blur": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Blur for near (foreground) elements."
+        },
+        "far-blur": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Blur for far (background) elements."
+        },
+        "focal-distance-near": {
+          "$value": "100px",
+          "$type": "dimension",
+          "$description": "Near focus plane distance."
+        },
+        "focal-distance-far": {
+          "$value": "500px",
+          "$type": "dimension",
+          "$description": "Far focus plane distance."
+        },
+        "bokeh-shape-circle": {
+          "$value": "circle",
+          "$type": "string",
+          "$description": "Circular bokeh shape (standard lens)."
+        },
+        "bokeh-shape-hexagon": {
+          "$value": "hexagon",
+          "$type": "string",
+          "$description": "Hexagonal bokeh (6-blade aperture)."
+        },
+        "bokeh-shape-octagon": {
+          "$value": "octagon",
+          "$type": "string",
+          "$description": "Octagonal bokeh (8-blade aperture)."
+        }
+      },
+
+      "focus": {
+        "$description": "Focus pull animation parameters",
+
+        "pull-duration-fast": {
+          "$value": "200ms",
+          "$type": "duration",
+          "$description": "Fast focus pull. Snap focus."
+        },
+        "pull-duration-standard": {
+          "$value": "400ms",
+          "$type": "duration",
+          "$description": "Standard focus pull. Natural pace."
+        },
+        "pull-duration-slow": {
+          "$value": "800ms",
+          "$type": "duration",
+          "$description": "Slow focus pull. Cinematic rack focus."
+        },
+        "pull-duration-dramatic": {
+          "$value": "1500ms",
+          "$type": "duration",
+          "$description": "Dramatic focus pull. Artsy transition."
+        },
+        "in-focus": {
+          "$value": "0px",
+          "$type": "dimension",
+          "$description": "Sharp focus state."
+        },
+        "out-of-focus-subtle": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Subtly out of focus."
+        },
+        "out-of-focus-clear": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Clearly out of focus."
+        },
+        "out-of-focus-heavy": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Heavily out of focus."
+        }
+      },
+
+      "tilt-shift": {
+        "$description": "Tilt-shift (miniature) effect parameters",
+
+        "focus-band-narrow": {
+          "$value": "100px",
+          "$type": "dimension",
+          "$description": "Narrow in-focus band. Strong miniature effect."
+        },
+        "focus-band-medium": {
+          "$value": "200px",
+          "$type": "dimension",
+          "$description": "Medium in-focus band. Balanced effect."
+        },
+        "focus-band-wide": {
+          "$value": "400px",
+          "$type": "dimension",
+          "$description": "Wide in-focus band. Subtle effect."
+        },
+        "edge-blur-light": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Light blur at focus band edges."
+        },
+        "edge-blur-medium": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Medium blur at focus band edges."
+        },
+        "edge-blur-strong": {
+          "$value": "32px",
+          "$type": "dimension",
+          "$description": "Strong blur at focus band edges."
+        },
+        "angle-horizontal": {
+          "$value": "0deg",
+          "$type": "dimension",
+          "$description": "Horizontal focus band."
+        },
+        "angle-vertical": {
+          "$value": "90deg",
+          "$type": "dimension",
+          "$description": "Vertical focus band."
+        },
+        "angle-diagonal": {
+          "$value": "45deg",
+          "$type": "dimension",
+          "$description": "Diagonal focus band."
+        }
+      },
+
+      "transition": {
+        "$description": "Blur transition timing",
+
+        "duration-instant": {
+          "$value": "0ms",
+          "$type": "duration",
+          "$description": "Instant blur change."
+        },
+        "duration-fast": {
+          "$value": "100ms",
+          "$type": "duration",
+          "$description": "Fast blur transition."
+        },
+        "duration-standard": {
+          "$value": "200ms",
+          "$type": "duration",
+          "$description": "Standard blur transition."
+        },
+        "duration-slow": {
+          "$value": "400ms",
+          "$type": "duration",
+          "$description": "Slow blur transition."
+        }
+      }
+    }
+  }
+}

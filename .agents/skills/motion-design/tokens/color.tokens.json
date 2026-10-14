@@ -1,0 +1,295 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Color animation tokens for hue shifts, saturation, brightness, and contrast transitions.",
+
+  "motion": {
+    "color": {
+      "$description": "Color animation tokens",
+
+      "shift": {
+        "$description": "Hue rotation values for color shifting animations",
+
+        "subtle": {
+          "$value": "10deg",
+          "$type": "dimension",
+          "$description": "Subtle hue shift. Barely perceptible color variation."
+        },
+        "small": {
+          "$value": "30deg",
+          "$type": "dimension",
+          "$description": "Small hue shift. Noticeable but gentle color change."
+        },
+        "medium": {
+          "$value": "60deg",
+          "$type": "dimension",
+          "$description": "Medium hue shift. Clear color transition."
+        },
+        "large": {
+          "$value": "90deg",
+          "$type": "dimension",
+          "$description": "Large hue shift. Dramatic color change."
+        },
+        "triadic": {
+          "$value": "120deg",
+          "$type": "dimension",
+          "$description": "Triadic shift. 1/3 around color wheel."
+        },
+        "complement": {
+          "$value": "180deg",
+          "$type": "dimension",
+          "$description": "Complementary hue. Opposite on color wheel."
+        },
+        "full": {
+          "$value": "360deg",
+          "$type": "dimension",
+          "$description": "Full hue rotation. Complete color wheel cycle."
+        }
+      },
+
+      "saturation": {
+        "$description": "Saturation multipliers for color intensity animations",
+
+        "grayscale": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "Zero saturation. Black and white."
+        },
+        "desaturated": {
+          "$value": 0.25,
+          "$type": "number",
+          "$description": "Heavily desaturated. Washed out appearance."
+        },
+        "muted": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "Muted saturation. Subdued colors."
+        },
+        "reduced": {
+          "$value": 0.75,
+          "$type": "number",
+          "$description": "Slightly reduced saturation."
+        },
+        "normal": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Normal saturation. Baseline colors."
+        },
+        "enhanced": {
+          "$value": 1.15,
+          "$type": "number",
+          "$description": "Enhanced saturation. Richer colors."
+        },
+        "vibrant": {
+          "$value": 1.3,
+          "$type": "number",
+          "$description": "Vibrant saturation. Bold, punchy colors."
+        },
+        "hyper": {
+          "$value": 1.5,
+          "$type": "number",
+          "$description": "Hyper-saturated. Intense, almost neon."
+        }
+      },
+
+      "brightness": {
+        "$description": "Brightness multipliers for lightness animations",
+
+        "black": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "Zero brightness. Complete black."
+        },
+        "dark": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "Dark brightness. Shadowed appearance."
+        },
+        "dimmed": {
+          "$value": 0.75,
+          "$type": "number",
+          "$description": "Dimmed brightness. Slightly darker."
+        },
+        "normal": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Normal brightness. Baseline."
+        },
+        "bright": {
+          "$value": 1.2,
+          "$type": "number",
+          "$description": "Bright. Enhanced luminosity."
+        },
+        "highlight": {
+          "$value": 1.5,
+          "$type": "number",
+          "$description": "Highlighted. Strong brightness increase."
+        },
+        "blown": {
+          "$value": 2,
+          "$type": "number",
+          "$description": "Overexposed. Blown out highlights."
+        },
+        "white": {
+          "$value": 3,
+          "$type": "number",
+          "$description": "Maximum brightness. Near white flash."
+        }
+      },
+
+      "contrast": {
+        "$description": "Contrast multipliers for color distinction animations",
+
+        "flat": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "Flat contrast. Low dynamic range."
+        },
+        "low": {
+          "$value": 0.75,
+          "$type": "number",
+          "$description": "Low contrast. Soft, gentle appearance."
+        },
+        "normal": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Normal contrast. Baseline."
+        },
+        "high": {
+          "$value": 1.1,
+          "$type": "number",
+          "$description": "High contrast. Increased separation."
+        },
+        "punchy": {
+          "$value": 1.2,
+          "$type": "number",
+          "$description": "Punchy contrast. Bold, crisp."
+        },
+        "dramatic": {
+          "$value": 1.5,
+          "$type": "number",
+          "$description": "Dramatic contrast. Strong visual impact."
+        },
+        "extreme": {
+          "$value": 2,
+          "$type": "number",
+          "$description": "Extreme contrast. Near-posterized effect."
+        }
+      },
+
+      "duration": {
+        "$description": "Duration values for color transitions",
+
+        "instant": {
+          "$value": "0ms",
+          "$type": "duration",
+          "$description": "Instant color change. No animation."
+        },
+        "flash": {
+          "$value": "100ms",
+          "$type": "duration",
+          "$description": "Flash color change. Quick pop."
+        },
+        "quick": {
+          "$value": "200ms",
+          "$type": "duration",
+          "$description": "Quick transition. Snappy feedback."
+        },
+        "standard": {
+          "$value": "300ms",
+          "$type": "duration",
+          "$description": "Standard color transition. Comfortable."
+        },
+        "smooth": {
+          "$value": "500ms",
+          "$type": "duration",
+          "$description": "Smooth transition. Gentle shift."
+        },
+        "gradual": {
+          "$value": "1000ms",
+          "$type": "duration",
+          "$description": "Gradual transition. Slow morph."
+        },
+        "ambient": {
+          "$value": "3000ms",
+          "$type": "duration",
+          "$description": "Ambient cycle. Slow color breathing."
+        }
+      },
+
+      "cycle": {
+        "$description": "Continuous color cycling parameters",
+
+        "period-slow": {
+          "$value": "10s",
+          "$type": "duration",
+          "$description": "Slow color cycle. Ambient mood lighting."
+        },
+        "period-medium": {
+          "$value": "5s",
+          "$type": "duration",
+          "$description": "Medium color cycle. Noticeable transition."
+        },
+        "period-fast": {
+          "$value": "2s",
+          "$type": "duration",
+          "$description": "Fast color cycle. Active animation."
+        },
+        "period-rapid": {
+          "$value": "1s",
+          "$type": "duration",
+          "$description": "Rapid color cycle. Dynamic effect."
+        }
+      },
+
+      "temperature": {
+        "$description": "Color temperature shift values (warm/cool)",
+
+        "cool-extreme": {
+          "$value": "-50deg",
+          "$type": "dimension",
+          "$description": "Extreme cool shift. Heavy blue cast."
+        },
+        "cool": {
+          "$value": "-20deg",
+          "$type": "dimension",
+          "$description": "Cool shift. Subtle blue/cyan tint."
+        },
+        "neutral": {
+          "$value": "0deg",
+          "$type": "dimension",
+          "$description": "Neutral temperature. No shift."
+        },
+        "warm": {
+          "$value": "20deg",
+          "$type": "dimension",
+          "$description": "Warm shift. Subtle orange/yellow tint."
+        },
+        "warm-extreme": {
+          "$value": "50deg",
+          "$type": "dimension",
+          "$description": "Extreme warm shift. Heavy orange cast."
+        }
+      },
+
+      "filter": {
+        "$description": "Preset color filter effects",
+
+        "sepia-intensity": {
+          "$value": 0.8,
+          "$type": "number",
+          "$description": "Sepia filter intensity. Vintage look."
+        },
+        "invert-full": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Full color inversion."
+        },
+        "invert-partial": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "Partial color inversion. Solarized effect."
+        }
+      }
+    }
+  }
+}

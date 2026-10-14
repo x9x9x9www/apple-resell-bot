@@ -1,0 +1,160 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Gesture interaction tokens. Defines thresholds and timings for touch and pointer gestures per Material Design 3 and platform conventions.",
+
+  "motion": {
+    "gesture": {
+      "$description": "Gesture detection thresholds and response timings",
+
+      "timing": {
+        "$description": "Time-based gesture thresholds",
+
+        "long-press": {
+          "$value": "500ms",
+          "$type": "duration",
+          "$description": "Time before long-press triggers. Android/M3 standard."
+        },
+        "double-tap-window": {
+          "$value": "300ms",
+          "$type": "duration",
+          "$description": "Maximum time between taps for double-tap detection."
+        },
+        "tap-timeout": {
+          "$value": "100ms",
+          "$type": "duration",
+          "$description": "Minimum time to distinguish tap from scroll initiation."
+        },
+        "hold-delay": {
+          "$value": "150ms",
+          "$type": "duration",
+          "$description": "Delay before continuous action starts (e.g., number stepper hold)."
+        },
+        "debounce": {
+          "$value": "50ms",
+          "$type": "duration",
+          "$description": "Debounce interval for rapid gesture events."
+        }
+      },
+
+      "distance": {
+        "$description": "Distance-based gesture thresholds",
+
+        "touch-slop": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Minimum movement to initiate drag (cancels tap). Android touch slop."
+        },
+        "swipe-threshold": {
+          "$value": "56px",
+          "$type": "dimension",
+          "$description": "Minimum distance for swipe gesture recognition."
+        },
+        "dismiss-threshold": {
+          "$value": "100px",
+          "$type": "dimension",
+          "$description": "Distance to trigger dismissal (cards, sheets)."
+        },
+        "fling-min-distance": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Minimum distance for fling gesture with velocity."
+        }
+      },
+
+      "velocity": {
+        "$description": "Velocity-based gesture thresholds",
+
+        "swipe-min": {
+          "$value": "100",
+          "$type": "number",
+          "$description": "Minimum velocity (px/s) for swipe recognition."
+        },
+        "fling-min": {
+          "$value": "500",
+          "$type": "number",
+          "$description": "Minimum velocity (px/s) for fling gesture."
+        },
+        "fling-max": {
+          "$value": "8000",
+          "$type": "number",
+          "$description": "Maximum velocity (px/s) cap for fling animations."
+        },
+        "dismiss-velocity": {
+          "$value": "800",
+          "$type": "number",
+          "$description": "Velocity (px/s) that triggers dismissal regardless of distance."
+        },
+        "scroll-velocity-threshold": {
+          "$value": "200",
+          "$type": "number",
+          "$description": "Velocity (px/s) that distinguishes scroll from tap."
+        }
+      },
+
+      "deceleration": {
+        "$description": "Momentum deceleration factors for fling animations",
+
+        "standard": {
+          "$value": 0.998,
+          "$type": "number",
+          "$description": "Standard deceleration. Natural scroll feel."
+        },
+        "fast": {
+          "$value": 0.99,
+          "$type": "number",
+          "$description": "Fast deceleration. Stops quickly."
+        },
+        "slow": {
+          "$value": 0.999,
+          "$type": "number",
+          "$description": "Slow deceleration. Long momentum carry."
+        }
+      },
+
+      "snap": {
+        "$description": "Snap point behavior thresholds",
+
+        "threshold": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "50% threshold - snap to nearest if past halfway."
+        },
+        "velocity-override": {
+          "$value": "500",
+          "$type": "number",
+          "$description": "Velocity (px/s) that overrides threshold (snaps in direction of motion)."
+        }
+      },
+
+      "pinch": {
+        "$description": "Pinch/zoom gesture thresholds",
+
+        "min-scale-delta": {
+          "$value": 0.02,
+          "$type": "number",
+          "$description": "Minimum scale change to register pinch gesture."
+        },
+        "min-pointers": {
+          "$value": 2,
+          "$type": "number",
+          "$description": "Minimum touch points for pinch gesture."
+        }
+      },
+
+      "rotation": {
+        "$description": "Rotation gesture thresholds",
+
+        "min-angle": {
+          "$value": "5deg",
+          "$type": "string",
+          "$description": "Minimum rotation angle to register gesture."
+        },
+        "min-pointers": {
+          "$value": 2,
+          "$type": "number",
+          "$description": "Minimum touch points for rotation gesture."
+        }
+      }
+    }
+  }
+}

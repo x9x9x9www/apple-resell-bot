@@ -1,0 +1,121 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Squash & Stretch tokens - Disney's first principle of animation. Defines volume-preserving deformation for organic, lifelike motion.",
+
+  "squash-stretch": {
+    "$description": "Scale factors for squash and stretch deformation. Volume preservation: scaleX * scaleY = 1",
+
+    "subtle": {
+      "$type": "object",
+      "$value": {
+        "squash": 0.95,
+        "stretch": 1.05,
+        "volumePreserved": true
+      },
+      "$description": "Minimal deformation for professional UI. Use for buttons, icons, micro-interactions. Brand attitude: elegant, refined."
+    },
+
+    "medium": {
+      "$type": "object",
+      "$value": {
+        "squash": 0.85,
+        "stretch": 1.15,
+        "volumePreserved": true
+      },
+      "$description": "Standard deformation for cards, modals, notifications. Brand attitude: friendly, approachable."
+    },
+
+    "expressive": {
+      "$type": "object",
+      "$value": {
+        "squash": 0.7,
+        "stretch": 1.3,
+        "volumePreserved": true
+      },
+      "$description": "Pronounced deformation for playful, emphasis moments. Brand attitude: playful, energetic, gaming."
+    },
+
+    "impact": {
+      "$type": "object",
+      "$value": {
+        "squash": 0.6,
+        "stretch": 1.0,
+        "volumePreserved": false
+      },
+      "$description": "Maximum squash for landing, collision, heavy impacts. Stretch is neutral - object compresses on impact."
+    },
+
+    "bounce": {
+      "$type": "object",
+      "$value": {
+        "squash": 0.8,
+        "stretch": 1.2,
+        "oscillations": 2
+      },
+      "$description": "Bounce sequence with multiple oscillations. For rubber-ball-like rebounds."
+    },
+
+    "elastic": {
+      "$type": "object",
+      "$value": {
+        "squash": 0.75,
+        "stretch": 1.35,
+        "springiness": 0.8
+      },
+      "$description": "Elastic material simulation. High stretch, moderate squash. For jelly, rubber UI elements."
+    }
+  },
+
+  "axis-alignment": {
+    "$description": "Squash/stretch axis relative to motion direction",
+
+    "perpendicular": {
+      "$type": "string",
+      "$value": "squash-axis: perpendicular-to-motion",
+      "$description": "Disney standard: squash perpendicular to motion direction, stretch along motion axis."
+    },
+
+    "radial": {
+      "$type": "string",
+      "$value": "squash-axis: toward-center",
+      "$description": "For circular/orbital motion: squash toward center, stretch along tangent."
+    }
+  },
+
+  "timing": {
+    "$description": "Duration ratios for squash/stretch phases",
+
+    "quick-impact": {
+      "$type": "object",
+      "$value": {
+        "anticipation": "10%",
+        "squash": "5%",
+        "stretch": "15%",
+        "settle": "70%"
+      },
+      "$description": "Fast impact with long settle. Ball drop, button press."
+    },
+
+    "balanced": {
+      "$type": "object",
+      "$value": {
+        "anticipation": "20%",
+        "squash": "10%",
+        "stretch": "20%",
+        "settle": "50%"
+      },
+      "$description": "Even distribution for general purpose bounce."
+    },
+
+    "slow-motion": {
+      "$type": "object",
+      "$value": {
+        "anticipation": "15%",
+        "squash": "15%",
+        "stretch": "25%",
+        "settle": "45%"
+      },
+      "$description": "Extended phases for dramatic, slow-motion reveals."
+    }
+  }
+}

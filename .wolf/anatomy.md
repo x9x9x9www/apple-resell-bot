@@ -1,6 +1,6 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-10-14T05:23:33.458Z
+> Auto-maintained by OpenWolf. Last scanned: 2026-10-14T05:36:17.430Z
 > Files: 57 tracked | Anatomy hits: 0 | Misses: 0
 
 > Project structure index. Auto-maintained by OpenWolf hooks and daemon.
@@ -11,7 +11,7 @@
 
 - `_headers` (~51 tok)
 - `.gitignore` — Git ignore rules (~119 tok)
-- `AGENTS.md` — OpenWolf (~75 tok)
+- `AGENTS.md` — OpenWolf (~611 tok)
 - `article.html` — ⚡️ БРЕДЛИ ПЕРЕКУПЕР (~559 tok)
 - `CLAUDE.md` — OpenWolf (~99 tok)
 - `config.py` — Settings: parse_target_chat_id, load_pricing_matrix, load_proxies (~772 tok)

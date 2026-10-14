@@ -1,0 +1,74 @@
+/* ===========================================
+   CSS Transition Template
+   Generated from Motion Design Agent v2
+   =========================================== */
+
+/* Transition: {{TRANSITION_NAME}}
+   Duration: {{DURATION}}ms ({{DURATION_TOKEN}})
+   Easing: {{EASING_CSS}}
+   Properties: {{PROPERTIES}}
+*/
+
+/* Base State */
+.{{CLASS_NAME}} {
+  {{BASE_STYLES}}
+
+  /* Transition definition */
+  transition: {{TRANSITION_PROPERTIES}};
+
+  /* Performance optimization */
+  will-change: {{WILL_CHANGE}};
+  backface-visibility: hidden;
+}
+
+/* Active/Target State */
+.{{CLASS_NAME}}{{STATE_SELECTOR}} {
+  {{TARGET_STYLES}}
+}
+
+{{#if HOVER_STATE}}
+/* Hover State */
+.{{CLASS_NAME}}:hover {
+  {{HOVER_STYLES}}
+}
+{{/if}}
+
+{{#if FOCUS_STATE}}
+/* Focus State */
+.{{CLASS_NAME}}:focus-visible {
+  {{FOCUS_STYLES}}
+}
+{{/if}}
+
+{{#if ACTIVE_STATE}}
+/* Active/Press State */
+.{{CLASS_NAME}}:active {
+  {{ACTIVE_STYLES}}
+}
+{{/if}}
+
+/* Reduced Motion Alternative */
+@media (prefers-reduced-motion: reduce) {
+  .{{CLASS_NAME}} {
+    transition: opacity {{REDUCED_DURATION}}ms ease;
+  }
+
+  .{{CLASS_NAME}}{{STATE_SELECTOR}} {
+    {{REDUCED_TARGET_STYLES}}
+  }
+}
+
+/* ===========================================
+   Usage:
+
+   <!-- Toggle with class -->
+   <button class="{{CLASS_NAME}}">Click me</button>
+
+   <!-- Toggle with JS state -->
+   <div class="{{CLASS_NAME}} {{CLASS_NAME}}--active">Content</div>
+   =========================================== */
+
+/* Token References:
+   Duration: {{DURATION_TOKEN}}
+   Easing: {{EASING_TOKEN}}
+*/

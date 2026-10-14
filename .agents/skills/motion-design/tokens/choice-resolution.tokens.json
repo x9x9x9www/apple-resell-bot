@@ -1,0 +1,293 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Unified choice resolution system for merging parallel choice layers (recipe, emotion, brand, platform) into deterministic animation parameters.",
+
+  "$meta": {
+    "version": "1.0.0",
+    "purpose": "Transforms parallel choice systems into a sequential resolution pipeline with clear precedence and bounded outputs."
+  },
+
+  "resolution-pipeline": {
+    "$description": "Resolution order: Recipe (base) → Emotion (modifier) → Brand (constraint) → Platform (adaptation) → Bounds → Accessibility (override)",
+    "order": [
+      {
+        "layer": "recipe",
+        "role": "base",
+        "description": "Starting values from matched recipe"
+      },
+      {
+        "layer": "emotion",
+        "role": "modifier",
+        "description": "Multiplicative adjustments to base values"
+      },
+      {
+        "layer": "brand",
+        "role": "constraint",
+        "description": "Upper bounds and feature restrictions"
+      },
+      {
+        "layer": "platform",
+        "role": "adaptation",
+        "description": "Platform-specific multipliers and limits"
+      },
+      {
+        "layer": "bounds",
+        "role": "clamp",
+        "description": "Final clamping to valid ranges"
+      },
+      {
+        "layer": "accessibility",
+        "role": "override",
+        "description": "Reduced motion bypasses all other layers"
+      }
+    ]
+  },
+
+  "merge-rules": {
+    "$description": "How each parameter type combines across layers",
+
+    "duration": {
+      "merge-type": "multiply",
+      "description": "Recipe base × emotion multiplier × platform multiplier, then clamp",
+      "example": "250ms × 1.2 (celebratory) × 0.6 (video) = 180ms"
+    },
+
+    "easing": {
+      "merge-type": "override",
+      "precedence": ["emotion", "recipe"],
+      "description": "Emotion easing overrides recipe if specified, else use recipe default"
+    },
+
+    "spring": {
+      "merge-type": "override",
+      "precedence": ["emotion", "recipe"],
+      "description": "Emotion spring overrides recipe if specified"
+    },
+
+    "exaggeration": {
+      "merge-type": "multiply-then-cap",
+      "description": "Recipe base × emotion boost, capped by brand maximum",
+      "levels": {
+        "minimal": 0.25,
+        "subtle": 0.5,
+        "moderate": 0.75,
+        "expressive": 1.0,
+        "dramatic": 1.25
+      }
+    },
+
+    "squash-stretch": {
+      "merge-type": "minimum",
+      "description": "Use the more conservative of emotion or brand setting",
+      "levels": ["none", "subtle", "medium", "expressive"],
+      "note": "Brand can forbid squash-stretch entirely"
+    },
+
+    "anticipation": {
+      "merge-type": "override",
+      "precedence": ["emotion", "recipe"],
+      "levels": ["none", "micro", "small", "medium", "sustained"]
+    },
+
+    "follow-through": {
+      "merge-type": "override",
+      "precedence": ["emotion", "recipe"],
+      "levels": ["instant", "snappy", "precise", "gentle", "bouncy", "fluid", "loose", "lingering"]
+    },
+
+    "secondary-effects": {
+      "merge-type": "union-with-filter",
+      "description": "Combine effects from emotion and recipe, but brand can disable specific types",
+      "example": "Recipe glow + emotion particles, minus brand-forbidden particles"
+    }
+  },
+
+  "platform-multipliers": {
+    "$description": "Duration and distance adjustments per platform",
+
+    "web": {
+      "duration-multiplier": 1.0,
+      "max-duration-ms": 600,
+      "min-duration-ms": 50,
+      "description": "Standard web platform (M3 baseline)"
+    },
+
+    "video": {
+      "duration-multiplier": 0.6,
+      "max-duration-ms": 400,
+      "min-duration-ms": 50,
+      "description": "Video content requires faster timing for engagement",
+      "notes": [
+        "Viewers expect immediate content - minimize intro time",
+        "3 frames minimum (100ms at 30fps)",
+        "Transitions should feel snappy, not leisurely"
+      ]
+    },
+
+    "mobile": {
+      "duration-multiplier": 1.1,
+      "max-duration-ms": 500,
+      "min-duration-ms": 50,
+      "description": "Slightly longer for touch feedback perception"
+    },
+
+    "tablet": {
+      "duration-multiplier": 1.0,
+      "max-duration-ms": 550,
+      "min-duration-ms": 50,
+      "description": "Balanced between mobile and desktop"
+    },
+
+    "low-end-device": {
+      "duration-multiplier": 0.8,
+      "max-duration-ms": 400,
+      "min-duration-ms": 50,
+      "disable-effects": ["particles", "blur", "glow"],
+      "description": "Simplified animations for performance"
+    }
+  },
+
+  "brand-constraints": {
+    "$description": "Brand personality limits on animation parameters",
+
+    "elegant": {
+      "max-exaggeration": "subtle",
+      "allows-squash-stretch": false,
+      "allows-particles": false,
+      "allows-bounce": false,
+      "duration-range": [0.9, 1.1],
+      "description": "Refined, understated motion"
+    },
+
+    "professional": {
+      "max-exaggeration": "subtle",
+      "allows-squash-stretch": false,
+      "allows-particles": false,
+      "allows-bounce": false,
+      "duration-range": [0.95, 1.05],
+      "description": "Corporate, credible motion"
+    },
+
+    "friendly": {
+      "max-exaggeration": "moderate",
+      "allows-squash-stretch": true,
+      "allows-particles": true,
+      "allows-bounce": true,
+      "duration-range": [0.9, 1.15],
+      "description": "Approachable, warm motion"
+    },
+
+    "playful": {
+      "max-exaggeration": "expressive",
+      "allows-squash-stretch": true,
+      "allows-particles": true,
+      "allows-bounce": true,
+      "duration-range": [0.8, 1.3],
+      "description": "Fun, energetic motion"
+    },
+
+    "bold": {
+      "max-exaggeration": "expressive",
+      "allows-squash-stretch": true,
+      "allows-particles": true,
+      "allows-bounce": true,
+      "duration-range": [0.7, 1.2],
+      "description": "Confident, impactful motion"
+    }
+  },
+
+  "bounds": {
+    "$description": "Final clamping ranges (M3-aligned)",
+
+    "duration": {
+      "web": { "min-ms": 50, "max-ms": 600 },
+      "video": { "min-ms": 50, "max-ms": 400 },
+      "mobile": { "min-ms": 50, "max-ms": 500 }
+    },
+
+    "exaggeration": {
+      "min": 0,
+      "max": 1.25,
+      "step": 0.25
+    },
+
+    "secondary-intensity": {
+      "min": 0,
+      "max": 1.0
+    }
+  },
+
+  "emotion-blending": {
+    "$description": "Rules for combining multiple emotions",
+
+    "blend-algorithm": {
+      "numeric-values": "weighted-average",
+      "discrete-values": "dominant-emotion",
+      "secondary-effects": "union-if-either-enables"
+    },
+
+    "common-blends": {
+      "payment-success": {
+        "emotions": ["celebratory", "trustworthy"],
+        "weights": [0.7, 0.3],
+        "description": "Celebration tempered with reliability"
+      },
+      "security-alert": {
+        "emotions": ["urgent", "trustworthy"],
+        "weights": [0.6, 0.4],
+        "description": "Urgency balanced with reassurance"
+      },
+      "childrens-app": {
+        "emotions": ["playful", "calming"],
+        "weights": [0.6, 0.4],
+        "description": "Fun without overstimulation"
+      },
+      "enterprise-onboarding": {
+        "emotions": ["professional", "welcoming"],
+        "weights": [0.5, 0.5],
+        "description": "Business-appropriate warmth"
+      }
+    },
+
+    "weight-rules": {
+      "normalization": "weights must sum to 1.0",
+      "minimum-weight": 0.1,
+      "maximum-emotions": 3
+    }
+  },
+
+  "accessibility-override": {
+    "$description": "Reduced motion settings bypass all other layers",
+
+    "prefers-reduced-motion": {
+      "priority": "absolute",
+      "action": "apply-reduced-motion-fallback",
+      "description": "When user prefers reduced motion, use recipe's reduced-motion variant"
+    },
+
+    "fallback-behavior": {
+      "no-recipe-fallback": {
+        "duration": "short-1",
+        "type": "opacity-only",
+        "easing": "standard"
+      }
+    }
+  },
+
+  "determinism": {
+    "$description": "Guarantees for consistent output",
+
+    "principles": [
+      "Same inputs always produce same outputs",
+      "No randomization in resolution",
+      "All stacking is bounded",
+      "Conflicts resolve to the more conservative option"
+    ],
+
+    "validation": {
+      "duration-in-bounds": true,
+      "exaggeration-in-bounds": true,
+      "no-undefined-values": true
+    }
+  }
+}

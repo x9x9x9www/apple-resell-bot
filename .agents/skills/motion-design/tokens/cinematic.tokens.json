@@ -1,0 +1,389 @@
+{
+  "$schema": "https://design-tokens.org/schema.json",
+  "motion": {
+    "cinematic": {
+      "$description": "Cinematic animation tokens for film-like effects and transitions",
+
+      "letterbox": {
+        "$description": "Letterbox/aspect ratio bars",
+        "height": {
+          "subtle": {
+            "$value": "5%",
+            "$type": "dimension",
+            "$description": "Subtle letterbox"
+          },
+          "standard": {
+            "$value": "12%",
+            "$type": "dimension",
+            "$description": "Standard 2.35:1 letterbox"
+          },
+          "dramatic": {
+            "$value": "20%",
+            "$type": "dimension",
+            "$description": "Dramatic ultra-wide"
+          }
+        },
+        "transition": {
+          "fast": {
+            "$value": "400ms",
+            "$type": "duration",
+            "$description": "Fast letterbox transition"
+          },
+          "normal": {
+            "$value": "800ms",
+            "$type": "duration",
+            "$description": "Standard letterbox transition"
+          },
+          "slow": {
+            "$value": "1500ms",
+            "$type": "duration",
+            "$description": "Slow cinematic reveal"
+          }
+        }
+      },
+
+      "fade": {
+        "$description": "Cinematic fade transitions",
+        "to-black": {
+          "fast": {
+            "$value": "500ms",
+            "$type": "duration",
+            "$description": "Fast fade to black"
+          },
+          "normal": {
+            "$value": "1000ms",
+            "$type": "duration",
+            "$description": "Standard fade to black"
+          },
+          "slow": {
+            "$value": "2000ms",
+            "$type": "duration",
+            "$description": "Slow fade to black"
+          },
+          "dramatic": {
+            "$value": "3000ms",
+            "$type": "duration",
+            "$description": "Dramatic fade to black"
+          }
+        },
+        "to-white": {
+          "fast": {
+            "$value": "300ms",
+            "$type": "duration",
+            "$description": "Fast fade to white"
+          },
+          "normal": {
+            "$value": "800ms",
+            "$type": "duration",
+            "$description": "Standard fade to white"
+          },
+          "slow": {
+            "$value": "1500ms",
+            "$type": "duration",
+            "$description": "Slow fade to white"
+          }
+        },
+        "hold": {
+          "brief": {
+            "$value": "500ms",
+            "$type": "duration",
+            "$description": "Brief hold on black"
+          },
+          "normal": {
+            "$value": "1000ms",
+            "$type": "duration",
+            "$description": "Standard hold"
+          },
+          "long": {
+            "$value": "2000ms",
+            "$type": "duration",
+            "$description": "Long dramatic hold"
+          }
+        }
+      },
+
+      "title-card": {
+        "$description": "Title card animation tokens",
+        "fade-in": {
+          "$value": "800ms",
+          "$type": "duration",
+          "$description": "Title fade in duration"
+        },
+        "hold": {
+          "$value": "2000ms",
+          "$type": "duration",
+          "$description": "Title hold duration"
+        },
+        "fade-out": {
+          "$value": "600ms",
+          "$type": "duration",
+          "$description": "Title fade out duration"
+        },
+        "stagger": {
+          "$value": "200ms",
+          "$type": "duration",
+          "$description": "Multi-line stagger"
+        }
+      },
+
+      "lower-third": {
+        "$description": "Lower third graphics",
+        "slide-in": {
+          "$value": "400ms",
+          "$type": "duration",
+          "$description": "Lower third slide in"
+        },
+        "slide-out": {
+          "$value": "300ms",
+          "$type": "duration",
+          "$description": "Lower third slide out"
+        },
+        "hold": {
+          "short": {
+            "$value": "3000ms",
+            "$type": "duration",
+            "$description": "Short hold"
+          },
+          "normal": {
+            "$value": "5000ms",
+            "$type": "duration",
+            "$description": "Standard hold"
+          },
+          "long": {
+            "$value": "8000ms",
+            "$type": "duration",
+            "$description": "Long hold"
+          }
+        }
+      },
+
+      "slow-motion": {
+        "$description": "Slow motion speed factors",
+        "slight": {
+          "$value": "0.75",
+          "$type": "number",
+          "$description": "Slight slow motion"
+        },
+        "moderate": {
+          "$value": "0.5",
+          "$type": "number",
+          "$description": "50% speed"
+        },
+        "dramatic": {
+          "$value": "0.25",
+          "$type": "number",
+          "$description": "Quarter speed"
+        },
+        "extreme": {
+          "$value": "0.1",
+          "$type": "number",
+          "$description": "10% speed"
+        }
+      },
+
+      "speed-ramp": {
+        "$description": "Speed ramping transitions",
+        "ramp-duration": {
+          "fast": {
+            "$value": "200ms",
+            "$type": "duration",
+            "$description": "Fast speed change"
+          },
+          "normal": {
+            "$value": "500ms",
+            "$type": "duration",
+            "$description": "Normal speed ramp"
+          },
+          "slow": {
+            "$value": "1000ms",
+            "$type": "duration",
+            "$description": "Slow speed ramp"
+          }
+        }
+      },
+
+      "film-grain": {
+        "$description": "Film grain overlay",
+        "intensity": {
+          "subtle": {
+            "$value": "0.03",
+            "$type": "number",
+            "$description": "Subtle grain"
+          },
+          "moderate": {
+            "$value": "0.08",
+            "$type": "number",
+            "$description": "Moderate grain"
+          },
+          "heavy": {
+            "$value": "0.15",
+            "$type": "number",
+            "$description": "Heavy grain"
+          }
+        },
+        "speed": {
+          "$value": "50ms",
+          "$type": "duration",
+          "$description": "Grain animation speed"
+        }
+      },
+
+      "vignette": {
+        "$description": "Vignette effect",
+        "intensity": {
+          "subtle": {
+            "$value": "0.2",
+            "$type": "number",
+            "$description": "Subtle vignette"
+          },
+          "moderate": {
+            "$value": "0.4",
+            "$type": "number",
+            "$description": "Moderate vignette"
+          },
+          "heavy": {
+            "$value": "0.6",
+            "$type": "number",
+            "$description": "Heavy vignette"
+          }
+        },
+        "size": {
+          "wide": {
+            "$value": "80%",
+            "$type": "dimension",
+            "$description": "Wide vignette"
+          },
+          "normal": {
+            "$value": "60%",
+            "$type": "dimension",
+            "$description": "Standard vignette"
+          },
+          "tight": {
+            "$value": "40%",
+            "$type": "dimension",
+            "$description": "Tight vignette"
+          }
+        },
+        "transition": {
+          "$value": "500ms",
+          "$type": "duration",
+          "$description": "Vignette transition"
+        }
+      },
+
+      "color-grade": {
+        "$description": "Color grading transitions",
+        "transition-speed": {
+          "cut": {
+            "$value": "0ms",
+            "$type": "duration",
+            "$description": "Instant grade change"
+          },
+          "fast": {
+            "$value": "300ms",
+            "$type": "duration",
+            "$description": "Fast grade transition"
+          },
+          "normal": {
+            "$value": "800ms",
+            "$type": "duration",
+            "$description": "Standard grade transition"
+          },
+          "slow": {
+            "$value": "2000ms",
+            "$type": "duration",
+            "$description": "Slow grade transition"
+          }
+        }
+      },
+
+      "flash-frame": {
+        "$description": "Flash frame/impact frame",
+        "duration": {
+          "single": {
+            "$value": "40ms",
+            "$type": "duration",
+            "$description": "Single frame flash"
+          },
+          "double": {
+            "$value": "80ms",
+            "$type": "duration",
+            "$description": "Double frame flash"
+          },
+          "extended": {
+            "$value": "150ms",
+            "$type": "duration",
+            "$description": "Extended flash"
+          }
+        },
+        "recovery": {
+          "$value": "200ms",
+          "$type": "duration",
+          "$description": "Flash recovery time"
+        }
+      },
+
+      "cross-dissolve": {
+        "$description": "Cross dissolve transition",
+        "fast": {
+          "$value": "500ms",
+          "$type": "duration",
+          "$description": "Fast dissolve"
+        },
+        "normal": {
+          "$value": "1000ms",
+          "$type": "duration",
+          "$description": "Standard dissolve"
+        },
+        "slow": {
+          "$value": "2000ms",
+          "$type": "duration",
+          "$description": "Slow dissolve"
+        },
+        "dream": {
+          "$value": "3000ms",
+          "$type": "duration",
+          "$description": "Dreamy slow dissolve"
+        }
+      },
+
+      "ken-burns": {
+        "$description": "Ken Burns pan/zoom effect",
+        "duration": {
+          "short": {
+            "$value": "5000ms",
+            "$type": "duration",
+            "$description": "Short Ken Burns"
+          },
+          "normal": {
+            "$value": "8000ms",
+            "$type": "duration",
+            "$description": "Standard Ken Burns"
+          },
+          "long": {
+            "$value": "12000ms",
+            "$type": "duration",
+            "$description": "Long Ken Burns"
+          }
+        },
+        "zoom-range": {
+          "subtle": {
+            "$value": "1.1",
+            "$type": "number",
+            "$description": "Subtle zoom (10%)"
+          },
+          "normal": {
+            "$value": "1.2",
+            "$type": "number",
+            "$description": "Normal zoom (20%)"
+          },
+          "dramatic": {
+            "$value": "1.4",
+            "$type": "number",
+            "$description": "Dramatic zoom (40%)"
+          }
+        }
+      }
+    }
+  }
+}

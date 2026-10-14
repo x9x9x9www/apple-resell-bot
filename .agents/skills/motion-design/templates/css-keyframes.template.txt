@@ -1,0 +1,65 @@
+/* ===========================================
+   CSS Keyframes Animation Template
+   Generated from Motion Design Agent v2
+   =========================================== */
+
+/* Animation: {{ANIMATION_NAME}}
+   Duration: {{DURATION}}ms ({{DURATION_TOKEN}})
+   Easing: {{EASING_CSS}}
+   Principles: {{PRINCIPLES}}
+*/
+
+/* Keyframes Definition */
+@keyframes {{ANIMATION_NAME}} {
+  0% {
+    {{#if FROM_OPACITY}}opacity: {{FROM_OPACITY}};{{/if}}
+    {{#if FROM_TRANSFORM}}transform: {{FROM_TRANSFORM}};{{/if}}
+    {{#if FROM_FILTER}}filter: {{FROM_FILTER}};{{/if}}
+  }
+  {{#if KEYFRAME_50}}
+  50% {
+    {{KEYFRAME_50}}
+  }
+  {{/if}}
+  {{#if KEYFRAME_70}}
+  70% {
+    {{KEYFRAME_70}}
+  }
+  {{/if}}
+  100% {
+    {{#if TO_OPACITY}}opacity: {{TO_OPACITY}};{{/if}}
+    {{#if TO_TRANSFORM}}transform: {{TO_TRANSFORM}};{{/if}}
+    {{#if TO_FILTER}}filter: {{TO_FILTER}};{{/if}}
+  }
+}
+
+/* Class Application */
+.{{CLASS_NAME}} {
+  animation: {{ANIMATION_NAME}} {{DURATION}}ms {{EASING_CSS}} {{FILL_MODE}};
+  {{#if DELAY}}animation-delay: {{DELAY}}ms;{{/if}}
+  {{#if ITERATION_COUNT}}animation-iteration-count: {{ITERATION_COUNT}};{{/if}}
+  will-change: {{WILL_CHANGE}};
+}
+
+/* Reduced Motion Alternative */
+@media (prefers-reduced-motion: reduce) {
+  .{{CLASS_NAME}} {
+    animation: none;
+    {{REDUCED_MOTION_STYLES}}
+  }
+}
+
+/* ===========================================
+   Usage Example:
+
+   <div class="{{CLASS_NAME}}">Content</div>
+
+   Or with JavaScript trigger:
+   element.classList.add('{{CLASS_NAME}}');
+   =========================================== */
+
+/* Token References:
+   Duration: tokens/duration.tokens.json → {{DURATION_TOKEN}}
+   Easing: tokens/easing.tokens.json → {{EASING_TOKEN}}
+   {{#if PRINCIPLE_REFS}}Principles: {{PRINCIPLE_REFS}}{{/if}}
+*/

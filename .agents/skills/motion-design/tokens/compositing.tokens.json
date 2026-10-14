@@ -1,0 +1,299 @@
+{
+  "$schema": "https://design-tokens.org/schema.json",
+  "motion": {
+    "compositing": {
+      "$description": "Compositing and layer animation tokens for multi-layer effects",
+
+      "blend-mode": {
+        "$description": "Blend mode transitions",
+        "transition-speed": {
+          "instant": {
+            "$value": "0ms",
+            "$type": "duration",
+            "$description": "Instant blend mode change"
+          },
+          "fast": {
+            "$value": "150ms",
+            "$type": "duration",
+            "$description": "Fast blend transition"
+          },
+          "normal": {
+            "$value": "300ms",
+            "$type": "duration",
+            "$description": "Standard blend transition"
+          }
+        }
+      },
+
+      "layer-timing": {
+        "$description": "Layer animation timing",
+        "stagger": {
+          "tight": {
+            "$value": "50ms",
+            "$type": "duration",
+            "$description": "Tight layer stagger"
+          },
+          "normal": {
+            "$value": "100ms",
+            "$type": "duration",
+            "$description": "Standard layer stagger"
+          },
+          "relaxed": {
+            "$value": "200ms",
+            "$type": "duration",
+            "$description": "Relaxed layer stagger"
+          }
+        },
+        "crossfade": {
+          "fast": {
+            "$value": "200ms",
+            "$type": "duration",
+            "$description": "Fast crossfade"
+          },
+          "normal": {
+            "$value": "400ms",
+            "$type": "duration",
+            "$description": "Standard crossfade"
+          },
+          "slow": {
+            "$value": "800ms",
+            "$type": "duration",
+            "$description": "Slow crossfade"
+          }
+        }
+      },
+
+      "z-index": {
+        "$description": "Layer ordering values",
+        "background": {
+          "$value": "-1",
+          "$type": "number",
+          "$description": "Background layer"
+        },
+        "base": {
+          "$value": "0",
+          "$type": "number",
+          "$description": "Base layer"
+        },
+        "content": {
+          "$value": "10",
+          "$type": "number",
+          "$description": "Content layer"
+        },
+        "overlay": {
+          "$value": "100",
+          "$type": "number",
+          "$description": "Overlay layer"
+        },
+        "modal": {
+          "$value": "1000",
+          "$type": "number",
+          "$description": "Modal layer"
+        },
+        "tooltip": {
+          "$value": "9999",
+          "$type": "number",
+          "$description": "Tooltip layer"
+        }
+      },
+
+      "opacity-layers": {
+        "$description": "Layer opacity presets",
+        "scrim-light": {
+          "$value": "0.3",
+          "$type": "number",
+          "$description": "Light scrim overlay"
+        },
+        "scrim-medium": {
+          "$value": "0.5",
+          "$type": "number",
+          "$description": "Medium scrim overlay"
+        },
+        "scrim-heavy": {
+          "$value": "0.7",
+          "$type": "number",
+          "$description": "Heavy scrim overlay"
+        },
+        "glass": {
+          "$value": "0.8",
+          "$type": "number",
+          "$description": "Glass effect opacity"
+        }
+      },
+
+      "backdrop-blur": {
+        "$description": "Backdrop blur for glass effects",
+        "subtle": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Subtle backdrop blur"
+        },
+        "medium": {
+          "$value": "12px",
+          "$type": "dimension",
+          "$description": "Medium backdrop blur"
+        },
+        "heavy": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Heavy backdrop blur"
+        },
+        "extreme": {
+          "$value": "48px",
+          "$type": "dimension",
+          "$description": "Extreme backdrop blur"
+        }
+      },
+
+      "color-overlay": {
+        "$description": "Color overlay animation",
+        "fade-speed": {
+          "fast": {
+            "$value": "200ms",
+            "$type": "duration",
+            "$description": "Fast color fade"
+          },
+          "normal": {
+            "$value": "500ms",
+            "$type": "duration",
+            "$description": "Standard color fade"
+          },
+          "slow": {
+            "$value": "1000ms",
+            "$type": "duration",
+            "$description": "Slow color fade"
+          }
+        }
+      },
+
+      "split-screen": {
+        "$description": "Split screen transition tokens",
+        "duration": {
+          "fast": {
+            "$value": "400ms",
+            "$type": "duration",
+            "$description": "Fast split transition"
+          },
+          "normal": {
+            "$value": "800ms",
+            "$type": "duration",
+            "$description": "Standard split transition"
+          },
+          "slow": {
+            "$value": "1200ms",
+            "$type": "duration",
+            "$description": "Slow split transition"
+          }
+        },
+        "gap": {
+          "none": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "No gap between splits"
+          },
+          "thin": {
+            "$value": "2px",
+            "$type": "dimension",
+            "$description": "Thin gap"
+          },
+          "normal": {
+            "$value": "8px",
+            "$type": "dimension",
+            "$description": "Normal gap"
+          }
+        }
+      },
+
+      "picture-in-picture": {
+        "$description": "PiP animation tokens",
+        "scale": {
+          "small": {
+            "$value": "0.25",
+            "$type": "number",
+            "$description": "Small PiP size"
+          },
+          "medium": {
+            "$value": "0.33",
+            "$type": "number",
+            "$description": "Medium PiP size"
+          },
+          "large": {
+            "$value": "0.5",
+            "$type": "number",
+            "$description": "Large PiP size"
+          }
+        },
+        "transition": {
+          "$value": "300ms",
+          "$type": "duration",
+          "$description": "PiP transition duration"
+        },
+        "corner-radius": {
+          "$value": "12px",
+          "$type": "dimension",
+          "$description": "PiP corner radius"
+        }
+      },
+
+      "layer-effects": {
+        "$description": "Layer effect intensities",
+        "saturation": {
+          "desaturate": {
+            "$value": "0",
+            "$type": "number",
+            "$description": "Fully desaturated"
+          },
+          "muted": {
+            "$value": "0.5",
+            "$type": "number",
+            "$description": "Muted saturation"
+          },
+          "normal": {
+            "$value": "1",
+            "$type": "number",
+            "$description": "Normal saturation"
+          },
+          "vibrant": {
+            "$value": "1.3",
+            "$type": "number",
+            "$description": "Enhanced saturation"
+          }
+        },
+        "contrast": {
+          "low": {
+            "$value": "0.8",
+            "$type": "number",
+            "$description": "Low contrast"
+          },
+          "normal": {
+            "$value": "1",
+            "$type": "number",
+            "$description": "Normal contrast"
+          },
+          "high": {
+            "$value": "1.2",
+            "$type": "number",
+            "$description": "High contrast"
+          }
+        },
+        "brightness": {
+          "dark": {
+            "$value": "0.7",
+            "$type": "number",
+            "$description": "Darkened"
+          },
+          "normal": {
+            "$value": "1",
+            "$type": "number",
+            "$description": "Normal brightness"
+          },
+          "bright": {
+            "$value": "1.2",
+            "$type": "number",
+            "$description": "Brightened"
+          }
+        }
+      }
+    }
+  }
+}

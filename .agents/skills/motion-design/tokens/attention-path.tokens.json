@@ -1,0 +1,251 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Attention path tokens for reading order and gaze choreography. Defines how animation guides visual attention through content.",
+
+  "$token-references": {
+    "$description": "W3C DTCG token reference paths",
+    "sequencing": "tokens/sequencing.tokens.json",
+    "duration": "tokens/duration.tokens.json"
+  },
+
+  "attention": {
+    "$description": "Attention choreography tokens for guiding user focus",
+
+    "reading-patterns": {
+      "$description": "Standard reading/scanning patterns mapped to animation order",
+
+      "f-pattern": {
+        "$description": "F-shaped reading pattern - common for text-heavy content",
+        "scan-order": {
+          "$value": ["top-left", "top-right", "mid-left", "mid-right", "bottom-left"],
+          "$type": "array"
+        },
+        "primary-axis": { "$value": "horizontal", "$type": "string" },
+        "attention-decay": { "$value": 0.15, "$type": "number" },
+        "stagger-base": { "$value": "60ms", "$type": "duration" },
+        "emphasis-zones": {
+          "$value": ["top-left", "mid-left"],
+          "$type": "array",
+          "$description": "High attention areas"
+        },
+        "use-case": { "$value": "articles, documentation, text-heavy pages", "$type": "string" }
+      },
+
+      "z-pattern": {
+        "$description": "Z-shaped reading pattern - common for landing pages",
+        "scan-order": {
+          "$value": ["top-left", "top-right", "center", "bottom-left", "bottom-right"],
+          "$type": "array"
+        },
+        "primary-axis": { "$value": "diagonal", "$type": "string" },
+        "attention-decay": { "$value": 0.1, "$type": "number" },
+        "stagger-base": { "$value": "80ms", "$type": "duration" },
+        "emphasis-zones": {
+          "$value": ["top-left", "bottom-right"],
+          "$type": "array",
+          "$description": "Start and action zones"
+        },
+        "use-case": { "$value": "landing-pages, marketing, sparse layouts", "$type": "string" }
+      },
+
+      "center-out": {
+        "$description": "Radial from center - for hero/focal content",
+        "scan-order": {
+          "$value": ["center", "inner-ring", "outer-ring", "edges"],
+          "$type": "array"
+        },
+        "primary-axis": { "$value": "radial", "$type": "string" },
+        "attention-decay": { "$value": 0.2, "$type": "number" },
+        "stagger-base": { "$value": "50ms", "$type": "duration" },
+        "emphasis-zones": {
+          "$value": ["center"],
+          "$type": "array"
+        },
+        "use-case": { "$value": "hero-sections, modals, featured content", "$type": "string" }
+      },
+
+      "gutenberg": {
+        "$description": "Gutenberg diagram - natural eye movement across page",
+        "scan-order": {
+          "$value": ["primary-optical", "strong-fallow", "weak-fallow", "terminal-area"],
+          "$type": "array"
+        },
+        "zones": {
+          "primary-optical": { "$value": "top-left", "$type": "string" },
+          "strong-fallow": { "$value": "top-right", "$type": "string" },
+          "weak-fallow": { "$value": "bottom-left", "$type": "string" },
+          "terminal-area": { "$value": "bottom-right", "$type": "string" }
+        },
+        "attention-weights": {
+          "$value": { "primary-optical": 1.0, "terminal-area": 0.9, "strong-fallow": 0.6, "weak-fallow": 0.3 },
+          "$type": "object"
+        },
+        "use-case": { "$value": "balanced layouts, forms, cards", "$type": "string" }
+      },
+
+      "layer-depth": {
+        "$description": "Front-to-back or back-to-front depth ordering",
+        "scan-order": {
+          "$value": ["foreground", "midground", "background"],
+          "$type": "array"
+        },
+        "primary-axis": { "$value": "z-axis", "$type": "string" },
+        "stagger-base": { "$value": "100ms", "$type": "duration" },
+        "use-case": { "$value": "parallax, 3d-scenes, layered-ui", "$type": "string" }
+      }
+    },
+
+    "gaze-paths": {
+      "$description": "Guided attention trajectories",
+
+      "linear": {
+        "$description": "Straight line attention guide",
+        "motion-type": { "$value": "translate", "$type": "string" },
+        "easing": { "$value": "{motion.easing.standard}", "$type": "string" },
+        "typical-duration": { "$value": "400ms", "$type": "duration" }
+      },
+
+      "arc": {
+        "$description": "Curved attention sweep",
+        "motion-type": { "$value": "arc-path", "$type": "string" },
+        "curvature": { "$value": 0.3, "$type": "number" },
+        "easing": { "$value": "{motion.easing.emphasized}", "$type": "string" },
+        "typical-duration": { "$value": "500ms", "$type": "duration" }
+      },
+
+      "spiral": {
+        "$description": "Inward or outward spiral",
+        "motion-type": { "$value": "spiral-path", "$type": "string" },
+        "direction": { "$value": "inward", "$type": "string" },
+        "typical-duration": { "$value": "800ms", "$type": "duration" }
+      },
+
+      "bounce": {
+        "$description": "Attention bounce between points",
+        "motion-type": { "$value": "multi-point", "$type": "string" },
+        "dwell-time": { "$value": "150ms", "$type": "duration" },
+        "transition-time": { "$value": "100ms", "$type": "duration" }
+      }
+    },
+
+    "focus-anchors": {
+      "$description": "Elements that hold attention",
+
+      "primary": {
+        "attention-weight": { "$value": 1.0, "$type": "number" },
+        "animation-intensity": { "$value": 0.8, "$type": "number" },
+        "entrance-priority": { "$value": 1, "$type": "number" },
+        "$description": "Main focus point - animates first"
+      },
+
+      "secondary": {
+        "attention-weight": { "$value": 0.6, "$type": "number" },
+        "animation-intensity": { "$value": 0.6, "$type": "number" },
+        "entrance-priority": { "$value": 2, "$type": "number" },
+        "$description": "Supporting elements - animate after primary"
+      },
+
+      "tertiary": {
+        "attention-weight": { "$value": 0.3, "$type": "number" },
+        "animation-intensity": { "$value": 0.4, "$type": "number" },
+        "entrance-priority": { "$value": 3, "$type": "number" },
+        "$description": "Background elements - subtle animation"
+      },
+
+      "ambient": {
+        "attention-weight": { "$value": 0.1, "$type": "number" },
+        "animation-intensity": { "$value": 0.2, "$type": "number" },
+        "entrance-priority": { "$value": 4, "$type": "number" },
+        "$description": "Environmental elements - minimal motion"
+      }
+    },
+
+    "attention-shifts": {
+      "$description": "Patterns for moving attention between elements",
+
+      "cut": {
+        "$description": "Instant attention shift",
+        "transition-duration": { "$value": "0ms", "$type": "duration" },
+        "use-case": { "$value": "urgent, high-priority shifts", "$type": "string" }
+      },
+
+      "glide": {
+        "$description": "Smooth attention transfer",
+        "transition-duration": { "$value": "200ms", "$type": "duration" },
+        "easing": { "$value": "{motion.easing.standard}", "$type": "string" },
+        "use-case": { "$value": "related content, natural flow", "$type": "string" }
+      },
+
+      "bridge": {
+        "$description": "Connected path between points",
+        "transition-duration": { "$value": "300ms", "$type": "duration" },
+        "connector-visible": { "$value": true, "$type": "boolean" },
+        "use-case": { "$value": "showing relationships, tutorials", "$type": "string" }
+      },
+
+      "dissolve": {
+        "$description": "Fade transition between focuses",
+        "transition-duration": { "$value": "250ms", "$type": "duration" },
+        "overlap": { "$value": 0.3, "$type": "number" },
+        "use-case": { "$value": "context changes, soft transitions", "$type": "string" }
+      }
+    },
+
+    "visual-hierarchy-animation": {
+      "$description": "Animation timing based on visual hierarchy",
+
+      "heading-first": {
+        "order": { "$value": ["h1", "h2", "body", "supporting"], "$type": "array" },
+        "base-stagger": { "$value": "80ms", "$type": "duration" }
+      },
+
+      "hero-first": {
+        "order": { "$value": ["hero-image", "hero-text", "cta", "secondary-content"], "$type": "array" },
+        "base-stagger": { "$value": "100ms", "$type": "duration" }
+      },
+
+      "action-first": {
+        "order": { "$value": ["cta", "supporting-text", "secondary-actions"], "$type": "array" },
+        "base-stagger": { "$value": "60ms", "$type": "duration" },
+        "$description": "For conversion-focused pages"
+      }
+    },
+
+    "distraction-management": {
+      "$description": "Controlling competing attention demands",
+
+      "suppress-secondary": {
+        "$description": "Reduce secondary element animation during primary focus",
+        "secondary-intensity": { "$value": 0.2, "$type": "number" },
+        "secondary-delay": { "$value": "300ms", "$type": "duration" }
+      },
+
+      "freeze-background": {
+        "$description": "Stop background animation during modal/overlay",
+        "background-motion": { "$value": "paused", "$type": "string" }
+      },
+
+      "dim-unfocused": {
+        "$description": "Reduce opacity of non-focus elements",
+        "unfocused-opacity": { "$value": 0.6, "$type": "number" }
+      }
+    },
+
+    "cultural-adaptations": {
+      "$description": "Reading pattern adjustments for different languages",
+
+      "rtl": {
+        "$description": "Right-to-left language adaptation",
+        "f-pattern-mirror": { "$value": true, "$type": "boolean" },
+        "z-pattern-mirror": { "$value": true, "$type": "boolean" },
+        "primary-entry": { "$value": "right", "$type": "string" }
+      },
+
+      "vertical": {
+        "$description": "Vertical script adaptation",
+        "primary-axis": { "$value": "vertical", "$type": "string" },
+        "scan-direction": { "$value": "top-to-bottom", "$type": "string" }
+      }
+    }
+  }
+}

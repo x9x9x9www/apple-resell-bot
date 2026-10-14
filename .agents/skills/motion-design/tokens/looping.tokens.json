@@ -1,0 +1,290 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Looping animation tokens for cycles, oscillation, and continuous motion patterns.",
+
+  "motion": {
+    "looping": {
+      "$description": "Loop and cycle animation tokens",
+
+      "duration": {
+        "$description": "Loop cycle durations",
+
+        "rapid": {
+          "$value": "0.5s",
+          "$type": "duration",
+          "$description": "Rapid cycle. Urgent, high-energy."
+        },
+        "fast": {
+          "$value": "1s",
+          "$type": "duration",
+          "$description": "Fast cycle. Active spinner, energetic."
+        },
+        "medium": {
+          "$value": "2s",
+          "$type": "duration",
+          "$description": "Medium cycle. Standard loading, heartbeat."
+        },
+        "normal": {
+          "$value": "3s",
+          "$type": "duration",
+          "$description": "Normal cycle. Natural breathing pace."
+        },
+        "slow": {
+          "$value": "5s",
+          "$type": "duration",
+          "$description": "Slow cycle. Relaxed, ambient motion."
+        },
+        "ambient": {
+          "$value": "8s",
+          "$type": "duration",
+          "$description": "Ambient cycle. Background, meditative."
+        },
+        "glacial": {
+          "$value": "15s",
+          "$type": "duration",
+          "$description": "Glacial cycle. Barely perceptible change."
+        },
+        "ultra-slow": {
+          "$value": "30s",
+          "$type": "duration",
+          "$description": "Ultra slow cycle. Cinemagraph-style subtlety."
+        }
+      },
+
+      "mode": {
+        "$description": "Loop playback modes",
+
+        "normal": {
+          "$value": "normal",
+          "$type": "string",
+          "$description": "Normal loop. Restart from beginning after end."
+        },
+        "reverse": {
+          "$value": "reverse",
+          "$type": "string",
+          "$description": "Reverse loop. Play backwards continuously."
+        },
+        "alternate": {
+          "$value": "alternate",
+          "$type": "string",
+          "$description": "Ping-pong loop. Forward then backward."
+        },
+        "alternate-reverse": {
+          "$value": "alternate-reverse",
+          "$type": "string",
+          "$description": "Reverse ping-pong. Backward then forward."
+        }
+      },
+
+      "count": {
+        "$description": "Loop iteration counts",
+
+        "once": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Play once (not a loop)."
+        },
+        "twice": {
+          "$value": 2,
+          "$type": "number",
+          "$description": "Play twice."
+        },
+        "few": {
+          "$value": 3,
+          "$type": "number",
+          "$description": "Play three times."
+        },
+        "several": {
+          "$value": 5,
+          "$type": "number",
+          "$description": "Play five times."
+        },
+        "many": {
+          "$value": 10,
+          "$type": "number",
+          "$description": "Play ten times."
+        },
+        "infinite": {
+          "$value": -1,
+          "$type": "number",
+          "$description": "Infinite loop. -1 or 'infinite' in CSS."
+        }
+      },
+
+      "oscillation": {
+        "$description": "Oscillation parameters for wave-like motion",
+
+        "amplitude-micro": {
+          "$value": 0.01,
+          "$type": "number",
+          "$description": "1% amplitude. Barely perceptible oscillation."
+        },
+        "amplitude-subtle": {
+          "$value": 0.02,
+          "$type": "number",
+          "$description": "2% amplitude. Subtle breathing."
+        },
+        "amplitude-gentle": {
+          "$value": 0.05,
+          "$type": "number",
+          "$description": "5% amplitude. Gentle oscillation."
+        },
+        "amplitude-noticeable": {
+          "$value": 0.1,
+          "$type": "number",
+          "$description": "10% amplitude. Clearly visible oscillation."
+        },
+        "amplitude-strong": {
+          "$value": 0.2,
+          "$type": "number",
+          "$description": "20% amplitude. Pronounced oscillation."
+        },
+        "amplitude-dramatic": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "50% amplitude. Dramatic swing."
+        }
+      },
+
+      "wave": {
+        "$description": "Wave shape parameters",
+
+        "sine": {
+          "$value": "sine",
+          "$type": "string",
+          "$description": "Sine wave. Smooth, natural oscillation."
+        },
+        "cosine": {
+          "$value": "cosine",
+          "$type": "string",
+          "$description": "Cosine wave. Sine offset by 90 degrees."
+        },
+        "triangle": {
+          "$value": "triangle",
+          "$type": "string",
+          "$description": "Triangle wave. Linear ramp up and down."
+        },
+        "sawtooth": {
+          "$value": "sawtooth",
+          "$type": "string",
+          "$description": "Sawtooth wave. Linear ramp up, instant reset."
+        },
+        "square": {
+          "$value": "square",
+          "$type": "string",
+          "$description": "Square wave. Instant toggle between states."
+        },
+        "ease-in-out": {
+          "$value": "ease-in-out",
+          "$type": "string",
+          "$description": "Eased oscillation. Smooth acceleration/deceleration."
+        }
+      },
+
+      "phase": {
+        "$description": "Phase offset for staggered loops",
+
+        "zero": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "No phase offset. Start at cycle beginning."
+        },
+        "quarter": {
+          "$value": 0.25,
+          "$type": "number",
+          "$description": "25% phase offset. Quarter cycle ahead."
+        },
+        "half": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "50% phase offset. Half cycle ahead."
+        },
+        "three-quarter": {
+          "$value": 0.75,
+          "$type": "number",
+          "$description": "75% phase offset. Three-quarter cycle ahead."
+        },
+        "random": {
+          "$value": "random",
+          "$type": "string",
+          "$description": "Random phase offset. Each element starts at random point."
+        }
+      },
+
+      "seamless": {
+        "$description": "Seamless loop parameters",
+
+        "crossfade-duration": {
+          "$value": "500ms",
+          "$type": "duration",
+          "$description": "Duration of crossfade for seamless video/audio loops."
+        },
+        "ease-match-threshold": {
+          "$value": 0.01,
+          "$type": "number",
+          "$description": "Velocity matching threshold for seamless position loops."
+        }
+      },
+
+      "idle": {
+        "$description": "Idle/ambient animation parameters",
+
+        "intensity-subtle": {
+          "$value": 0.3,
+          "$type": "number",
+          "$description": "30% intensity. Very calm idle motion."
+        },
+        "intensity-normal": {
+          "$value": 0.6,
+          "$type": "number",
+          "$description": "60% intensity. Normal idle motion."
+        },
+        "intensity-active": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "100% intensity. Full idle motion."
+        },
+        "delay-before-idle": {
+          "$value": "3s",
+          "$type": "duration",
+          "$description": "Delay before idle animation starts after inactivity."
+        }
+      },
+
+      "pulse": {
+        "$description": "Pulsing loop parameters",
+
+        "heartbeat-fast": {
+          "$value": "0.8s",
+          "$type": "duration",
+          "$description": "Fast heartbeat. 75 BPM equivalent."
+        },
+        "heartbeat-normal": {
+          "$value": "1s",
+          "$type": "duration",
+          "$description": "Normal heartbeat. 60 BPM equivalent."
+        },
+        "heartbeat-slow": {
+          "$value": "1.5s",
+          "$type": "duration",
+          "$description": "Slow heartbeat. 40 BPM equivalent."
+        },
+        "breath-fast": {
+          "$value": "2s",
+          "$type": "duration",
+          "$description": "Fast breathing. Anxious pace."
+        },
+        "breath-normal": {
+          "$value": "4s",
+          "$type": "duration",
+          "$description": "Normal breathing. Relaxed pace."
+        },
+        "breath-slow": {
+          "$value": "6s",
+          "$type": "duration",
+          "$description": "Slow breathing. Meditative pace."
+        }
+      }
+    }
+  }
+}

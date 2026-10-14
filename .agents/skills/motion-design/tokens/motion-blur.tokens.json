@@ -1,0 +1,303 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Motion Blur tokens for video and high-performance animation. Frame-accurate blur simulation for cinematic quality.",
+
+  "motion-blur": {
+    "$description": "Motion blur intensity presets for different contexts",
+
+    "subtle": {
+      "$type": "object",
+      "$value": {
+        "samples": 4,
+        "intensity": 0.3,
+        "shutterAngle": 90,
+        "velocityThreshold": 100
+      },
+      "$description": "Minimal blur. Clean digital look. UI animations."
+    },
+
+    "standard": {
+      "$type": "object",
+      "$value": {
+        "samples": 8,
+        "intensity": 0.5,
+        "shutterAngle": 180,
+        "velocityThreshold": 50
+      },
+      "$description": "Standard film-like blur. Balanced clarity and motion smoothing."
+    },
+
+    "cinematic": {
+      "$type": "object",
+      "$value": {
+        "samples": 16,
+        "intensity": 0.8,
+        "shutterAngle": 270,
+        "velocityThreshold": 30
+      },
+      "$description": "Film-quality blur. 24fps aesthetic. Dramatic motion sequences."
+    },
+
+    "action": {
+      "$type": "object",
+      "$value": {
+        "samples": 24,
+        "intensity": 1.0,
+        "shutterAngle": 360,
+        "velocityThreshold": 20
+      },
+      "$description": "Maximum blur for fast action. Speed emphasis. Sports, gaming."
+    },
+
+    "off": {
+      "$type": "object",
+      "$value": {
+        "samples": 0,
+        "intensity": 0,
+        "shutterAngle": 0,
+        "velocityThreshold": "infinity"
+      },
+      "$description": "No motion blur. Sharp frames. UI, text animations."
+    }
+  },
+
+  "shutter-angle": {
+    "$description": "Film camera shutter angle equivalents (higher = more blur)",
+
+    "sharp-90": {
+      "$type": "number",
+      "$value": 90,
+      "$description": "Quarter exposure. Minimal blur, staccato feel. Action sports."
+    },
+
+    "standard-180": {
+      "$type": "number",
+      "$value": 180,
+      "$description": "Half exposure. Standard film look. Natural motion."
+    },
+
+    "smooth-270": {
+      "$type": "number",
+      "$value": 270,
+      "$description": "Three-quarter exposure. Smooth, dreamy motion."
+    },
+
+    "maximum-360": {
+      "$type": "number",
+      "$value": 360,
+      "$description": "Full exposure. Maximum blur. Abstract, artistic."
+    }
+  },
+
+  "frame-rate-mapping": {
+    "$description": "Blur settings optimized for different frame rates",
+
+    "fps-24": {
+      "$type": "object",
+      "$value": {
+        "recommendedShutter": 180,
+        "frameDuration": "41.67ms",
+        "style": "cinematic"
+      },
+      "$description": "Film standard. Natural motion blur expected."
+    },
+
+    "fps-30": {
+      "$type": "object",
+      "$value": {
+        "recommendedShutter": 180,
+        "frameDuration": "33.33ms",
+        "style": "broadcast"
+      },
+      "$description": "Video standard. Slightly sharper than film."
+    },
+
+    "fps-60": {
+      "$type": "object",
+      "$value": {
+        "recommendedShutter": 180,
+        "frameDuration": "16.67ms",
+        "style": "smooth"
+      },
+      "$description": "High frame rate. Inherently smoother, less blur needed."
+    },
+
+    "fps-120": {
+      "$type": "object",
+      "$value": {
+        "recommendedShutter": 90,
+        "frameDuration": "8.33ms",
+        "style": "ultra-smooth"
+      },
+      "$description": "Ultra-high frame rate. Sharp frames, minimal blur."
+    }
+  },
+
+  "directional-blur": {
+    "$description": "Direction-specific blur for velocity-based effects",
+
+    "horizontal": {
+      "$type": "object",
+      "$value": {
+        "axis": "x",
+        "blurMultiplier": 1.0
+      },
+      "$description": "Horizontal motion blur. Side-scrolling, panning."
+    },
+
+    "vertical": {
+      "$type": "object",
+      "$value": {
+        "axis": "y",
+        "blurMultiplier": 1.0
+      },
+      "$description": "Vertical motion blur. Falling, rising animations."
+    },
+
+    "radial": {
+      "$type": "object",
+      "$value": {
+        "axis": "radial",
+        "blurMultiplier": 0.8
+      },
+      "$description": "Radial/zoom blur. Zoom in/out effects."
+    },
+
+    "rotational": {
+      "$type": "object",
+      "$value": {
+        "axis": "rotation",
+        "blurMultiplier": 0.6
+      },
+      "$description": "Rotation blur. Spinning objects, wheels."
+    }
+  },
+
+  "velocity-thresholds": {
+    "$description": "Pixel-per-second thresholds for blur activation",
+
+    "slow": {
+      "$type": "object",
+      "$value": {
+        "minVelocity": 200,
+        "blurScale": 0.5
+      },
+      "$description": "Only blur fast motion. Keeps slow animations sharp."
+    },
+
+    "medium": {
+      "$type": "object",
+      "$value": {
+        "minVelocity": 100,
+        "blurScale": 0.75
+      },
+      "$description": "Blur moderate+ speeds. Balanced approach."
+    },
+
+    "aggressive": {
+      "$type": "object",
+      "$value": {
+        "minVelocity": 50,
+        "blurScale": 1.0
+      },
+      "$description": "Blur almost all motion. Maximum smoothing."
+    },
+
+    "always": {
+      "$type": "object",
+      "$value": {
+        "minVelocity": 1,
+        "blurScale": 1.0
+      },
+      "$description": "Blur any movement. Stylistic choice."
+    }
+  },
+
+  "velocity-response": {
+    "$description": "Direct velocity-to-blur pixel mapping. Use when precise blur values needed.",
+
+    "slow": {
+      "$type": "object",
+      "$value": {
+        "velocityRange": [0, 200],
+        "blur": "1px",
+        "unit": "px/s"
+      },
+      "$description": "Slow motion (<200px/s) gets 1px blur. Subtle smoothing."
+    },
+
+    "normal": {
+      "$type": "object",
+      "$value": {
+        "velocityRange": [200, 600],
+        "blur": "4px",
+        "unit": "px/s"
+      },
+      "$description": "Normal motion (200-600px/s) gets 4px blur. Standard smoothing."
+    },
+
+    "fast": {
+      "$type": "object",
+      "$value": {
+        "velocityRange": [600, 2000],
+        "blur": "8px",
+        "unit": "px/s"
+      },
+      "$description": "Fast motion (600-2000px/s) gets 8px blur. Maximum smoothing."
+    },
+
+    "extreme": {
+      "$type": "object",
+      "$value": {
+        "velocityRange": [2000, "Infinity"],
+        "blur": "12px",
+        "unit": "px/s"
+      },
+      "$description": "Extreme motion (>2000px/s) gets 12px blur. Dramatic speed blur."
+    }
+  },
+
+  "quality-performance": {
+    "$description": "Quality vs performance tradeoffs",
+
+    "preview": {
+      "$type": "object",
+      "$value": {
+        "samples": 2,
+        "quality": "low",
+        "realtime": true
+      },
+      "$description": "Fast preview quality. Real-time editing."
+    },
+
+    "draft": {
+      "$type": "object",
+      "$value": {
+        "samples": 4,
+        "quality": "medium",
+        "realtime": true
+      },
+      "$description": "Draft render quality. Quick exports."
+    },
+
+    "production": {
+      "$type": "object",
+      "$value": {
+        "samples": 16,
+        "quality": "high",
+        "realtime": false
+      },
+      "$description": "Production quality. Final renders."
+    },
+
+    "maximum": {
+      "$type": "object",
+      "$value": {
+        "samples": 32,
+        "quality": "maximum",
+        "realtime": false
+      },
+      "$description": "Maximum quality. Showcase, film output."
+    }
+  }
+}

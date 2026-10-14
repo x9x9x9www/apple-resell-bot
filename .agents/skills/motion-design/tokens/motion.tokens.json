@@ -1,0 +1,399 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Motion design tokens following W3C DTCG specification, with Material Design 3 as baseline",
+
+  "motion": {
+    "$description": "Complete motion token library",
+
+    "easing": {
+      "$description": "Easing curves in W3C DTCG cubicBezier format",
+
+      "standard": {
+        "$value": [0.2, 0, 0, 1],
+        "$type": "cubicBezier",
+        "$description": "Standard easing for most animations. M3: standard, Fluent: decelerate, Carbon: standard"
+      },
+      "emphasized": {
+        "$value": [0.2, 0, 0, 1],
+        "$type": "cubicBezier",
+        "$description": "Single-bezier APPROXIMATION of M3 emphasized. Use emphasized-path for exact M3 behavior on supporting platforms.",
+        "$extensions": {
+          "com.material.m3": {
+            "isApproximation": true,
+            "exactPath": "M 0,0 C 0.05, 0, 0.133333, 0.06, 0.166666, 0.4 C 0.208333, 0.82, 0.25, 1, 1, 1"
+          }
+        }
+      },
+      "emphasized-path": {
+        "$value": {
+          "type": "path",
+          "d": "M 0,0 C 0.05, 0, 0.133333, 0.06, 0.166666, 0.4 C 0.208333, 0.82, 0.25, 1, 1, 1",
+          "segments": [
+            {"control1": [0.05, 0], "control2": [0.133333, 0.06], "end": [0.166666, 0.4]},
+            {"control1": [0.208333, 0.82], "control2": [0.25, 1], "end": [1, 1]}
+          ]
+        },
+        "$type": "object",
+        "$description": "Exact M3 emphasized easing as two-segment cubic bezier path. Use with Android PathInterpolator or custom JS implementation."
+      },
+      "emphasized-linear": {
+        "$value": "linear(0, 0.006, 0.025 2.8%, 0.101 6.1%, 0.539 18.9%, 0.721 25.3%, 0.849 31.5%, 0.937 38.1%, 0.968 41.8%, 0.991 47.3%, 1)",
+        "$type": "string",
+        "$description": "CSS linear() function for exact M3 emphasized easing. Requires modern browser support (Chrome 113+, Safari 17.2+)."
+      },
+      "emphasized-decelerate": {
+        "$value": [0.05, 0.7, 0.1, 1],
+        "$type": "cubicBezier",
+        "$description": "For elements ENTERING the screen. Fast start, gentle settle. M3: emphasized-decelerate"
+      },
+      "emphasized-accelerate": {
+        "$value": [0.3, 0, 0.8, 0.15],
+        "$type": "cubicBezier",
+        "$description": "For elements EXITING the screen. Slow start, fast exit. M3: emphasized-accelerate"
+      },
+      "standard-decelerate": {
+        "$value": [0, 0, 0, 1],
+        "$type": "cubicBezier",
+        "$description": "Simple deceleration for basic entrances. M3: standard-decelerate"
+      },
+      "standard-accelerate": {
+        "$value": [0.3, 0, 1, 1],
+        "$type": "cubicBezier",
+        "$description": "Simple acceleration for basic exits. M3: standard-accelerate"
+      },
+      "linear": {
+        "$value": [0, 0, 1, 1],
+        "$type": "cubicBezier",
+        "$description": "Linear motion for continuous animations (spinners, progress). All systems: linear"
+      },
+
+      "cross-reference": {
+        "$description": "Equivalent curves in other design systems",
+
+        "fluent-decelerate": {
+          "$value": [0.1, 0.9, 0.2, 1],
+          "$type": "cubicBezier",
+          "$description": "Fluent 2 decelerate curve"
+        },
+        "fluent-accelerate": {
+          "$value": [0.9, 0.1, 1, 0.2],
+          "$type": "cubicBezier",
+          "$description": "Fluent 2 accelerate curve"
+        },
+        "carbon-standard": {
+          "$value": [0.2, 0, 0.38, 0.9],
+          "$type": "cubicBezier",
+          "$description": "Carbon productive-standard curve"
+        },
+        "carbon-entrance": {
+          "$value": [0, 0, 0.38, 0.9],
+          "$type": "cubicBezier",
+          "$description": "Carbon productive-entrance curve"
+        },
+        "carbon-exit": {
+          "$value": [0.2, 0, 1, 0.9],
+          "$type": "cubicBezier",
+          "$description": "Carbon productive-exit curve"
+        },
+        "carbon-expressive-standard": {
+          "$value": [0.4, 0.14, 0.3, 1],
+          "$type": "cubicBezier",
+          "$description": "Carbon expressive-standard curve"
+        }
+      }
+    },
+
+    "duration": {
+      "$description": "Duration tokens in milliseconds. W3C DTCG duration type.",
+
+      "short-1": {
+        "$value": "50ms",
+        "$type": "duration",
+        "$description": "Micro-interactions, ripples. M3: short1"
+      },
+      "short-2": {
+        "$value": "100ms",
+        "$type": "duration",
+        "$description": "Simple state changes, toggles. M3: short2"
+      },
+      "short-3": {
+        "$value": "150ms",
+        "$type": "duration",
+        "$description": "Small elements, icons. M3: short3"
+      },
+      "short-4": {
+        "$value": "200ms",
+        "$type": "duration",
+        "$description": "Selection controls, buttons. M3: short4"
+      },
+      "medium-1": {
+        "$value": "250ms",
+        "$type": "duration",
+        "$description": "Cards, small components. M3: medium1"
+      },
+      "medium-2": {
+        "$value": "300ms",
+        "$type": "duration",
+        "$description": "Dialogs, sheets. M3: medium2"
+      },
+      "medium-3": {
+        "$value": "350ms",
+        "$type": "duration",
+        "$description": "Medium transitions. M3: medium3"
+      },
+      "medium-4": {
+        "$value": "400ms",
+        "$type": "duration",
+        "$description": "Complex transitions. M3: medium4"
+      },
+      "long-1": {
+        "$value": "450ms",
+        "$type": "duration",
+        "$description": "Page transitions. M3: long1"
+      },
+      "long-2": {
+        "$value": "500ms",
+        "$type": "duration",
+        "$description": "Expressive animations. M3: long2"
+      },
+      "long-3": {
+        "$value": "550ms",
+        "$type": "duration",
+        "$description": "Extended expressions. M3: long3"
+      },
+      "long-4": {
+        "$value": "600ms",
+        "$type": "duration",
+        "$description": "Standard long duration. M3: long4"
+      },
+      "extra-long-1": {
+        "$value": "700ms",
+        "$type": "duration",
+        "$description": "Complex multi-element transitions. M3: extraLong1. 21 frames at 30fps."
+      },
+      "extra-long-2": {
+        "$value": "800ms",
+        "$type": "duration",
+        "$description": "Narrative/storytelling animations. M3: extraLong2. 24 frames at 30fps."
+      },
+      "extra-long-3": {
+        "$value": "900ms",
+        "$type": "duration",
+        "$description": "Dramatic entrances. M3: extraLong3. 27 frames at 30fps."
+      },
+      "extra-long-4": {
+        "$value": "1000ms",
+        "$type": "duration",
+        "$description": "Maximum M3 duration, hero moments. M3: extraLong4. 30 frames at 30fps."
+      },
+
+      "cross-reference": {
+        "$description": "Equivalent durations in other design systems",
+
+        "fluent-ultra-fast": {
+          "$value": "50ms",
+          "$type": "duration",
+          "$description": "Fluent 2 ultra-fast"
+        },
+        "fluent-faster": {
+          "$value": "100ms",
+          "$type": "duration",
+          "$description": "Fluent 2 faster"
+        },
+        "fluent-fast": {
+          "$value": "150ms",
+          "$type": "duration",
+          "$description": "Fluent 2 fast"
+        },
+        "fluent-normal": {
+          "$value": "200ms",
+          "$type": "duration",
+          "$description": "Fluent 2 normal"
+        },
+        "fluent-slow": {
+          "$value": "300ms",
+          "$type": "duration",
+          "$description": "Fluent 2 slow"
+        },
+        "fluent-slower": {
+          "$value": "400ms",
+          "$type": "duration",
+          "$description": "Fluent 2 slower"
+        },
+        "fluent-ultra-slow": {
+          "$value": "500ms",
+          "$type": "duration",
+          "$description": "Fluent 2 ultra-slow"
+        },
+        "carbon-fast-01": {
+          "$value": "70ms",
+          "$type": "duration",
+          "$description": "Carbon fast-01"
+        },
+        "carbon-fast-02": {
+          "$value": "110ms",
+          "$type": "duration",
+          "$description": "Carbon fast-02"
+        },
+        "carbon-moderate-01": {
+          "$value": "150ms",
+          "$type": "duration",
+          "$description": "Carbon moderate-01"
+        },
+        "carbon-moderate-02": {
+          "$value": "240ms",
+          "$type": "duration",
+          "$description": "Carbon moderate-02"
+        },
+        "carbon-slow-01": {
+          "$value": "400ms",
+          "$type": "duration",
+          "$description": "Carbon slow-01"
+        },
+        "carbon-slow-02": {
+          "$value": "700ms",
+          "$type": "duration",
+          "$description": "Carbon slow-02"
+        }
+      }
+    },
+
+    "spring": {
+      "$description": "M3 spring system. Spatial springs allow overshoot (position/scale/rotation). Effects springs are critically damped (opacity/color).",
+
+      "fast": {
+        "$description": "Fast springs for small components (buttons, switches, icons)",
+        "spatial": {
+          "$value": { "damping": 0.9, "stiffness": 1400, "mass": 1 },
+          "$type": "object",
+          "$description": "M3 fast spatial spring. Position, scale, rotation for small elements. Allows overshoot."
+        },
+        "effects": {
+          "$value": { "damping": 1.0, "stiffness": 3800, "mass": 1 },
+          "$type": "object",
+          "$description": "M3 fast effects spring. Opacity, color for small elements. Critically damped, no overshoot."
+        }
+      },
+
+      "default": {
+        "$description": "Default springs for standard UI transitions",
+        "spatial": {
+          "$value": { "damping": 0.9, "stiffness": 700, "mass": 1 },
+          "$type": "object",
+          "$description": "M3 default spatial spring. Position, scale, rotation for standard UI. Allows overshoot."
+        },
+        "effects": {
+          "$value": { "damping": 1.0, "stiffness": 1600, "mass": 1 },
+          "$type": "object",
+          "$description": "M3 default effects spring. Opacity, color for standard UI. Critically damped, no overshoot."
+        }
+      },
+
+      "slow": {
+        "$description": "Slow springs for full-screen and large element animations",
+        "spatial": {
+          "$value": { "damping": 0.9, "stiffness": 300, "mass": 1 },
+          "$type": "object",
+          "$description": "M3 slow spatial spring. Position, scale, rotation for large elements. Allows overshoot."
+        },
+        "effects": {
+          "$value": { "damping": 1.0, "stiffness": 800, "mass": 1 },
+          "$type": "object",
+          "$description": "M3 slow effects spring. Opacity, color for large elements. Critically damped, no overshoot."
+        }
+      },
+
+      "legacy": {
+        "$description": "Previous spring tokens for backward compatibility. Use M3 springs (fast/default/slow + spatial/effects) for new implementations.",
+        "standard": {
+          "$value": { "damping": 15, "stiffness": 150, "mass": 1 },
+          "$type": "object",
+          "$description": "DEPRECATED: Use spring.default.spatial. Standard spring.",
+          "$extensions": { "com.motion-design-agent": { "deprecated": true, "replacement": "{motion.spring.default.spatial}" } }
+        },
+        "snappy": {
+          "$value": { "damping": 25, "stiffness": 300, "mass": 0.5 },
+          "$type": "object",
+          "$description": "DEPRECATED: Use spring.fast.spatial. Snappy response.",
+          "$extensions": { "com.motion-design-agent": { "deprecated": true, "replacement": "{motion.spring.fast.spatial}" } }
+        },
+        "bouncy": {
+          "$value": { "damping": 10, "stiffness": 180, "mass": 1 },
+          "$type": "object",
+          "$description": "Custom bouncy spring (not in M3). Low damping for playful overshoot."
+        },
+        "gentle": {
+          "$value": { "damping": 25, "stiffness": 100, "mass": 1.2 },
+          "$type": "object",
+          "$description": "DEPRECATED: Use spring.slow.spatial. Gentle settle.",
+          "$extensions": { "com.motion-design-agent": { "deprecated": true, "replacement": "{motion.spring.slow.spatial}" } }
+        },
+        "enter": {
+          "$value": { "damping": 20, "stiffness": 180, "mass": 1 },
+          "$type": "object",
+          "$description": "DEPRECATED: Use spring.default.spatial. Entrance spring.",
+          "$extensions": { "com.motion-design-agent": { "deprecated": true, "replacement": "{motion.spring.default.spatial}" } }
+        }
+      }
+    },
+
+    "transition": {
+      "$description": "Composite transition tokens combining duration and easing",
+
+      "fade-in": {
+        "$value": {
+          "duration": "{motion.duration.medium-1}",
+          "timingFunction": "{motion.easing.emphasized-decelerate}",
+          "delay": "0ms"
+        },
+        "$type": "transition",
+        "$description": "Standard fade-in entrance"
+      },
+      "fade-out": {
+        "$value": {
+          "duration": "{motion.duration.short-4}",
+          "timingFunction": "{motion.easing.emphasized-accelerate}",
+          "delay": "0ms"
+        },
+        "$type": "transition",
+        "$description": "Standard fade-out exit"
+      },
+      "slide-up": {
+        "$value": {
+          "duration": "{motion.duration.medium-1}",
+          "timingFunction": "{motion.easing.emphasized-decelerate}",
+          "delay": "0ms"
+        },
+        "$type": "transition",
+        "$description": "Slide up entrance (combine with fade)"
+      },
+      "container-transform": {
+        "$value": {
+          "duration": "{motion.duration.long-2}",
+          "timingFunction": "{motion.easing.emphasized}",
+          "delay": "0ms"
+        },
+        "$type": "transition",
+        "$description": "M3 container transform transition"
+      },
+      "shared-axis": {
+        "$value": {
+          "duration": "{motion.duration.medium-4}",
+          "timingFunction": "{motion.easing.emphasized}",
+          "delay": "0ms"
+        },
+        "$type": "transition",
+        "$description": "M3 shared axis transition"
+      },
+      "fade-through": {
+        "$value": {
+          "duration": "{motion.duration.medium-2}",
+          "timingFunction": "{motion.easing.standard}",
+          "delay": "0ms"
+        },
+        "$type": "transition",
+        "$description": "M3 fade through transition"
+      }
+    }
+  }
+}

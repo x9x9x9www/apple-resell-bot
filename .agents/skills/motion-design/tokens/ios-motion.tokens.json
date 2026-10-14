@@ -1,0 +1,199 @@
+{
+  "ios": {
+    "$description": "iOS platform-specific motion tokens mapped to UIKit and SwiftUI APIs",
+
+    "spring": {
+      "$description": "iOS spring configurations for UIKit and SwiftUI",
+
+      "interactive": {
+        "$value": {
+          "response": 0.3,
+          "dampingRatio": 0.825
+        },
+        "$type": "object",
+        "$description": "SwiftUI .interactiveSpring() - user-driven interactions"
+      },
+
+      "bouncy": {
+        "$value": {
+          "response": 0.5,
+          "dampingRatio": 0.6
+        },
+        "$type": "object",
+        "$description": "SwiftUI .bouncy - playful, attention-grabbing"
+      },
+
+      "smooth": {
+        "$value": {
+          "response": 0.5,
+          "dampingRatio": 0.9
+        },
+        "$type": "object",
+        "$description": "SwiftUI .smooth - refined, professional feel"
+      },
+
+      "snappy": {
+        "$value": {
+          "response": 0.35,
+          "dampingRatio": 0.9
+        },
+        "$type": "object",
+        "$description": "SwiftUI .snappy - quick, responsive feedback"
+      },
+
+      "default": {
+        "$value": {
+          "response": 0.55,
+          "dampingRatio": 1.0
+        },
+        "$type": "object",
+        "$description": "SwiftUI default spring - critically damped"
+      }
+    },
+
+    "uikit-timing": {
+      "$description": "UIKit timing curve presets",
+
+      "ease-in-out": {
+        "$value": [0.42, 0, 0.58, 1],
+        "$type": "cubicBezier",
+        "$description": "UIView.AnimationCurve.easeInOut"
+      },
+
+      "ease-in": {
+        "$value": [0.42, 0, 1, 1],
+        "$type": "cubicBezier",
+        "$description": "UIView.AnimationCurve.easeIn"
+      },
+
+      "ease-out": {
+        "$value": [0, 0, 0.58, 1],
+        "$type": "cubicBezier",
+        "$description": "UIView.AnimationCurve.easeOut"
+      },
+
+      "linear": {
+        "$value": [0, 0, 1, 1],
+        "$type": "cubicBezier",
+        "$description": "UIView.AnimationCurve.linear"
+      }
+    },
+
+    "core-animation": {
+      "$description": "CAMediaTimingFunction presets",
+
+      "default": {
+        "$value": [0.25, 0.1, 0.25, 1],
+        "$type": "cubicBezier",
+        "$description": "kCAMediaTimingFunctionDefault"
+      },
+
+      "linear": {
+        "$value": [0, 0, 1, 1],
+        "$type": "cubicBezier",
+        "$description": "kCAMediaTimingFunctionLinear"
+      },
+
+      "ease-in": {
+        "$value": [0.42, 0, 1, 1],
+        "$type": "cubicBezier",
+        "$description": "kCAMediaTimingFunctionEaseIn"
+      },
+
+      "ease-out": {
+        "$value": [0, 0, 0.58, 1],
+        "$type": "cubicBezier",
+        "$description": "kCAMediaTimingFunctionEaseOut"
+      },
+
+      "ease-in-out": {
+        "$value": [0.42, 0, 0.58, 1],
+        "$type": "cubicBezier",
+        "$description": "kCAMediaTimingFunctionEaseInEaseOut"
+      }
+    },
+
+    "duration": {
+      "$description": "iOS HIG duration guidelines",
+
+      "instant": {
+        "$value": "100ms",
+        "$type": "duration",
+        "$description": "Micro-feedback, haptic-paired animations"
+      },
+
+      "fast": {
+        "$value": "200ms",
+        "$type": "duration",
+        "$description": "Button states, toggles, quick feedback"
+      },
+
+      "standard": {
+        "$value": "300ms",
+        "$type": "duration",
+        "$description": "Most UI transitions, sheets, popovers"
+      },
+
+      "moderate": {
+        "$value": "400ms",
+        "$type": "duration",
+        "$description": "Modal presentations, page transitions"
+      },
+
+      "slow": {
+        "$value": "500ms",
+        "$type": "duration",
+        "$description": "Full-screen transitions, hero animations"
+      },
+
+      "deliberate": {
+        "$value": "700ms",
+        "$type": "duration",
+        "$description": "Onboarding, showcase animations"
+      }
+    },
+
+    "transition-styles": {
+      "$description": "iOS system transition presets",
+
+      "modal-present": {
+        "$value": {
+          "duration": "350ms",
+          "damping": 1.0,
+          "response": 0.55
+        },
+        "$type": "object",
+        "$description": "Standard modal presentation (sheet from bottom)"
+      },
+
+      "push": {
+        "$value": {
+          "duration": "350ms",
+          "damping": 1.0,
+          "response": 0.5
+        },
+        "$type": "object",
+        "$description": "Navigation push transition"
+      },
+
+      "pop": {
+        "$value": {
+          "duration": "350ms",
+          "damping": 1.0,
+          "response": 0.5
+        },
+        "$type": "object",
+        "$description": "Navigation pop transition"
+      },
+
+      "fade": {
+        "$value": {
+          "duration": "250ms",
+          "curve": "ease-in-out"
+        },
+        "$type": "object",
+        "$description": "Cross-dissolve transition"
+      }
+    }
+  }
+}

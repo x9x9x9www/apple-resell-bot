@@ -1,0 +1,251 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Position and translation tokens for movement animations. Defines offset distances, path types, and motion trajectories.",
+
+  "motion": {
+    "position": {
+      "$description": "Translation and movement tokens",
+
+      "offset": {
+        "$description": "Standard translation distances",
+
+        "micro": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Subtle shifts, micro-feedback. Use for hover states, icon nudges."
+        },
+        "small": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Small movements. Use for button press feedback, list item shifts."
+        },
+        "medium": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Standard movement distance. Use for card entrances, modal slides."
+        },
+        "large": {
+          "$value": "32px",
+          "$type": "dimension",
+          "$description": "Pronounced movement. Use for drawer slides, panel transitions."
+        },
+        "xlarge": {
+          "$value": "64px",
+          "$type": "dimension",
+          "$description": "Dramatic movement. Use for hero entrances, page transitions."
+        },
+        "xxlarge": {
+          "$value": "128px",
+          "$type": "dimension",
+          "$description": "Extreme movement. Use for off-screen origins, dramatic reveals."
+        },
+        "viewport-quarter": {
+          "$value": "25vw",
+          "$type": "dimension",
+          "$description": "Quarter viewport width. Use for slide-in panels."
+        },
+        "viewport-half": {
+          "$value": "50vw",
+          "$type": "dimension",
+          "$description": "Half viewport width. Use for split-screen transitions."
+        },
+        "viewport-full": {
+          "$value": "100vw",
+          "$type": "dimension",
+          "$description": "Full viewport width. Use for page swipes, carousel slides."
+        },
+        "viewport-height-quarter": {
+          "$value": "25vh",
+          "$type": "dimension",
+          "$description": "Quarter viewport height. Use for bottom sheet peek."
+        },
+        "viewport-height-half": {
+          "$value": "50vh",
+          "$type": "dimension",
+          "$description": "Half viewport height. Use for modal slides."
+        },
+        "viewport-height-full": {
+          "$value": "100vh",
+          "$type": "dimension",
+          "$description": "Full viewport height. Use for vertical page transitions."
+        }
+      },
+
+      "direction": {
+        "$description": "Standard movement directions",
+
+        "up": {
+          "$value": { "x": 0, "y": -1 },
+          "$type": "object",
+          "$description": "Upward movement vector. Common for entrance animations (slide up)."
+        },
+        "down": {
+          "$value": { "x": 0, "y": 1 },
+          "$type": "object",
+          "$description": "Downward movement vector. Common for dropdown, gravity effects."
+        },
+        "left": {
+          "$value": { "x": -1, "y": 0 },
+          "$type": "object",
+          "$description": "Leftward movement vector. Use for forward navigation (LTR)."
+        },
+        "right": {
+          "$value": { "x": 1, "y": 0 },
+          "$type": "object",
+          "$description": "Rightward movement vector. Use for back navigation (LTR)."
+        },
+        "up-left": {
+          "$value": { "x": -0.707, "y": -0.707 },
+          "$type": "object",
+          "$description": "Diagonal up-left vector (normalized)."
+        },
+        "up-right": {
+          "$value": { "x": 0.707, "y": -0.707 },
+          "$type": "object",
+          "$description": "Diagonal up-right vector (normalized)."
+        },
+        "down-left": {
+          "$value": { "x": -0.707, "y": 0.707 },
+          "$type": "object",
+          "$description": "Diagonal down-left vector (normalized)."
+        },
+        "down-right": {
+          "$value": { "x": 0.707, "y": 0.707 },
+          "$type": "object",
+          "$description": "Diagonal down-right vector (normalized)."
+        }
+      },
+
+      "path": {
+        "$description": "Motion path configurations",
+
+        "linear": {
+          "$value": "linear",
+          "$type": "string",
+          "$description": "Straight-line motion. Use for mechanical, precise movements."
+        },
+        "arc-subtle": {
+          "$value": { "control-offset": 0.2 },
+          "$type": "object",
+          "$description": "Gentle arc for small aspect ratio changes. Natural feel."
+        },
+        "arc-standard": {
+          "$value": { "control-offset": 0.5 },
+          "$type": "object",
+          "$description": "Standard arc for medium morphs. Google M3 default."
+        },
+        "arc-dramatic": {
+          "$value": { "control-offset": 0.8 },
+          "$type": "object",
+          "$description": "Pronounced arc for large transformations. Theatrical motion."
+        }
+      },
+
+      "arc-threshold": {
+        "$value": 0.1,
+        "$type": "number",
+        "$description": "Use arc motion when aspect ratio changes by more than 10%. Google M3 container transform rule."
+      },
+
+      "orbit": {
+        "$description": "Circular and orbital motion parameters",
+
+        "radius-small": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Small orbit radius. Use for loading spinners, icon orbits."
+        },
+        "radius-medium": {
+          "$value": "48px",
+          "$type": "dimension",
+          "$description": "Medium orbit radius. Use for decorative orbits."
+        },
+        "radius-large": {
+          "$value": "96px",
+          "$type": "dimension",
+          "$description": "Large orbit radius. Use for satellite elements, hero decorations."
+        },
+        "speed-slow": {
+          "$value": "8s",
+          "$type": "duration",
+          "$description": "Slow orbit cycle. Ambient, background motion."
+        },
+        "speed-medium": {
+          "$value": "4s",
+          "$type": "duration",
+          "$description": "Medium orbit cycle. Noticeable but not distracting."
+        },
+        "speed-fast": {
+          "$value": "2s",
+          "$type": "duration",
+          "$description": "Fast orbit cycle. Active, energetic motion."
+        }
+      },
+
+      "overshoot": {
+        "$description": "Overshoot and settle parameters",
+
+        "subtle": {
+          "$value": 1.02,
+          "$type": "number",
+          "$description": "2% overshoot. Barely perceptible settle."
+        },
+        "small": {
+          "$value": 1.05,
+          "$type": "number",
+          "$description": "5% overshoot. Gentle bounce settle."
+        },
+        "medium": {
+          "$value": 1.1,
+          "$type": "number",
+          "$description": "10% overshoot. Noticeable spring settle."
+        },
+        "large": {
+          "$value": 1.2,
+          "$type": "number",
+          "$description": "20% overshoot. Playful, bouncy settle."
+        },
+        "exaggerated": {
+          "$value": 1.5,
+          "$type": "number",
+          "$description": "50% overshoot. Cartoon-style bounce."
+        }
+      },
+
+      "drift": {
+        "$description": "Ambient floating/drifting parameters",
+
+        "amplitude-subtle": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Subtle drift range. Barely perceptible float."
+        },
+        "amplitude-gentle": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Gentle drift range. Calm floating effect."
+        },
+        "amplitude-noticeable": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Noticeable drift range. Visible ambient motion."
+        },
+        "period-slow": {
+          "$value": "6s",
+          "$type": "duration",
+          "$description": "Slow drift cycle. Meditative, calm."
+        },
+        "period-medium": {
+          "$value": "3s",
+          "$type": "duration",
+          "$description": "Medium drift cycle. Natural floating."
+        },
+        "period-fast": {
+          "$value": "1.5s",
+          "$type": "duration",
+          "$description": "Fast drift cycle. Energetic floating."
+        }
+      }
+    }
+  }
+}

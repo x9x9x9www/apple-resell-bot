@@ -1,0 +1,240 @@
+/**
+ * ===========================================
+ * Framer Motion Variants Template
+ * Generated from Motion Design Agent v2
+ * ===========================================
+ */
+
+import type { Variants, Transition } from 'framer-motion';
+import { useReducedMotion } from 'framer-motion';
+
+/**
+ * Animation: {{ANIMATION_NAME}}
+ * Duration: {{DURATION}}s ({{DURATION_TOKEN}})
+ * Easing: {{EASING_ARRAY}}
+ * Principles: {{PRINCIPLES}}
+ */
+
+// Duration tokens (seconds)
+export const duration = {
+  'short-1': 0.05,
+  'short-2': 0.1,
+  'short-3': 0.15,
+  'short-4': 0.2,
+  'medium-1': 0.25,
+  'medium-2': 0.3,
+  'medium-3': 0.35,
+  'medium-4': 0.4,
+  'long-1': 0.45,
+  'long-2': 0.5,
+} as const;
+
+// Easing tokens (cubic-bezier arrays)
+export const easing = {
+  standard: [0.2, 0, 0, 1] as const,
+  'emphasized-decelerate': [0.05, 0.7, 0.1, 1] as const,
+  'emphasized-accelerate': [0.3, 0, 0.8, 0.15] as const,
+  'standard-decelerate': [0, 0, 0, 1] as const,
+  linear: [0, 0, 1, 1] as const,
+} as const;
+
+// Spring configurations
+export const springConfig = {
+  standard: { damping: 15, stiffness: 150, mass: 1 },
+  snappy: { damping: 25, stiffness: 300, mass: 0.5 },
+  bouncy: { damping: 10, stiffness: 180, mass: 1 },
+  gentle: { damping: 25, stiffness: 100, mass: 1.2 },
+} as const;
+
+// Transition presets
+const enterTransition: Transition = {
+  duration: duration['{{DURATION_TOKEN}}'],
+  ease: easing['{{EASING_TOKEN}}'],
+};
+
+const exitTransition: Transition = {
+  duration: duration['short-4'],
+  ease: easing['emphasized-accelerate'],
+};
+
+{{#if USE_SPRING}}
+const springTransition: Transition = {
+  type: 'spring',
+  ...springConfig['{{SPRING_CONFIG}}'],
+};
+{{/if}}
+
+/**
+ * {{ANIMATION_DESCRIPTION}}
+ */
+export const {{VARIANT_NAME}}Variants: Variants = {
+  hidden: {
+    {{HIDDEN_STATE}}
+  },
+  visible: {
+    {{VISIBLE_STATE}}
+    transition: {{#if USE_SPRING}}springTransition{{else}}enterTransition{{/if}},
+  },
+  exit: {
+    {{EXIT_STATE}}
+    transition: exitTransition,
+  },
+};
+
+/**
+ * Reduced motion variant
+ */
+export const {{VARIANT_NAME}}ReducedVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 0.1 },
+  },
+  exit: {
+    opacity: 0,
+    transition: { duration: 0.1 },
+  },
+};
+
+{{#if HAS_STAGGER}}
+/**
+ * Container variants for staggered children
+ */
+export const {{VARIANT_NAME}}ContainerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: {{STAGGER_DELAY}},
+      delayChildren: {{DELAY_CHILDREN}},
+    },
+  },
+  exit: {
+    opacity: 0,
+    transition: {
+      staggerChildren: {{EXIT_STAGGER_DELAY}},
+      staggerDirection: -1,
+    },
+  },
+};
+
+/**
+ * Item variants for staggered children
+ */
+export const {{VARIANT_NAME}}ItemVariants: Variants = {
+  hidden: {
+    {{ITEM_HIDDEN_STATE}}
+  },
+  visible: {
+    {{ITEM_VISIBLE_STATE}}
+    transition: enterTransition,
+  },
+  exit: {
+    {{ITEM_EXIT_STATE}}
+    transition: exitTransition,
+  },
+};
+{{/if}}
+
+{{#if HAS_GESTURE}}
+/**
+ * Gesture variants for hover/tap states
+ */
+export const {{VARIANT_NAME}}GestureVariants = {
+  {{#if HOVER_STATE}}
+  whileHover: {
+    {{HOVER_STATE}}
+    transition: { duration: duration['short-3'] },
+  },
+  {{/if}}
+  {{#if TAP_STATE}}
+  whileTap: {
+    {{TAP_STATE}}
+    transition: { duration: duration['short-2'] },
+  },
+  {{/if}}
+};
+{{/if}}
+
+/**
+ * Hook for motion-safe variants
+ */
+export function use{{VARIANT_NAME}}Variants() {
+  const prefersReducedMotion = useReducedMotion();
+  return prefersReducedMotion
+    ? {{VARIANT_NAME}}ReducedVariants
+    : {{VARIANT_NAME}}Variants;
+}
+
+/* ===========================================
+   Usage Example:
+
+   import { motion, AnimatePresence } from 'framer-motion';
+   import {
+     {{VARIANT_NAME}}Variants,
+     use{{VARIANT_NAME}}Variants
+   } from './{{FILE_NAME}}';
+
+   // Basic usage
+   function Component() {
+     const variants = use{{VARIANT_NAME}}Variants();
+
+     return (
+       <motion.div
+         variants={variants}
+         initial="hidden"
+         animate="visible"
+         exit="exit"
+       >
+         Content
+       </motion.div>
+     );
+   }
+
+   // With AnimatePresence
+   function AnimatedComponent({ isVisible }) {
+     return (
+       <AnimatePresence>
+         {isVisible && (
+           <motion.div
+             variants={{{VARIANT_NAME}}Variants}
+             initial="hidden"
+             animate="visible"
+             exit="exit"
+           >
+             Content
+           </motion.div>
+         )}
+       </AnimatePresence>
+     );
+   }
+   {{#if HAS_STAGGER}}
+
+   // Staggered list
+   function StaggeredList({ items }) {
+     return (
+       <motion.ul
+         variants={{{VARIANT_NAME}}ContainerVariants}
+         initial="hidden"
+         animate="visible"
+       >
+         {items.map(item => (
+           <motion.li
+             key={item.id}
+             variants={{{VARIANT_NAME}}ItemVariants}
+           >
+             {item.content}
+           </motion.li>
+         ))}
+       </motion.ul>
+     );
+   }
+   {{/if}}
+   =========================================== */
+
+/* Token References:
+   Duration: {{DURATION_TOKEN}}
+   Easing: {{EASING_TOKEN}}
+   {{#if USE_SPRING}}Spring: {{SPRING_CONFIG}}{{/if}}
+   Recipe: {{RECIPE_REF}}
+*/

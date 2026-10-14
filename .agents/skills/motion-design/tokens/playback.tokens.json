@@ -1,0 +1,291 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Playback control tokens for animation speed, direction, scrubbing, and timing control.",
+
+  "motion": {
+    "playback": {
+      "$description": "Animation playback control tokens",
+
+      "speed": {
+        "$description": "Playback speed multipliers",
+
+        "paused": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "Paused state. No playback."
+        },
+        "slow-motion": {
+          "$value": 0.25,
+          "$type": "number",
+          "$description": "Quarter speed. Dramatic slow-mo."
+        },
+        "half": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "Half speed. Gentle slowdown."
+        },
+        "normal": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Normal speed. 1x playback."
+        },
+        "fast": {
+          "$value": 1.5,
+          "$type": "number",
+          "$description": "1.5x speed. Quick preview."
+        },
+        "double": {
+          "$value": 2,
+          "$type": "number",
+          "$description": "Double speed. Fast forward."
+        },
+        "rapid": {
+          "$value": 4,
+          "$type": "number",
+          "$description": "4x speed. Rapid scrub."
+        },
+        "instant": {
+          "$value": 10,
+          "$type": "number",
+          "$description": "Near-instant. Skip animation."
+        }
+      },
+
+      "direction": {
+        "$description": "Playback direction values",
+
+        "forward": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Normal forward playback."
+        },
+        "reverse": {
+          "$value": -1,
+          "$type": "number",
+          "$description": "Reverse playback."
+        },
+        "alternate": {
+          "$value": "alternate",
+          "$type": "string",
+          "$description": "Alternate forward/reverse each iteration."
+        },
+        "alternate-reverse": {
+          "$value": "alternate-reverse",
+          "$type": "string",
+          "$description": "Start reversed, then alternate."
+        }
+      },
+
+      "iteration": {
+        "$description": "Iteration count values",
+
+        "once": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Play once and stop."
+        },
+        "twice": {
+          "$value": 2,
+          "$type": "number",
+          "$description": "Play twice."
+        },
+        "thrice": {
+          "$value": 3,
+          "$type": "number",
+          "$description": "Play three times."
+        },
+        "few": {
+          "$value": 5,
+          "$type": "number",
+          "$description": "Play five times."
+        },
+        "infinite": {
+          "$value": -1,
+          "$type": "number",
+          "$description": "Loop indefinitely. Use -1 or Infinity."
+        }
+      },
+
+      "fill-mode": {
+        "$description": "Animation fill mode values",
+
+        "none": {
+          "$value": "none",
+          "$type": "string",
+          "$description": "No fill. Return to initial state."
+        },
+        "forwards": {
+          "$value": "forwards",
+          "$type": "string",
+          "$description": "Keep final keyframe state."
+        },
+        "backwards": {
+          "$value": "backwards",
+          "$type": "string",
+          "$description": "Apply first keyframe during delay."
+        },
+        "both": {
+          "$value": "both",
+          "$type": "string",
+          "$description": "Apply both forwards and backwards."
+        }
+      },
+
+      "scrub": {
+        "$description": "Scrubbing/seeking parameters",
+
+        "sensitivity": {
+          "low": {
+            "$value": 0.5,
+            "$type": "number",
+            "$description": "Low scrub sensitivity. Precise control."
+          },
+          "normal": {
+            "$value": 1,
+            "$type": "number",
+            "$description": "Normal scrub sensitivity."
+          },
+          "high": {
+            "$value": 2,
+            "$type": "number",
+            "$description": "High scrub sensitivity. Fast seeking."
+          }
+        },
+
+        "snap-points": {
+          "none": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "No snap points. Continuous scrub."
+          },
+          "keyframes": {
+            "$value": "keyframes",
+            "$type": "string",
+            "$description": "Snap to keyframe positions."
+          },
+          "quarters": {
+            "$value": 4,
+            "$type": "number",
+            "$description": "Snap to 0%, 25%, 50%, 75%, 100%."
+          },
+          "tenths": {
+            "$value": 10,
+            "$type": "number",
+            "$description": "Snap to 10% increments."
+          }
+        },
+
+        "momentum": {
+          "$value": 0.95,
+          "$type": "number",
+          "$description": "Scrub momentum decay factor."
+        }
+      },
+
+      "transition-speed": {
+        "$description": "Speed change transition durations",
+
+        "instant": {
+          "$value": "0ms",
+          "$type": "duration",
+          "$description": "Instant speed change."
+        },
+        "snap": {
+          "$value": "50ms",
+          "$type": "duration",
+          "$description": "Quick speed transition."
+        },
+        "smooth": {
+          "$value": "200ms",
+          "$type": "duration",
+          "$description": "Smooth speed ramp."
+        },
+        "gradual": {
+          "$value": "500ms",
+          "$type": "duration",
+          "$description": "Gradual speed change."
+        }
+      },
+
+      "seek": {
+        "$description": "Seek behavior parameters",
+
+        "step-small": {
+          "$value": "0.1s",
+          "$type": "duration",
+          "$description": "Small seek step. 100ms."
+        },
+        "step-medium": {
+          "$value": "0.5s",
+          "$type": "duration",
+          "$description": "Medium seek step. 500ms."
+        },
+        "step-large": {
+          "$value": "1s",
+          "$type": "duration",
+          "$description": "Large seek step. 1 second."
+        },
+        "step-frame": {
+          "$value": "0.033s",
+          "$type": "duration",
+          "$description": "Single frame step at 30fps."
+        }
+      },
+
+      "delay": {
+        "$description": "Playback delay values",
+
+        "none": {
+          "$value": "0ms",
+          "$type": "duration",
+          "$description": "No delay. Start immediately."
+        },
+        "short": {
+          "$value": "100ms",
+          "$type": "duration",
+          "$description": "Short delay before playback."
+        },
+        "medium": {
+          "$value": "300ms",
+          "$type": "duration",
+          "$description": "Medium delay."
+        },
+        "long": {
+          "$value": "500ms",
+          "$type": "duration",
+          "$description": "Long delay."
+        },
+        "extended": {
+          "$value": "1000ms",
+          "$type": "duration",
+          "$description": "Extended delay. 1 second."
+        }
+      },
+
+      "state": {
+        "$description": "Playback state indicators",
+
+        "idle": {
+          "$value": "idle",
+          "$type": "string",
+          "$description": "Animation not started."
+        },
+        "running": {
+          "$value": "running",
+          "$type": "string",
+          "$description": "Animation playing."
+        },
+        "paused": {
+          "$value": "paused",
+          "$type": "string",
+          "$description": "Animation paused."
+        },
+        "finished": {
+          "$value": "finished",
+          "$type": "string",
+          "$description": "Animation complete."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,347 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Microstate tokens for component-level state machines. Defines granular states, transitions, and motion for interactive UI components.",
+
+  "$token-references": {
+    "$description": "W3C DTCG token reference paths",
+    "state-layer": "tokens/state-layer.tokens.json",
+    "easing": "tokens/easing.tokens.json",
+    "duration": "tokens/duration.tokens.json"
+  },
+
+  "microstate": {
+    "$description": "Component state machine definitions for deep animation orchestration",
+
+    "core-states": {
+      "$description": "Universal component states",
+
+      "idle": {
+        "$description": "Default resting state",
+        "visual-profile": {
+          "opacity": { "$value": 1.0, "$type": "number" },
+          "scale": { "$value": 1.0, "$type": "number" },
+          "elevation": { "$value": "base", "$type": "string" }
+        },
+        "motion": { "$value": "none", "$type": "string" },
+        "is-stable": { "$value": true, "$type": "boolean" }
+      },
+
+      "hover": {
+        "$description": "Mouse/pointer over state",
+        "visual-profile": {
+          "opacity": { "$value": 1.0, "$type": "number" },
+          "scale": { "$value": 1.02, "$type": "number" },
+          "elevation": { "$value": "raised", "$type": "string" },
+          "state-layer-opacity": { "$value": 0.08, "$type": "number" }
+        },
+        "transition-duration": { "$value": "100ms", "$type": "duration" },
+        "easing": { "$value": "{motion.easing.standard}", "$type": "string" }
+      },
+
+      "focus": {
+        "$description": "Keyboard/accessibility focus state",
+        "visual-profile": {
+          "focus-ring": { "$value": true, "$type": "boolean" },
+          "focus-ring-width": { "$value": "3px", "$type": "dimension" },
+          "state-layer-opacity": { "$value": 0.12, "$type": "number" }
+        },
+        "transition-duration": { "$value": "50ms", "$type": "duration" },
+        "accessibility-required": { "$value": true, "$type": "boolean" }
+      },
+
+      "active": {
+        "$description": "Being interacted with (pressed/touched)",
+        "visual-profile": {
+          "scale": { "$value": 0.98, "$type": "number" },
+          "state-layer-opacity": { "$value": 0.12, "$type": "number" }
+        },
+        "transition-duration": { "$value": "50ms", "$type": "duration" },
+        "easing": { "$value": "{motion.easing.emphasized-accelerate}", "$type": "string" }
+      },
+
+      "disabled": {
+        "$description": "Non-interactive state",
+        "visual-profile": {
+          "opacity": { "$value": 0.38, "$type": "number" },
+          "cursor": { "$value": "not-allowed", "$type": "string" }
+        },
+        "motion": { "$value": "none", "$type": "string" },
+        "is-stable": { "$value": true, "$type": "boolean" }
+      },
+
+      "loading": {
+        "$description": "Async operation in progress",
+        "visual-profile": {
+          "opacity": { "$value": 0.7, "$type": "number" },
+          "cursor": { "$value": "wait", "$type": "string" }
+        },
+        "motion": { "$value": "pulse", "$type": "string" },
+        "motion-duration": { "$value": "1200ms", "$type": "duration" },
+        "motion-iteration": { "$value": "infinite", "$type": "string" }
+      },
+
+      "success": {
+        "$description": "Successful completion state",
+        "visual-profile": {
+          "color-shift": { "$value": "success", "$type": "string" },
+          "icon-transform": { "$value": "checkmark", "$type": "string" }
+        },
+        "entrance-motion": {
+          "type": { "$value": "scale-bounce", "$type": "string" },
+          "duration": { "$value": "300ms", "$type": "duration" },
+          "easing": { "$value": "{motion.spring.legacy.bouncy}", "$type": "string" }
+        },
+        "is-transient": { "$value": true, "$type": "boolean" },
+        "auto-exit-delay": { "$value": "2000ms", "$type": "duration" }
+      },
+
+      "error": {
+        "$description": "Error/failure state",
+        "visual-profile": {
+          "color-shift": { "$value": "error", "$type": "string" },
+          "shake": { "$value": true, "$type": "boolean" }
+        },
+        "entrance-motion": {
+          "type": { "$value": "shake", "$type": "string" },
+          "duration": { "$value": "400ms", "$type": "duration" },
+          "iterations": { "$value": 2, "$type": "number" }
+        },
+        "requires-resolution": { "$value": true, "$type": "boolean" }
+      },
+
+      "selected": {
+        "$description": "Currently selected/active item",
+        "visual-profile": {
+          "background": { "$value": "selected", "$type": "string" },
+          "border": { "$value": "accent", "$type": "string" }
+        },
+        "is-stable": { "$value": true, "$type": "boolean" }
+      },
+
+      "dragging": {
+        "$description": "Being dragged/moved",
+        "visual-profile": {
+          "elevation": { "$value": "high", "$type": "string" },
+          "scale": { "$value": 1.05, "$type": "number" },
+          "opacity": { "$value": 0.9, "$type": "number" }
+        },
+        "motion": { "$value": "follow-pointer", "$type": "string" },
+        "state-layer-opacity": { "$value": 0.16, "$type": "number" }
+      }
+    },
+
+    "state-transitions": {
+      "$description": "Valid transitions between states",
+
+      "idle-to-hover": {
+        "from": { "$value": "idle", "$type": "string" },
+        "to": { "$value": "hover", "$type": "string" },
+        "trigger": { "$value": "pointerenter", "$type": "string" },
+        "duration": { "$value": "100ms", "$type": "duration" },
+        "easing": { "$value": "{motion.easing.standard}", "$type": "string" }
+      },
+
+      "hover-to-idle": {
+        "from": { "$value": "hover", "$type": "string" },
+        "to": { "$value": "idle", "$type": "string" },
+        "trigger": { "$value": "pointerleave", "$type": "string" },
+        "duration": { "$value": "150ms", "$type": "duration" },
+        "easing": { "$value": "{motion.easing.standard-decelerate}", "$type": "string" }
+      },
+
+      "hover-to-active": {
+        "from": { "$value": "hover", "$type": "string" },
+        "to": { "$value": "active", "$type": "string" },
+        "trigger": { "$value": "pointerdown", "$type": "string" },
+        "duration": { "$value": "50ms", "$type": "duration" },
+        "easing": { "$value": "{motion.easing.emphasized-accelerate}", "$type": "string" }
+      },
+
+      "active-to-success": {
+        "from": { "$value": "active", "$type": "string" },
+        "to": { "$value": "success", "$type": "string" },
+        "trigger": { "$value": "action-complete", "$type": "string" },
+        "duration": { "$value": "200ms", "$type": "duration" },
+        "easing": { "$value": "{motion.spring.legacy.bouncy}", "$type": "string" }
+      },
+
+      "active-to-error": {
+        "from": { "$value": "active", "$type": "string" },
+        "to": { "$value": "error", "$type": "string" },
+        "trigger": { "$value": "action-failed", "$type": "string" },
+        "duration": { "$value": "150ms", "$type": "duration" },
+        "easing": { "$value": "{motion.easing.emphasized}", "$type": "string" }
+      },
+
+      "active-to-loading": {
+        "from": { "$value": "active", "$type": "string" },
+        "to": { "$value": "loading", "$type": "string" },
+        "trigger": { "$value": "async-start", "$type": "string" },
+        "duration": { "$value": "100ms", "$type": "duration" }
+      },
+
+      "loading-to-success": {
+        "from": { "$value": "loading", "$type": "string" },
+        "to": { "$value": "success", "$type": "string" },
+        "trigger": { "$value": "async-complete", "$type": "string" },
+        "duration": { "$value": "200ms", "$type": "duration" }
+      },
+
+      "loading-to-error": {
+        "from": { "$value": "loading", "$type": "string" },
+        "to": { "$value": "error", "$type": "string" },
+        "trigger": { "$value": "async-failed", "$type": "string" },
+        "duration": { "$value": "150ms", "$type": "duration" }
+      },
+
+      "success-to-idle": {
+        "from": { "$value": "success", "$type": "string" },
+        "to": { "$value": "idle", "$type": "string" },
+        "trigger": { "$value": "auto-timeout", "$type": "string" },
+        "delay": { "$value": "2000ms", "$type": "duration" },
+        "duration": { "$value": "300ms", "$type": "duration" }
+      },
+
+      "error-to-idle": {
+        "from": { "$value": "error", "$type": "string" },
+        "to": { "$value": "idle", "$type": "string" },
+        "trigger": { "$value": "user-dismiss", "$type": "string" },
+        "duration": { "$value": "200ms", "$type": "duration" }
+      },
+
+      "idle-to-selected": {
+        "from": { "$value": "idle", "$type": "string" },
+        "to": { "$value": "selected", "$type": "string" },
+        "trigger": { "$value": "select", "$type": "string" },
+        "duration": { "$value": "150ms", "$type": "duration" }
+      },
+
+      "hover-to-dragging": {
+        "from": { "$value": "hover", "$type": "string" },
+        "to": { "$value": "dragging", "$type": "string" },
+        "trigger": { "$value": "drag-start", "$type": "string" },
+        "duration": { "$value": "100ms", "$type": "duration" }
+      },
+
+      "dragging-to-idle": {
+        "from": { "$value": "dragging", "$type": "string" },
+        "to": { "$value": "idle", "$type": "string" },
+        "trigger": { "$value": "drop", "$type": "string" },
+        "duration": { "$value": "200ms", "$type": "duration" },
+        "easing": { "$value": "{motion.spring.default.spatial}", "$type": "string" }
+      }
+    },
+
+    "component-machines": {
+      "$description": "Pre-configured state machines for common components",
+
+      "button": {
+        "states": { "$value": ["idle", "hover", "focus", "active", "loading", "success", "error", "disabled"], "$type": "array" },
+        "initial": { "$value": "idle", "$type": "string" },
+        "parallel-states": {
+          "$value": ["focus"],
+          "$type": "array",
+          "$description": "States that can coexist with others"
+        }
+      },
+
+      "checkbox": {
+        "states": { "$value": ["unchecked", "hover", "focus", "active", "checked", "indeterminate", "disabled"], "$type": "array" },
+        "initial": { "$value": "unchecked", "$type": "string" },
+        "toggle-transitions": {
+          "unchecked-to-checked": {
+            "motion": { "$value": "scale-in-check", "$type": "string" },
+            "duration": { "$value": "150ms", "$type": "duration" }
+          },
+          "checked-to-unchecked": {
+            "motion": { "$value": "scale-out-check", "$type": "string" },
+            "duration": { "$value": "100ms", "$type": "duration" }
+          }
+        }
+      },
+
+      "toggle": {
+        "states": { "$value": ["off", "hover-off", "on", "hover-on", "focus", "disabled"], "$type": "array" },
+        "initial": { "$value": "off", "$type": "string" },
+        "toggle-motion": {
+          "thumb-travel": { "$value": "slide", "$type": "string" },
+          "track-fill": { "$value": "color-shift", "$type": "string" },
+          "duration": { "$value": "200ms", "$type": "duration" },
+          "easing": { "$value": "{motion.spring.fast.spatial}", "$type": "string" }
+        }
+      },
+
+      "input": {
+        "states": { "$value": ["empty", "focus", "filled", "error", "success", "disabled"], "$type": "array" },
+        "initial": { "$value": "empty", "$type": "string" },
+        "label-motion": {
+          "float-up": {
+            "trigger": { "$value": "focus", "$type": "string" },
+            "duration": { "$value": "150ms", "$type": "duration" }
+          }
+        }
+      },
+
+      "card": {
+        "states": { "$value": ["idle", "hover", "focus", "active", "expanded", "selected", "dragging"], "$type": "array" },
+        "initial": { "$value": "idle", "$type": "string" },
+        "hover-motion": {
+          "elevation-rise": { "$value": "2dp", "$type": "dimension" },
+          "scale": { "$value": 1.02, "$type": "number" }
+        }
+      },
+
+      "accordion": {
+        "states": { "$value": ["collapsed", "hover", "expanding", "expanded", "collapsing"], "$type": "array" },
+        "initial": { "$value": "collapsed", "$type": "string" },
+        "expand-motion": {
+          "header-rotation": { "$value": "90deg", "$type": "dimension" },
+          "content-reveal": { "$value": "height-auto", "$type": "string" },
+          "duration": { "$value": "300ms", "$type": "duration" },
+          "easing": { "$value": "{motion.easing.emphasized}", "$type": "string" }
+        }
+      },
+
+      "dropdown": {
+        "states": { "$value": ["closed", "opening", "open", "closing", "disabled"], "$type": "array" },
+        "initial": { "$value": "closed", "$type": "string" },
+        "open-motion": {
+          "type": { "$value": "scale-fade", "$type": "string" },
+          "origin": { "$value": "top", "$type": "string" },
+          "duration": { "$value": "200ms", "$type": "duration" }
+        }
+      },
+
+      "tab": {
+        "states": { "$value": ["inactive", "hover", "focus", "active", "disabled"], "$type": "array" },
+        "initial": { "$value": "inactive", "$type": "string" },
+        "indicator-motion": {
+          "type": { "$value": "slide-morph", "$type": "string" },
+          "duration": { "$value": "250ms", "$type": "duration" },
+          "easing": { "$value": "{motion.spring.default.spatial}", "$type": "string" }
+        }
+      }
+    },
+
+    "transition-priorities": {
+      "$description": "How to handle competing state transitions",
+
+      "interrupt": {
+        "$description": "New transition interrupts current animation",
+        "behavior": { "$value": "cancel-current", "$type": "string" }
+      },
+
+      "queue": {
+        "$description": "Queue new transition after current completes",
+        "behavior": { "$value": "wait", "$type": "string" },
+        "max-queue": { "$value": 2, "$type": "number" }
+      },
+
+      "blend": {
+        "$description": "Blend current and new transitions",
+        "behavior": { "$value": "interpolate", "$type": "string" },
+        "blend-duration": { "$value": "100ms", "$type": "duration" }
+      }
+    }
+  }
+}

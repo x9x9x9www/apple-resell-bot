@@ -1,0 +1,217 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Duration tokens (subset of motion.tokens.json)",
+
+  "motion": {
+    "duration": {
+      "$description": "Duration tokens in milliseconds. W3C DTCG duration type.",
+
+      "short-1": {
+        "$value": "50ms",
+        "$type": "duration",
+        "$description": "Micro-interactions, ripples. M3: short1"
+      },
+      "short-2": {
+        "$value": "100ms",
+        "$type": "duration",
+        "$description": "Simple state changes, toggles. M3: short2"
+      },
+      "short-3": {
+        "$value": "150ms",
+        "$type": "duration",
+        "$description": "Small elements, icons. M3: short3"
+      },
+      "short-4": {
+        "$value": "200ms",
+        "$type": "duration",
+        "$description": "Selection controls, buttons. M3: short4"
+      },
+      "medium-1": {
+        "$value": "250ms",
+        "$type": "duration",
+        "$description": "Cards, small components. M3: medium1"
+      },
+      "medium-2": {
+        "$value": "300ms",
+        "$type": "duration",
+        "$description": "Dialogs, sheets. M3: medium2"
+      },
+      "medium-3": {
+        "$value": "350ms",
+        "$type": "duration",
+        "$description": "Medium transitions. M3: medium3"
+      },
+      "medium-4": {
+        "$value": "400ms",
+        "$type": "duration",
+        "$description": "Complex transitions. M3: medium4"
+      },
+      "long-1": {
+        "$value": "450ms",
+        "$type": "duration",
+        "$description": "Page transitions. M3: long1"
+      },
+      "long-2": {
+        "$value": "500ms",
+        "$type": "duration",
+        "$description": "Expressive animations. M3: long2"
+      },
+      "long-3": {
+        "$value": "550ms",
+        "$type": "duration",
+        "$description": "Extended expressions. M3: long3"
+      },
+      "long-4": {
+        "$value": "600ms",
+        "$type": "duration",
+        "$description": "Standard long duration. M3: long4"
+      },
+
+      "extra-long-1": {
+        "$value": "700ms",
+        "$type": "duration",
+        "$description": "Complex multi-element transitions. M3: extraLong1. 21 frames at 30fps."
+      },
+      "extra-long-2": {
+        "$value": "800ms",
+        "$type": "duration",
+        "$description": "Narrative/storytelling animations. M3: extraLong2. 24 frames at 30fps."
+      },
+      "extra-long-3": {
+        "$value": "900ms",
+        "$type": "duration",
+        "$description": "Dramatic entrances. M3: extraLong3. 27 frames at 30fps."
+      },
+      "extra-long-4": {
+        "$value": "1000ms",
+        "$type": "duration",
+        "$description": "Maximum M3 duration, hero moments. M3: extraLong4. 30 frames at 30fps."
+      },
+
+      "cross-reference": {
+        "$description": "Equivalent durations in other design systems",
+
+        "fluent-ultra-fast": {
+          "$value": "50ms",
+          "$type": "duration",
+          "$description": "Fluent 2 ultra-fast"
+        },
+        "fluent-faster": {
+          "$value": "100ms",
+          "$type": "duration",
+          "$description": "Fluent 2 faster"
+        },
+        "fluent-fast": {
+          "$value": "150ms",
+          "$type": "duration",
+          "$description": "Fluent 2 fast"
+        },
+        "fluent-normal": {
+          "$value": "200ms",
+          "$type": "duration",
+          "$description": "Fluent 2 normal"
+        },
+        "fluent-slow": {
+          "$value": "300ms",
+          "$type": "duration",
+          "$description": "Fluent 2 slow"
+        },
+        "fluent-slower": {
+          "$value": "400ms",
+          "$type": "duration",
+          "$description": "Fluent 2 slower"
+        },
+        "fluent-ultra-slow": {
+          "$value": "500ms",
+          "$type": "duration",
+          "$description": "Fluent 2 ultra-slow"
+        },
+        "carbon-fast-01": {
+          "$value": "70ms",
+          "$type": "duration",
+          "$description": "Carbon fast-01"
+        },
+        "carbon-fast-02": {
+          "$value": "110ms",
+          "$type": "duration",
+          "$description": "Carbon fast-02"
+        },
+        "carbon-moderate-01": {
+          "$value": "150ms",
+          "$type": "duration",
+          "$description": "Carbon moderate-01"
+        },
+        "carbon-moderate-02": {
+          "$value": "240ms",
+          "$type": "duration",
+          "$description": "Carbon moderate-02"
+        },
+        "carbon-slow-01": {
+          "$value": "400ms",
+          "$type": "duration",
+          "$description": "Carbon slow-01"
+        },
+        "carbon-slow-02": {
+          "$value": "700ms",
+          "$type": "duration",
+          "$description": "Carbon slow-02"
+        },
+        "apple-instant": {
+          "$value": "100ms",
+          "$type": "duration",
+          "$description": "Apple HIG instant. Micro-interactions, button feedback."
+        },
+        "apple-fast": {
+          "$value": "200ms",
+          "$type": "duration",
+          "$description": "Apple HIG fast. Toggle states, small elements."
+        },
+        "apple-default": {
+          "$value": "300ms",
+          "$type": "duration",
+          "$description": "Apple HIG default. Standard UI transitions."
+        },
+        "apple-slow": {
+          "$value": "500ms",
+          "$type": "duration",
+          "$description": "Apple HIG slow. Large elements, page transitions."
+        },
+        "apple-spring-settle": {
+          "$value": "600ms",
+          "$type": "duration",
+          "$description": "Apple HIG spring settle time. Natural motion completion."
+        }
+      },
+
+      "video": {
+        "$description": "Video-specific durations (shorter than web for better pacing)",
+
+        "scene-transition": {
+          "$value": "150ms",
+          "$type": "duration",
+          "$description": "Scene-to-scene transitions in video. Shorter than web for quick pacing."
+        },
+        "crossfade": {
+          "$value": "100ms",
+          "$type": "duration",
+          "$description": "Quick crossfade for video cuts. 3 frames at 30fps."
+        },
+        "dissolve": {
+          "$value": "150ms",
+          "$type": "duration",
+          "$description": "Opacity dissolve for video. 5 frames at 30fps."
+        },
+        "cut": {
+          "$value": "0ms",
+          "$type": "duration",
+          "$description": "Instant cut with no transition."
+        },
+        "wipe": {
+          "$value": "200ms",
+          "$type": "duration",
+          "$description": "Directional wipe transition. 6 frames at 30fps."
+        }
+      }
+    }
+  }
+}

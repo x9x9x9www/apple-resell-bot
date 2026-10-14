@@ -1,0 +1,80 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Scrim and overlay tokens for depth cues and focus isolation. Based on Google Material Design 3 specifications.",
+
+  "motion": {
+    "scrim": {
+      "$description": "Scrim tokens for modal overlays, sheets, and focus states",
+
+      "opacity": {
+        "$description": "Scrim opacity levels for different emphasis",
+
+        "light": {
+          "$value": 0.12,
+          "$type": "number",
+          "$description": "Subtle depth hint. Use for light overlays, hover states."
+        },
+        "standard": {
+          "$value": 0.32,
+          "$type": "number",
+          "$description": "Google M3 default scrim opacity. Use for modals, sheets."
+        },
+        "heavy": {
+          "$value": 0.52,
+          "$type": "number",
+          "$description": "Strong focus isolation. Use for critical dialogs, image lightboxes."
+        }
+      },
+
+      "color": {
+        "$description": "Scrim background colors",
+
+        "dark": {
+          "$value": "#000000",
+          "$type": "color",
+          "$description": "Standard dark scrim. Use for light theme overlays."
+        },
+        "light": {
+          "$value": "#FFFFFF",
+          "$type": "color",
+          "$description": "Light scrim. Use for dark theme overlays."
+        }
+      },
+
+      "duration": {
+        "$description": "Scrim fade timing",
+
+        "in": {
+          "$value": "150ms",
+          "$type": "duration",
+          "$description": "Scrim fade-in duration. Slightly slower for perception."
+        },
+        "out": {
+          "$value": "100ms",
+          "$type": "duration",
+          "$description": "Scrim fade-out duration. Faster exit per M3 asymmetry."
+        }
+      },
+
+      "blur": {
+        "$description": "Optional backdrop blur for glass-morphism effects",
+
+        "subtle": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Subtle backdrop blur. Minimal glass effect."
+        },
+        "standard": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Standard backdrop blur. Clear glass-morphism."
+        },
+        "heavy": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Heavy backdrop blur. Strong frosted glass effect."
+        }
+      }
+    }
+  }
+}

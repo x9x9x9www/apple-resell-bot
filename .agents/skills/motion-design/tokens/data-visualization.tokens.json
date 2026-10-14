@@ -1,0 +1,345 @@
+{
+  "data-visualization": {
+    "$description": "Motion tokens specifically designed for data visualization and chart animations",
+
+    "chart-entrance": {
+      "$description": "Animation configurations for chart element entrances",
+
+      "bar-grow": {
+        "$value": {
+          "duration": "750ms",
+          "easing": [0.34, 1.56, 0.64, 1],
+          "stagger": "50ms"
+        },
+        "$type": "object",
+        "$description": "Bars grow from baseline with overshoot"
+      },
+
+      "line-draw": {
+        "$value": {
+          "duration": "1200ms",
+          "easing": [0.25, 0.1, 0.25, 1]
+        },
+        "$type": "object",
+        "$description": "Line chart path drawing animation"
+      },
+
+      "pie-expand": {
+        "$value": {
+          "duration": "600ms",
+          "easing": [0.34, 1.56, 0.64, 1],
+          "stagger": "30ms"
+        },
+        "$type": "object",
+        "$description": "Pie slices expand from center"
+      },
+
+      "scatter-pop": {
+        "$value": {
+          "duration": "400ms",
+          "easing": [0.34, 1.56, 0.64, 1],
+          "stagger": "20ms"
+        },
+        "$type": "object",
+        "$description": "Scatter points pop in with scale"
+      },
+
+      "area-fill": {
+        "$value": {
+          "duration": "800ms",
+          "easing": [0.25, 0.1, 0.25, 1]
+        },
+        "$type": "object",
+        "$description": "Area chart fill animation"
+      },
+
+      "donut-reveal": {
+        "$value": {
+          "duration": "700ms",
+          "easing": [0.2, 0, 0, 1],
+          "startAngle": -90
+        },
+        "$type": "object",
+        "$description": "Donut chart radial reveal"
+      }
+    },
+
+    "data-transition": {
+      "$description": "Animation configurations for data updates",
+
+      "morph": {
+        "$value": {
+          "duration": "500ms",
+          "easing": [0.2, 0, 0, 1]
+        },
+        "$type": "object",
+        "$description": "Smooth morphing between data states"
+      },
+
+      "interpolate": {
+        "$value": {
+          "duration": "400ms",
+          "easing": [0.42, 0, 0.58, 1]
+        },
+        "$type": "object",
+        "$description": "Linear data interpolation"
+      },
+
+      "reorder": {
+        "$value": {
+          "duration": "350ms",
+          "easing": [0.2, 0, 0, 1],
+          "stagger": "25ms"
+        },
+        "$type": "object",
+        "$description": "Bar/element reordering animation"
+      },
+
+      "update-pulse": {
+        "$value": {
+          "duration": "200ms",
+          "scale": 1.1,
+          "easing": [0.2, 0, 0, 1]
+        },
+        "$type": "object",
+        "$description": "Highlight updated data points"
+      }
+    },
+
+    "hover-interaction": {
+      "$description": "Hover state animations for data elements",
+
+      "highlight": {
+        "$value": {
+          "duration": "150ms",
+          "easing": [0.2, 0, 0, 1],
+          "opacity": 1,
+          "dimOthers": 0.3
+        },
+        "$type": "object",
+        "$description": "Highlight focused element, dim others"
+      },
+
+      "tooltip-enter": {
+        "$value": {
+          "duration": "200ms",
+          "easing": [0.05, 0.7, 0.1, 1],
+          "offset": "8px"
+        },
+        "$type": "object",
+        "$description": "Tooltip entrance animation"
+      },
+
+      "tooltip-exit": {
+        "$value": {
+          "duration": "100ms",
+          "easing": [0.3, 0, 0.8, 0.15]
+        },
+        "$type": "object",
+        "$description": "Tooltip exit animation"
+      },
+
+      "crosshair": {
+        "$value": {
+          "duration": "50ms",
+          "easing": "linear"
+        },
+        "$type": "object",
+        "$description": "Crosshair following cursor"
+      }
+    },
+
+    "stagger-patterns": {
+      "$description": "Stagger timing patterns for data series",
+
+      "sequential": {
+        "$value": "50ms",
+        "$type": "duration",
+        "$description": "Elements animate one after another"
+      },
+
+      "grouped": {
+        "$value": {
+          "withinGroup": "30ms",
+          "betweenGroups": "100ms"
+        },
+        "$type": "object",
+        "$description": "Grouped stagger for multi-series"
+      },
+
+      "center-out": {
+        "$value": {
+          "base": "0ms",
+          "increment": "50ms",
+          "direction": "center"
+        },
+        "$type": "object",
+        "$description": "Animate from center outward"
+      },
+
+      "random": {
+        "$value": {
+          "min": "0ms",
+          "max": "300ms"
+        },
+        "$type": "object",
+        "$description": "Random stagger for organic feel"
+      }
+    },
+
+    "axis-animation": {
+      "$description": "Axis and label animations",
+
+      "axis-draw": {
+        "$value": {
+          "duration": "300ms",
+          "easing": [0.25, 0.1, 0.25, 1]
+        },
+        "$type": "object",
+        "$description": "Axis line draw-on animation"
+      },
+
+      "tick-enter": {
+        "$value": {
+          "duration": "200ms",
+          "easing": [0.05, 0.7, 0.1, 1],
+          "stagger": "20ms"
+        },
+        "$type": "object",
+        "$description": "Tick marks fade in"
+      },
+
+      "label-slide": {
+        "$value": {
+          "duration": "250ms",
+          "easing": [0.2, 0, 0, 1]
+        },
+        "$type": "object",
+        "$description": "Labels slide to new positions"
+      },
+
+      "gridline-fade": {
+        "$value": {
+          "duration": "200ms",
+          "easing": "linear"
+        },
+        "$type": "object",
+        "$description": "Gridlines fade in/out"
+      }
+    },
+
+    "legend-animation": {
+      "$description": "Legend interaction animations",
+
+      "toggle-series": {
+        "$value": {
+          "duration": "300ms",
+          "easing": [0.2, 0, 0, 1]
+        },
+        "$type": "object",
+        "$description": "Toggle series visibility"
+      },
+
+      "hover-highlight": {
+        "$value": {
+          "duration": "150ms",
+          "easing": [0.2, 0, 0, 1]
+        },
+        "$type": "object",
+        "$description": "Legend item hover state"
+      }
+    },
+
+    "real-time": {
+      "$description": "Real-time data streaming animations",
+
+      "append": {
+        "$value": {
+          "duration": "100ms",
+          "easing": "linear"
+        },
+        "$type": "object",
+        "$description": "New data point animation"
+      },
+
+      "scroll": {
+        "$value": {
+          "duration": "16ms",
+          "easing": "linear"
+        },
+        "$type": "object",
+        "$description": "Smooth chart scrolling (60fps)"
+      },
+
+      "value-change": {
+        "$value": {
+          "duration": "200ms",
+          "easing": [0.2, 0, 0, 1]
+        },
+        "$type": "object",
+        "$description": "Animating number/value changes"
+      }
+    },
+
+    "loading-states": {
+      "$description": "Loading and placeholder animations",
+
+      "skeleton-pulse": {
+        "$value": {
+          "duration": "1500ms",
+          "easing": [0.4, 0, 0.6, 1],
+          "loop": true
+        },
+        "$type": "object",
+        "$description": "Chart skeleton loading pulse"
+      },
+
+      "shimmer": {
+        "$value": {
+          "duration": "1200ms",
+          "easing": "linear",
+          "loop": true
+        },
+        "$type": "object",
+        "$description": "Shimmer loading effect"
+      },
+
+      "progress-reveal": {
+        "$value": {
+          "duration": "varies",
+          "easing": [0.25, 0.1, 0.25, 1]
+        },
+        "$type": "object",
+        "$description": "Progressive data reveal as it loads"
+      }
+    },
+
+    "easing-presets": {
+      "$description": "Common easing curves for data viz",
+
+      "overshoot": {
+        "$value": [0.34, 1.56, 0.64, 1],
+        "$type": "cubicBezier",
+        "$description": "Elastic overshoot for emphasis"
+      },
+
+      "smooth": {
+        "$value": [0.25, 0.1, 0.25, 1],
+        "$type": "cubicBezier",
+        "$description": "Smooth standard curve"
+      },
+
+      "decelerate": {
+        "$value": [0, 0, 0.2, 1],
+        "$type": "cubicBezier",
+        "$description": "Quick start, slow end"
+      },
+
+      "accelerate": {
+        "$value": [0.4, 0, 1, 1],
+        "$type": "cubicBezier",
+        "$description": "Slow start, quick end"
+      }
+    }
+  }
+}

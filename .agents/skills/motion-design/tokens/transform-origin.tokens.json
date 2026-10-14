@@ -1,0 +1,160 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Transform origin tokens for controlling the pivot point of CSS transforms and animations.",
+
+  "motion": {
+    "transform-origin": {
+      "$description": "Transform origin position tokens",
+
+      "position": {
+        "$description": "Common transform origin positions",
+
+        "center": {
+          "$value": "center center",
+          "$type": "string",
+          "$description": "Center of element. Default."
+        },
+        "top": {
+          "$value": "center top",
+          "$type": "string",
+          "$description": "Top center. Drop-down menus."
+        },
+        "bottom": {
+          "$value": "center bottom",
+          "$type": "string",
+          "$description": "Bottom center. Pop-up tooltips."
+        },
+        "left": {
+          "$value": "left center",
+          "$type": "string",
+          "$description": "Left center. Slide-out panels."
+        },
+        "right": {
+          "$value": "right center",
+          "$type": "string",
+          "$description": "Right center. Slide-out panels."
+        },
+        "top-left": {
+          "$value": "left top",
+          "$type": "string",
+          "$description": "Top-left corner."
+        },
+        "top-right": {
+          "$value": "right top",
+          "$type": "string",
+          "$description": "Top-right corner."
+        },
+        "bottom-left": {
+          "$value": "left bottom",
+          "$type": "string",
+          "$description": "Bottom-left corner."
+        },
+        "bottom-right": {
+          "$value": "right bottom",
+          "$type": "string",
+          "$description": "Bottom-right corner."
+        }
+      },
+
+      "percentage": {
+        "$description": "Percentage-based origins",
+
+        "0": {
+          "$value": "0% 0%",
+          "$type": "string",
+          "$description": "Top-left (0%, 0%)."
+        },
+        "25": {
+          "$value": "25% 25%",
+          "$type": "string",
+          "$description": "Quarter offset from top-left."
+        },
+        "50": {
+          "$value": "50% 50%",
+          "$type": "string",
+          "$description": "Center (50%, 50%)."
+        },
+        "75": {
+          "$value": "75% 75%",
+          "$type": "string",
+          "$description": "Quarter offset from bottom-right."
+        },
+        "100": {
+          "$value": "100% 100%",
+          "$type": "string",
+          "$description": "Bottom-right (100%, 100%)."
+        }
+      },
+
+      "3d": {
+        "$description": "3D transform origins with Z",
+
+        "center-near": {
+          "$value": "center center 50px",
+          "$type": "string",
+          "$description": "Center with forward Z offset."
+        },
+        "center-far": {
+          "$value": "center center -50px",
+          "$type": "string",
+          "$description": "Center with backward Z offset."
+        }
+      },
+
+      "use-cases": {
+        "$description": "Semantic origins for common patterns",
+
+        "button": {
+          "$value": "center center",
+          "$type": "string",
+          "$description": "Buttons scale from center."
+        },
+        "dropdown": {
+          "$value": "center top",
+          "$type": "string",
+          "$description": "Dropdowns open from top."
+        },
+        "tooltip-top": {
+          "$value": "center bottom",
+          "$type": "string",
+          "$description": "Tooltip above element."
+        },
+        "tooltip-bottom": {
+          "$value": "center top",
+          "$type": "string",
+          "$description": "Tooltip below element."
+        },
+        "sidebar-left": {
+          "$value": "left center",
+          "$type": "string",
+          "$description": "Left sidebar open."
+        },
+        "sidebar-right": {
+          "$value": "right center",
+          "$type": "string",
+          "$description": "Right sidebar open."
+        },
+        "card-flip": {
+          "$value": "center center",
+          "$type": "string",
+          "$description": "Card flip rotation."
+        },
+        "door-left": {
+          "$value": "left center",
+          "$type": "string",
+          "$description": "Door opening from left hinge."
+        },
+        "door-right": {
+          "$value": "right center",
+          "$type": "string",
+          "$description": "Door opening from right hinge."
+        },
+        "fab": {
+          "$value": "right bottom",
+          "$type": "string",
+          "$description": "FAB menu expansion."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,201 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Follow-Through & Overlapping Action tokens - Disney principles for secondary motion and natural settling.",
+
+  "follow-through": {
+    "$description": "Parameters for motion that continues after primary action stops",
+
+    "tight": {
+      "$type": "object",
+      "$value": {
+        "delay": "30ms",
+        "overshoot": 1.02,
+        "settleDuration": "100ms",
+        "oscillations": 1
+      },
+      "$description": "Minimal follow-through. Professional, controlled. Enterprise UI."
+    },
+
+    "loose": {
+      "$type": "object",
+      "$value": {
+        "delay": "80ms",
+        "overshoot": 1.08,
+        "settleDuration": "200ms",
+        "oscillations": 2
+      },
+      "$description": "Noticeable lag and overshoot. Consumer apps, friendly UI."
+    },
+
+    "fluid": {
+      "$type": "object",
+      "$value": {
+        "delay": "120ms",
+        "overshoot": 1.15,
+        "settleDuration": "300ms",
+        "oscillations": 3
+      },
+      "$description": "Pronounced follow-through with multiple oscillations. Playful, organic."
+    },
+
+    "heavy": {
+      "$type": "object",
+      "$value": {
+        "delay": "150ms",
+        "overshoot": 1.05,
+        "settleDuration": "400ms",
+        "oscillations": 2
+      },
+      "$description": "Slow, weighty follow-through. Heavy objects, dramatic emphasis."
+    },
+
+    "elastic": {
+      "$type": "object",
+      "$value": {
+        "delay": "60ms",
+        "overshoot": 1.25,
+        "settleDuration": "350ms",
+        "oscillations": 4
+      },
+      "$description": "High overshoot, many oscillations. Rubber, jelly, bouncy materials."
+    }
+  },
+
+  "overlap": {
+    "$description": "Stagger offsets for overlapping action between elements",
+
+    "sequential": {
+      "$type": "object",
+      "$value": {
+        "offset": "20%",
+        "description": "Small overlap - elements start while previous is 80% done"
+      },
+      "$description": "Tight sequencing with minimal overlap. Ordered, methodical."
+    },
+
+    "staggered": {
+      "$type": "object",
+      "$value": {
+        "offset": "40%",
+        "description": "Moderate overlap - elements start while previous is 60% done"
+      },
+      "$description": "Standard stagger for list animations. Balanced flow."
+    },
+
+    "cascading": {
+      "$type": "object",
+      "$value": {
+        "offset": "60%",
+        "description": "Large overlap - elements start while previous is 40% done"
+      },
+      "$description": "Wave-like cascade. Multiple elements in motion simultaneously."
+    },
+
+    "simultaneous": {
+      "$type": "object",
+      "$value": {
+        "offset": "80%",
+        "description": "Near-simultaneous - elements start while previous is 20% done"
+      },
+      "$description": "Almost all elements moving at once. Explosive, energetic."
+    }
+  },
+
+  "secondary-elements": {
+    "$description": "Delay and behavior for secondary/child elements",
+
+    "attached-tight": {
+      "$type": "object",
+      "$value": {
+        "delay": "1-2 frames",
+        "damping": 0.9,
+        "description": "Rigidly attached secondary element"
+      },
+      "$description": "Closely attached items (badge on card). Minimal lag."
+    },
+
+    "attached-loose": {
+      "$type": "object",
+      "$value": {
+        "delay": "3-5 frames",
+        "damping": 0.7,
+        "description": "Loosely attached secondary element"
+      },
+      "$description": "Loosely connected items (pendant, charm). Noticeable drag."
+    },
+
+    "trailing": {
+      "$type": "object",
+      "$value": {
+        "delay": "5-10 frames",
+        "damping": 0.5,
+        "description": "Trailing element with significant lag"
+      },
+      "$description": "Hair, cloth, ribbon. Significant follow-through."
+    },
+
+    "independent": {
+      "$type": "object",
+      "$value": {
+        "delay": "varies",
+        "damping": 0.3,
+        "description": "Semi-independent secondary motion"
+      },
+      "$description": "Loosely related elements. Own physics, responds to primary."
+    }
+  },
+
+  "spring-configs": {
+    "$description": "Spring physics configurations for natural settling",
+
+    "tight-spring": {
+      "$type": "object",
+      "$value": {
+        "stiffness": 400,
+        "damping": 30,
+        "mass": 1
+      },
+      "$description": "Quick settle, minimal oscillation. Professional UI."
+    },
+
+    "standard-spring": {
+      "$type": "object",
+      "$value": {
+        "stiffness": 200,
+        "damping": 20,
+        "mass": 1
+      },
+      "$description": "Balanced spring. Consumer apps."
+    },
+
+    "bouncy-spring": {
+      "$type": "object",
+      "$value": {
+        "stiffness": 300,
+        "damping": 10,
+        "mass": 1
+      },
+      "$description": "Low damping, visible bounce. Playful UI."
+    },
+
+    "heavy-spring": {
+      "$type": "object",
+      "$value": {
+        "stiffness": 150,
+        "damping": 25,
+        "mass": 2
+      },
+      "$description": "Heavy mass, slow settle. Weighty elements."
+    },
+
+    "wobbly-spring": {
+      "$type": "object",
+      "$value": {
+        "stiffness": 180,
+        "damping": 8,
+        "mass": 1
+      },
+      "$description": "Very low damping. Jelly, rubber-like wobble."
+    }
+  }
+}

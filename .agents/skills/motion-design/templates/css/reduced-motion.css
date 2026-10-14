@@ -1,0 +1,266 @@
+/**
+ * CSS Reduced Motion Fallbacks
+ * WCAG 2.1 compliant reduced motion alternatives
+ *
+ * Token References:
+ * - Fallback duration: 100ms (instant transition)
+ *
+ * @see https://www.w3.org/WAI/WCAG21/Understanding/animation-from-interactions
+ */
+
+/* ============================================
+   Reduced Motion Custom Properties
+   ============================================ */
+
+:root {
+  /* Reduced motion fallback duration (instant but visible) */
+  --reduced-motion-duration: 100ms;
+
+  /* Reduced motion easing (linear for simplicity) */
+  --reduced-motion-easing: linear;
+}
+
+/* ============================================
+   Media Query Wrapper
+   Apply all reduced motion styles within this query
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  /* ----------------------------------------
+     Global Animation Disable
+     ---------------------------------------- */
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: var(--reduced-motion-duration) !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* ----------------------------------------
+     Transform Animations
+     Remove all transform-based motion
+     ---------------------------------------- */
+
+  [class*="slide"],
+  [class*="scale"],
+  [class*="rotate"],
+  [class*="translate"],
+  [class*="bounce"],
+  [class*="shake"],
+  [class*="swing"],
+  [class*="pulse"] {
+    transform: none !important;
+    animation: none !important;
+  }
+
+  /* ----------------------------------------
+     Opacity-Only Fallbacks
+     Keep opacity transitions for visibility
+     ---------------------------------------- */
+
+  .fade-in,
+  .fade-out,
+  .modal,
+  .dialog,
+  .tooltip,
+  .dropdown {
+    transition: opacity var(--reduced-motion-duration) var(--reduced-motion-easing) !important;
+  }
+
+  /* ----------------------------------------
+     Loading Indicators
+     Static alternatives for animated loaders
+     ---------------------------------------- */
+
+  .spinner,
+  .loading,
+  .skeleton,
+  [role="progressbar"] {
+    animation: none !important;
+  }
+
+  /* Show static progress instead of animation */
+  .spinner::after {
+    content: "Loading...";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75em;
+    color: currentColor;
+  }
+
+  /* ----------------------------------------
+     Hover/Focus States
+     Use opacity or border instead of transform
+     ---------------------------------------- */
+
+  a:hover,
+  button:hover,
+  [role="button"]:hover {
+    transform: none !important;
+    opacity: 0.9;
+  }
+
+  a:focus,
+  button:focus,
+  [role="button"]:focus {
+    transform: none !important;
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  /* ----------------------------------------
+     Card/Element Hover
+     Replace lift/scale with border/shadow
+     ---------------------------------------- */
+
+  .card:hover,
+  .list-item:hover,
+  [class*="hover-lift"]:hover,
+  [class*="hover-scale"]:hover {
+    transform: none !important;
+    box-shadow: 0 0 0 2px currentColor;
+  }
+
+  /* ----------------------------------------
+     Button Press
+     Replace scale with opacity
+     ---------------------------------------- */
+
+  button:active,
+  [role="button"]:active,
+  .button:active {
+    transform: none !important;
+    opacity: 0.7;
+  }
+
+  /* ----------------------------------------
+     Toggle/Switch
+     Instant position change
+     ---------------------------------------- */
+
+  [class*="toggle"],
+  [class*="switch"],
+  [class*="checkbox"] {
+    transition: none !important;
+  }
+
+  /* ----------------------------------------
+     Page Transitions
+     Instant content change
+     ---------------------------------------- */
+
+  .page-transition,
+  [class*="route-"],
+  .view-enter,
+  .view-exit {
+    animation: none !important;
+    transition: opacity var(--reduced-motion-duration) !important;
+  }
+
+  /* ----------------------------------------
+     Notification/Toast
+     Fade only, no slide
+     ---------------------------------------- */
+
+  .toast,
+  .notification,
+  .snackbar,
+  .alert {
+    animation: none !important;
+    transform: none !important;
+    transition: opacity var(--reduced-motion-duration) !important;
+  }
+
+  /* ----------------------------------------
+     Celebration Effects
+     Remove entirely - use static icon instead
+     ---------------------------------------- */
+
+  .confetti,
+  .particles,
+  .celebration,
+  [class*="firework"] {
+    display: none !important;
+  }
+
+  /* Show success icon instead of celebration */
+  .celebration-fallback::after {
+    content: "✓";
+    font-size: 2em;
+    color: var(--success-color, green);
+  }
+
+  /* ----------------------------------------
+     Scroll Animations
+     Disable scroll-triggered animations
+     ---------------------------------------- */
+
+  [data-animate-on-scroll],
+  [class*="scroll-"],
+  .parallax {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  /* ----------------------------------------
+     Error States
+     Replace shake with border highlight
+     ---------------------------------------- */
+
+  .error,
+  .invalid,
+  [aria-invalid="true"] {
+    animation: none !important;
+    border-color: var(--error-color, red) !important;
+    box-shadow: 0 0 0 2px var(--error-color, red) !important;
+  }
+}
+
+/* ============================================
+   JavaScript Detection Helper
+   Use this class when JS detects reduced motion
+   ============================================ */
+
+.prefers-reduced-motion {
+  --animation-duration: 0ms;
+  --transition-duration: 100ms;
+}
+
+.prefers-reduced-motion * {
+  animation-duration: 0ms !important;
+  transition-duration: var(--reduced-motion-duration) !important;
+}
+
+/* ============================================
+   Utility Classes for Reduced Motion
+   ============================================ */
+
+/* Always respect reduced motion on this element */
+.motion-safe {
+  /* Only animate when motion is allowed */
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .motion-safe {
+    transition: all 250ms ease;
+  }
+}
+
+/* Never animate this element */
+.motion-none {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Reduce but don't eliminate motion */
+.motion-reduce {
+  animation-duration: 100ms !important;
+  transition-duration: 100ms !important;
+}

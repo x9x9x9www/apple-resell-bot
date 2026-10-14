@@ -1,0 +1,554 @@
+{
+  "$schema": "https://design-tokens.org/schema.json",
+  "motion": {
+    "camera": {
+      "$description": "Camera movement and cinematography tokens for spatial animations",
+
+      "fov": {
+        "$description": "Field of view angles",
+        "narrow": {
+          "$value": "35deg",
+          "$type": "dimension",
+          "$description": "Telephoto/compressed perspective"
+        },
+        "normal": {
+          "$value": "50deg",
+          "$type": "dimension",
+          "$description": "Natural human-like view"
+        },
+        "wide": {
+          "$value": "75deg",
+          "$type": "dimension",
+          "$description": "Wide angle view"
+        },
+        "ultrawide": {
+          "$value": "100deg",
+          "$type": "dimension",
+          "$description": "Extreme wide angle"
+        },
+        "fisheye": {
+          "$value": "140deg",
+          "$type": "dimension",
+          "$description": "Fisheye distortion"
+        }
+      },
+
+      "zoom": {
+        "$description": "Zoom speed and range",
+        "speed": {
+          "slow": {
+            "$value": "2000ms",
+            "$type": "duration",
+            "$description": "Slow cinematic zoom"
+          },
+          "normal": {
+            "$value": "800ms",
+            "$type": "duration",
+            "$description": "Standard zoom speed"
+          },
+          "fast": {
+            "$value": "300ms",
+            "$type": "duration",
+            "$description": "Quick zoom"
+          },
+          "snap": {
+            "$value": "100ms",
+            "$type": "duration",
+            "$description": "Instant snap zoom"
+          }
+        },
+        "range": {
+          "subtle": {
+            "$value": "1.2",
+            "$type": "number",
+            "$description": "Slight zoom"
+          },
+          "moderate": {
+            "$value": "1.5",
+            "$type": "number",
+            "$description": "Noticeable zoom"
+          },
+          "dramatic": {
+            "$value": "2.0",
+            "$type": "number",
+            "$description": "Strong zoom"
+          },
+          "extreme": {
+            "$value": "3.0",
+            "$type": "number",
+            "$description": "Extreme zoom"
+          }
+        }
+      },
+
+      "pan": {
+        "$description": "Horizontal camera movement",
+        "speed": {
+          "crawl": {
+            "$value": "5000ms",
+            "$type": "duration",
+            "$description": "Very slow pan"
+          },
+          "slow": {
+            "$value": "2000ms",
+            "$type": "duration",
+            "$description": "Slow cinematic pan"
+          },
+          "normal": {
+            "$value": "1000ms",
+            "$type": "duration",
+            "$description": "Standard pan"
+          },
+          "fast": {
+            "$value": "400ms",
+            "$type": "duration",
+            "$description": "Quick pan"
+          },
+          "whip": {
+            "$value": "150ms",
+            "$type": "duration",
+            "$description": "Whip pan transition"
+          }
+        },
+        "distance": {
+          "short": {
+            "$value": "100px",
+            "$type": "dimension",
+            "$description": "Small pan distance"
+          },
+          "medium": {
+            "$value": "300px",
+            "$type": "dimension",
+            "$description": "Medium pan"
+          },
+          "long": {
+            "$value": "600px",
+            "$type": "dimension",
+            "$description": "Long pan"
+          },
+          "full": {
+            "$value": "100%",
+            "$type": "dimension",
+            "$description": "Full viewport pan"
+          }
+        }
+      },
+
+      "tilt": {
+        "$description": "Vertical camera movement",
+        "speed": {
+          "slow": {
+            "$value": "2000ms",
+            "$type": "duration",
+            "$description": "Slow tilt"
+          },
+          "normal": {
+            "$value": "1000ms",
+            "$type": "duration",
+            "$description": "Standard tilt"
+          },
+          "fast": {
+            "$value": "400ms",
+            "$type": "duration",
+            "$description": "Quick tilt"
+          }
+        },
+        "angle": {
+          "slight": {
+            "$value": "5deg",
+            "$type": "dimension",
+            "$description": "Slight tilt"
+          },
+          "moderate": {
+            "$value": "15deg",
+            "$type": "dimension",
+            "$description": "Moderate tilt"
+          },
+          "dramatic": {
+            "$value": "30deg",
+            "$type": "dimension",
+            "$description": "Dramatic tilt"
+          },
+          "extreme": {
+            "$value": "45deg",
+            "$type": "dimension",
+            "$description": "Extreme high/low angle"
+          }
+        }
+      },
+
+      "dolly": {
+        "$description": "Camera movement toward/away from subject",
+        "speed": {
+          "slow": {
+            "$value": "3000ms",
+            "$type": "duration",
+            "$description": "Slow dolly"
+          },
+          "normal": {
+            "$value": "1500ms",
+            "$type": "duration",
+            "$description": "Standard dolly"
+          },
+          "fast": {
+            "$value": "600ms",
+            "$type": "duration",
+            "$description": "Quick dolly"
+          },
+          "crash": {
+            "$value": "200ms",
+            "$type": "duration",
+            "$description": "Crash zoom/dolly"
+          }
+        },
+        "distance": {
+          "close": {
+            "$value": "50px",
+            "$type": "dimension",
+            "$description": "Short dolly"
+          },
+          "medium": {
+            "$value": "150px",
+            "$type": "dimension",
+            "$description": "Medium dolly"
+          },
+          "far": {
+            "$value": "400px",
+            "$type": "dimension",
+            "$description": "Long dolly"
+          }
+        }
+      },
+
+      "shake": {
+        "$description": "Camera shake/handheld effect",
+        "intensity": {
+          "subtle": {
+            "$value": "2px",
+            "$type": "dimension",
+            "$description": "Barely perceptible shake"
+          },
+          "light": {
+            "$value": "5px",
+            "$type": "dimension",
+            "$description": "Light handheld feel"
+          },
+          "medium": {
+            "$value": "10px",
+            "$type": "dimension",
+            "$description": "Noticeable shake"
+          },
+          "heavy": {
+            "$value": "20px",
+            "$type": "dimension",
+            "$description": "Strong shake"
+          },
+          "violent": {
+            "$value": "40px",
+            "$type": "dimension",
+            "$description": "Extreme impact shake"
+          }
+        },
+        "frequency": {
+          "slow": {
+            "$value": "100ms",
+            "$type": "duration",
+            "$description": "Slow shake cycles"
+          },
+          "normal": {
+            "$value": "50ms",
+            "$type": "duration",
+            "$description": "Standard shake"
+          },
+          "fast": {
+            "$value": "25ms",
+            "$type": "duration",
+            "$description": "Rapid shake"
+          }
+        },
+        "decay": {
+          "none": {
+            "$value": "1.0",
+            "$type": "number",
+            "$description": "No decay"
+          },
+          "slow": {
+            "$value": "0.98",
+            "$type": "number",
+            "$description": "Slow decay"
+          },
+          "normal": {
+            "$value": "0.95",
+            "$type": "number",
+            "$description": "Standard decay"
+          },
+          "fast": {
+            "$value": "0.9",
+            "$type": "number",
+            "$description": "Quick decay"
+          }
+        }
+      },
+
+      "tracking": {
+        "$description": "Lateral camera movement following subject",
+        "speed": {
+          "match": {
+            "$value": "1.0",
+            "$type": "number",
+            "$description": "Match subject speed exactly"
+          },
+          "lag": {
+            "$value": "0.8",
+            "$type": "number",
+            "$description": "Slight lag behind subject"
+          },
+          "lead": {
+            "$value": "1.2",
+            "$type": "number",
+            "$description": "Lead ahead of subject"
+          }
+        },
+        "smoothing": {
+          "none": {
+            "$value": "0",
+            "$type": "number",
+            "$description": "Direct tracking"
+          },
+          "light": {
+            "$value": "0.1",
+            "$type": "number",
+            "$description": "Light smoothing"
+          },
+          "medium": {
+            "$value": "0.2",
+            "$type": "number",
+            "$description": "Moderate smoothing"
+          },
+          "heavy": {
+            "$value": "0.4",
+            "$type": "number",
+            "$description": "Heavy smoothing"
+          }
+        }
+      },
+
+      "orbit": {
+        "$description": "Camera orbiting around subject",
+        "speed": {
+          "slow": {
+            "$value": "10000ms",
+            "$type": "duration",
+            "$description": "Full slow orbit"
+          },
+          "normal": {
+            "$value": "5000ms",
+            "$type": "duration",
+            "$description": "Standard orbit"
+          },
+          "fast": {
+            "$value": "2000ms",
+            "$type": "duration",
+            "$description": "Quick orbit"
+          }
+        },
+        "radius": {
+          "close": {
+            "$value": "100px",
+            "$type": "dimension",
+            "$description": "Close orbit"
+          },
+          "medium": {
+            "$value": "250px",
+            "$type": "dimension",
+            "$description": "Medium orbit"
+          },
+          "far": {
+            "$value": "500px",
+            "$type": "dimension",
+            "$description": "Wide orbit"
+          }
+        },
+        "arc": {
+          "quarter": {
+            "$value": "90deg",
+            "$type": "dimension",
+            "$description": "Quarter orbit"
+          },
+          "half": {
+            "$value": "180deg",
+            "$type": "dimension",
+            "$description": "Half orbit"
+          },
+          "full": {
+            "$value": "360deg",
+            "$type": "dimension",
+            "$description": "Complete orbit"
+          }
+        }
+      },
+
+      "parallax": {
+        "$description": "Depth-based parallax movement",
+        "intensity": {
+          "subtle": {
+            "$value": "0.1",
+            "$type": "number",
+            "$description": "Subtle depth effect"
+          },
+          "moderate": {
+            "$value": "0.3",
+            "$type": "number",
+            "$description": "Noticeable parallax"
+          },
+          "strong": {
+            "$value": "0.5",
+            "$type": "number",
+            "$description": "Strong depth separation"
+          },
+          "extreme": {
+            "$value": "0.8",
+            "$type": "number",
+            "$description": "Extreme parallax"
+          }
+        },
+        "layers": {
+          "foreground": {
+            "$value": "1.5",
+            "$type": "number",
+            "$description": "Foreground speed multiplier"
+          },
+          "midground": {
+            "$value": "1.0",
+            "$type": "number",
+            "$description": "Midground base speed"
+          },
+          "background": {
+            "$value": "0.5",
+            "$type": "number",
+            "$description": "Background speed multiplier"
+          },
+          "distant": {
+            "$value": "0.2",
+            "$type": "number",
+            "$description": "Distant layer speed"
+          }
+        }
+      },
+
+      "focus": {
+        "$description": "Depth of field focus",
+        "pull-speed": {
+          "slow": {
+            "$value": "1500ms",
+            "$type": "duration",
+            "$description": "Slow focus pull"
+          },
+          "normal": {
+            "$value": "600ms",
+            "$type": "duration",
+            "$description": "Standard focus pull"
+          },
+          "fast": {
+            "$value": "200ms",
+            "$type": "duration",
+            "$description": "Quick focus pull"
+          }
+        },
+        "depth": {
+          "shallow": {
+            "$value": "2",
+            "$type": "number",
+            "$description": "Very shallow DOF"
+          },
+          "medium": {
+            "$value": "5",
+            "$type": "number",
+            "$description": "Medium DOF"
+          },
+          "deep": {
+            "$value": "10",
+            "$type": "number",
+            "$description": "Deep focus"
+          }
+        }
+      },
+
+      "vertigo": {
+        "$description": "Dolly zoom (Hitchcock/Vertigo effect)",
+        "speed": {
+          "slow": {
+            "$value": "3000ms",
+            "$type": "duration",
+            "$description": "Slow vertigo effect"
+          },
+          "normal": {
+            "$value": "1500ms",
+            "$type": "duration",
+            "$description": "Standard vertigo"
+          },
+          "fast": {
+            "$value": "600ms",
+            "$type": "duration",
+            "$description": "Quick vertigo"
+          }
+        },
+        "intensity": {
+          "subtle": {
+            "$value": "1.2",
+            "$type": "number",
+            "$description": "Subtle effect"
+          },
+          "moderate": {
+            "$value": "1.5",
+            "$type": "number",
+            "$description": "Moderate effect"
+          },
+          "dramatic": {
+            "$value": "2.0",
+            "$type": "number",
+            "$description": "Dramatic effect"
+          }
+        }
+      },
+
+      "crane": {
+        "$description": "Vertical crane/jib movements",
+        "speed": {
+          "slow": {
+            "$value": "4000ms",
+            "$type": "duration",
+            "$description": "Slow crane"
+          },
+          "normal": {
+            "$value": "2000ms",
+            "$type": "duration",
+            "$description": "Standard crane"
+          },
+          "fast": {
+            "$value": "800ms",
+            "$type": "duration",
+            "$description": "Quick crane"
+          }
+        },
+        "height": {
+          "short": {
+            "$value": "100px",
+            "$type": "dimension",
+            "$description": "Short crane movement"
+          },
+          "medium": {
+            "$value": "300px",
+            "$type": "dimension",
+            "$description": "Medium crane"
+          },
+          "tall": {
+            "$value": "600px",
+            "$type": "dimension",
+            "$description": "Tall crane movement"
+          }
+        }
+      }
+    }
+  }
+}

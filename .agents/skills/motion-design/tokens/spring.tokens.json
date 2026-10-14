@@ -1,0 +1,167 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "M3 Spring physics tokens with spatial/effects distinction",
+
+  "motion": {
+    "spring": {
+      "$description": "M3 spring system. Spatial springs allow overshoot (position/scale/rotation). Effects springs are critically damped (opacity/color).",
+
+      "fast": {
+        "$description": "Fast springs for small components (buttons, switches, icons)",
+        "spatial": {
+          "$value": { "damping": 0.9, "stiffness": 1400, "mass": 1 },
+          "$type": "object",
+          "$description": "M3 fast spatial spring. Position, scale, rotation for small elements. Allows overshoot."
+        },
+        "effects": {
+          "$value": { "damping": 1.0, "stiffness": 3800, "mass": 1 },
+          "$type": "object",
+          "$description": "M3 fast effects spring. Opacity, color for small elements. Critically damped, no overshoot."
+        }
+      },
+
+      "default": {
+        "$description": "Default springs for standard UI transitions",
+        "spatial": {
+          "$value": { "damping": 0.9, "stiffness": 700, "mass": 1 },
+          "$type": "object",
+          "$description": "M3 default spatial spring. Position, scale, rotation for standard UI. Allows overshoot."
+        },
+        "effects": {
+          "$value": { "damping": 1.0, "stiffness": 1600, "mass": 1 },
+          "$type": "object",
+          "$description": "M3 default effects spring. Opacity, color for standard UI. Critically damped, no overshoot."
+        }
+      },
+
+      "slow": {
+        "$description": "Slow springs for full-screen and large element animations",
+        "spatial": {
+          "$value": { "damping": 0.9, "stiffness": 300, "mass": 1 },
+          "$type": "object",
+          "$description": "M3 slow spatial spring. Position, scale, rotation for large elements. Allows overshoot."
+        },
+        "effects": {
+          "$value": { "damping": 1.0, "stiffness": 800, "mass": 1 },
+          "$type": "object",
+          "$description": "M3 slow effects spring. Opacity, color for large elements. Critically damped, no overshoot."
+        }
+      },
+
+      "selection-guide": {
+        "$description": "How to select the right spring",
+        "$value": {
+          "property-type": {
+            "position": "spatial",
+            "scale": "spatial",
+            "rotation": "spatial",
+            "opacity": "effects",
+            "color": "effects",
+            "background": "effects",
+            "filter": "effects"
+          },
+          "element-size": {
+            "small": "fast",
+            "medium": "default",
+            "large": "slow",
+            "full-screen": "slow"
+          }
+        },
+        "$type": "object"
+      },
+
+      "legacy": {
+        "$description": "Previous spring tokens for backward compatibility. Use M3 springs (fast/default/slow + spatial/effects) for new implementations.",
+
+        "standard": {
+          "$value": { "damping": 15, "stiffness": 150, "mass": 1 },
+          "$type": "object",
+          "$description": "DEPRECATED: Use spring.default.spatial. Standard spring (Framer Motion convention).",
+          "$extensions": {
+            "com.motion-design-agent": {
+              "deprecated": true,
+              "replacement": "{motion.spring.default.spatial}"
+            }
+          }
+        },
+        "snappy": {
+          "$value": { "damping": 25, "stiffness": 300, "mass": 0.5 },
+          "$type": "object",
+          "$description": "DEPRECATED: Use spring.fast.spatial. Snappy response (Framer Motion convention).",
+          "$extensions": {
+            "com.motion-design-agent": {
+              "deprecated": true,
+              "replacement": "{motion.spring.fast.spatial}"
+            }
+          }
+        },
+        "bouncy": {
+          "$value": { "damping": 10, "stiffness": 180, "mass": 1 },
+          "$type": "object",
+          "$description": "Custom bouncy spring (not in M3). Low damping for playful overshoot."
+        },
+        "gentle": {
+          "$value": { "damping": 25, "stiffness": 100, "mass": 1.2 },
+          "$type": "object",
+          "$description": "DEPRECATED: Use spring.slow.spatial. Gentle settle (Framer Motion convention).",
+          "$extensions": {
+            "com.motion-design-agent": {
+              "deprecated": true,
+              "replacement": "{motion.spring.slow.spatial}"
+            }
+          }
+        },
+        "enter": {
+          "$value": { "damping": 20, "stiffness": 180, "mass": 1 },
+          "$type": "object",
+          "$description": "DEPRECATED: Use spring.default.spatial. Entrance spring.",
+          "$extensions": {
+            "com.motion-design-agent": {
+              "deprecated": true,
+              "replacement": "{motion.spring.default.spatial}"
+            }
+          }
+        },
+        "celebratory": {
+          "$value": { "damping": 8, "stiffness": 180, "mass": 1 },
+          "$type": "object",
+          "$description": "Custom celebratory spring (not in M3). Extra bouncy for celebration moments."
+        },
+        "calming": {
+          "$value": { "damping": 30, "stiffness": 80, "mass": 1.5 },
+          "$type": "object",
+          "$description": "Custom calming spring (not in M3). Very gentle for relaxation."
+        },
+        "urgent": {
+          "$value": { "damping": 30, "stiffness": 400, "mass": 0.5 },
+          "$type": "object",
+          "$description": "Custom urgent spring (not in M3). Fast and crisp for urgency."
+        },
+        "energetic": {
+          "$value": { "damping": 12, "stiffness": 250, "mass": 0.8 },
+          "$type": "object",
+          "$description": "Custom energetic spring (not in M3). Quick with some bounce."
+        },
+        "mysterious": {
+          "$value": { "damping": 35, "stiffness": 60, "mass": 2 },
+          "$type": "object",
+          "$description": "Custom mysterious spring (not in M3). Very slow and smooth."
+        }
+      },
+
+      "conversion": {
+        "$description": "Convert M3 springs to Framer Motion / React Spring convention",
+        "$value": {
+          "formula": "framer_damping = m3_damping * 10 * sqrt(stiffness/100)",
+          "note": "M3 uses damping ratio (0-1), Framer uses damping coefficient. Approximate conversion provided.",
+          "examples": {
+            "m3-fast-spatial": "framer: { damping: 34, stiffness: 1400, mass: 1 }",
+            "m3-default-spatial": "framer: { damping: 24, stiffness: 700, mass: 1 }",
+            "m3-slow-spatial": "framer: { damping: 16, stiffness: 300, mass: 1 }"
+          }
+        },
+        "$type": "object"
+      }
+    }
+  }
+}

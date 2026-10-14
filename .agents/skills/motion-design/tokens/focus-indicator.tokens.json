@@ -1,0 +1,160 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Focus indicator tokens for keyboard navigation accessibility. Defines ring styles, glow effects, and animation per WCAG 2.1 and Material Design 3.",
+
+  "motion": {
+    "focus-indicator": {
+      "$description": "Focus ring and glow specifications for accessibility",
+
+      "ring": {
+        "$description": "Focus ring dimensions",
+
+        "width": {
+          "$value": "3px",
+          "$type": "dimension",
+          "$description": "Focus ring stroke width. Visible at all zoom levels."
+        },
+        "offset": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Gap between element and focus ring."
+        },
+        "radius": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Border radius of focus ring. Matches M3 component radii."
+        },
+        "style": {
+          "$value": "solid",
+          "$type": "string",
+          "$description": "Focus ring border style."
+        }
+      },
+
+      "color": {
+        "$description": "Focus indicator colors",
+
+        "primary": {
+          "$value": "primary",
+          "$type": "string",
+          "$description": "Primary theme color for focus ring. High contrast."
+        },
+        "on-dark": {
+          "$value": "#FFFFFF",
+          "$type": "color",
+          "$description": "Focus ring color on dark surfaces."
+        },
+        "on-light": {
+          "$value": "#1A73E8",
+          "$type": "color",
+          "$description": "Focus ring color on light surfaces. Google Blue 500."
+        },
+        "error": {
+          "$value": "#B3261E",
+          "$type": "color",
+          "$description": "Focus ring for error state. M3 error color."
+        }
+      },
+
+      "glow": {
+        "$description": "Optional glow effect for enhanced visibility",
+
+        "enabled": {
+          "$value": true,
+          "$type": "boolean",
+          "$description": "Enable subtle glow around focus ring."
+        },
+        "blur": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Glow blur radius."
+        },
+        "spread": {
+          "$value": "1px",
+          "$type": "dimension",
+          "$description": "Glow spread radius."
+        },
+        "opacity": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "Glow opacity. Subtle but visible."
+        }
+      },
+
+      "animation": {
+        "$description": "Focus indicator animation (optional pulse for emphasis)",
+
+        "pulse-enabled": {
+          "$value": false,
+          "$type": "boolean",
+          "$description": "Enable pulse animation. Disabled by default for reduced motion."
+        },
+        "pulse-duration": {
+          "$value": "1.5s",
+          "$type": "duration",
+          "$description": "One full pulse cycle duration."
+        },
+        "pulse-scale-min": {
+          "$value": 1.0,
+          "$type": "number",
+          "$description": "Minimum scale during pulse."
+        },
+        "pulse-scale-max": {
+          "$value": 1.05,
+          "$type": "number",
+          "$description": "Maximum scale during pulse. Subtle 5% increase."
+        },
+        "pulse-opacity-min": {
+          "$value": 0.7,
+          "$type": "number",
+          "$description": "Minimum opacity during pulse."
+        },
+        "pulse-opacity-max": {
+          "$value": 1.0,
+          "$type": "number",
+          "$description": "Maximum opacity during pulse."
+        },
+        "enter-duration": {
+          "$value": "100ms",
+          "$type": "duration",
+          "$description": "Focus ring appear duration."
+        },
+        "exit-duration": {
+          "$value": "75ms",
+          "$type": "duration",
+          "$description": "Focus ring disappear duration."
+        }
+      },
+
+      "inset": {
+        "$description": "Alternative inset focus style for certain components",
+
+        "width": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Inset focus border width."
+        },
+        "offset": {
+          "$value": "-2px",
+          "$type": "dimension",
+          "$description": "Negative offset for inset appearance."
+        }
+      },
+
+      "contrast": {
+        "$description": "WCAG contrast requirements",
+
+        "min-ratio": {
+          "$value": 3,
+          "$type": "number",
+          "$description": "Minimum contrast ratio (3:1) against adjacent colors per WCAG 2.1."
+        },
+        "enhanced-ratio": {
+          "$value": 4.5,
+          "$type": "number",
+          "$description": "Enhanced contrast ratio for AAA compliance."
+        }
+      }
+    }
+  }
+}

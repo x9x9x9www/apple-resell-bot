@@ -1,0 +1,420 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Distortion effect tokens for warps, glitches, and deformation animations.",
+
+  "motion": {
+    "distortion": {
+      "$description": "Distortion and warp effect tokens",
+
+      "intensity": {
+        "$description": "Distortion intensity levels",
+
+        "subtle": {
+          "$value": 0.05,
+          "$type": "number",
+          "$description": "5% distortion. Barely perceptible."
+        },
+        "light": {
+          "$value": 0.1,
+          "$type": "number",
+          "$description": "10% distortion. Slight warp."
+        },
+        "medium": {
+          "$value": 0.25,
+          "$type": "number",
+          "$description": "25% distortion. Clear effect."
+        },
+        "strong": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "50% distortion. Pronounced warp."
+        },
+        "extreme": {
+          "$value": 0.8,
+          "$type": "number",
+          "$description": "80% distortion. Heavy deformation."
+        },
+        "maximum": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "100% distortion. Maximum effect."
+        }
+      },
+
+      "wave": {
+        "$description": "Wave distortion parameters",
+
+        "amplitude-subtle": {
+          "$value": "5px",
+          "$type": "dimension",
+          "$description": "Subtle wave height."
+        },
+        "amplitude-medium": {
+          "$value": "15px",
+          "$type": "dimension",
+          "$description": "Medium wave height."
+        },
+        "amplitude-strong": {
+          "$value": "30px",
+          "$type": "dimension",
+          "$description": "Strong wave height."
+        },
+        "frequency-low": {
+          "$value": 0.02,
+          "$type": "number",
+          "$description": "Low wave frequency. Long waves."
+        },
+        "frequency-medium": {
+          "$value": 0.05,
+          "$type": "number",
+          "$description": "Medium wave frequency."
+        },
+        "frequency-high": {
+          "$value": 0.1,
+          "$type": "number",
+          "$description": "High wave frequency. Short waves."
+        },
+        "speed-slow": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Slow wave animation speed."
+        },
+        "speed-medium": {
+          "$value": 3,
+          "$type": "number",
+          "$description": "Medium wave animation speed."
+        },
+        "speed-fast": {
+          "$value": 8,
+          "$type": "number",
+          "$description": "Fast wave animation speed."
+        }
+      },
+
+      "ripple": {
+        "$description": "Ripple distortion parameters",
+
+        "radius-small": {
+          "$value": "50px",
+          "$type": "dimension",
+          "$description": "Small ripple radius."
+        },
+        "radius-medium": {
+          "$value": "150px",
+          "$type": "dimension",
+          "$description": "Medium ripple radius."
+        },
+        "radius-large": {
+          "$value": "300px",
+          "$type": "dimension",
+          "$description": "Large ripple radius."
+        },
+        "wavelength-tight": {
+          "$value": "20px",
+          "$type": "dimension",
+          "$description": "Tight ripple wavelength."
+        },
+        "wavelength-normal": {
+          "$value": "40px",
+          "$type": "dimension",
+          "$description": "Normal ripple wavelength."
+        },
+        "wavelength-wide": {
+          "$value": "80px",
+          "$type": "dimension",
+          "$description": "Wide ripple wavelength."
+        },
+        "decay-fast": {
+          "$value": 0.95,
+          "$type": "number",
+          "$description": "Fast ripple decay."
+        },
+        "decay-medium": {
+          "$value": 0.98,
+          "$type": "number",
+          "$description": "Medium ripple decay."
+        },
+        "decay-slow": {
+          "$value": 0.995,
+          "$type": "number",
+          "$description": "Slow ripple decay."
+        }
+      },
+
+      "bulge": {
+        "$description": "Bulge/pinch distortion parameters",
+
+        "strength-subtle": {
+          "$value": 0.1,
+          "$type": "number",
+          "$description": "Subtle bulge strength."
+        },
+        "strength-medium": {
+          "$value": 0.3,
+          "$type": "number",
+          "$description": "Medium bulge strength."
+        },
+        "strength-strong": {
+          "$value": 0.6,
+          "$type": "number",
+          "$description": "Strong bulge strength."
+        },
+        "radius-small": {
+          "$value": "50px",
+          "$type": "dimension",
+          "$description": "Small bulge radius."
+        },
+        "radius-medium": {
+          "$value": "100px",
+          "$type": "dimension",
+          "$description": "Medium bulge radius."
+        },
+        "radius-large": {
+          "$value": "200px",
+          "$type": "dimension",
+          "$description": "Large bulge radius."
+        }
+      },
+
+      "twirl": {
+        "$description": "Twirl/swirl distortion parameters",
+
+        "angle-subtle": {
+          "$value": "30deg",
+          "$type": "dimension",
+          "$description": "Subtle twirl angle."
+        },
+        "angle-medium": {
+          "$value": "90deg",
+          "$type": "dimension",
+          "$description": "Medium twirl angle."
+        },
+        "angle-strong": {
+          "$value": "180deg",
+          "$type": "dimension",
+          "$description": "Strong twirl angle."
+        },
+        "angle-extreme": {
+          "$value": "360deg",
+          "$type": "dimension",
+          "$description": "Full rotation twirl."
+        },
+        "radius-small": {
+          "$value": "50px",
+          "$type": "dimension",
+          "$description": "Small twirl radius."
+        },
+        "radius-medium": {
+          "$value": "100px",
+          "$type": "dimension",
+          "$description": "Medium twirl radius."
+        },
+        "radius-large": {
+          "$value": "200px",
+          "$type": "dimension",
+          "$description": "Large twirl radius."
+        }
+      },
+
+      "glitch": {
+        "$description": "Digital glitch effect parameters",
+
+        "rgb-offset-subtle": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Subtle RGB channel offset."
+        },
+        "rgb-offset-medium": {
+          "$value": "5px",
+          "$type": "dimension",
+          "$description": "Medium RGB channel offset."
+        },
+        "rgb-offset-strong": {
+          "$value": "10px",
+          "$type": "dimension",
+          "$description": "Strong RGB channel offset."
+        },
+        "rgb-offset-extreme": {
+          "$value": "20px",
+          "$type": "dimension",
+          "$description": "Extreme RGB channel offset."
+        },
+        "slice-count-few": {
+          "$value": 3,
+          "$type": "number",
+          "$description": "Few glitch slices."
+        },
+        "slice-count-medium": {
+          "$value": 8,
+          "$type": "number",
+          "$description": "Medium glitch slices."
+        },
+        "slice-count-many": {
+          "$value": 15,
+          "$type": "number",
+          "$description": "Many glitch slices."
+        },
+        "slice-offset-subtle": {
+          "$value": "10px",
+          "$type": "dimension",
+          "$description": "Subtle slice displacement."
+        },
+        "slice-offset-medium": {
+          "$value": "30px",
+          "$type": "dimension",
+          "$description": "Medium slice displacement."
+        },
+        "slice-offset-strong": {
+          "$value": "80px",
+          "$type": "dimension",
+          "$description": "Strong slice displacement."
+        },
+        "duration-flash": {
+          "$value": "50ms",
+          "$type": "duration",
+          "$description": "Flash glitch duration."
+        },
+        "duration-short": {
+          "$value": "150ms",
+          "$type": "duration",
+          "$description": "Short glitch duration."
+        },
+        "duration-medium": {
+          "$value": "300ms",
+          "$type": "duration",
+          "$description": "Medium glitch duration."
+        },
+        "interval-rapid": {
+          "$value": "100ms",
+          "$type": "duration",
+          "$description": "Rapid glitch interval."
+        },
+        "interval-normal": {
+          "$value": "500ms",
+          "$type": "duration",
+          "$description": "Normal glitch interval."
+        },
+        "interval-sparse": {
+          "$value": "2000ms",
+          "$type": "duration",
+          "$description": "Sparse glitch interval."
+        }
+      },
+
+      "chromatic-aberration": {
+        "$description": "Color fringing effect parameters",
+
+        "offset-subtle": {
+          "$value": "1px",
+          "$type": "dimension",
+          "$description": "Subtle color fringing."
+        },
+        "offset-medium": {
+          "$value": "3px",
+          "$type": "dimension",
+          "$description": "Medium color fringing."
+        },
+        "offset-strong": {
+          "$value": "6px",
+          "$type": "dimension",
+          "$description": "Strong color fringing."
+        },
+        "angle": {
+          "$value": "0deg",
+          "$type": "dimension",
+          "$description": "Horizontal aberration angle."
+        }
+      },
+
+      "scanlines": {
+        "$description": "CRT scanline effect parameters",
+
+        "density-light": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Light scanline density."
+        },
+        "density-medium": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Medium scanline density."
+        },
+        "density-heavy": {
+          "$value": "1px",
+          "$type": "dimension",
+          "$description": "Heavy scanline density."
+        },
+        "opacity-subtle": {
+          "$value": 0.1,
+          "$type": "number",
+          "$description": "Subtle scanline opacity."
+        },
+        "opacity-medium": {
+          "$value": 0.3,
+          "$type": "number",
+          "$description": "Medium scanline opacity."
+        },
+        "opacity-strong": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "Strong scanline opacity."
+        }
+      },
+
+      "noise-overlay": {
+        "$description": "Static/noise overlay parameters",
+
+        "intensity-subtle": {
+          "$value": 0.03,
+          "$type": "number",
+          "$description": "Subtle noise overlay."
+        },
+        "intensity-medium": {
+          "$value": 0.08,
+          "$type": "number",
+          "$description": "Medium noise overlay."
+        },
+        "intensity-strong": {
+          "$value": 0.15,
+          "$type": "number",
+          "$description": "Strong noise overlay."
+        },
+        "speed-slow": {
+          "$value": 5,
+          "$type": "number",
+          "$description": "Slow noise animation (5 fps)."
+        },
+        "speed-medium": {
+          "$value": 15,
+          "$type": "number",
+          "$description": "Medium noise animation (15 fps)."
+        },
+        "speed-fast": {
+          "$value": 30,
+          "$type": "number",
+          "$description": "Fast noise animation (30 fps)."
+        }
+      },
+
+      "vhs": {
+        "$description": "VHS tape distortion effect",
+
+        "tracking-error": {
+          "$value": { "probability": 0.1, "severity": 20 },
+          "$type": "object",
+          "$description": "VHS tracking error simulation."
+        },
+        "color-bleed": {
+          "$value": "3px",
+          "$type": "dimension",
+          "$description": "VHS color bleed amount."
+        },
+        "noise-bands": {
+          "$value": { "count": 5, "speed": 50 },
+          "$type": "object",
+          "$description": "VHS horizontal noise bands."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "v": "5.7.1",
+  "fr": 30,
+  "ip": 0,
+  "op": 30,
+  "w": 100,
+  "h": 100,
+  "nm": "Loading Spinner",
+  "ddd": 0,
+  "meta": {
+    "$description": "Simple loading spinner with continuous rotation",
+    "$token-refs": {
+      "duration": "{motion.duration.long-2}",
+      "easing": "{motion.easing.linear}"
+    },
+    "$wcag": "WCAG 2.1 compliant - use with role='progressbar' and aria-label",
+    "$reduced-motion": "Display static spinner or hide entirely"
+  },
+  "assets": [],
+  "layers": [
+    {
+      "ddd": 0,
+      "ind": 1,
+      "ty": 4,
+      "nm": "Spinner Arc",
+      "sr": 1,
+      "ks": {
+        "o": { "a": 0, "k": 100 },
+        "r": {
+          "a": 1,
+          "k": [
+            {
+              "i": { "x": [0], "y": [1] },
+              "o": { "x": [1], "y": [0] },
+              "t": 0,
+              "s": [0]
+            },
+            {
+              "t": 30,
+              "s": [360]
+            }
+          ]
+        },
+        "p": { "a": 0, "k": [50, 50, 0] },
+        "a": { "a": 0, "k": [0, 0, 0] },
+        "s": { "a": 0, "k": [100, 100, 100] }
+      },
+      "ao": 0,
+      "shapes": [
+        {
+          "ty": "gr",
+          "it": [
+            {
+              "ty": "el",
+              "d": 1,
+              "s": { "a": 0, "k": [80, 80] },
+              "p": { "a": 0, "k": [0, 0] },
+              "nm": "Circle"
+            },
+            {
+              "ty": "st",
+              "c": { "a": 0, "k": [0.404, 0.314, 0.643, 1] },
+              "o": { "a": 0, "k": 100 },
+              "w": { "a": 0, "k": 8 },
+              "lc": 2,
+              "lj": 2,
+              "bm": 0,
+              "d": [
+                { "n": "d", "nm": "dash", "v": { "a": 0, "k": 188 } },
+                { "n": "g", "nm": "gap", "v": { "a": 0, "k": 62 } },
+                { "n": "o", "nm": "offset", "v": { "a": 0, "k": 0 } }
+              ],
+              "nm": "Stroke"
+            },
+            {
+              "ty": "tr",
+              "p": { "a": 0, "k": [0, 0] },
+              "a": { "a": 0, "k": [0, 0] },
+              "s": { "a": 0, "k": [100, 100] },
+              "r": { "a": 0, "k": 0 },
+              "o": { "a": 0, "k": 100 },
+              "sk": { "a": 0, "k": 0 },
+              "sa": { "a": 0, "k": 0 }
+            }
+          ],
+          "nm": "Spinner Group"
+        }
+      ],
+      "ip": 0,
+      "op": 30,
+      "st": 0,
+      "bm": 0
+    }
+  ],
+  "markers": []
+}

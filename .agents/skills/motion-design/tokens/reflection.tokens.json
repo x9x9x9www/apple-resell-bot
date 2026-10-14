@@ -1,0 +1,309 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Reflection effect tokens for floor, water, glass, and mirror reflections.",
+
+  "motion": {
+    "reflection": {
+      "$description": "Reflection animation tokens",
+
+      "floor": {
+        "$description": "Floor/surface reflection parameters",
+
+        "opacity": {
+          "subtle": {
+            "$value": 0.15,
+            "$type": "number",
+            "$description": "Subtle floor reflection. Hint of reflection."
+          },
+          "light": {
+            "$value": 0.25,
+            "$type": "number",
+            "$description": "Light floor reflection. Polished wood."
+          },
+          "medium": {
+            "$value": 0.4,
+            "$type": "number",
+            "$description": "Medium floor reflection. Marble/tile."
+          },
+          "strong": {
+            "$value": 0.6,
+            "$type": "number",
+            "$description": "Strong floor reflection. Wet surface."
+          }
+        },
+
+        "blur": {
+          "none": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "No blur. Mirror-like surface."
+          },
+          "slight": {
+            "$value": 2,
+            "$type": "number",
+            "$description": "Slight blur (px). Polished surface."
+          },
+          "medium": {
+            "$value": 5,
+            "$type": "number",
+            "$description": "Medium blur (px). Semi-matte surface."
+          },
+          "heavy": {
+            "$value": 10,
+            "$type": "number",
+            "$description": "Heavy blur (px). Frosted surface."
+          }
+        },
+
+        "fade-height": {
+          "short": {
+            "$value": "30%",
+            "$type": "dimension",
+            "$description": "Short fade. Quick reflection falloff."
+          },
+          "medium": {
+            "$value": "50%",
+            "$type": "dimension",
+            "$description": "Medium fade. Standard reflection."
+          },
+          "tall": {
+            "$value": "80%",
+            "$type": "dimension",
+            "$description": "Tall fade. Extended reflection."
+          },
+          "full": {
+            "$value": "100%",
+            "$type": "dimension",
+            "$description": "Full height. No fade."
+          }
+        },
+
+        "gap": {
+          "none": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "No gap. Object touches reflection."
+          },
+          "small": {
+            "$value": 2,
+            "$type": "number",
+            "$description": "Small gap (px). Slight separation."
+          },
+          "medium": {
+            "$value": 5,
+            "$type": "number",
+            "$description": "Medium gap (px). Clear separation."
+          },
+          "large": {
+            "$value": 10,
+            "$type": "number",
+            "$description": "Large gap (px). Floating effect."
+          }
+        }
+      },
+
+      "water": {
+        "$description": "Water reflection parameters",
+
+        "opacity": {
+          "calm": {
+            "$value": 0.5,
+            "$type": "number",
+            "$description": "Calm water opacity. Clear reflection."
+          },
+          "rippled": {
+            "$value": 0.35,
+            "$type": "number",
+            "$description": "Rippled water. Diffused reflection."
+          },
+          "turbulent": {
+            "$value": 0.2,
+            "$type": "number",
+            "$description": "Turbulent water. Fragmented reflection."
+          }
+        },
+
+        "distortion": {
+          "none": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "No distortion. Still water."
+          },
+          "subtle": {
+            "$value": 2,
+            "$type": "number",
+            "$description": "Subtle ripples (px amplitude)."
+          },
+          "moderate": {
+            "$value": 5,
+            "$type": "number",
+            "$description": "Moderate waves (px amplitude)."
+          },
+          "strong": {
+            "$value": 10,
+            "$type": "number",
+            "$description": "Strong waves (px amplitude)."
+          }
+        },
+
+        "ripple-speed": {
+          "slow": {
+            "$value": "3s",
+            "$type": "duration",
+            "$description": "Slow ripple cycle. Gentle motion."
+          },
+          "medium": {
+            "$value": "1.5s",
+            "$type": "duration",
+            "$description": "Medium ripple cycle."
+          },
+          "fast": {
+            "$value": "0.75s",
+            "$type": "duration",
+            "$description": "Fast ripple cycle. Active water."
+          }
+        },
+
+        "ripple-frequency": {
+          "low": {
+            "$value": 0.5,
+            "$type": "number",
+            "$description": "Low frequency. Broad waves."
+          },
+          "medium": {
+            "$value": 1,
+            "$type": "number",
+            "$description": "Medium frequency."
+          },
+          "high": {
+            "$value": 2,
+            "$type": "number",
+            "$description": "High frequency. Choppy water."
+          }
+        }
+      },
+
+      "glass": {
+        "$description": "Glass/transparent surface reflection parameters",
+
+        "intensity": {
+          "subtle": {
+            "$value": 0.1,
+            "$type": "number",
+            "$description": "Subtle glass reflection."
+          },
+          "light": {
+            "$value": 0.2,
+            "$type": "number",
+            "$description": "Light glass reflection."
+          },
+          "medium": {
+            "$value": 0.35,
+            "$type": "number",
+            "$description": "Medium glass reflection."
+          },
+          "strong": {
+            "$value": 0.5,
+            "$type": "number",
+            "$description": "Strong glass reflection. Window at angle."
+          }
+        },
+
+        "fresnel-min": {
+          "$value": 0.05,
+          "$type": "number",
+          "$description": "Fresnel effect minimum (direct view)."
+        },
+        "fresnel-max": {
+          "$value": 0.8,
+          "$type": "number",
+          "$description": "Fresnel effect maximum (glancing angle)."
+        },
+
+        "tint": {
+          "none": {
+            "$value": "transparent",
+            "$type": "color",
+            "$description": "No tint. Clear glass."
+          },
+          "cool": {
+            "$value": "rgba(200, 220, 255, 0.1)",
+            "$type": "color",
+            "$description": "Cool blue tint."
+          },
+          "warm": {
+            "$value": "rgba(255, 240, 220, 0.1)",
+            "$type": "color",
+            "$description": "Warm amber tint."
+          }
+        }
+      },
+
+      "mirror": {
+        "$description": "Perfect mirror reflection parameters",
+
+        "fidelity": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Perfect mirror fidelity. Exact copy."
+        },
+
+        "tint": {
+          "none": {
+            "$value": "transparent",
+            "$type": "color",
+            "$description": "No tint. True mirror."
+          },
+          "silver": {
+            "$value": "rgba(200, 200, 210, 0.05)",
+            "$type": "color",
+            "$description": "Slight silver/cool tint."
+          },
+          "antique": {
+            "$value": "rgba(255, 250, 240, 0.08)",
+            "$type": "color",
+            "$description": "Antique mirror warm tint."
+          }
+        },
+
+        "edge-fade": {
+          "none": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "No edge fade. Sharp boundary."
+          },
+          "subtle": {
+            "$value": 10,
+            "$type": "number",
+            "$description": "Subtle edge fade (px)."
+          },
+          "soft": {
+            "$value": 30,
+            "$type": "number",
+            "$description": "Soft edge fade (px)."
+          }
+        }
+      },
+
+      "animation": {
+        "$description": "Reflection animation parameters",
+
+        "appear": {
+          "$value": "300ms",
+          "$type": "duration",
+          "$description": "Reflection fade-in duration."
+        },
+        "disappear": {
+          "$value": "200ms",
+          "$type": "duration",
+          "$description": "Reflection fade-out duration."
+        },
+        "sync-delay": {
+          "$value": "16ms",
+          "$type": "duration",
+          "$description": "Sync delay with source. One frame."
+        }
+      }
+    }
+  }
+}

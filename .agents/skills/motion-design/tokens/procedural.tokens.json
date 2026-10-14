@@ -1,0 +1,370 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Procedural motion tokens for noise, wiggle, and generative animation patterns.",
+
+  "motion": {
+    "procedural": {
+      "$description": "Procedural and generative motion tokens",
+
+      "noise": {
+        "$description": "Noise function parameters",
+
+        "frequency-fine": {
+          "$value": 0.01,
+          "$type": "number",
+          "$description": "Fine noise frequency. Slow, large-scale variation."
+        },
+        "frequency-medium": {
+          "$value": 0.05,
+          "$type": "number",
+          "$description": "Medium noise frequency. Balanced variation."
+        },
+        "frequency-coarse": {
+          "$value": 0.1,
+          "$type": "number",
+          "$description": "Coarse noise frequency. Fast, small-scale variation."
+        },
+        "frequency-high": {
+          "$value": 0.2,
+          "$type": "number",
+          "$description": "High noise frequency. Rapid variation."
+        },
+        "amplitude-subtle": {
+          "$value": 2,
+          "$type": "number",
+          "$description": "Subtle noise amplitude. ±2 units."
+        },
+        "amplitude-medium": {
+          "$value": 10,
+          "$type": "number",
+          "$description": "Medium noise amplitude. ±10 units."
+        },
+        "amplitude-strong": {
+          "$value": 30,
+          "$type": "number",
+          "$description": "Strong noise amplitude. ±30 units."
+        },
+        "amplitude-extreme": {
+          "$value": 100,
+          "$type": "number",
+          "$description": "Extreme noise amplitude. ±100 units."
+        },
+        "octaves-simple": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Single octave noise. Simple, smooth."
+        },
+        "octaves-normal": {
+          "$value": 3,
+          "$type": "number",
+          "$description": "Three octave noise. Natural complexity."
+        },
+        "octaves-complex": {
+          "$value": 6,
+          "$type": "number",
+          "$description": "Six octave noise. High detail, organic."
+        },
+        "octaves-extreme": {
+          "$value": 8,
+          "$type": "number",
+          "$description": "Eight octave noise. Maximum detail."
+        },
+        "type-perlin": {
+          "$value": "perlin",
+          "$type": "string",
+          "$description": "Perlin noise. Smooth gradient noise."
+        },
+        "type-simplex": {
+          "$value": "simplex",
+          "$type": "string",
+          "$description": "Simplex noise. Improved Perlin, fewer artifacts."
+        },
+        "type-worley": {
+          "$value": "worley",
+          "$type": "string",
+          "$description": "Worley/Cellular noise. Organic cell patterns."
+        },
+        "type-fractal": {
+          "$value": "fractal",
+          "$type": "string",
+          "$description": "Fractal Brownian motion. Layered noise."
+        }
+      },
+
+      "wiggle": {
+        "$description": "Wiggle/jitter animation parameters (After Effects style)",
+
+        "frequency-slow": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "1 wiggle per second. Slow, gentle."
+        },
+        "frequency-medium": {
+          "$value": 3,
+          "$type": "number",
+          "$description": "3 wiggles per second. Natural jitter."
+        },
+        "frequency-fast": {
+          "$value": 8,
+          "$type": "number",
+          "$description": "8 wiggles per second. Nervous energy."
+        },
+        "frequency-rapid": {
+          "$value": 15,
+          "$type": "number",
+          "$description": "15 wiggles per second. Vibration."
+        },
+        "amplitude-micro": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "±1 unit wiggle. Barely perceptible."
+        },
+        "amplitude-subtle": {
+          "$value": 3,
+          "$type": "number",
+          "$description": "±3 units wiggle. Subtle movement."
+        },
+        "amplitude-medium": {
+          "$value": 10,
+          "$type": "number",
+          "$description": "±10 units wiggle. Clear jitter."
+        },
+        "amplitude-strong": {
+          "$value": 25,
+          "$type": "number",
+          "$description": "±25 units wiggle. Pronounced shake."
+        },
+        "amplitude-extreme": {
+          "$value": 50,
+          "$type": "number",
+          "$description": "±50 units wiggle. Wild motion."
+        }
+      },
+
+      "random": {
+        "$description": "Random motion parameters",
+
+        "seed-auto": {
+          "$value": "auto",
+          "$type": "string",
+          "$description": "Automatic random seed. Different each time."
+        },
+        "seed-fixed": {
+          "$value": 12345,
+          "$type": "number",
+          "$description": "Fixed seed for reproducible randomness."
+        },
+        "distribution-uniform": {
+          "$value": "uniform",
+          "$type": "string",
+          "$description": "Uniform distribution. Equal probability."
+        },
+        "distribution-gaussian": {
+          "$value": "gaussian",
+          "$type": "string",
+          "$description": "Gaussian/normal distribution. Bell curve."
+        },
+        "distribution-exponential": {
+          "$value": "exponential",
+          "$type": "string",
+          "$description": "Exponential distribution. Rare extremes."
+        }
+      },
+
+      "shake": {
+        "$description": "Shake/vibrate effect parameters",
+
+        "intensity-subtle": {
+          "$value": { "x": 2, "y": 2, "rotation": 0.5 },
+          "$type": "object",
+          "$description": "Subtle shake. Slight unsteadiness."
+        },
+        "intensity-medium": {
+          "$value": { "x": 5, "y": 5, "rotation": 1 },
+          "$type": "object",
+          "$description": "Medium shake. Noticeable vibration."
+        },
+        "intensity-strong": {
+          "$value": { "x": 10, "y": 10, "rotation": 2 },
+          "$type": "object",
+          "$description": "Strong shake. Violent tremor."
+        },
+        "intensity-earthquake": {
+          "$value": { "x": 25, "y": 25, "rotation": 5 },
+          "$type": "object",
+          "$description": "Earthquake shake. Extreme vibration."
+        },
+        "decay-none": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "No decay. Constant shake intensity."
+        },
+        "decay-linear": {
+          "$value": "linear",
+          "$type": "string",
+          "$description": "Linear decay. Steady reduction."
+        },
+        "decay-exponential": {
+          "$value": "exponential",
+          "$type": "string",
+          "$description": "Exponential decay. Quick settle."
+        }
+      },
+
+      "organic": {
+        "$description": "Organic/hand-drawn feel parameters",
+
+        "imperfection-subtle": {
+          "$value": 0.02,
+          "$type": "number",
+          "$description": "2% imperfection. Slight organic variation."
+        },
+        "imperfection-medium": {
+          "$value": 0.05,
+          "$type": "number",
+          "$description": "5% imperfection. Noticeable hand-drawn feel."
+        },
+        "imperfection-strong": {
+          "$value": 0.1,
+          "$type": "number",
+          "$description": "10% imperfection. Rough, sketchy feel."
+        },
+        "boil-subtle": {
+          "$value": { "frequency": 12, "amplitude": 0.5 },
+          "$type": "object",
+          "$description": "Subtle line boil. Gentle frame-by-frame variation."
+        },
+        "boil-medium": {
+          "$value": { "frequency": 12, "amplitude": 1 },
+          "$type": "object",
+          "$description": "Medium line boil. Classic hand-drawn animation feel."
+        },
+        "boil-strong": {
+          "$value": { "frequency": 12, "amplitude": 2 },
+          "$type": "object",
+          "$description": "Strong line boil. Energetic, rough animation."
+        }
+      },
+
+      "drift": {
+        "$description": "Procedural drift/wander parameters",
+
+        "speed-glacial": {
+          "$value": 0.1,
+          "$type": "number",
+          "$description": "Glacial drift speed. Barely moving."
+        },
+        "speed-slow": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "Slow drift speed. Calm wandering."
+        },
+        "speed-medium": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Medium drift speed. Natural floating."
+        },
+        "speed-fast": {
+          "$value": 2,
+          "$type": "number",
+          "$description": "Fast drift speed. Active wandering."
+        },
+        "bounds-small": {
+          "$value": 20,
+          "$type": "number",
+          "$description": "Small drift bounds. ±20 units from origin."
+        },
+        "bounds-medium": {
+          "$value": 50,
+          "$type": "number",
+          "$description": "Medium drift bounds. ±50 units from origin."
+        },
+        "bounds-large": {
+          "$value": 100,
+          "$type": "number",
+          "$description": "Large drift bounds. ±100 units from origin."
+        },
+        "return-force": {
+          "$value": 0.01,
+          "$type": "number",
+          "$description": "Return force toward origin. Higher = stronger pull back."
+        }
+      },
+
+      "turbulence": {
+        "$description": "Turbulence parameters for chaotic motion",
+
+        "intensity-calm": {
+          "$value": 0.1,
+          "$type": "number",
+          "$description": "Calm turbulence. Minimal disturbance."
+        },
+        "intensity-moderate": {
+          "$value": 0.3,
+          "$type": "number",
+          "$description": "Moderate turbulence. Noticeable chaos."
+        },
+        "intensity-strong": {
+          "$value": 0.6,
+          "$type": "number",
+          "$description": "Strong turbulence. Significant chaos."
+        },
+        "intensity-violent": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Violent turbulence. Maximum chaos."
+        },
+        "scale-fine": {
+          "$value": 10,
+          "$type": "number",
+          "$description": "Fine turbulence scale. Small eddies."
+        },
+        "scale-medium": {
+          "$value": 50,
+          "$type": "number",
+          "$description": "Medium turbulence scale. Balanced."
+        },
+        "scale-large": {
+          "$value": 100,
+          "$type": "number",
+          "$description": "Large turbulence scale. Big swirls."
+        }
+      },
+
+      "spring": {
+        "$description": "Spring-based procedural motion",
+
+        "tension-loose": {
+          "$value": 50,
+          "$type": "number",
+          "$description": "Loose spring tension. Slow, lazy response."
+        },
+        "tension-normal": {
+          "$value": 150,
+          "$type": "number",
+          "$description": "Normal spring tension. Balanced response."
+        },
+        "tension-tight": {
+          "$value": 300,
+          "$type": "number",
+          "$description": "Tight spring tension. Snappy response."
+        },
+        "friction-low": {
+          "$value": 5,
+          "$type": "number",
+          "$description": "Low friction. Many oscillations before rest."
+        },
+        "friction-medium": {
+          "$value": 15,
+          "$type": "number",
+          "$description": "Medium friction. Natural damping."
+        },
+        "friction-high": {
+          "$value": 30,
+          "$type": "number",
+          "$description": "High friction. Quick settle, minimal bounce."
+        }
+      }
+    }
+  }
+}

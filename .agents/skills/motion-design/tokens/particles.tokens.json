@@ -1,0 +1,450 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Particle system tokens for emitters, physics, and visual effects.",
+
+  "motion": {
+    "particles": {
+      "$description": "Particle animation tokens",
+
+      "emission": {
+        "$description": "Particle emission rate parameters",
+
+        "rate-sparse": {
+          "$value": 5,
+          "$type": "number",
+          "$description": "5 particles per second. Sparse, occasional emission."
+        },
+        "rate-light": {
+          "$value": 15,
+          "$type": "number",
+          "$description": "15 particles per second. Light, subtle effect."
+        },
+        "rate-normal": {
+          "$value": 30,
+          "$type": "number",
+          "$description": "30 particles per second. Standard emission."
+        },
+        "rate-dense": {
+          "$value": 60,
+          "$type": "number",
+          "$description": "60 particles per second. Dense particle field."
+        },
+        "rate-heavy": {
+          "$value": 100,
+          "$type": "number",
+          "$description": "100 particles per second. Heavy emission."
+        },
+        "rate-burst": {
+          "$value": 500,
+          "$type": "number",
+          "$description": "500 particles instant burst. Explosion effect."
+        }
+      },
+
+      "lifespan": {
+        "$description": "Particle lifetime durations",
+
+        "flash": {
+          "$value": "100ms",
+          "$type": "duration",
+          "$description": "Flash lifespan. Sparks, quick flashes."
+        },
+        "short": {
+          "$value": "500ms",
+          "$type": "duration",
+          "$description": "Short lifespan. Quick particles."
+        },
+        "medium": {
+          "$value": "1500ms",
+          "$type": "duration",
+          "$description": "Medium lifespan. Standard particles."
+        },
+        "long": {
+          "$value": "3000ms",
+          "$type": "duration",
+          "$description": "Long lifespan. Slow-falling particles."
+        },
+        "extended": {
+          "$value": "5000ms",
+          "$type": "duration",
+          "$description": "Extended lifespan. Floating particles."
+        },
+        "persistent": {
+          "$value": "10000ms",
+          "$type": "duration",
+          "$description": "Persistent lifespan. Long-lasting ambient."
+        }
+      },
+
+      "velocity": {
+        "$description": "Initial particle velocity",
+
+        "static": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "No initial velocity. Particles spawn in place."
+        },
+        "gentle": {
+          "$value": 20,
+          "$type": "number",
+          "$description": "20 px/s. Gentle drift."
+        },
+        "slow": {
+          "$value": 50,
+          "$type": "number",
+          "$description": "50 px/s. Slow movement."
+        },
+        "medium": {
+          "$value": 100,
+          "$type": "number",
+          "$description": "100 px/s. Standard velocity."
+        },
+        "fast": {
+          "$value": 200,
+          "$type": "number",
+          "$description": "200 px/s. Fast particles."
+        },
+        "rapid": {
+          "$value": 400,
+          "$type": "number",
+          "$description": "400 px/s. Rapid motion."
+        },
+        "explosive": {
+          "$value": 800,
+          "$type": "number",
+          "$description": "800 px/s. Explosion velocity."
+        }
+      },
+
+      "gravity": {
+        "$description": "Gravity force on particles",
+
+        "float-up": {
+          "$value": -100,
+          "$type": "number",
+          "$description": "Negative gravity. Particles rise (smoke, bubbles)."
+        },
+        "float-gentle": {
+          "$value": -50,
+          "$type": "number",
+          "$description": "Gentle upward float."
+        },
+        "none": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "No gravity. Particles maintain velocity."
+        },
+        "light": {
+          "$value": 100,
+          "$type": "number",
+          "$description": "Light gravity. Slow fall (confetti, leaves)."
+        },
+        "normal": {
+          "$value": 400,
+          "$type": "number",
+          "$description": "Normal gravity. Natural fall."
+        },
+        "heavy": {
+          "$value": 800,
+          "$type": "number",
+          "$description": "Heavy gravity. Fast fall (rain)."
+        },
+        "extreme": {
+          "$value": 1500,
+          "$type": "number",
+          "$description": "Extreme gravity. Rapid drop."
+        }
+      },
+
+      "size": {
+        "$description": "Particle size parameters",
+
+        "tiny": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Tiny particles. Dust, fine spray."
+        },
+        "small": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Small particles. Sparks, dots."
+        },
+        "medium": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Medium particles. Standard size."
+        },
+        "large": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Large particles. Snowflakes, confetti."
+        },
+        "xlarge": {
+          "$value": "32px",
+          "$type": "dimension",
+          "$description": "Extra large particles. Bubbles, orbs."
+        },
+        "variance-none": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "No size variance. Uniform particles."
+        },
+        "variance-slight": {
+          "$value": 0.2,
+          "$type": "number",
+          "$description": "20% size variance."
+        },
+        "variance-medium": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "50% size variance."
+        },
+        "variance-high": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "100% size variance. Wide range."
+        }
+      },
+
+      "opacity-over-life": {
+        "$description": "Opacity change over particle lifetime",
+
+        "constant": {
+          "$value": [1, 1],
+          "$type": "object",
+          "$description": "Constant opacity throughout life."
+        },
+        "fade-out": {
+          "$value": [1, 0],
+          "$type": "object",
+          "$description": "Fade out over lifetime. Most common."
+        },
+        "fade-in-out": {
+          "$value": [0, 1, 0],
+          "$type": "object",
+          "$description": "Fade in then out. Soft appearance/disappearance."
+        },
+        "pop-fade": {
+          "$value": [1, 1, 0],
+          "$type": "object",
+          "$description": "Full opacity, then quick fade at end."
+        }
+      },
+
+      "scale-over-life": {
+        "$description": "Scale change over particle lifetime",
+
+        "constant": {
+          "$value": [1, 1],
+          "$type": "object",
+          "$description": "Constant size throughout life."
+        },
+        "shrink": {
+          "$value": [1, 0],
+          "$type": "object",
+          "$description": "Shrink to nothing over lifetime."
+        },
+        "grow": {
+          "$value": [0.5, 1.5],
+          "$type": "object",
+          "$description": "Grow over lifetime (smoke expansion)."
+        },
+        "grow-shrink": {
+          "$value": [0.5, 1.2, 0.3],
+          "$type": "object",
+          "$description": "Grow then shrink."
+        },
+        "pop": {
+          "$value": [0, 1.2, 1],
+          "$type": "object",
+          "$description": "Pop in with overshoot."
+        }
+      },
+
+      "spread": {
+        "$description": "Emission spread angle",
+
+        "focused": {
+          "$value": "15deg",
+          "$type": "dimension",
+          "$description": "Focused beam. Tight spread."
+        },
+        "narrow": {
+          "$value": "30deg",
+          "$type": "dimension",
+          "$description": "Narrow cone spread."
+        },
+        "medium": {
+          "$value": "60deg",
+          "$type": "dimension",
+          "$description": "Medium cone spread."
+        },
+        "wide": {
+          "$value": "120deg",
+          "$type": "dimension",
+          "$description": "Wide spread."
+        },
+        "hemisphere": {
+          "$value": "180deg",
+          "$type": "dimension",
+          "$description": "Half-sphere spread."
+        },
+        "full": {
+          "$value": "360deg",
+          "$type": "dimension",
+          "$description": "Full sphere/circle spread."
+        }
+      },
+
+      "emitter-shape": {
+        "$description": "Emitter shape types",
+
+        "point": {
+          "$value": "point",
+          "$type": "string",
+          "$description": "Single point emitter."
+        },
+        "line": {
+          "$value": "line",
+          "$type": "string",
+          "$description": "Line emitter. Particles along a line."
+        },
+        "circle": {
+          "$value": "circle",
+          "$type": "string",
+          "$description": "Circle edge emitter."
+        },
+        "circle-filled": {
+          "$value": "circle-filled",
+          "$type": "string",
+          "$description": "Filled circle area emitter."
+        },
+        "rectangle": {
+          "$value": "rectangle",
+          "$type": "string",
+          "$description": "Rectangle edge emitter."
+        },
+        "rectangle-filled": {
+          "$value": "rectangle-filled",
+          "$type": "string",
+          "$description": "Filled rectangle area emitter."
+        }
+      },
+
+      "physics": {
+        "$description": "Physics simulation parameters",
+
+        "friction-none": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "No friction. Particles maintain velocity."
+        },
+        "friction-light": {
+          "$value": 0.01,
+          "$type": "number",
+          "$description": "Light friction. Slow deceleration."
+        },
+        "friction-medium": {
+          "$value": 0.05,
+          "$type": "number",
+          "$description": "Medium friction. Noticeable slowdown."
+        },
+        "friction-heavy": {
+          "$value": 0.1,
+          "$type": "number",
+          "$description": "Heavy friction. Quick slowdown."
+        },
+        "bounce-none": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "No bounce. Particles stop on collision."
+        },
+        "bounce-low": {
+          "$value": 0.3,
+          "$type": "number",
+          "$description": "Low bounce. 30% energy retained."
+        },
+        "bounce-medium": {
+          "$value": 0.6,
+          "$type": "number",
+          "$description": "Medium bounce. 60% energy retained."
+        },
+        "bounce-high": {
+          "$value": 0.9,
+          "$type": "number",
+          "$description": "High bounce. 90% energy retained."
+        }
+      },
+
+      "presets": {
+        "$description": "Common particle effect presets",
+
+        "confetti": {
+          "$value": {
+            "rate": 100,
+            "lifespan": 3000,
+            "gravity": 200,
+            "spread": 120,
+            "rotation": true
+          },
+          "$type": "object",
+          "$description": "Confetti celebration effect."
+        },
+        "snow": {
+          "$value": {
+            "rate": 30,
+            "lifespan": 8000,
+            "gravity": 50,
+            "spread": 30,
+            "drift": true
+          },
+          "$type": "object",
+          "$description": "Gentle snowfall effect."
+        },
+        "sparks": {
+          "$value": {
+            "rate": 50,
+            "lifespan": 500,
+            "gravity": 400,
+            "spread": 60,
+            "fadeOut": true
+          },
+          "$type": "object",
+          "$description": "Metal sparks effect."
+        },
+        "bubbles": {
+          "$value": {
+            "rate": 10,
+            "lifespan": 5000,
+            "gravity": -50,
+            "wobble": true
+          },
+          "$type": "object",
+          "$description": "Rising bubbles effect."
+        },
+        "fire": {
+          "$value": {
+            "rate": 60,
+            "lifespan": 1000,
+            "gravity": -100,
+            "scaleOverLife": [1, 0.3],
+            "colorOverLife": true
+          },
+          "$type": "object",
+          "$description": "Fire/flame effect."
+        },
+        "smoke": {
+          "$value": {
+            "rate": 20,
+            "lifespan": 4000,
+            "gravity": -30,
+            "scaleOverLife": [0.5, 2],
+            "opacityOverLife": [0.6, 0]
+          },
+          "$type": "object",
+          "$description": "Rising smoke effect."
+        }
+      }
+    }
+  }
+}

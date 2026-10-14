@@ -1,0 +1,350 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Physics-based animation tokens for gravity, friction, bounce, velocity, and realistic motion.",
+
+  "motion": {
+    "physics": {
+      "$description": "Physics simulation tokens",
+
+      "gravity": {
+        "$description": "Gravitational acceleration values",
+
+        "none": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "No gravity. Floating/space-like."
+        },
+        "moon": {
+          "$value": 1.62,
+          "$type": "number",
+          "$description": "Moon gravity (1.62 m/s²). Slow, floaty falls."
+        },
+        "light": {
+          "$value": 4.9,
+          "$type": "number",
+          "$description": "Light gravity. Half of Earth. Gentle falls."
+        },
+        "earth": {
+          "$value": 9.81,
+          "$type": "number",
+          "$description": "Earth gravity (9.81 m/s²). Realistic."
+        },
+        "heavy": {
+          "$value": 19.6,
+          "$type": "number",
+          "$description": "Double gravity. Quick, punchy falls."
+        },
+        "jupiter": {
+          "$value": 24.79,
+          "$type": "number",
+          "$description": "Jupiter gravity. Very heavy feel."
+        }
+      },
+
+      "friction": {
+        "$description": "Friction coefficients for surface resistance",
+
+        "none": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "No friction. Ice/frictionless surface."
+        },
+        "ice": {
+          "$value": 0.03,
+          "$type": "number",
+          "$description": "Ice surface. Very slippery."
+        },
+        "low": {
+          "$value": 0.1,
+          "$type": "number",
+          "$description": "Low friction. Smooth surface."
+        },
+        "medium": {
+          "$value": 0.3,
+          "$type": "number",
+          "$description": "Medium friction. Normal surface."
+        },
+        "high": {
+          "$value": 0.6,
+          "$type": "number",
+          "$description": "High friction. Rough surface."
+        },
+        "sticky": {
+          "$value": 0.9,
+          "$type": "number",
+          "$description": "Very high friction. Sticky/tacky."
+        },
+        "locked": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Maximum friction. No sliding."
+        }
+      },
+
+      "bounce": {
+        "$description": "Restitution coefficients for bounce behavior",
+
+        "none": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "No bounce. Clay/putty behavior."
+        },
+        "dead": {
+          "$value": 0.1,
+          "$type": "number",
+          "$description": "Nearly dead bounce. Sandbag."
+        },
+        "low": {
+          "$value": 0.3,
+          "$type": "number",
+          "$description": "Low bounce. Tennis ball on grass."
+        },
+        "medium": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "Medium bounce. Basketball."
+        },
+        "high": {
+          "$value": 0.7,
+          "$type": "number",
+          "$description": "High bounce. Rubber ball."
+        },
+        "super": {
+          "$value": 0.9,
+          "$type": "number",
+          "$description": "Super bouncy. Superball."
+        },
+        "perfect": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Perfect elastic. No energy loss."
+        }
+      },
+
+      "velocity": {
+        "$description": "Initial velocity values in pixels per second",
+
+        "crawl": {
+          "$value": 50,
+          "$type": "number",
+          "$description": "Crawling speed. 50px/s."
+        },
+        "slow": {
+          "$value": 100,
+          "$type": "number",
+          "$description": "Slow movement. 100px/s."
+        },
+        "walk": {
+          "$value": 200,
+          "$type": "number",
+          "$description": "Walking pace. 200px/s."
+        },
+        "moderate": {
+          "$value": 400,
+          "$type": "number",
+          "$description": "Moderate speed. 400px/s."
+        },
+        "fast": {
+          "$value": 800,
+          "$type": "number",
+          "$description": "Fast movement. 800px/s."
+        },
+        "rapid": {
+          "$value": 1200,
+          "$type": "number",
+          "$description": "Rapid movement. 1200px/s."
+        },
+        "instant": {
+          "$value": 2000,
+          "$type": "number",
+          "$description": "Near-instant. 2000px/s."
+        }
+      },
+
+      "mass": {
+        "$description": "Relative mass values affecting momentum",
+
+        "feather": {
+          "$value": 0.1,
+          "$type": "number",
+          "$description": "Very light. Feather/paper."
+        },
+        "light": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "Light object. Balloon/leaf."
+        },
+        "normal": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Normal mass. Baseline."
+        },
+        "heavy": {
+          "$value": 2,
+          "$type": "number",
+          "$description": "Heavy object. Double mass."
+        },
+        "dense": {
+          "$value": 5,
+          "$type": "number",
+          "$description": "Dense object. 5x mass."
+        },
+        "anchor": {
+          "$value": 10,
+          "$type": "number",
+          "$description": "Very heavy. Anchor-like."
+        }
+      },
+
+      "damping": {
+        "$description": "Velocity damping factors per frame",
+
+        "none": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "No damping. Perpetual motion."
+        },
+        "minimal": {
+          "$value": 0.01,
+          "$type": "number",
+          "$description": "Minimal damping. Slow decay."
+        },
+        "light": {
+          "$value": 0.05,
+          "$type": "number",
+          "$description": "Light damping. Gradual slowdown."
+        },
+        "medium": {
+          "$value": 0.1,
+          "$type": "number",
+          "$description": "Medium damping. Normal drag."
+        },
+        "heavy": {
+          "$value": 0.2,
+          "$type": "number",
+          "$description": "Heavy damping. Quick slowdown."
+        },
+        "critical": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "Critical damping. Rapid stop."
+        }
+      },
+
+      "air-resistance": {
+        "$description": "Air resistance coefficients",
+
+        "vacuum": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "No air resistance. Space."
+        },
+        "thin": {
+          "$value": 0.01,
+          "$type": "number",
+          "$description": "Thin atmosphere. High altitude."
+        },
+        "normal": {
+          "$value": 0.05,
+          "$type": "number",
+          "$description": "Normal atmosphere. Earth sea level."
+        },
+        "thick": {
+          "$value": 0.1,
+          "$type": "number",
+          "$description": "Thick atmosphere. Dense air."
+        },
+        "water": {
+          "$value": 0.3,
+          "$type": "number",
+          "$description": "Water resistance. Underwater."
+        },
+        "honey": {
+          "$value": 0.7,
+          "$type": "number",
+          "$description": "Very viscous. Like honey."
+        }
+      },
+
+      "spring": {
+        "$description": "Spring physics configurations",
+
+        "soft": {
+          "$value": {
+            "stiffness": 100,
+            "damping": 10,
+            "mass": 1
+          },
+          "$type": "object",
+          "$description": "Soft spring. Gentle, slow oscillation."
+        },
+        "medium": {
+          "$value": {
+            "stiffness": 200,
+            "damping": 20,
+            "mass": 1
+          },
+          "$type": "object",
+          "$description": "Medium spring. Balanced response."
+        },
+        "stiff": {
+          "$value": {
+            "stiffness": 400,
+            "damping": 30,
+            "mass": 1
+          },
+          "$type": "object",
+          "$description": "Stiff spring. Quick, snappy response."
+        },
+        "bouncy": {
+          "$value": {
+            "stiffness": 300,
+            "damping": 10,
+            "mass": 1
+          },
+          "$type": "object",
+          "$description": "Bouncy spring. Low damping, oscillates."
+        },
+        "critical": {
+          "$value": {
+            "stiffness": 200,
+            "damping": 28,
+            "mass": 1
+          },
+          "$type": "object",
+          "$description": "Critically damped. No overshoot."
+        }
+      },
+
+      "collision": {
+        "$description": "Collision response parameters",
+
+        "absorb": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "Absorb collision. No response."
+        },
+        "soft": {
+          "$value": 0.3,
+          "$type": "number",
+          "$description": "Soft collision. Cushioned impact."
+        },
+        "normal": {
+          "$value": 0.6,
+          "$type": "number",
+          "$description": "Normal collision. Standard response."
+        },
+        "hard": {
+          "$value": 0.9,
+          "$type": "number",
+          "$description": "Hard collision. Strong response."
+        },
+        "elastic": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Elastic collision. Full energy transfer."
+        }
+      }
+    }
+  }
+}

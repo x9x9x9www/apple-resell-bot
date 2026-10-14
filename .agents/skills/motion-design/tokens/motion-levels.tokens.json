@@ -1,0 +1,149 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Platform motion levels for adaptive animation intensity. Implements M3 motion level system (L1-L4) for device capability and user preference.",
+
+  "motion": {
+    "levels": {
+      "$description": "Motion intensity levels from none to enhanced. Adapt animations to device capability and user preference.",
+
+      "L1-none": {
+        "$description": "Level 1: No motion. For prefers-reduced-motion: reduce.",
+        "$value": {
+          "enabled": false,
+          "durationMultiplier": 0,
+          "springDamping": 1,
+          "useInstantTransitions": true
+        },
+        "$type": "object",
+        "triggers": ["prefers-reduced-motion: reduce", "accessibility settings"]
+      },
+
+      "L2-simplified": {
+        "$description": "Level 2: Simplified motion. Essential transitions only.",
+        "$value": {
+          "enabled": true,
+          "durationMultiplier": 0.5,
+          "springDamping": 0.9,
+          "useInstantTransitions": false,
+          "disableParallax": true,
+          "disableParticles": true,
+          "disableStagger": true,
+          "maxConcurrentAnimations": 2
+        },
+        "$type": "object",
+        "triggers": ["low-power mode", "battery saver", "older devices", "slow network"]
+      },
+
+      "L3-full": {
+        "$description": "Level 3: Full motion. Standard M3 experience.",
+        "$value": {
+          "enabled": true,
+          "durationMultiplier": 1.0,
+          "springDamping": 0.7,
+          "useInstantTransitions": false,
+          "disableParallax": false,
+          "disableParticles": false,
+          "disableStagger": false,
+          "maxConcurrentAnimations": 10
+        },
+        "$type": "object",
+        "triggers": ["default", "standard devices"]
+      },
+
+      "L4-enhanced": {
+        "$description": "Level 4: Enhanced motion. Extra flourishes for capable devices.",
+        "$value": {
+          "enabled": true,
+          "durationMultiplier": 1.2,
+          "springDamping": 0.5,
+          "useInstantTransitions": false,
+          "disableParallax": false,
+          "disableParticles": false,
+          "disableStagger": false,
+          "maxConcurrentAnimations": 20,
+          "enableMotionBlur": true,
+          "enable3DTransforms": true,
+          "enableBackdropEffects": true
+        },
+        "$type": "object",
+        "triggers": ["high-refresh displays", "powerful GPUs", "opt-in enhanced"]
+      }
+    },
+
+    "platform-multipliers": {
+      "$description": "Duration multipliers by platform/viewport. Smaller screens get baseline, larger screens are faster.",
+
+      "mobile": {
+        "$value": 1.0,
+        "$type": "number",
+        "$description": "Mobile devices (< 768px). Baseline duration."
+      },
+      "tablet": {
+        "$value": 0.85,
+        "$type": "number",
+        "$description": "Tablet devices (768-1024px). 15% faster."
+      },
+      "desktop": {
+        "$value": 0.7,
+        "$type": "number",
+        "$description": "Desktop devices (> 1024px). 30% faster."
+      },
+      "large-display": {
+        "$value": 0.6,
+        "$type": "number",
+        "$description": "Large displays (> 1440px). 40% faster for quick feedback."
+      }
+    },
+
+    "capability-detection": {
+      "$description": "Device capability checks for level selection",
+
+      "gpu-tier-thresholds": {
+        "$value": {
+          "tier-1": "L2-simplified",
+          "tier-2": "L3-full",
+          "tier-3": "L4-enhanced"
+        },
+        "$type": "object",
+        "$description": "Map GPU benchmark tiers to motion levels."
+      },
+
+      "refresh-rate-thresholds": {
+        "$value": {
+          "60hz": "L3-full",
+          "90hz": "L3-full",
+          "120hz": "L4-enhanced",
+          "144hz": "L4-enhanced"
+        },
+        "$type": "object",
+        "$description": "Higher refresh rates can handle enhanced motion."
+      },
+
+      "battery-thresholds": {
+        "$value": {
+          "below-20": "L2-simplified",
+          "below-50": "L3-full",
+          "above-50": "L3-full"
+        },
+        "$type": "object",
+        "$description": "Reduce motion on low battery."
+      }
+    },
+
+    "level-selection": {
+      "$description": "Logic for automatic level selection",
+
+      "priority-order": {
+        "$value": ["user-preference", "accessibility", "battery", "performance", "default"],
+        "$type": "array",
+        "$description": "Check these in order. First match wins."
+      },
+
+      "default-level": {
+        "$value": "L3-full",
+        "$type": "string",
+        "$description": "Default to full motion if no constraints."
+      }
+    }
+  }
+}

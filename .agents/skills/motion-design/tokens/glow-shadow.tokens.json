@@ -1,0 +1,443 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Glow and shadow effect tokens for light effects, shadows, and reflections.",
+
+  "motion": {
+    "glow": {
+      "$description": "Glow and light effect tokens",
+
+      "intensity": {
+        "$description": "Glow brightness intensity",
+
+        "subtle": {
+          "$value": 0.3,
+          "$type": "number",
+          "$description": "Subtle glow. Soft highlight."
+        },
+        "medium": {
+          "$value": 0.6,
+          "$type": "number",
+          "$description": "Medium glow. Clear illumination."
+        },
+        "strong": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Strong glow. Bright effect."
+        },
+        "bloom": {
+          "$value": 1.5,
+          "$type": "number",
+          "$description": "Bloom glow. Overexposed look."
+        },
+        "intense": {
+          "$value": 2,
+          "$type": "number",
+          "$description": "Intense glow. Very bright."
+        }
+      },
+
+      "radius": {
+        "$description": "Glow spread radius",
+
+        "tight": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Tight glow. Close to source."
+        },
+        "small": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Small glow radius."
+        },
+        "medium": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Medium glow radius."
+        },
+        "large": {
+          "$value": "32px",
+          "$type": "dimension",
+          "$description": "Large glow radius."
+        },
+        "xlarge": {
+          "$value": "48px",
+          "$type": "dimension",
+          "$description": "Extra large glow radius."
+        },
+        "bloom": {
+          "$value": "80px",
+          "$type": "dimension",
+          "$description": "Bloom-level glow radius."
+        }
+      },
+
+      "neon": {
+        "$description": "Neon glow effect parameters",
+
+        "inner-radius": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Neon inner glow radius."
+        },
+        "outer-radius": {
+          "$value": "20px",
+          "$type": "dimension",
+          "$description": "Neon outer glow radius."
+        },
+        "pulse-duration": {
+          "$value": "2s",
+          "$type": "duration",
+          "$description": "Neon pulse animation duration."
+        },
+        "flicker-probability": {
+          "$value": 0.05,
+          "$type": "number",
+          "$description": "Neon flicker probability per frame."
+        }
+      },
+
+      "light-sweep": {
+        "$description": "Light sweep/shine effect parameters",
+
+        "angle": {
+          "$value": "-45deg",
+          "$type": "dimension",
+          "$description": "Light sweep angle."
+        },
+        "width-narrow": {
+          "$value": "30px",
+          "$type": "dimension",
+          "$description": "Narrow light sweep width."
+        },
+        "width-medium": {
+          "$value": "60px",
+          "$type": "dimension",
+          "$description": "Medium light sweep width."
+        },
+        "width-wide": {
+          "$value": "120px",
+          "$type": "dimension",
+          "$description": "Wide light sweep width."
+        },
+        "duration-fast": {
+          "$value": "500ms",
+          "$type": "duration",
+          "$description": "Fast light sweep."
+        },
+        "duration-normal": {
+          "$value": "1000ms",
+          "$type": "duration",
+          "$description": "Normal light sweep."
+        },
+        "duration-slow": {
+          "$value": "2000ms",
+          "$type": "duration",
+          "$description": "Slow light sweep."
+        }
+      },
+
+      "pulse": {
+        "$description": "Glow pulse animation parameters",
+
+        "min-intensity": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "Minimum pulse intensity."
+        },
+        "max-intensity": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Maximum pulse intensity."
+        },
+        "period-slow": {
+          "$value": "3s",
+          "$type": "duration",
+          "$description": "Slow glow pulse."
+        },
+        "period-medium": {
+          "$value": "1.5s",
+          "$type": "duration",
+          "$description": "Medium glow pulse."
+        },
+        "period-fast": {
+          "$value": "0.75s",
+          "$type": "duration",
+          "$description": "Fast glow pulse."
+        }
+      }
+    },
+
+    "shadow": {
+      "$description": "Shadow effect tokens",
+
+      "offset": {
+        "$description": "Shadow offset distances",
+
+        "none": {
+          "$value": { "x": 0, "y": 0 },
+          "$type": "object",
+          "$description": "No offset. Centered shadow (glow-like)."
+        },
+        "subtle": {
+          "$value": { "x": 1, "y": 2 },
+          "$type": "object",
+          "$description": "Subtle offset. Minimal depth."
+        },
+        "small": {
+          "$value": { "x": 2, "y": 4 },
+          "$type": "object",
+          "$description": "Small offset. Slight elevation."
+        },
+        "medium": {
+          "$value": { "x": 4, "y": 8 },
+          "$type": "object",
+          "$description": "Medium offset. Clear elevation."
+        },
+        "large": {
+          "$value": { "x": 8, "y": 16 },
+          "$type": "object",
+          "$description": "Large offset. High elevation."
+        },
+        "long": {
+          "$value": { "x": 16, "y": 32 },
+          "$type": "object",
+          "$description": "Long shadow. Dramatic depth."
+        }
+      },
+
+      "blur": {
+        "$description": "Shadow blur radius",
+
+        "sharp": {
+          "$value": "0px",
+          "$type": "dimension",
+          "$description": "Sharp shadow edge."
+        },
+        "subtle": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Subtle blur."
+        },
+        "soft": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Soft shadow blur."
+        },
+        "medium": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Medium shadow blur."
+        },
+        "diffuse": {
+          "$value": "32px",
+          "$type": "dimension",
+          "$description": "Diffuse shadow blur."
+        },
+        "ambient": {
+          "$value": "48px",
+          "$type": "dimension",
+          "$description": "Ambient shadow blur."
+        }
+      },
+
+      "spread": {
+        "$description": "Shadow spread radius",
+
+        "contract": {
+          "$value": "-4px",
+          "$type": "dimension",
+          "$description": "Contracted shadow (smaller than element)."
+        },
+        "none": {
+          "$value": "0px",
+          "$type": "dimension",
+          "$description": "No spread."
+        },
+        "small": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Small spread."
+        },
+        "medium": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Medium spread."
+        },
+        "large": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Large spread."
+        }
+      },
+
+      "opacity": {
+        "$description": "Shadow opacity levels",
+
+        "subtle": {
+          "$value": 0.1,
+          "$type": "number",
+          "$description": "Subtle shadow opacity."
+        },
+        "light": {
+          "$value": 0.15,
+          "$type": "number",
+          "$description": "Light shadow opacity."
+        },
+        "medium": {
+          "$value": 0.25,
+          "$type": "number",
+          "$description": "Medium shadow opacity."
+        },
+        "strong": {
+          "$value": 0.35,
+          "$type": "number",
+          "$description": "Strong shadow opacity."
+        },
+        "heavy": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "Heavy shadow opacity."
+        }
+      },
+
+      "elevation": {
+        "$description": "M3-style elevation shadow presets",
+
+        "level-0": {
+          "$value": "none",
+          "$type": "string",
+          "$description": "No elevation. Flat."
+        },
+        "level-1": {
+          "$value": "0 1px 2px rgba(0,0,0,0.15)",
+          "$type": "string",
+          "$description": "Minimal elevation. Cards at rest."
+        },
+        "level-2": {
+          "$value": "0 2px 4px rgba(0,0,0,0.15)",
+          "$type": "string",
+          "$description": "Low elevation. Raised cards."
+        },
+        "level-3": {
+          "$value": "0 4px 8px rgba(0,0,0,0.15)",
+          "$type": "string",
+          "$description": "Medium elevation. Dialogs."
+        },
+        "level-4": {
+          "$value": "0 8px 16px rgba(0,0,0,0.15)",
+          "$type": "string",
+          "$description": "High elevation. Modals."
+        },
+        "level-5": {
+          "$value": "0 16px 32px rgba(0,0,0,0.15)",
+          "$type": "string",
+          "$description": "Maximum elevation. Floating elements."
+        }
+      },
+
+      "inner": {
+        "$description": "Inner shadow (inset) parameters",
+
+        "subtle": {
+          "$value": "inset 0 1px 2px rgba(0,0,0,0.1)",
+          "$type": "string",
+          "$description": "Subtle inner shadow."
+        },
+        "medium": {
+          "$value": "inset 0 2px 4px rgba(0,0,0,0.15)",
+          "$type": "string",
+          "$description": "Medium inner shadow."
+        },
+        "strong": {
+          "$value": "inset 0 4px 8px rgba(0,0,0,0.2)",
+          "$type": "string",
+          "$description": "Strong inner shadow."
+        }
+      },
+
+      "contact": {
+        "$description": "Contact shadow parameters",
+
+        "tight": {
+          "$value": "0 1px 2px rgba(0,0,0,0.2)",
+          "$type": "string",
+          "$description": "Tight contact shadow."
+        },
+        "normal": {
+          "$value": "0 2px 4px rgba(0,0,0,0.15)",
+          "$type": "string",
+          "$description": "Normal contact shadow."
+        },
+        "spread": {
+          "$value": "0 4px 8px rgba(0,0,0,0.1)",
+          "$type": "string",
+          "$description": "Spread contact shadow."
+        }
+      }
+    },
+
+    "reflection": {
+      "$description": "Reflection effect tokens",
+
+      "opacity": {
+        "$description": "Reflection opacity",
+
+        "subtle": {
+          "$value": 0.1,
+          "$type": "number",
+          "$description": "Subtle reflection."
+        },
+        "medium": {
+          "$value": 0.3,
+          "$type": "number",
+          "$description": "Medium reflection."
+        },
+        "strong": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "Strong reflection."
+        }
+      },
+
+      "gradient-fade": {
+        "$description": "Reflection gradient fade",
+
+        "short": {
+          "$value": "30%",
+          "$type": "dimension",
+          "$description": "Short fade (quick dropoff)."
+        },
+        "medium": {
+          "$value": "50%",
+          "$type": "dimension",
+          "$description": "Medium fade."
+        },
+        "long": {
+          "$value": "80%",
+          "$type": "dimension",
+          "$description": "Long fade (gradual dropoff)."
+        }
+      },
+
+      "offset": {
+        "$description": "Reflection offset",
+
+        "none": {
+          "$value": "0px",
+          "$type": "dimension",
+          "$description": "No gap between element and reflection."
+        },
+        "small": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Small gap."
+        },
+        "medium": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Medium gap."
+        }
+      }
+    }
+  }
+}

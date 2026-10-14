@@ -1,0 +1,250 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Export and rendering tokens for animation output formats, quality settings, and optimization.",
+
+  "motion": {
+    "export": {
+      "$description": "Animation export and rendering tokens",
+
+      "format": {
+        "$description": "Output format specifications",
+
+        "lottie": {
+          "$value": "json",
+          "$type": "string",
+          "$description": "Lottie JSON format for web/mobile."
+        },
+        "dotlottie": {
+          "$value": "lottie",
+          "$type": "string",
+          "$description": "Compressed dotLottie format."
+        },
+        "gif": {
+          "$value": "gif",
+          "$type": "string",
+          "$description": "GIF format for universal compatibility."
+        },
+        "webm": {
+          "$value": "webm",
+          "$type": "string",
+          "$description": "WebM video for web."
+        },
+        "mp4": {
+          "$value": "mp4",
+          "$type": "string",
+          "$description": "MP4 video for broad compatibility."
+        },
+        "apng": {
+          "$value": "apng",
+          "$type": "string",
+          "$description": "Animated PNG for transparency."
+        },
+        "webp": {
+          "$value": "webp",
+          "$type": "string",
+          "$description": "Animated WebP for modern browsers."
+        },
+        "sprite-sheet": {
+          "$value": "png",
+          "$type": "string",
+          "$description": "Sprite sheet PNG export."
+        }
+      },
+
+      "resolution": {
+        "$description": "Output resolution presets",
+
+        "1x": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Standard resolution (1x)."
+        },
+        "2x": {
+          "$value": 2,
+          "$type": "number",
+          "$description": "Retina/HiDPI (2x)."
+        },
+        "3x": {
+          "$value": 3,
+          "$type": "number",
+          "$description": "Extra high density (3x)."
+        },
+        "4k": {
+          "$value": { "width": 3840, "height": 2160 },
+          "$type": "object",
+          "$description": "4K UHD resolution."
+        },
+        "1080p": {
+          "$value": { "width": 1920, "height": 1080 },
+          "$type": "object",
+          "$description": "Full HD resolution."
+        },
+        "720p": {
+          "$value": { "width": 1280, "height": 720 },
+          "$type": "object",
+          "$description": "HD resolution."
+        },
+        "social-square": {
+          "$value": { "width": 1080, "height": 1080 },
+          "$type": "object",
+          "$description": "Social media square."
+        },
+        "social-story": {
+          "$value": { "width": 1080, "height": 1920 },
+          "$type": "object",
+          "$description": "Social media story (9:16)."
+        }
+      },
+
+      "framerate": {
+        "$description": "Output framerate values",
+
+        "web": {
+          "$value": 60,
+          "$type": "number",
+          "$description": "Web standard (60fps)."
+        },
+        "video": {
+          "$value": 30,
+          "$type": "number",
+          "$description": "Video standard (30fps)."
+        },
+        "film": {
+          "$value": 24,
+          "$type": "number",
+          "$description": "Film standard (24fps)."
+        },
+        "gif": {
+          "$value": 15,
+          "$type": "number",
+          "$description": "GIF optimization (15fps)."
+        },
+        "low": {
+          "$value": 12,
+          "$type": "number",
+          "$description": "Low framerate (12fps)."
+        }
+      },
+
+      "quality": {
+        "$description": "Compression quality settings",
+
+        "lossless": {
+          "$value": 100,
+          "$type": "number",
+          "$description": "Lossless quality."
+        },
+        "high": {
+          "$value": 90,
+          "$type": "number",
+          "$description": "High quality."
+        },
+        "medium": {
+          "$value": 75,
+          "$type": "number",
+          "$description": "Medium quality. Good balance."
+        },
+        "low": {
+          "$value": 50,
+          "$type": "number",
+          "$description": "Low quality. Small file."
+        },
+        "preview": {
+          "$value": 30,
+          "$type": "number",
+          "$description": "Preview quality. Very small."
+        }
+      },
+
+      "optimization": {
+        "$description": "Optimization settings",
+
+        "lottie": {
+          "precision": {
+            "$value": 2,
+            "$type": "number",
+            "$description": "Decimal precision for Lottie values."
+          },
+          "compress": {
+            "$value": true,
+            "$type": "boolean",
+            "$description": "Enable gzip compression."
+          }
+        },
+        "gif": {
+          "colors": {
+            "$value": 256,
+            "$type": "number",
+            "$description": "Maximum color palette."
+          },
+          "dither": {
+            "$value": true,
+            "$type": "boolean",
+            "$description": "Enable dithering."
+          }
+        },
+        "video": {
+          "bitrate-high": {
+            "$value": "10M",
+            "$type": "string",
+            "$description": "High bitrate for quality."
+          },
+          "bitrate-medium": {
+            "$value": "5M",
+            "$type": "string",
+            "$description": "Medium bitrate."
+          },
+          "bitrate-low": {
+            "$value": "2M",
+            "$type": "string",
+            "$description": "Low bitrate for size."
+          }
+        }
+      },
+
+      "sprite": {
+        "$description": "Sprite sheet export settings",
+
+        "columns": {
+          "auto": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Auto-calculate columns."
+          },
+          "row": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Single row layout."
+          },
+          "grid-4": {
+            "$value": 4,
+            "$type": "number",
+            "$description": "4-column grid."
+          },
+          "grid-8": {
+            "$value": 8,
+            "$type": "number",
+            "$description": "8-column grid."
+          }
+        },
+        "padding": {
+          "none": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "No padding between frames."
+          },
+          "small": {
+            "$value": 1,
+            "$type": "number",
+            "$description": "1px padding."
+          },
+          "medium": {
+            "$value": 2,
+            "$type": "number",
+            "$description": "2px padding."
+          }
+        }
+      }
+    }
+  }
+}

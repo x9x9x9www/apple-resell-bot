@@ -1,0 +1,320 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Sequencing and orchestration tokens for staggered, cascading, and coordinated animations.",
+
+  "motion": {
+    "sequencing": {
+      "$description": "Animation sequencing and orchestration tokens",
+
+      "stagger": {
+        "$description": "Stagger delay values between sequential elements. Google M3 caps at 20ms for production UI.",
+
+        "micro": {
+          "$value": "10ms",
+          "$type": "duration",
+          "$description": "Ultra-fast, barely perceptible. Near-simultaneous wave effect."
+        },
+        "small": {
+          "$value": "15ms",
+          "$type": "duration",
+          "$description": "Fast sequence. Quick cascade for list items."
+        },
+        "medium": {
+          "$value": "20ms",
+          "$type": "duration",
+          "$description": "Google M3 standard maximum. Clear but fast sequence."
+        },
+        "large": {
+          "$value": "20ms",
+          "$type": "duration",
+          "$description": "Even large should not exceed M3 max of 20ms for production."
+        },
+        "video-slow": {
+          "$value": "50ms",
+          "$type": "duration",
+          "$description": "Slower stagger for video/presentation contexts only. Not for UI."
+        },
+        "video-dramatic": {
+          "$value": "100ms",
+          "$type": "duration",
+          "$description": "Dramatic stagger for video storytelling only. Never use in UI."
+        }
+      },
+
+      "choreography": {
+        "$description": "Sequence choreography constraints from Google M3",
+
+        "max-total-duration": {
+          "$value": "500ms",
+          "$type": "duration",
+          "$description": "No sequence should exceed 500ms total. Cap cascade time."
+        },
+        "enter-exit-ratio": {
+          "$value": 0.7,
+          "$type": "number",
+          "$description": "Exit duration = Enter duration × 0.7. Exits are 30% faster."
+        }
+      },
+
+      "overlap": {
+        "$description": "Animation overlap ratios (0 = sequential, 1 = simultaneous)",
+
+        "none": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "No overlap. Strictly sequential animations."
+        },
+        "minimal": {
+          "$value": 0.1,
+          "$type": "number",
+          "$description": "10% overlap. Slight connection between animations."
+        },
+        "slight": {
+          "$value": 0.2,
+          "$type": "number",
+          "$description": "20% overlap. Gentle flow between animations."
+        },
+        "moderate": {
+          "$value": 0.3,
+          "$type": "number",
+          "$description": "30% overlap. Natural transition flow."
+        },
+        "half": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "50% overlap. Balanced overlap, smooth cascade."
+        },
+        "heavy": {
+          "$value": 0.7,
+          "$type": "number",
+          "$description": "70% overlap. Near-simultaneous with slight delay."
+        },
+        "extreme": {
+          "$value": 0.9,
+          "$type": "number",
+          "$description": "90% overlap. Almost simultaneous, wave effect."
+        }
+      },
+
+      "delay": {
+        "$description": "Initial delay before animation sequence starts",
+
+        "none": {
+          "$value": "0ms",
+          "$type": "duration",
+          "$description": "No delay. Immediate start."
+        },
+        "micro": {
+          "$value": "50ms",
+          "$type": "duration",
+          "$description": "Micro delay. Perception threshold."
+        },
+        "short": {
+          "$value": "100ms",
+          "$type": "duration",
+          "$description": "Short delay. Brief pause before start."
+        },
+        "medium": {
+          "$value": "200ms",
+          "$type": "duration",
+          "$description": "Medium delay. Noticeable pause."
+        },
+        "long": {
+          "$value": "400ms",
+          "$type": "duration",
+          "$description": "Long delay. Deliberate pause, build anticipation."
+        },
+        "extended": {
+          "$value": "800ms",
+          "$type": "duration",
+          "$description": "Extended delay. Dramatic pause."
+        }
+      },
+
+      "order": {
+        "$description": "Stagger order patterns",
+
+        "forward": {
+          "$value": "normal",
+          "$type": "string",
+          "$description": "Forward order. First to last (0, 1, 2, 3...)."
+        },
+        "reverse": {
+          "$value": "reverse",
+          "$type": "string",
+          "$description": "Reverse order. Last to first (...3, 2, 1, 0)."
+        },
+        "center-out": {
+          "$value": "center-out",
+          "$type": "string",
+          "$description": "Center outward. Middle elements first, edges last."
+        },
+        "edges-in": {
+          "$value": "edges-in",
+          "$type": "string",
+          "$description": "Edges inward. Edge elements first, center last."
+        },
+        "random": {
+          "$value": "random",
+          "$type": "string",
+          "$description": "Random order. Shuffle element sequence."
+        }
+      },
+
+      "distribution": {
+        "$description": "Stagger timing distribution curves",
+
+        "linear": {
+          "$value": "linear",
+          "$type": "string",
+          "$description": "Linear distribution. Equal delay between all elements."
+        },
+        "ease-in": {
+          "$value": "ease-in",
+          "$type": "string",
+          "$description": "Accelerating distribution. Starts slow, speeds up."
+        },
+        "ease-out": {
+          "$value": "ease-out",
+          "$type": "string",
+          "$description": "Decelerating distribution. Starts fast, slows down."
+        },
+        "ease-in-out": {
+          "$value": "ease-in-out",
+          "$type": "string",
+          "$description": "Ease in-out distribution. Slow-fast-slow."
+        }
+      },
+
+      "cascade": {
+        "$description": "Cascade animation patterns",
+
+        "waterfall": {
+          "$value": { "direction": "down", "pattern": "linear" },
+          "$type": "object",
+          "$description": "Waterfall cascade. Top-to-bottom linear reveal."
+        },
+        "ripple": {
+          "$value": { "direction": "radial", "pattern": "ease-out" },
+          "$type": "object",
+          "$description": "Ripple cascade. Center-out radial spread."
+        },
+        "wave": {
+          "$value": { "direction": "horizontal", "pattern": "sine" },
+          "$type": "object",
+          "$description": "Wave cascade. Sinusoidal horizontal spread."
+        },
+        "domino": {
+          "$value": { "direction": "forward", "pattern": "linear" },
+          "$type": "object",
+          "$description": "Domino cascade. Sequential chain reaction."
+        }
+      },
+
+      "grid": {
+        "$description": "Grid-based stagger patterns",
+
+        "row-first": {
+          "$value": "row",
+          "$type": "string",
+          "$description": "Row-first stagger. Complete each row before next."
+        },
+        "column-first": {
+          "$value": "column",
+          "$type": "string",
+          "$description": "Column-first stagger. Complete each column before next."
+        },
+        "diagonal": {
+          "$value": "diagonal",
+          "$type": "string",
+          "$description": "Diagonal stagger. Diagonal wave across grid."
+        },
+        "spiral": {
+          "$value": "spiral",
+          "$type": "string",
+          "$description": "Spiral stagger. Outside-in or inside-out spiral."
+        },
+        "random": {
+          "$value": "random",
+          "$type": "string",
+          "$description": "Random grid stagger. Randomized cell order."
+        }
+      },
+
+      "timeline": {
+        "$description": "Timeline position markers",
+
+        "start": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "Timeline start (0%). Animation beginning."
+        },
+        "quarter": {
+          "$value": 0.25,
+          "$type": "number",
+          "$description": "Quarter point (25%). Early phase."
+        },
+        "half": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "Midpoint (50%). Animation middle."
+        },
+        "three-quarter": {
+          "$value": 0.75,
+          "$type": "number",
+          "$description": "Three-quarter point (75%). Late phase."
+        },
+        "end": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Timeline end (100%). Animation complete."
+        }
+      },
+
+      "sync": {
+        "$description": "Animation synchronization modes",
+
+        "parallel": {
+          "$value": "parallel",
+          "$type": "string",
+          "$description": "Parallel execution. All animations start together."
+        },
+        "sequential": {
+          "$value": "sequential",
+          "$type": "string",
+          "$description": "Sequential execution. One after another."
+        },
+        "staggered": {
+          "$value": "staggered",
+          "$type": "string",
+          "$description": "Staggered execution. Overlapping cascade."
+        }
+      },
+
+      "item-count-limits": {
+        "$description": "Maximum stagger items before capping delay",
+
+        "small-group": {
+          "$value": 5,
+          "$type": "number",
+          "$description": "5 items max. Use full stagger delays."
+        },
+        "medium-group": {
+          "$value": 10,
+          "$type": "number",
+          "$description": "10 items max. Reduce stagger delay above this."
+        },
+        "large-group": {
+          "$value": 20,
+          "$type": "number",
+          "$description": "20 items max. Significantly reduce delay above this."
+        },
+        "max-total-duration": {
+          "$value": "500ms",
+          "$type": "duration",
+          "$description": "Maximum total stagger duration. Google M3 caps at 500ms."
+        }
+      }
+    }
+  }
+}

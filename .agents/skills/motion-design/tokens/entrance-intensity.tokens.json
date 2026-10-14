@@ -1,0 +1,253 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Entrance animation intensity tokens. Implements M3 hierarchy-based entrance variations: emphasized, standard, and subtle.",
+
+  "motion": {
+    "entrance": {
+      "$description": "Entrance animation intensity levels. Match intensity to element hierarchy and importance.",
+
+      "emphasized": {
+        "$description": "High-impact entrance for primary/hero elements. Large scale change.",
+
+        "scale": {
+          "start": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Start from zero scale (point)."
+          },
+          "end": {
+            "$value": 1,
+            "$type": "number",
+            "$description": "End at full scale."
+          }
+        },
+        "opacity": {
+          "start": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Start fully transparent."
+          },
+          "end": {
+            "$value": 1,
+            "$type": "number",
+            "$description": "End fully opaque."
+          }
+        },
+        "translate": {
+          "$value": "32px",
+          "$type": "dimension",
+          "$description": "Optional: start 32px offset from final position."
+        },
+        "duration": {
+          "$value": "{motion.duration.medium-2}",
+          "$type": "duration",
+          "$description": "300ms for emphasized entrance."
+        },
+        "easing": {
+          "$value": "{motion.easing.emphasized-decelerate}",
+          "$type": "cubicBezier",
+          "$description": "Decelerate into resting position."
+        },
+        "use-for": {
+          "$value": ["hero images", "primary modals", "full-screen content", "feature announcements"],
+          "$type": "array",
+          "$description": "Use for highest-hierarchy elements."
+        }
+      },
+
+      "standard": {
+        "$description": "Normal entrance for typical components. Small scale change.",
+
+        "scale": {
+          "start": {
+            "$value": 0.95,
+            "$type": "number",
+            "$description": "Start at 95% scale (subtle shrink)."
+          },
+          "end": {
+            "$value": 1,
+            "$type": "number",
+            "$description": "End at full scale."
+          }
+        },
+        "opacity": {
+          "start": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Start fully transparent."
+          },
+          "end": {
+            "$value": 1,
+            "$type": "number",
+            "$description": "End fully opaque."
+          }
+        },
+        "translate": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Subtle 8px offset from final position."
+        },
+        "duration": {
+          "$value": "{motion.duration.short-4}",
+          "$type": "duration",
+          "$description": "200ms for standard entrance."
+        },
+        "easing": {
+          "$value": "{motion.easing.standard-decelerate}",
+          "$type": "cubicBezier",
+          "$description": "Standard decelerate curve."
+        },
+        "use-for": {
+          "$value": ["cards", "list items", "dialogs", "menus", "tooltips"],
+          "$type": "array",
+          "$description": "Use for most UI components."
+        }
+      },
+
+      "subtle": {
+        "$description": "Minimal entrance for secondary elements. Opacity only, no transform.",
+
+        "scale": {
+          "start": {
+            "$value": 1,
+            "$type": "number",
+            "$description": "No scale change."
+          },
+          "end": {
+            "$value": 1,
+            "$type": "number",
+            "$description": "Stays at full scale."
+          }
+        },
+        "opacity": {
+          "start": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Start fully transparent."
+          },
+          "end": {
+            "$value": 1,
+            "$type": "number",
+            "$description": "End fully opaque."
+          }
+        },
+        "translate": {
+          "$value": "0px",
+          "$type": "dimension",
+          "$description": "No position offset."
+        },
+        "duration": {
+          "$value": "{motion.duration.short-3}",
+          "$type": "duration",
+          "$description": "150ms for subtle entrance."
+        },
+        "easing": {
+          "$value": "{motion.easing.standard-decelerate}",
+          "$type": "cubicBezier",
+          "$description": "Standard decelerate for smooth fade."
+        },
+        "use-for": {
+          "$value": ["badges", "inline elements", "text updates", "status indicators"],
+          "$type": "array",
+          "$description": "Use for low-priority or inline elements."
+        }
+      },
+
+      "stagger-group": {
+        "$description": "Entrance for staggered groups. Each item uses subtle/standard based on hierarchy.",
+
+        "first-item": {
+          "$value": "standard",
+          "$type": "string",
+          "$description": "First item in stagger uses standard entrance."
+        },
+        "subsequent-items": {
+          "$value": "subtle",
+          "$type": "string",
+          "$description": "Following items use subtle entrance."
+        },
+        "stagger-delay": {
+          "$value": "{motion.sequencing.stagger.medium}",
+          "$type": "duration",
+          "$description": "20ms between items (M3 max)."
+        }
+      }
+    },
+
+    "exit": {
+      "$description": "Exit animation intensity. Generally 30% faster than entrance counterparts.",
+
+      "emphasized": {
+        "$description": "Fast exit for primary elements.",
+        "scale-end": {
+          "$value": 0.9,
+          "$type": "number",
+          "$description": "Scale down slightly on exit."
+        },
+        "opacity-end": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "Fade to transparent."
+        },
+        "duration": {
+          "$value": "210ms",
+          "$type": "duration",
+          "$description": "300ms × 0.7 = 210ms exit."
+        },
+        "easing": {
+          "$value": "{motion.easing.emphasized-accelerate}",
+          "$type": "cubicBezier",
+          "$description": "Accelerate out of view."
+        }
+      },
+
+      "standard": {
+        "$description": "Normal exit for typical components.",
+        "scale-end": {
+          "$value": 0.95,
+          "$type": "number",
+          "$description": "Slight scale down."
+        },
+        "opacity-end": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "Fade to transparent."
+        },
+        "duration": {
+          "$value": "140ms",
+          "$type": "duration",
+          "$description": "200ms × 0.7 = 140ms exit."
+        },
+        "easing": {
+          "$value": "{motion.easing.standard-accelerate}",
+          "$type": "cubicBezier",
+          "$description": "Standard accelerate out."
+        }
+      },
+
+      "subtle": {
+        "$description": "Quick fade for secondary elements.",
+        "scale-end": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "No scale change."
+        },
+        "opacity-end": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "Just fade out."
+        },
+        "duration": {
+          "$value": "100ms",
+          "$type": "duration",
+          "$description": "150ms × 0.7 ≈ 100ms exit."
+        },
+        "easing": {
+          "$value": "linear",
+          "$type": "string",
+          "$description": "Linear fade for minimal distraction."
+        }
+      }
+    }
+  }
+}

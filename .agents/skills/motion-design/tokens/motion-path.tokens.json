@@ -1,0 +1,134 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Motion Path tokens - Arc trajectories for natural, physics-based movement. Disney principle: arcs follow gravity and momentum.",
+
+  "motion-path": {
+    "$description": "SVG path definitions for arc motion. Paths assume origin at (0,0), normalized to 100-unit scale.",
+
+    "arc-subtle": {
+      "$type": "string",
+      "$value": "M0,0 Q25,10 50,0",
+      "$description": "Gentle arc for small movements. 10% height deviation. Icons, micro-interactions."
+    },
+
+    "arc-medium": {
+      "$type": "string",
+      "$value": "M0,0 Q50,30 100,0",
+      "$description": "Standard arc for card movements, list reordering. 30% height deviation."
+    },
+
+    "arc-large": {
+      "$type": "string",
+      "$value": "M0,0 Q75,50 150,0",
+      "$description": "Dramatic arc for hero animations, page transitions. 50% height deviation."
+    },
+
+    "arc-throw": {
+      "$type": "string",
+      "$value": "M0,0 Q100,80 200,20",
+      "$description": "Ballistic arc for toss, dismiss gestures. Asymmetric - high apex, lower landing."
+    },
+
+    "arc-drop": {
+      "$type": "string",
+      "$value": "M0,0 Q10,50 50,100",
+      "$description": "Gravity drop arc. Steep descent with slight horizontal drift."
+    },
+
+    "arc-rise": {
+      "$type": "string",
+      "$value": "M0,100 Q40,50 50,0",
+      "$description": "Upward arc against gravity. Decelerating rise for toast notifications."
+    },
+
+    "arc-swing": {
+      "$type": "string",
+      "$value": "M0,0 Q25,40 50,0 Q75,-30 100,0",
+      "$description": "Pendulum swing arc. Oscillating path for side-to-side motion."
+    },
+
+    "arc-orbit": {
+      "$type": "string",
+      "$value": "M50,0 A50,50 0 1,1 50,100 A50,50 0 1,1 50,0",
+      "$description": "Circular orbit path. For loading spinners, orbital animations."
+    }
+  },
+
+  "gravity-simulation": {
+    "$description": "Physics-based arc parameters for realistic motion",
+
+    "earth-gravity": {
+      "$type": "object",
+      "$value": {
+        "acceleration": 9.8,
+        "unit": "m/s²",
+        "pixelScale": 100
+      },
+      "$description": "Earth-like gravity. 100 pixels = 1 meter for realistic feel."
+    },
+
+    "light-gravity": {
+      "$type": "object",
+      "$value": {
+        "acceleration": 3.0,
+        "unit": "m/s²",
+        "pixelScale": 100
+      },
+      "$description": "Moon-like gravity for floaty, dreamy motion."
+    },
+
+    "heavy-gravity": {
+      "$type": "object",
+      "$value": {
+        "acceleration": 20.0,
+        "unit": "m/s²",
+        "pixelScale": 100
+      },
+      "$description": "Heavy gravity for snappy, grounded motion."
+    }
+  },
+
+  "path-easing": {
+    "$description": "Easing along the path (separate from path shape)",
+
+    "constant-velocity": {
+      "$type": "cubicBezier",
+      "$value": [0, 0, 1, 1],
+      "$description": "Linear progress along path. Object maintains constant speed."
+    },
+
+    "accelerate-along-path": {
+      "$type": "cubicBezier",
+      "$value": [0.4, 0, 1, 1],
+      "$description": "Speed up along the path. Falling objects."
+    },
+
+    "decelerate-along-path": {
+      "$type": "cubicBezier",
+      "$value": [0, 0, 0.2, 1],
+      "$description": "Slow down along the path. Rising objects fighting gravity."
+    },
+
+    "ease-in-out-path": {
+      "$type": "cubicBezier",
+      "$value": [0.42, 0, 0.58, 1],
+      "$description": "Smooth acceleration and deceleration along path."
+    }
+  },
+
+  "direction-hints": {
+    "$description": "When to use arcs vs linear motion",
+
+    "use-arc": {
+      "$type": "string",
+      "$value": "object-motion, drag-release, toss-dismiss, gravity-affected, organic-movement",
+      "$description": "Arc motion for physical objects, organic animations, anything affected by gravity."
+    },
+
+    "use-linear": {
+      "$type": "string",
+      "$value": "ui-feedback, state-change, direct-manipulation, mechanical-motion",
+      "$description": "Linear motion for UI feedback, direct user control, mechanical/robotic motion."
+    }
+  }
+}

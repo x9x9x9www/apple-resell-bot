@@ -1,0 +1,211 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Character animation tokens for rigged characters, lip sync, walk cycles, and expressive motion.",
+
+  "motion": {
+    "character": {
+      "$description": "Character animation tokens",
+
+      "walk-cycle": {
+        "$description": "Walk cycle timing parameters",
+
+        "duration": {
+          "slow": {
+            "$value": "1.5s",
+            "$type": "duration",
+            "$description": "Slow walk. Leisurely pace."
+          },
+          "normal": {
+            "$value": "1s",
+            "$type": "duration",
+            "$description": "Normal walk. Average pace."
+          },
+          "fast": {
+            "$value": "0.6s",
+            "$type": "duration",
+            "$description": "Fast walk. Brisk pace."
+          },
+          "run": {
+            "$value": "0.4s",
+            "$type": "duration",
+            "$description": "Running cycle."
+          }
+        },
+        "bob-amount": {
+          "subtle": {
+            "$value": 2,
+            "$type": "number",
+            "$description": "Subtle vertical bob (px)."
+          },
+          "normal": {
+            "$value": 5,
+            "$type": "number",
+            "$description": "Normal vertical bob (px)."
+          },
+          "bouncy": {
+            "$value": 10,
+            "$type": "number",
+            "$description": "Bouncy vertical bob (px)."
+          }
+        }
+      },
+
+      "blink": {
+        "$description": "Eye blink timing parameters",
+
+        "duration": {
+          "$value": "150ms",
+          "$type": "duration",
+          "$description": "Blink close-open duration."
+        },
+        "interval-min": {
+          "$value": "2s",
+          "$type": "duration",
+          "$description": "Minimum time between blinks."
+        },
+        "interval-max": {
+          "$value": "6s",
+          "$type": "duration",
+          "$description": "Maximum time between blinks."
+        },
+        "hold": {
+          "$value": "50ms",
+          "$type": "duration",
+          "$description": "Eyes closed hold time."
+        }
+      },
+
+      "lip-sync": {
+        "$description": "Lip sync phoneme timing",
+
+        "transition": {
+          "$value": "50ms",
+          "$type": "duration",
+          "$description": "Transition between mouth shapes."
+        },
+        "hold-min": {
+          "$value": "80ms",
+          "$type": "duration",
+          "$description": "Minimum phoneme hold."
+        },
+        "hold-max": {
+          "$value": "200ms",
+          "$type": "duration",
+          "$description": "Maximum phoneme hold."
+        }
+      },
+
+      "expression": {
+        "$description": "Facial expression parameters",
+
+        "transition-quick": {
+          "$value": "200ms",
+          "$type": "duration",
+          "$description": "Quick expression change."
+        },
+        "transition-normal": {
+          "$value": "400ms",
+          "$type": "duration",
+          "$description": "Normal expression transition."
+        },
+        "transition-slow": {
+          "$value": "800ms",
+          "$type": "duration",
+          "$description": "Slow, dramatic expression change."
+        },
+        "intensity": {
+          "subtle": {
+            "$value": 0.3,
+            "$type": "number",
+            "$description": "Subtle expression intensity."
+          },
+          "normal": {
+            "$value": 0.6,
+            "$type": "number",
+            "$description": "Normal expression intensity."
+          },
+          "exaggerated": {
+            "$value": 1,
+            "$type": "number",
+            "$description": "Full, exaggerated expression."
+          }
+        }
+      },
+
+      "idle": {
+        "$description": "Idle animation parameters",
+
+        "breathing-period": {
+          "$value": "4s",
+          "$type": "duration",
+          "$description": "Breathing cycle duration."
+        },
+        "breathing-amount": {
+          "$value": 0.02,
+          "$type": "number",
+          "$description": "Breathing scale variance (2%)."
+        },
+        "sway-period": {
+          "$value": "3s",
+          "$type": "duration",
+          "$description": "Idle sway period."
+        },
+        "sway-amount": {
+          "$value": 2,
+          "$type": "number",
+          "$description": "Idle sway amount (degrees)."
+        }
+      },
+
+      "gesture": {
+        "$description": "Gesture timing parameters",
+
+        "wave": {
+          "$value": "600ms",
+          "$type": "duration",
+          "$description": "Hand wave gesture duration."
+        },
+        "nod": {
+          "$value": "400ms",
+          "$type": "duration",
+          "$description": "Head nod gesture duration."
+        },
+        "shake": {
+          "$value": "500ms",
+          "$type": "duration",
+          "$description": "Head shake gesture duration."
+        },
+        "point": {
+          "$value": "300ms",
+          "$type": "duration",
+          "$description": "Pointing gesture duration."
+        }
+      },
+
+      "body": {
+        "$description": "Body part movement parameters",
+
+        "head-turn-max": {
+          "$value": 45,
+          "$type": "number",
+          "$description": "Maximum head turn (degrees)."
+        },
+        "torso-twist-max": {
+          "$value": 20,
+          "$type": "number",
+          "$description": "Maximum torso twist (degrees)."
+        },
+        "arm-swing": {
+          "$value": 30,
+          "$type": "number",
+          "$description": "Arm swing range (degrees)."
+        },
+        "leg-stride": {
+          "$value": 40,
+          "$type": "number",
+          "$description": "Leg stride angle (degrees)."
+        }
+      }
+    }
+  }
+}

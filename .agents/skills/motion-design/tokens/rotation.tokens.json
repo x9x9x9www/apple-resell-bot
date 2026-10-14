@@ -1,0 +1,330 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Rotation transform tokens for 2D and 3D rotation animations. Includes angles, spin speeds, wobble, and pendulum parameters.",
+
+  "motion": {
+    "rotation": {
+      "$description": "Rotation transform tokens",
+
+      "angles": {
+        "$description": "Standard rotation angle values",
+
+        "micro": {
+          "$value": "1deg",
+          "$type": "dimension",
+          "$description": "Micro rotation. Subtle tilt for organic feel."
+        },
+        "subtle": {
+          "$value": "3deg",
+          "$type": "dimension",
+          "$description": "Subtle rotation. Gentle tilt, slight rock."
+        },
+        "small": {
+          "$value": "5deg",
+          "$type": "dimension",
+          "$description": "Small rotation. Noticeable tilt."
+        },
+        "medium": {
+          "$value": "15deg",
+          "$type": "dimension",
+          "$description": "Medium rotation. Clear rotation, icon turns."
+        },
+        "large": {
+          "$value": "45deg",
+          "$type": "dimension",
+          "$description": "Large rotation. Significant turn, diagonal orientation."
+        },
+        "quarter": {
+          "$value": "90deg",
+          "$type": "dimension",
+          "$description": "Quarter turn. Perpendicular rotation."
+        },
+        "half": {
+          "$value": "180deg",
+          "$type": "dimension",
+          "$description": "Half turn. Flip, invert."
+        },
+        "three-quarter": {
+          "$value": "270deg",
+          "$type": "dimension",
+          "$description": "Three-quarter turn."
+        },
+        "full": {
+          "$value": "360deg",
+          "$type": "dimension",
+          "$description": "Full rotation. Complete spin cycle."
+        },
+        "full-and-half": {
+          "$value": "540deg",
+          "$type": "dimension",
+          "$description": "One and a half turns. Extended spin."
+        },
+        "double": {
+          "$value": "720deg",
+          "$type": "dimension",
+          "$description": "Double rotation. Two complete spins."
+        }
+      },
+
+      "direction": {
+        "$description": "Rotation direction multipliers",
+
+        "clockwise": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Clockwise rotation (positive degrees)."
+        },
+        "counter-clockwise": {
+          "$value": -1,
+          "$type": "number",
+          "$description": "Counter-clockwise rotation (negative degrees)."
+        }
+      },
+
+      "axis": {
+        "$description": "3D rotation axis definitions",
+
+        "z": {
+          "$value": { "x": 0, "y": 0, "z": 1 },
+          "$type": "object",
+          "$description": "Z-axis (2D rotation). Standard flat spin."
+        },
+        "x": {
+          "$value": { "x": 1, "y": 0, "z": 0 },
+          "$type": "object",
+          "$description": "X-axis rotation. Flip forward/backward."
+        },
+        "y": {
+          "$value": { "x": 0, "y": 1, "z": 0 },
+          "$type": "object",
+          "$description": "Y-axis rotation. Turn left/right (card flip)."
+        },
+        "diagonal-forward": {
+          "$value": { "x": 1, "y": 1, "z": 0 },
+          "$type": "object",
+          "$description": "Diagonal axis rotation. Tumble effect."
+        },
+        "diagonal-back": {
+          "$value": { "x": -1, "y": 1, "z": 0 },
+          "$type": "object",
+          "$description": "Reverse diagonal axis. Reverse tumble."
+        }
+      },
+
+      "spin": {
+        "$description": "Continuous spin animation parameters",
+
+        "speed-slow": {
+          "$value": "8s",
+          "$type": "duration",
+          "$description": "Slow spin cycle. Ambient, meditative rotation."
+        },
+        "speed-medium": {
+          "$value": "4s",
+          "$type": "duration",
+          "$description": "Medium spin cycle. Loading indicator pace."
+        },
+        "speed-fast": {
+          "$value": "1s",
+          "$type": "duration",
+          "$description": "Fast spin cycle. Active spinner."
+        },
+        "speed-rapid": {
+          "$value": "0.5s",
+          "$type": "duration",
+          "$description": "Rapid spin. Blur-inducing speed."
+        }
+      },
+
+      "wobble": {
+        "$description": "Wobble/wiggle animation parameters",
+
+        "amplitude-subtle": {
+          "$value": "2deg",
+          "$type": "dimension",
+          "$description": "Subtle wobble range. Barely perceptible shake."
+        },
+        "amplitude-gentle": {
+          "$value": "5deg",
+          "$type": "dimension",
+          "$description": "Gentle wobble range. Soft shake, uncertainty."
+        },
+        "amplitude-medium": {
+          "$value": "10deg",
+          "$type": "dimension",
+          "$description": "Medium wobble range. Clear shake, attention."
+        },
+        "amplitude-strong": {
+          "$value": "20deg",
+          "$type": "dimension",
+          "$description": "Strong wobble range. Vigorous shake, error state."
+        },
+        "amplitude-extreme": {
+          "$value": "45deg",
+          "$type": "dimension",
+          "$description": "Extreme wobble. Cartoon-style shake."
+        },
+        "frequency-slow": {
+          "$value": 2,
+          "$type": "number",
+          "$description": "2 wobbles per second. Gentle rocking."
+        },
+        "frequency-medium": {
+          "$value": 5,
+          "$type": "number",
+          "$description": "5 wobbles per second. Natural shake."
+        },
+        "frequency-fast": {
+          "$value": 10,
+          "$type": "number",
+          "$description": "10 wobbles per second. Rapid vibration."
+        },
+        "frequency-vibrate": {
+          "$value": 20,
+          "$type": "number",
+          "$description": "20 wobbles per second. Blur-like vibration."
+        }
+      },
+
+      "pendulum": {
+        "$description": "Pendulum/swing animation parameters",
+
+        "amplitude-subtle": {
+          "$value": "10deg",
+          "$type": "dimension",
+          "$description": "Subtle swing range. Gentle clock pendulum."
+        },
+        "amplitude-medium": {
+          "$value": "30deg",
+          "$type": "dimension",
+          "$description": "Medium swing range. Natural pendulum."
+        },
+        "amplitude-wide": {
+          "$value": "60deg",
+          "$type": "dimension",
+          "$description": "Wide swing range. Dramatic pendulum."
+        },
+        "amplitude-extreme": {
+          "$value": "90deg",
+          "$type": "dimension",
+          "$description": "Extreme swing (quarter turn each way)."
+        },
+        "period-slow": {
+          "$value": "3s",
+          "$type": "duration",
+          "$description": "Slow pendulum cycle. Grandfather clock feel."
+        },
+        "period-medium": {
+          "$value": "1.5s",
+          "$type": "duration",
+          "$description": "Medium pendulum cycle. Natural swing."
+        },
+        "period-fast": {
+          "$value": "0.75s",
+          "$type": "duration",
+          "$description": "Fast pendulum cycle. Metronome pace."
+        },
+        "damping-none": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "No damping. Perpetual motion."
+        },
+        "damping-light": {
+          "$value": 0.02,
+          "$type": "number",
+          "$description": "Light damping. Slow decay to rest."
+        },
+        "damping-medium": {
+          "$value": 0.1,
+          "$type": "number",
+          "$description": "Medium damping. Natural decay."
+        },
+        "damping-heavy": {
+          "$value": 0.3,
+          "$type": "number",
+          "$description": "Heavy damping. Quick settle to rest."
+        }
+      },
+
+      "origin": {
+        "$description": "Rotation origin/pivot presets",
+
+        "center": {
+          "$value": "center center",
+          "$type": "string",
+          "$description": "Rotate around center. Default pivot."
+        },
+        "top": {
+          "$value": "center top",
+          "$type": "string",
+          "$description": "Rotate around top edge. Hinge from top."
+        },
+        "bottom": {
+          "$value": "center bottom",
+          "$type": "string",
+          "$description": "Rotate around bottom edge. Hinge from bottom."
+        },
+        "left": {
+          "$value": "left center",
+          "$type": "string",
+          "$description": "Rotate around left edge. Door hinge left."
+        },
+        "right": {
+          "$value": "right center",
+          "$type": "string",
+          "$description": "Rotate around right edge. Door hinge right."
+        },
+        "top-left": {
+          "$value": "left top",
+          "$type": "string",
+          "$description": "Rotate around top-left corner. Corner pivot."
+        },
+        "top-right": {
+          "$value": "right top",
+          "$type": "string",
+          "$description": "Rotate around top-right corner. Corner pivot."
+        },
+        "bottom-left": {
+          "$value": "left bottom",
+          "$type": "string",
+          "$description": "Rotate around bottom-left corner. Corner pivot."
+        },
+        "bottom-right": {
+          "$value": "right bottom",
+          "$type": "string",
+          "$description": "Rotate around bottom-right corner. Corner pivot."
+        }
+      },
+
+      "flip": {
+        "$description": "3D flip animation presets",
+
+        "horizontal": {
+          "$value": { "axis": "y", "angle": 180 },
+          "$type": "object",
+          "$description": "Horizontal flip (Y-axis). Card flip left-right."
+        },
+        "vertical": {
+          "$value": { "axis": "x", "angle": 180 },
+          "$type": "object",
+          "$description": "Vertical flip (X-axis). Card flip top-bottom."
+        },
+        "perspective-near": {
+          "$value": "600px",
+          "$type": "dimension",
+          "$description": "Near perspective. Dramatic 3D effect."
+        },
+        "perspective-medium": {
+          "$value": "1000px",
+          "$type": "dimension",
+          "$description": "Medium perspective. Natural 3D effect."
+        },
+        "perspective-far": {
+          "$value": "2000px",
+          "$type": "dimension",
+          "$description": "Far perspective. Subtle 3D effect."
+        }
+      }
+    }
+  }
+}

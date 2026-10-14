@@ -1,0 +1,155 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Skew transform tokens for slant, italic, and perspective distortion animations.",
+
+  "motion": {
+    "skew": {
+      "$description": "Skew transform animation tokens",
+
+      "angle": {
+        "$description": "Skew angle values",
+
+        "subtle": {
+          "$value": "3deg",
+          "$type": "dimension",
+          "$description": "Subtle skew. Barely perceptible slant."
+        },
+        "light": {
+          "$value": "5deg",
+          "$type": "dimension",
+          "$description": "Light skew. Gentle italic feel."
+        },
+        "medium": {
+          "$value": "10deg",
+          "$type": "dimension",
+          "$description": "Medium skew. Noticeable slant."
+        },
+        "strong": {
+          "$value": "20deg",
+          "$type": "dimension",
+          "$description": "Strong skew. Dramatic distortion."
+        },
+        "extreme": {
+          "$value": "35deg",
+          "$type": "dimension",
+          "$description": "Extreme skew. Heavy perspective."
+        },
+        "max": {
+          "$value": "45deg",
+          "$type": "dimension",
+          "$description": "Maximum practical skew."
+        }
+      },
+
+      "direction": {
+        "$description": "Skew direction presets",
+
+        "left": {
+          "$value": "-10deg",
+          "$type": "dimension",
+          "$description": "Skew left (negative X)."
+        },
+        "right": {
+          "$value": "10deg",
+          "$type": "dimension",
+          "$description": "Skew right (positive X)."
+        },
+        "up": {
+          "$value": "-10deg",
+          "$type": "dimension",
+          "$description": "Skew up (negative Y)."
+        },
+        "down": {
+          "$value": "10deg",
+          "$type": "dimension",
+          "$description": "Skew down (positive Y)."
+        }
+      },
+
+      "italic": {
+        "$description": "Text italic simulation values",
+
+        "normal": {
+          "$value": "0deg",
+          "$type": "dimension",
+          "$description": "No italic. Upright text."
+        },
+        "slight": {
+          "$value": "-5deg",
+          "$type": "dimension",
+          "$description": "Slight italic. Subtle emphasis."
+        },
+        "standard": {
+          "$value": "-12deg",
+          "$type": "dimension",
+          "$description": "Standard italic angle."
+        },
+        "heavy": {
+          "$value": "-18deg",
+          "$type": "dimension",
+          "$description": "Heavy italic. Strong emphasis."
+        }
+      },
+
+      "duration": {
+        "$description": "Skew animation durations",
+
+        "snap": {
+          "$value": "100ms",
+          "$type": "duration",
+          "$description": "Quick snap skew."
+        },
+        "quick": {
+          "$value": "200ms",
+          "$type": "duration",
+          "$description": "Quick skew transition."
+        },
+        "standard": {
+          "$value": "300ms",
+          "$type": "duration",
+          "$description": "Standard skew duration."
+        },
+        "smooth": {
+          "$value": "500ms",
+          "$type": "duration",
+          "$description": "Smooth skew transition."
+        }
+      },
+
+      "oscillation": {
+        "$description": "Skew oscillation parameters",
+
+        "amplitude-subtle": {
+          "$value": "2deg",
+          "$type": "dimension",
+          "$description": "Subtle wobble amplitude."
+        },
+        "amplitude-medium": {
+          "$value": "5deg",
+          "$type": "dimension",
+          "$description": "Medium wobble amplitude."
+        },
+        "amplitude-strong": {
+          "$value": "10deg",
+          "$type": "dimension",
+          "$description": "Strong wobble amplitude."
+        },
+        "period-fast": {
+          "$value": "0.5s",
+          "$type": "duration",
+          "$description": "Fast oscillation period."
+        },
+        "period-medium": {
+          "$value": "1s",
+          "$type": "duration",
+          "$description": "Medium oscillation period."
+        },
+        "period-slow": {
+          "$value": "2s",
+          "$type": "duration",
+          "$description": "Slow oscillation period."
+        }
+      }
+    }
+  }
+}

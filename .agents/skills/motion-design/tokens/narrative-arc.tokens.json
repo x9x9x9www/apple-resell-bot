@@ -1,0 +1,305 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Narrative arc tokens based on Freytag's pyramid for UI motion storytelling. Maps story phases to animation intensity and timing.",
+
+  "$token-references": {
+    "$description": "W3C DTCG token reference paths",
+    "duration": "tokens/duration.tokens.json",
+    "easing": "tokens/easing.tokens.json"
+  },
+
+  "narrative": {
+    "$description": "Narrative arc motion tokens for storytelling through animation",
+
+    "arc-phases": {
+      "$description": "Freytag's pyramid phases mapped to motion parameters",
+
+      "exposition": {
+        "$description": "Introduction phase - establish context, low energy entrance",
+        "intensity": {
+          "$value": 0.3,
+          "$type": "number",
+          "$description": "Animation intensity multiplier for exposition phase"
+        },
+        "duration-weight": {
+          "$value": 0.15,
+          "$type": "number",
+          "$description": "Proportion of total arc duration for exposition"
+        },
+        "easing-ref": {
+          "$value": "{motion.easing.standard-decelerate}",
+          "$type": "string",
+          "$description": "Gentle deceleration for establishing context"
+        },
+        "motion-profile": {
+          "$value": "fade-settle",
+          "$type": "string",
+          "$description": "Primary motion pattern for exposition"
+        }
+      },
+
+      "rising-action": {
+        "$description": "Building tension phase - increasing complexity and energy",
+        "intensity": {
+          "$value": 0.6,
+          "$type": "number",
+          "$description": "Animation intensity multiplier for rising action"
+        },
+        "duration-weight": {
+          "$value": 0.25,
+          "$type": "number",
+          "$description": "Proportion of total arc duration for rising action"
+        },
+        "easing-ref": {
+          "$value": "{motion.easing.standard}",
+          "$type": "string",
+          "$description": "Standard easing for building momentum"
+        },
+        "motion-profile": {
+          "$value": "build-momentum",
+          "$type": "string",
+          "$description": "Primary motion pattern for rising action"
+        }
+      },
+
+      "climax": {
+        "$description": "Peak intensity phase - maximum visual impact",
+        "intensity": {
+          "$value": 1.0,
+          "$type": "number",
+          "$description": "Full animation intensity at narrative peak"
+        },
+        "duration-weight": {
+          "$value": 0.15,
+          "$type": "number",
+          "$description": "Proportion of total arc duration for climax (brief but impactful)"
+        },
+        "easing-ref": {
+          "$value": "{motion.easing.emphasized}",
+          "$type": "string",
+          "$description": "Emphasized easing for maximum impact"
+        },
+        "motion-profile": {
+          "$value": "burst-expand",
+          "$type": "string",
+          "$description": "Primary motion pattern for climax"
+        }
+      },
+
+      "falling-action": {
+        "$description": "Denouement phase - energy dissipation, aftermath",
+        "intensity": {
+          "$value": 0.4,
+          "$type": "number",
+          "$description": "Reduced intensity for falling action"
+        },
+        "duration-weight": {
+          "$value": 0.25,
+          "$type": "number",
+          "$description": "Proportion of total arc duration for falling action"
+        },
+        "easing-ref": {
+          "$value": "{motion.easing.standard-decelerate}",
+          "$type": "string",
+          "$description": "Deceleration for energy dissipation"
+        },
+        "motion-profile": {
+          "$value": "settle-cascade",
+          "$type": "string",
+          "$description": "Primary motion pattern for falling action"
+        }
+      },
+
+      "resolution": {
+        "$description": "Conclusion phase - rest state, new equilibrium",
+        "intensity": {
+          "$value": 0.2,
+          "$type": "number",
+          "$description": "Minimal intensity for resolution"
+        },
+        "duration-weight": {
+          "$value": 0.20,
+          "$type": "number",
+          "$description": "Proportion of total arc duration for resolution"
+        },
+        "easing-ref": {
+          "$value": "{motion.easing.ease-out}",
+          "$type": "string",
+          "$description": "Smooth ease-out for final settling"
+        },
+        "motion-profile": {
+          "$value": "rest-affirm",
+          "$type": "string",
+          "$description": "Primary motion pattern for resolution"
+        }
+      }
+    },
+
+    "arc-presets": {
+      "$description": "Pre-configured narrative arcs for different interaction scales",
+
+      "micro": {
+        "$description": "Ultra-short arc for micro-interactions (button press, toggle)",
+        "total-duration": {
+          "$value": "300ms",
+          "$type": "duration"
+        },
+        "phases": {
+          "$value": ["incident", "climax", "resolution"],
+          "$type": "array",
+          "$description": "Compressed 3-phase arc"
+        },
+        "phase-timing": {
+          "$value": { "incident": 0.25, "climax": 0.35, "resolution": 0.40 },
+          "$type": "object"
+        }
+      },
+
+      "short": {
+        "$description": "Short arc for component-level interactions (modal open, card expand)",
+        "total-duration": {
+          "$value": "600ms",
+          "$type": "duration"
+        },
+        "phases": {
+          "$value": ["exposition", "rising", "climax", "resolution"],
+          "$type": "array",
+          "$description": "4-phase arc without falling action"
+        },
+        "phase-timing": {
+          "$value": { "exposition": 0.15, "rising": 0.30, "climax": 0.25, "resolution": 0.30 },
+          "$type": "object"
+        }
+      },
+
+      "medium": {
+        "$description": "Medium arc for page transitions and complex sequences",
+        "total-duration": {
+          "$value": "1200ms",
+          "$type": "duration"
+        },
+        "phases": {
+          "$value": ["exposition", "rising-action", "climax", "falling-action", "resolution"],
+          "$type": "array",
+          "$description": "Full 5-phase Freytag arc"
+        },
+        "phase-timing": {
+          "$value": { "exposition": 0.12, "rising-action": 0.25, "climax": 0.18, "falling-action": 0.22, "resolution": 0.23 },
+          "$type": "object"
+        }
+      },
+
+      "extended": {
+        "$description": "Extended arc for onboarding flows and multi-step wizards",
+        "total-duration": {
+          "$value": "3000ms",
+          "$type": "duration"
+        },
+        "phases": {
+          "$value": ["exposition", "rising-action", "climax", "falling-action", "resolution"],
+          "$type": "array"
+        },
+        "phase-timing": {
+          "$value": { "exposition": 0.15, "rising-action": 0.28, "climax": 0.15, "falling-action": 0.22, "resolution": 0.20 },
+          "$type": "object"
+        }
+      }
+    },
+
+    "beat-types": {
+      "$description": "Story beats - discrete narrative moments within arcs",
+
+      "setup": {
+        "$description": "Establish context, introduce elements",
+        "intensity-range": { "$value": [0.2, 0.4], "$type": "array" },
+        "typical-duration": { "$value": "150ms", "$type": "duration" }
+      },
+
+      "build": {
+        "$description": "Increase tension, add complexity",
+        "intensity-range": { "$value": [0.4, 0.7], "$type": "array" },
+        "typical-duration": { "$value": "200ms", "$type": "duration" }
+      },
+
+      "payoff": {
+        "$description": "Deliver the expected result, satisfy anticipation",
+        "intensity-range": { "$value": [0.8, 1.0], "$type": "array" },
+        "typical-duration": { "$value": "250ms", "$type": "duration" }
+      },
+
+      "surprise": {
+        "$description": "Unexpected moment, delight or redirect",
+        "intensity-range": { "$value": [0.9, 1.0], "$type": "array" },
+        "typical-duration": { "$value": "180ms", "$type": "duration" }
+      },
+
+      "breathe": {
+        "$description": "Pause moment, let user absorb",
+        "intensity-range": { "$value": [0.1, 0.2], "$type": "array" },
+        "typical-duration": { "$value": "400ms", "$type": "duration" }
+      },
+
+      "echo": {
+        "$description": "Subtle callback to earlier motion",
+        "intensity-range": { "$value": [0.2, 0.4], "$type": "array" },
+        "typical-duration": { "$value": "200ms", "$type": "duration" }
+      }
+    },
+
+    "tension-curves": {
+      "$description": "Mathematical tension profiles across narrative arcs",
+
+      "linear-rise": {
+        "$value": "linear",
+        "$type": "string",
+        "$description": "Steady, predictable build - educational content"
+      },
+
+      "exponential-rise": {
+        "$value": "ease-in",
+        "$type": "string",
+        "$description": "Slow start, rapid crescendo - reveals, surprises"
+      },
+
+      "stepped": {
+        "$value": "steps(5)",
+        "$type": "string",
+        "$description": "Discrete tension levels - wizard steps, checkpoints"
+      },
+
+      "wave": {
+        "$value": "sine",
+        "$type": "string",
+        "$description": "Oscillating tension - ongoing processes, dashboards"
+      }
+    },
+
+    "resolution-types": {
+      "$description": "How narratives conclude",
+
+      "complete": {
+        "$description": "Full resolution, clear ending",
+        "final-intensity": { "$value": 0.0, "$type": "number" },
+        "motion": { "$value": "settle-to-rest", "$type": "string" }
+      },
+
+      "open": {
+        "$description": "Partial resolution, invites continuation",
+        "final-intensity": { "$value": 0.15, "$type": "number" },
+        "motion": { "$value": "gentle-pulse", "$type": "string" }
+      },
+
+      "cliffhanger": {
+        "$description": "Suspended resolution, creates anticipation",
+        "final-intensity": { "$value": 0.4, "$type": "number" },
+        "motion": { "$value": "hold-tension", "$type": "string" }
+      },
+
+      "cyclical": {
+        "$description": "Returns to beginning, suggests loop",
+        "final-intensity": { "$value": 0.3, "$type": "number" },
+        "motion": { "$value": "return-origin", "$type": "string" }
+      }
+    }
+  }
+}

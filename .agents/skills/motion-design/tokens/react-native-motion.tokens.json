@@ -1,0 +1,352 @@
+{
+  "react-native": {
+    "$description": "React Native motion tokens for Animated API and Reanimated 3",
+
+    "animated-timing": {
+      "$description": "Animated.timing easing presets",
+
+      "linear": {
+        "$value": "Easing.linear",
+        "$type": "string",
+        "$description": "Linear interpolation, no acceleration"
+      },
+
+      "ease": {
+        "$value": "Easing.ease",
+        "$type": "string",
+        "$description": "Standard ease curve, equivalent to cubic-bezier(0.25, 0.1, 0.25, 1)"
+      },
+
+      "quad": {
+        "$value": "Easing.quad",
+        "$type": "string",
+        "$description": "Quadratic acceleration t^2"
+      },
+
+      "cubic": {
+        "$value": "Easing.cubic",
+        "$type": "string",
+        "$description": "Cubic acceleration t^3"
+      },
+
+      "sin": {
+        "$value": "Easing.sin",
+        "$type": "string",
+        "$description": "Sinusoidal curve"
+      },
+
+      "circle": {
+        "$value": "Easing.circle",
+        "$type": "string",
+        "$description": "Circular curve"
+      },
+
+      "exp": {
+        "$value": "Easing.exp",
+        "$type": "string",
+        "$description": "Exponential curve 2^(10*(t-1))"
+      },
+
+      "elastic": {
+        "$value": "Easing.elastic(1)",
+        "$type": "string",
+        "$description": "Elastic spring effect (default bounciness: 1)"
+      },
+
+      "back": {
+        "$value": "Easing.back(1.5)",
+        "$type": "string",
+        "$description": "Overshoots before settling (default overshoot: 1.5)"
+      },
+
+      "bounce": {
+        "$value": "Easing.bounce",
+        "$type": "string",
+        "$description": "Bouncing ball physics"
+      },
+
+      "bezier": {
+        "$value": "Easing.bezier(0.25, 0.1, 0.25, 1)",
+        "$type": "string",
+        "$description": "Custom cubic-bezier curve"
+      }
+    },
+
+    "animated-spring": {
+      "$description": "Animated.spring configurations",
+
+      "default": {
+        "$value": {
+          "tension": 40,
+          "friction": 7,
+          "useNativeDriver": true
+        },
+        "$type": "object",
+        "$description": "Default spring - balanced feel"
+      },
+
+      "gentle": {
+        "$value": {
+          "tension": 20,
+          "friction": 7,
+          "useNativeDriver": true
+        },
+        "$type": "object",
+        "$description": "Slow, gentle spring"
+      },
+
+      "snappy": {
+        "$value": {
+          "tension": 100,
+          "friction": 7,
+          "useNativeDriver": true
+        },
+        "$type": "object",
+        "$description": "Quick, responsive spring"
+      },
+
+      "bouncy": {
+        "$value": {
+          "tension": 40,
+          "friction": 3,
+          "useNativeDriver": true
+        },
+        "$type": "object",
+        "$description": "High bounce spring"
+      },
+
+      "stiff": {
+        "$value": {
+          "tension": 200,
+          "friction": 20,
+          "useNativeDriver": true
+        },
+        "$type": "object",
+        "$description": "Stiff, damped spring"
+      }
+    },
+
+    "reanimated-spring": {
+      "$description": "Reanimated 3 withSpring configurations",
+
+      "default": {
+        "$value": {
+          "damping": 10,
+          "stiffness": 100,
+          "mass": 1
+        },
+        "$type": "object",
+        "$description": "Default spring with moderate bounce"
+      },
+
+      "snappy": {
+        "$value": {
+          "damping": 15,
+          "stiffness": 300,
+          "mass": 1
+        },
+        "$type": "object",
+        "$description": "Quick, responsive spring"
+      },
+
+      "bouncy": {
+        "$value": {
+          "damping": 8,
+          "stiffness": 100,
+          "mass": 1
+        },
+        "$type": "object",
+        "$description": "High bounce spring"
+      },
+
+      "gentle": {
+        "$value": {
+          "damping": 20,
+          "stiffness": 80,
+          "mass": 1
+        },
+        "$type": "object",
+        "$description": "Slow, smooth spring"
+      },
+
+      "stiff": {
+        "$value": {
+          "damping": 20,
+          "stiffness": 400,
+          "mass": 1
+        },
+        "$type": "object",
+        "$description": "Very responsive, minimal bounce"
+      },
+
+      "m3-fast-spatial": {
+        "$value": {
+          "damping": 15,
+          "stiffness": 300,
+          "mass": 1
+        },
+        "$type": "object",
+        "$description": "M3 fast.spatial equivalent"
+      },
+
+      "m3-default-spatial": {
+        "$value": {
+          "damping": 25,
+          "stiffness": 200,
+          "mass": 1
+        },
+        "$type": "object",
+        "$description": "M3 default.spatial equivalent"
+      },
+
+      "m3-slow-spatial": {
+        "$value": {
+          "damping": 30,
+          "stiffness": 150,
+          "mass": 1
+        },
+        "$type": "object",
+        "$description": "M3 slow.spatial equivalent"
+      }
+    },
+
+    "reanimated-timing": {
+      "$description": "Reanimated 3 withTiming configurations",
+
+      "standard": {
+        "$value": {
+          "duration": 300,
+          "easing": [0.2, 0, 0, 1]
+        },
+        "$type": "object",
+        "$description": "M3 standard timing"
+      },
+
+      "emphasized-decelerate": {
+        "$value": {
+          "duration": 400,
+          "easing": [0.05, 0.7, 0.1, 1]
+        },
+        "$type": "object",
+        "$description": "M3 emphasized decelerate (entrances)"
+      },
+
+      "emphasized-accelerate": {
+        "$value": {
+          "duration": 200,
+          "easing": [0.3, 0, 0.8, 0.15]
+        },
+        "$type": "object",
+        "$description": "M3 emphasized accelerate (exits)"
+      },
+
+      "quick": {
+        "$value": {
+          "duration": 150,
+          "easing": [0.2, 0, 0, 1]
+        },
+        "$type": "object",
+        "$description": "Quick feedback animations"
+      },
+
+      "slow": {
+        "$value": {
+          "duration": 500,
+          "easing": [0.2, 0, 0, 1]
+        },
+        "$type": "object",
+        "$description": "Slow, deliberate animations"
+      }
+    },
+
+    "duration": {
+      "$description": "Duration tokens for React Native (in milliseconds)",
+
+      "instant": {
+        "$value": 100,
+        "$type": "number",
+        "$description": "Micro-interactions, immediate feedback"
+      },
+
+      "fast": {
+        "$value": 200,
+        "$type": "number",
+        "$description": "Button press, quick transitions"
+      },
+
+      "normal": {
+        "$value": 300,
+        "$type": "number",
+        "$description": "Standard transitions"
+      },
+
+      "moderate": {
+        "$value": 400,
+        "$type": "number",
+        "$description": "Sheet presentations"
+      },
+
+      "slow": {
+        "$value": 500,
+        "$type": "number",
+        "$description": "Page transitions"
+      },
+
+      "deliberate": {
+        "$value": 700,
+        "$type": "number",
+        "$description": "Onboarding, showcase"
+      }
+    },
+
+    "layout-animation": {
+      "$description": "LayoutAnimation presets",
+
+      "linear": {
+        "$value": "LayoutAnimation.Presets.linear",
+        "$type": "string",
+        "$description": "Linear layout animation"
+      },
+
+      "ease-in-ease-out": {
+        "$value": "LayoutAnimation.Presets.easeInEaseOut",
+        "$type": "string",
+        "$description": "Standard ease-in-out layout"
+      },
+
+      "spring": {
+        "$value": "LayoutAnimation.Presets.spring",
+        "$type": "string",
+        "$description": "Spring-based layout animation"
+      }
+    },
+
+    "gesture": {
+      "$description": "Gesture response configurations",
+
+      "pan-threshold": {
+        "$value": 5,
+        "$type": "number",
+        "$description": "Minimum pan distance to trigger"
+      },
+
+      "swipe-velocity": {
+        "$value": 500,
+        "$type": "number",
+        "$description": "Velocity threshold for swipe recognition"
+      },
+
+      "decay-deceleration": {
+        "$value": 0.998,
+        "$type": "number",
+        "$description": "Decay animation deceleration rate"
+      },
+
+      "clamp-velocity": {
+        "$value": [0, 0, 4000, 4000],
+        "$type": "object",
+        "$description": "Maximum velocity clamp [minX, minY, maxX, maxY]"
+      }
+    }
+  }
+}

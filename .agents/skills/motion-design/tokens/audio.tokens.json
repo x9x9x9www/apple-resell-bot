@@ -1,0 +1,201 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Audio-reactive animation tokens for music visualization, beat synchronization, and sound-driven motion.",
+
+  "motion": {
+    "audio": {
+      "$description": "Audio-reactive animation tokens",
+
+      "frequency": {
+        "$description": "Frequency band ranges in Hz",
+
+        "sub-bass": {
+          "$value": [20, 60],
+          "$type": "object",
+          "$description": "Sub-bass frequencies. Deep rumble."
+        },
+        "bass": {
+          "$value": [60, 250],
+          "$type": "object",
+          "$description": "Bass frequencies. Kick drums."
+        },
+        "low-mid": {
+          "$value": [250, 500],
+          "$type": "object",
+          "$description": "Low-mids. Body of instruments."
+        },
+        "mid": {
+          "$value": [500, 2000],
+          "$type": "object",
+          "$description": "Mids. Vocals, most instruments."
+        },
+        "high-mid": {
+          "$value": [2000, 4000],
+          "$type": "object",
+          "$description": "High-mids. Clarity, presence."
+        },
+        "high": {
+          "$value": [4000, 8000],
+          "$type": "object",
+          "$description": "Highs. Brightness, sizzle."
+        },
+        "ultra-high": {
+          "$value": [8000, 20000],
+          "$type": "object",
+          "$description": "Ultra-highs. Air, sparkle."
+        }
+      },
+
+      "sensitivity": {
+        "$description": "Audio level sensitivity multipliers",
+
+        "subtle": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "Low sensitivity. Subtle response."
+        },
+        "normal": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Normal sensitivity."
+        },
+        "high": {
+          "$value": 2,
+          "$type": "number",
+          "$description": "High sensitivity. Dramatic response."
+        },
+        "extreme": {
+          "$value": 4,
+          "$type": "number",
+          "$description": "Extreme sensitivity. Very reactive."
+        }
+      },
+
+      "smoothing": {
+        "$description": "Audio analysis smoothing values",
+
+        "none": {
+          "$value": 0,
+          "$type": "number",
+          "$description": "No smoothing. Raw response."
+        },
+        "light": {
+          "$value": 0.5,
+          "$type": "number",
+          "$description": "Light smoothing. Slight lag."
+        },
+        "medium": {
+          "$value": 0.75,
+          "$type": "number",
+          "$description": "Medium smoothing. Smooth response."
+        },
+        "heavy": {
+          "$value": 0.9,
+          "$type": "number",
+          "$description": "Heavy smoothing. Slow, flowing."
+        }
+      },
+
+      "beat": {
+        "$description": "Beat detection parameters",
+
+        "threshold": {
+          "low": {
+            "$value": 0.3,
+            "$type": "number",
+            "$description": "Low threshold. Detects subtle beats."
+          },
+          "normal": {
+            "$value": 0.5,
+            "$type": "number",
+            "$description": "Normal threshold."
+          },
+          "high": {
+            "$value": 0.7,
+            "$type": "number",
+            "$description": "High threshold. Only strong beats."
+          }
+        },
+        "decay": {
+          "fast": {
+            "$value": 0.9,
+            "$type": "number",
+            "$description": "Fast decay. Quick beat response."
+          },
+          "medium": {
+            "$value": 0.95,
+            "$type": "number",
+            "$description": "Medium decay."
+          },
+          "slow": {
+            "$value": 0.99,
+            "$type": "number",
+            "$description": "Slow decay. Sustained response."
+          }
+        }
+      },
+
+      "response": {
+        "$description": "Animation response to audio",
+
+        "scale-min": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Minimum scale at silence."
+        },
+        "scale-max": {
+          "$value": 1.5,
+          "$type": "number",
+          "$description": "Maximum scale at peak."
+        },
+        "opacity-min": {
+          "$value": 0.3,
+          "$type": "number",
+          "$description": "Minimum opacity at silence."
+        },
+        "opacity-max": {
+          "$value": 1,
+          "$type": "number",
+          "$description": "Maximum opacity at peak."
+        },
+        "position-range": {
+          "$value": 50,
+          "$type": "number",
+          "$description": "Position displacement range (px)."
+        },
+        "rotation-range": {
+          "$value": 30,
+          "$type": "number",
+          "$description": "Rotation range (degrees)."
+        }
+      },
+
+      "visualization": {
+        "$description": "Audio visualization parameters",
+
+        "bar-count": {
+          "low": {
+            "$value": 16,
+            "$type": "number",
+            "$description": "Low resolution. 16 bars."
+          },
+          "medium": {
+            "$value": 32,
+            "$type": "number",
+            "$description": "Medium resolution. 32 bars."
+          },
+          "high": {
+            "$value": 64,
+            "$type": "number",
+            "$description": "High resolution. 64 bars."
+          }
+        },
+        "waveform-points": {
+          "$value": 128,
+          "$type": "number",
+          "$description": "Waveform sample points."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,210 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Texture animation tokens for grain, noise, pattern, and surface effect animations.",
+
+  "motion": {
+    "texture": {
+      "$description": "Animated texture tokens",
+
+      "grain": {
+        "$description": "Film/photo grain parameters",
+
+        "opacity": {
+          "subtle": {
+            "$value": 0.05,
+            "$type": "number",
+            "$description": "Subtle grain. Barely visible."
+          },
+          "light": {
+            "$value": 0.1,
+            "$type": "number",
+            "$description": "Light grain. Adds texture."
+          },
+          "medium": {
+            "$value": 0.15,
+            "$type": "number",
+            "$description": "Medium grain. Noticeable film look."
+          },
+          "heavy": {
+            "$value": 0.25,
+            "$type": "number",
+            "$description": "Heavy grain. High ISO look."
+          }
+        },
+        "size": {
+          "fine": {
+            "$value": 1,
+            "$type": "number",
+            "$description": "Fine grain. Small particles."
+          },
+          "medium": {
+            "$value": 2,
+            "$type": "number",
+            "$description": "Medium grain size."
+          },
+          "coarse": {
+            "$value": 4,
+            "$type": "number",
+            "$description": "Coarse grain. Large particles."
+          }
+        },
+        "speed": {
+          "static": {
+            "$value": "0ms",
+            "$type": "duration",
+            "$description": "Static grain. No animation."
+          },
+          "slow": {
+            "$value": "200ms",
+            "$type": "duration",
+            "$description": "Slow grain shift."
+          },
+          "medium": {
+            "$value": "100ms",
+            "$type": "duration",
+            "$description": "Medium grain animation."
+          },
+          "fast": {
+            "$value": "50ms",
+            "$type": "duration",
+            "$description": "Fast grain flicker."
+          }
+        }
+      },
+
+      "noise": {
+        "$description": "Procedural noise parameters",
+
+        "frequency": {
+          "low": {
+            "$value": 0.01,
+            "$type": "number",
+            "$description": "Low frequency. Large patterns."
+          },
+          "medium": {
+            "$value": 0.05,
+            "$type": "number",
+            "$description": "Medium frequency."
+          },
+          "high": {
+            "$value": 0.1,
+            "$type": "number",
+            "$description": "High frequency. Fine detail."
+          }
+        },
+        "amplitude": {
+          "subtle": {
+            "$value": 5,
+            "$type": "number",
+            "$description": "Subtle displacement (px)."
+          },
+          "medium": {
+            "$value": 15,
+            "$type": "number",
+            "$description": "Medium displacement (px)."
+          },
+          "strong": {
+            "$value": 30,
+            "$type": "number",
+            "$description": "Strong displacement (px)."
+          }
+        },
+        "octaves": {
+          "simple": {
+            "$value": 1,
+            "$type": "number",
+            "$description": "Single octave. Simple noise."
+          },
+          "detailed": {
+            "$value": 3,
+            "$type": "number",
+            "$description": "Multiple octaves. More detail."
+          },
+          "complex": {
+            "$value": 5,
+            "$type": "number",
+            "$description": "Many octaves. Complex texture."
+          }
+        }
+      },
+
+      "pattern": {
+        "$description": "Animated pattern parameters",
+
+        "scroll-speed": {
+          "slow": {
+            "$value": "30s",
+            "$type": "duration",
+            "$description": "Slow pattern scroll."
+          },
+          "medium": {
+            "$value": "15s",
+            "$type": "duration",
+            "$description": "Medium pattern scroll."
+          },
+          "fast": {
+            "$value": "5s",
+            "$type": "duration",
+            "$description": "Fast pattern scroll."
+          }
+        },
+        "scale-pulse": {
+          "subtle": {
+            "$value": 0.02,
+            "$type": "number",
+            "$description": "Subtle scale variance (±2%)."
+          },
+          "medium": {
+            "$value": 0.05,
+            "$type": "number",
+            "$description": "Medium scale variance (±5%)."
+          }
+        }
+      },
+
+      "surface": {
+        "$description": "Surface effect parameters",
+
+        "roughness": {
+          "smooth": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Perfectly smooth surface."
+          },
+          "polished": {
+            "$value": 0.2,
+            "$type": "number",
+            "$description": "Polished surface. Slight texture."
+          },
+          "matte": {
+            "$value": 0.5,
+            "$type": "number",
+            "$description": "Matte surface. Diffuse."
+          },
+          "rough": {
+            "$value": 0.8,
+            "$type": "number",
+            "$description": "Rough surface. Heavy texture."
+          }
+        },
+        "shimmer": {
+          "none": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "No shimmer effect."
+          },
+          "subtle": {
+            "$value": 0.1,
+            "$type": "number",
+            "$description": "Subtle shimmer."
+          },
+          "metallic": {
+            "$value": 0.3,
+            "$type": "number",
+            "$description": "Metallic shimmer."
+          }
+        }
+      }
+    }
+  }
+}

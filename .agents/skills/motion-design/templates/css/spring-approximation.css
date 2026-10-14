@@ -1,0 +1,174 @@
+/**
+ * CSS Spring Approximation
+ * Approximates spring physics using cubic-bezier curves
+ *
+ * Token References:
+ * - Spring configs from {motion.spring.*}
+ *
+ * Note: True spring physics require JavaScript. These are
+ * CSS approximations that capture the "feel" of springs.
+ *
+ * @see https://m3.material.io/styles/motion
+ */
+
+:root {
+  /* Duration variables - from tokens/duration.tokens.json */
+  --motion-duration-short-1: 50ms;
+  --motion-duration-short-2: 100ms;
+  --motion-duration-short-3: 150ms;
+  --motion-duration-short-4: 200ms;
+  --motion-duration-medium-1: 250ms;
+  --motion-duration-medium-2: 300ms;
+  --motion-duration-medium-3: 350ms;
+  --motion-duration-medium-4: 400ms;
+  --motion-duration-long-1: 450ms;
+  --motion-duration-long-2: 500ms;
+
+  /* Spring approximation curves */
+
+  /* Standard Spring (damping: 15, stiffness: 150)
+     Balanced, natural movement */
+  --spring-standard: cubic-bezier(0.2, 0, 0, 1);
+  --spring-standard-duration: 300ms;
+
+  /* Snappy Spring (damping: 25, stiffness: 300)
+     Quick response, minimal overshoot */
+  --spring-snappy: cubic-bezier(0.34, 1.1, 0.64, 1);
+  --spring-snappy-duration: 200ms;
+
+  /* Bouncy Spring (damping: 10, stiffness: 180)
+     Playful with visible overshoot */
+  --spring-bouncy: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --spring-bouncy-duration: 400ms;
+
+  /* Gentle Spring (damping: 25, stiffness: 100)
+     Slow, gradual settle */
+  --spring-gentle: cubic-bezier(0.4, 0, 0.2, 1);
+  --spring-gentle-duration: 500ms;
+
+  /* Enter Spring (damping: 20, stiffness: 180)
+     Optimized for entrance animations */
+  --spring-enter: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --spring-enter-duration: 350ms;
+}
+
+/* ============================================
+   Spring Animation Classes
+   ============================================ */
+
+/* Standard spring - balanced, natural */
+.spring-standard {
+  transition: transform var(--spring-standard-duration) var(--spring-standard),
+              opacity var(--spring-standard-duration) var(--spring-standard);
+}
+
+/* Snappy spring - quick, responsive */
+.spring-snappy {
+  transition: transform var(--spring-snappy-duration) var(--spring-snappy),
+              opacity var(--spring-snappy-duration) var(--spring-snappy);
+}
+
+/* Bouncy spring - playful, expressive */
+.spring-bouncy {
+  transition: transform var(--spring-bouncy-duration) var(--spring-bouncy),
+              opacity var(--spring-bouncy-duration) var(--spring-bouncy);
+}
+
+/* Gentle spring - slow, calming */
+.spring-gentle {
+  transition: transform var(--spring-gentle-duration) var(--spring-gentle),
+              opacity var(--spring-gentle-duration) var(--spring-gentle);
+}
+
+/* Enter spring - entrance optimized */
+.spring-enter {
+  transition: transform var(--spring-enter-duration) var(--spring-enter),
+              opacity var(--spring-enter-duration) var(--spring-enter);
+}
+
+/* ============================================
+   Common Spring Animations
+   ============================================ */
+
+/* Pop-in effect (celebratory) */
+@keyframes spring-pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  80% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.spring-pop-in {
+  animation: spring-pop-in var(--spring-bouncy-duration) var(--spring-bouncy) forwards;
+}
+
+/* Slide-up with spring */
+@keyframes spring-slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.spring-slide-up {
+  animation: spring-slide-up var(--spring-enter-duration) var(--spring-enter) forwards;
+}
+
+/* Button press with spring back */
+.spring-button {
+  transition: transform var(--spring-snappy-duration) var(--spring-snappy);
+}
+
+.spring-button:active {
+  transform: scale(0.95);
+}
+
+/* Toggle switch with spring */
+.spring-toggle {
+  transition: transform var(--spring-snappy-duration) var(--spring-snappy);
+}
+
+.spring-toggle[data-state="on"] {
+  transform: translateX(20px);
+}
+
+/* ============================================
+   Reduced Motion Support
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .spring-standard,
+  .spring-snappy,
+  .spring-bouncy,
+  .spring-gentle,
+  .spring-enter {
+    transition: opacity 100ms linear;
+  }
+
+  .spring-pop-in,
+  .spring-slide-up {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .spring-button:active,
+  .spring-toggle[data-state="on"] {
+    transform: none;
+    opacity: 0.9;
+  }
+}

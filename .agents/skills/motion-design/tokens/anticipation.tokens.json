@@ -1,0 +1,165 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Anticipation tokens - Disney's principle of preparation before action. Wind-up motion opposite to intended direction.",
+
+  "anticipation": {
+    "$description": "Wind-up parameters: scale, offset, and duration before main action",
+
+    "micro": {
+      "$type": "object",
+      "$value": {
+        "duration": "50ms",
+        "scale": 0.98,
+        "offsetY": "-2px",
+        "offsetX": "0px"
+      },
+      "$description": "Barely perceptible anticipation. Micro-interactions, toggles. Subtle professionalism."
+    },
+
+    "small": {
+      "$type": "object",
+      "$value": {
+        "duration": "80ms",
+        "scale": 0.95,
+        "offsetY": "-5px",
+        "offsetX": "0px"
+      },
+      "$description": "Noticeable but quick anticipation. Buttons, icons, small UI elements."
+    },
+
+    "medium": {
+      "$type": "object",
+      "$value": {
+        "duration": "120ms",
+        "scale": 0.9,
+        "offsetY": "-10px",
+        "offsetX": "0px"
+      },
+      "$description": "Standard anticipation for cards, modals, medium components."
+    },
+
+    "dramatic": {
+      "$type": "object",
+      "$value": {
+        "duration": "200ms",
+        "scale": 0.85,
+        "offsetY": "-20px",
+        "offsetX": "0px"
+      },
+      "$description": "Pronounced wind-up for hero moments, celebrations, dramatic reveals."
+    },
+
+    "extreme": {
+      "$type": "object",
+      "$value": {
+        "duration": "300ms",
+        "scale": 0.75,
+        "offsetY": "-40px",
+        "offsetX": "0px"
+      },
+      "$description": "Maximum anticipation for cartoon-style animations, gaming, playful brands."
+    }
+  },
+
+  "direction-patterns": {
+    "$description": "Anticipation offset direction relative to main action",
+
+    "vertical-up": {
+      "$type": "object",
+      "$value": {
+        "anticipationY": "negative",
+        "actionY": "positive"
+      },
+      "$description": "Crouch before jump. Pull down before popping up."
+    },
+
+    "vertical-down": {
+      "$type": "object",
+      "$value": {
+        "anticipationY": "positive",
+        "actionY": "negative"
+      },
+      "$description": "Rise before drop. Used for gravity-assisted actions."
+    },
+
+    "horizontal-left": {
+      "$type": "object",
+      "$value": {
+        "anticipationX": "positive",
+        "actionX": "negative"
+      },
+      "$description": "Pull right before moving left. Slide-in from left."
+    },
+
+    "horizontal-right": {
+      "$type": "object",
+      "$value": {
+        "anticipationX": "negative",
+        "actionX": "positive"
+      },
+      "$description": "Pull left before moving right. Slide-in from right."
+    },
+
+    "scale-up": {
+      "$type": "object",
+      "$value": {
+        "anticipationScale": "shrink",
+        "actionScale": "grow"
+      },
+      "$description": "Compress before expanding. Pop-in effects."
+    },
+
+    "scale-down": {
+      "$type": "object",
+      "$value": {
+        "anticipationScale": "grow",
+        "actionScale": "shrink"
+      },
+      "$description": "Swell before shrinking. Emphasis before disappear."
+    }
+  },
+
+  "timing-ratios": {
+    "$description": "Anticipation duration as percentage of total animation",
+
+    "subtle": {
+      "$type": "string",
+      "$value": "15%",
+      "$description": "Minimal anticipation time. Professional, efficient."
+    },
+
+    "standard": {
+      "$type": "string",
+      "$value": "20%",
+      "$description": "Balanced anticipation. Most UI use cases."
+    },
+
+    "expressive": {
+      "$type": "string",
+      "$value": "25%",
+      "$description": "Extended anticipation. Playful, character animation."
+    },
+
+    "dramatic": {
+      "$type": "string",
+      "$value": "35%",
+      "$description": "Long wind-up for maximum impact. Hero moments only."
+    }
+  },
+
+  "easing": {
+    "$description": "Easing curves for anticipation phase",
+
+    "wind-up": {
+      "$type": "cubicBezier",
+      "$value": [0.4, 0, 0.2, 1],
+      "$description": "Ease-out into anticipation position. Smooth deceleration to wind-up."
+    },
+
+    "spring-back": {
+      "$type": "cubicBezier",
+      "$value": [0.175, 0.885, 0.32, 1.275],
+      "$description": "Spring-like release from anticipation into action. Overshoots slightly."
+    }
+  }
+}

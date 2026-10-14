@@ -1,0 +1,221 @@
+{
+  "$schema": "https://designtokens.org/schemas/draft-2/schema.json",
+  "$description": "Exaggeration tokens - Disney's principle of amplifying motion for clarity and impact. Multipliers for scale, distance, and timing.",
+
+  "exaggeration": {
+    "$description": "Global multipliers for animation intensity",
+
+    "subtle": {
+      "$type": "object",
+      "$value": {
+        "multiplier": 1.1,
+        "scaleBoost": 1.05,
+        "distanceBoost": 1.1,
+        "timingStretch": 1.0
+      },
+      "$description": "Minimal exaggeration. Professional, enterprise, serious contexts."
+    },
+
+    "moderate": {
+      "$type": "object",
+      "$value": {
+        "multiplier": 1.3,
+        "scaleBoost": 1.15,
+        "distanceBoost": 1.25,
+        "timingStretch": 1.1
+      },
+      "$description": "Standard exaggeration. Consumer apps, general UI."
+    },
+
+    "expressive": {
+      "$type": "object",
+      "$value": {
+        "multiplier": 1.6,
+        "scaleBoost": 1.3,
+        "distanceBoost": 1.5,
+        "timingStretch": 1.2
+      },
+      "$description": "Pronounced exaggeration. Playful, gaming, creative apps."
+    },
+
+    "dramatic": {
+      "$type": "object",
+      "$value": {
+        "multiplier": 2.0,
+        "scaleBoost": 1.5,
+        "distanceBoost": 2.0,
+        "timingStretch": 1.3
+      },
+      "$description": "Maximum exaggeration. Hero moments, celebrations, landing pages."
+    },
+
+    "cartoon": {
+      "$type": "object",
+      "$value": {
+        "multiplier": 2.5,
+        "scaleBoost": 2.0,
+        "distanceBoost": 2.5,
+        "timingStretch": 1.5
+      },
+      "$description": "Cartoon-level exaggeration. Character animation, kids apps."
+    }
+  },
+
+  "context-mapping": {
+    "$description": "Exaggeration levels by use case",
+
+    "micro-interaction": {
+      "$type": "string",
+      "$value": "subtle",
+      "$description": "Buttons, toggles, ripples. Keep subtle to avoid distraction."
+    },
+
+    "state-change": {
+      "$type": "string",
+      "$value": "moderate",
+      "$description": "Tab switches, expansions, reveals. Clear but not overwhelming."
+    },
+
+    "notification": {
+      "$type": "string",
+      "$value": "expressive",
+      "$description": "Alerts, toasts, badges. Needs attention, deserves emphasis."
+    },
+
+    "celebration": {
+      "$type": "string",
+      "$value": "dramatic",
+      "$description": "Success states, achievements, milestones. Maximum impact."
+    },
+
+    "error": {
+      "$type": "string",
+      "$value": "moderate",
+      "$description": "Error states. Noticeable but not alarming. Avoid anxiety-inducing exaggeration."
+    },
+
+    "onboarding": {
+      "$type": "string",
+      "$value": "expressive",
+      "$description": "First-run experience. Memorable, engaging, brand-building."
+    }
+  },
+
+  "brand-attitude": {
+    "$description": "Exaggeration mapping by brand personality",
+
+    "elegant": {
+      "$type": "string",
+      "$value": "subtle",
+      "$description": "Luxury, premium, sophisticated brands. Restraint is elegance."
+    },
+
+    "professional": {
+      "$type": "string",
+      "$value": "subtle-to-moderate",
+      "$description": "Enterprise, B2B, productivity tools. Functional clarity."
+    },
+
+    "friendly": {
+      "$type": "string",
+      "$value": "moderate",
+      "$description": "Consumer apps, social platforms. Approachable warmth."
+    },
+
+    "playful": {
+      "$type": "string",
+      "$value": "expressive",
+      "$description": "Gaming, kids, creative tools. Joy and energy."
+    },
+
+    "bold": {
+      "$type": "string",
+      "$value": "dramatic",
+      "$description": "Disruptor brands, marketing sites. Make a statement."
+    }
+  },
+
+  "narrative-phase": {
+    "$description": "Exaggeration scaling through narrative arc",
+
+    "introduction": {
+      "$type": "object",
+      "$value": {
+        "level": "moderate-to-expressive",
+        "purpose": "establish-engagement"
+      },
+      "$description": "Opening moments. Build interest, set expectations."
+    },
+
+    "rising-action": {
+      "$type": "object",
+      "$value": {
+        "level": "moderate",
+        "purpose": "maintain-flow"
+      },
+      "$description": "Building toward climax. Steady escalation."
+    },
+
+    "climax": {
+      "$type": "object",
+      "$value": {
+        "level": "dramatic",
+        "purpose": "maximum-impact"
+      },
+      "$description": "Peak moment. Pull out all stops."
+    },
+
+    "resolution": {
+      "$type": "object",
+      "$value": {
+        "level": "subtle-to-moderate",
+        "purpose": "satisfying-conclusion"
+      },
+      "$description": "After climax. Return to calm, satisfaction."
+    }
+  },
+
+  "realistic-vs-stylized": {
+    "$description": "Spectrum from realistic to stylized motion",
+
+    "photorealistic": {
+      "$type": "object",
+      "$value": {
+        "exaggeration": 1.0,
+        "physics": "accurate",
+        "timing": "real-time"
+      },
+      "$description": "No exaggeration. Simulation, scientific visualization."
+    },
+
+    "natural": {
+      "$type": "object",
+      "$value": {
+        "exaggeration": 1.1,
+        "physics": "slightly-enhanced",
+        "timing": "optimized"
+      },
+      "$description": "Subtly enhanced reality. Professional UI."
+    },
+
+    "stylized": {
+      "$type": "object",
+      "$value": {
+        "exaggeration": 1.5,
+        "physics": "stylized",
+        "timing": "dramatic"
+      },
+      "$description": "Clearly stylized but believable. Most UI animation."
+    },
+
+    "cartoon": {
+      "$type": "object",
+      "$value": {
+        "exaggeration": 2.5,
+        "physics": "impossible",
+        "timing": "stretched"
+      },
+      "$description": "Full cartoon physics. Impossible but delightful."
+    }
+  }
+}
