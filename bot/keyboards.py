@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import time
 from typing import TYPE_CHECKING, Optional
 from aiogram.types import (
     InlineKeyboardMarkup,
@@ -125,10 +126,14 @@ def get_main_menu_keyboard(
 
     # Если задан URL Web App — добавляем кнопку прямого открытия Mini App
     if webapp_url:
+        from urllib.parse import quote
+        reg_part = f"#region={quote(current_region)}" if current_region else ""
+        clean_url = webapp_url.split("#")[0].split("?")[0]
+        final_url = f"{clean_url}?v={int(time.time())}&region={quote(current_region)}{reg_part}"
         rows.append([
             InlineKeyboardButton(
                 text="📱 Матрица цен (Mini App)",
-                web_app=WebAppInfo(url=webapp_url),
+                web_app=WebAppInfo(url=final_url),
             )
         ])
     else:
