@@ -17,23 +17,29 @@
   <meta name="twitter:image" content="https://x9x9x9www.github.io/apple-resell-bot/banner.jpg">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    :root {
-      /* Apple iPhone 18 Pro: Liquid Obsidian & Amber Gold Palette (Keynote Gold) */
-      --bg-color: #000000;
-      --card-bg: rgba(14, 13, 10, 0.82);
-      --card-bg-elevated: rgba(24, 21, 15, 0.94);
-      --card-border: rgba(251, 191, 36, 0.14);
-      --card-border-hover: rgba(251, 191, 36, 0.32);
-      --card-specular: inset 0 0.5px 0 rgba(255, 240, 200, 0.28);
+    @property --laser-angle {
+      syntax: '<angle>';
+      initial-value: 0deg;
+      inherits: false;
+    }
 
-      /* Amber Gold Accent (Warm Keynote Presentation Gold) */
-      --accent-color: #F59E0B;
-      --accent-highlight: #FBBF24;
-      --accent-glow: rgba(245, 158, 11, 0.40);
-      --accent-subtle: rgba(245, 158, 11, 0.14);
-      --accent-border: rgba(251, 191, 36, 0.36);
-      --accent-gradient: linear-gradient(135deg, #FBBF24 0%, #D97706 55%, #92400E 100%);
-      --accent-gradient-hover: linear-gradient(135deg, #FDE68A 0%, #F59E0B 50%, #B45309 100%);
+    :root {
+      /* Apple iPhone 18 Pro Cosmic Titanium Palette */
+      --bg-color: #050507;
+      --card-bg: rgba(18, 18, 22, 0.78);
+      --card-bg-elevated: rgba(28, 28, 34, 0.94);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-border-hover: rgba(255, 59, 112, 0.35);
+      --card-specular: inset 0 0.5px 0 rgba(255, 255, 255, 0.22);
+
+      /* iPhone 18 Pro Deep Burgundy Wine Accent */
+      --accent-color: #B81D4C;
+      --accent-highlight: #FF3B70;
+      --accent-glow: rgba(255, 59, 112, 0.40);
+      --accent-subtle: rgba(184, 29, 76, 0.16);
+      --accent-border: rgba(255, 59, 112, 0.38);
+      --accent-gradient: linear-gradient(135deg, #E62865 0%, #7D0E32 100%);
+      --accent-gradient-hover: linear-gradient(135deg, #F03875 0%, #941740 100%);
 
       /* Apple System Colors */
       --success-color: #30D158;
@@ -46,8 +52,8 @@
 
       /* Typography & Neutral Shades */
       --text-main: #FFFFFF;
-      --text-muted: #A3A3A8;
-      --text-tertiary: #6E6E73;
+      --text-muted: #98989E;
+      --text-tertiary: #636366;
       --tag-bg: rgba(255, 255, 255, 0.08);
       --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', system-ui, sans-serif;
 
@@ -82,7 +88,7 @@
     }
 
     body {
-      background: radial-gradient(130% 70% at 50% -12%, rgba(245, 158, 11, 0.18) 0%, rgba(217, 119, 6, 0.06) 40%, rgba(0, 0, 0, 1) 85%), #000000;
+      background: radial-gradient(130% 70% at 50% -12%, rgba(184, 29, 76, 0.18) 0%, rgba(125, 14, 50, 0.05) 45%, rgba(5, 5, 7, 1) 80%), #050507;
       background-attachment: fixed;
       color: var(--text-main);
       font-family: var(--font-family);
@@ -136,10 +142,10 @@
     }
 
     .ios-large-title .title-accent {
-      background: linear-gradient(135deg, #FFFFFF 0%, #FDE68A 35%, #F59E0B 75%, #D97706 100%);
+      background: linear-gradient(135deg, #FFFFFF 0%, #FF85A2 30%, #FF3B70 70%, #B81D4C 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 16px rgba(245, 158, 11, 0.3));
+      filter: drop-shadow(0 0 16px var(--accent-glow));
     }
 
     .header-actions {
@@ -149,7 +155,7 @@
       flex-shrink: 0;
     }
 
-    /* iOS Pill Buttons (Amber Gold & Glass) */
+    /* iOS Pill Buttons (Burgundy & Glass) */
     .btn-condition {
       background: rgba(255, 255, 255, 0.08);
       border: 0.5px solid var(--card-border);
@@ -174,8 +180,8 @@
 
     .btn-add-model {
       background: var(--accent-gradient);
-      color: #000;
-      font-weight: 800;
+      color: #fff;
+      font-weight: 700;
       border: none;
       padding: 6px 13px;
       border-radius: 20px;
@@ -244,9 +250,9 @@
       top: 5px;
       height: 48px;
       border-radius: 14px;
-      background: rgba(245, 158, 11, 0.12);
-      border: 0.5px solid rgba(251, 191, 36, 0.28);
-      box-shadow: inset 0 0.5px 0 rgba(255, 240, 200, 0.32), 0 2px 14px rgba(245, 158, 11, 0.22);
+      background: var(--accent-subtle);
+      border: 0.5px solid var(--accent-border);
+      box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.28), 0 2px 14px var(--accent-glow);
       z-index: 1;
       pointer-events: none;
       transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
@@ -294,7 +300,7 @@
     }
 
     .tab-item.active {
-      color: #FBBF24;
+      color: #fff;
     }
 
     .tab-item.active .tab-icon {
@@ -302,9 +308,9 @@
     }
 
     .tab-item.active .tab-label {
-      color: #FBBF24;
+      color: var(--accent-highlight);
       font-weight: 700;
-      text-shadow: 0 0 10px rgba(245, 158, 11, 0.35);
+      text-shadow: 0 0 10px var(--accent-glow);
     }
 
     /* Save Bar position adjusted above Tab Bar */
@@ -755,13 +761,13 @@
 
     .dynamic-island {
       pointer-events: auto;
-      background: rgba(12, 11, 8, 0.94);
+      background: rgba(10, 10, 14, 0.94);
       backdrop-filter: blur(32px) saturate(210%);
       -webkit-backdrop-filter: blur(32px) saturate(210%);
-      border: 0.5px solid rgba(251, 191, 36, 0.24);
-      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.8),
-                  inset 0 0.5px 0 rgba(255, 240, 200, 0.3),
-                  0 0 24px rgba(245, 158, 11, 0.25);
+      border: 0.5px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.75),
+                  inset 0 0.5px 0 rgba(255, 255, 255, 0.25),
+                  0 0 24px rgba(184, 29, 76, 0.22);
       border-radius: 28px;
       padding: 0 14px;
       height: 38px;
@@ -815,8 +821,8 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: #F59E0B;
-      box-shadow: 0 0 10px #F59E0B;
+      background: #30D158;
+      box-shadow: 0 0 8px #30D158;
     }
 
     .radar-ping {
@@ -824,7 +830,7 @@
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      border: 1.5px solid #F59E0B;
+      border: 1.5px solid #30D158;
       animation: radarRipple 1.8s cubic-bezier(0, 0.2, 0.8, 1) infinite;
     }
 
@@ -864,9 +870,9 @@
     .pulse-live {
       font-size: 9px;
       font-weight: 800;
-      background: rgba(245, 158, 11, 0.18);
-      color: #FBBF24;
-      border: 0.5px solid rgba(245, 158, 11, 0.4);
+      background: rgba(48, 209, 88, 0.18);
+      color: #30D158;
+      border: 0.5px solid rgba(48, 209, 88, 0.4);
       padding: 1px 5px;
       border-radius: 6px;
       letter-spacing: 0.5px;
@@ -886,9 +892,9 @@
     .island-region-badge {
       font-size: 9px;
       font-weight: 700;
-      color: #FBBF24;
-      background: rgba(245, 158, 11, 0.16);
-      border: 0.5px solid rgba(251, 191, 36, 0.35);
+      color: var(--accent-highlight);
+      background: var(--accent-subtle);
+      border: 0.5px solid var(--accent-border);
       padding: 2px 7px;
       border-radius: 10px;
       text-transform: uppercase;
@@ -916,10 +922,10 @@
       min-width: 290px;
       max-width: 92vw;
       border-radius: 26px;
-      border-color: rgba(251, 191, 36, 0.5);
-      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.9),
-                  0 0 32px var(--accent-glow),
-                  inset 0 0.5px 0 rgba(255, 240, 200, 0.35);
+      border-color: var(--accent-border);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85),
+                  0 0 28px var(--accent-glow),
+                  inset 0 0.5px 0 rgba(255, 255, 255, 0.3);
     }
 
     .dynamic-island.expanded .island-collapsed-view {
@@ -1064,7 +1070,7 @@
     }
     .series-pill.active {
       background: var(--accent-gradient);
-      color: #000;
+      color: #FFFFFF;
       font-weight: 800;
       border-color: transparent;
       box-shadow: var(--card-specular), 0 4px 18px var(--accent-glow);
@@ -1094,7 +1100,7 @@
     }
     .series-pill.btn-add-pill:active {
       transform: scale(0.95);
-      background: rgba(245, 158, 11, 0.25);
+      background: rgba(255, 59, 112, 0.25);
     }
 
     .badge-category {
@@ -1187,6 +1193,36 @@
       }
     }
 
+    @keyframes keynoteSceneEnter {
+      0% {
+        opacity: 0;
+        transform: scale(0.975) translateY(12px);
+        filter: blur(5px);
+      }
+      70% {
+        filter: blur(0px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        filter: blur(0px);
+      }
+    }
+
+    .keynote-scene-enter {
+      animation: keynoteSceneEnter 0.36s cubic-bezier(0.16, 1, 0.3, 1) both;
+      will-change: transform, opacity, filter;
+    }
+
+    @keyframes laserSpin {
+      0% {
+        --laser-angle: 0deg;
+      }
+      100% {
+        --laser-angle: 360deg;
+      }
+    }
+
     .model-card {
       background: var(--card-bg);
       backdrop-filter: blur(28px) saturate(190%);
@@ -1197,24 +1233,56 @@
       display: flex;
       flex-direction: column;
       gap: 11px;
-      box-shadow: var(--card-specular), 0 8px 26px rgba(0, 0, 0, 0.55), 0 0 16px rgba(245, 158, 11, 0.04);
+      box-shadow: var(--card-specular), 0 8px 26px rgba(0, 0, 0, 0.55), 0 0 16px rgba(255, 59, 112, 0.05);
       transition: transform 0.22s var(--spring-press), border-color 0.25s ease, box-shadow 0.25s ease, opacity 0.2s ease;
       animation: keynoteEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
       will-change: transform, opacity;
       position: relative;
     }
+    .model-card::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 21px;
+      padding: 1px;
+      background: conic-gradient(
+        from var(--laser-angle, 0deg) at 50% 50%,
+        transparent 0deg,
+        transparent 250deg,
+        rgba(184, 29, 76, 0.25) 290deg,
+        rgba(255, 59, 112, 0.85) 330deg,
+        #FFFFFF 352deg,
+        rgba(255, 133, 162, 0.95) 358deg,
+        transparent 360deg
+      );
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0.7;
+      animation: laserSpin 5s linear infinite;
+      transition: opacity 0.3s ease;
+      z-index: 2;
+    }
     .model-card:hover {
       border-color: var(--card-border-hover);
-      box-shadow: var(--card-specular), 0 12px 36px rgba(0, 0, 0, 0.65), 0 0 24px rgba(245, 158, 11, 0.14);
+      box-shadow: var(--card-specular), 0 12px 36px rgba(0, 0, 0, 0.65), 0 0 24px rgba(255, 59, 112, 0.18);
+    }
+    .model-card:hover::before {
+      opacity: 1;
+      animation-duration: 3s;
     }
     .model-card:active {
       transform: scale(0.988);
     }
     .model-card.custom-card {
-      border-color: rgba(251, 191, 36, 0.38);
+      border-color: rgba(255, 59, 112, 0.45);
     }
     .model-card.disabled {
       opacity: 0.44;
+    }
+    .model-card.disabled::before {
+      display: none;
     }
 
     .card-top {
@@ -1341,7 +1409,7 @@
     .storage-chip-btn.active {
       background: var(--accent-gradient);
       border-color: transparent;
-      color: #000;
+      color: #FFFFFF;
       font-weight: 800;
       box-shadow: var(--card-specular), 0 3px 12px var(--accent-glow);
     }
@@ -1533,7 +1601,8 @@
     .btn-save {
       flex: 1;
       background: var(--accent-gradient);
-      color: #000;
+      color: #FFFFFF;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
       border: none;
       padding: 14px;
       border-radius: 16px;
@@ -2187,6 +2256,19 @@
       border-color: var(--danger-color) !important;
       box-shadow: 0 0 14px rgba(255, 69, 58, 0.45) !important;
       animation: iosInputShake 0.38s var(--spring-bounce);
+    }
+
+    /* Accessibility: System Reduced Motion Fallback */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .model-card::before {
+        display: none !important;
+      }
     }
   </style>
 </head>
@@ -3524,6 +3606,48 @@ const POPULAR_TEMPLATES = [
 
     const selectedStorageMap = new Map();
 
+    function animateProfitBadge(badgeEl, targetValue, duration = 280) {
+      if (!badgeEl) return;
+      const currentValAttr = badgeEl.dataset.currentValue;
+      const startValue = currentValAttr !== undefined ? parseFloat(currentValAttr) : targetValue;
+      badgeEl.dataset.currentValue = targetValue;
+
+      badgeEl.classList.toggle('negative', targetValue < 0);
+      badgeEl.classList.remove('pulse');
+      void badgeEl.offsetWidth;
+      badgeEl.classList.add('pulse');
+
+      if (startValue === targetValue || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        badgeEl.textContent = `Навар: ~${Math.round(targetValue).toLocaleString('ru-RU')} ₽`;
+        return;
+      }
+
+      if (badgeEl._animFrame) {
+        cancelAnimationFrame(badgeEl._animFrame);
+        badgeEl._animFrame = null;
+      }
+
+      const startTime = performance.now();
+      const diff = targetValue - startValue;
+
+      function step(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const currentInterp = startValue + diff * eased;
+        badgeEl.textContent = `Навар: ~${Math.round(currentInterp).toLocaleString('ru-RU')} ₽`;
+
+        if (progress < 1) {
+          badgeEl._animFrame = requestAnimationFrame(step);
+        } else {
+          badgeEl.textContent = `Навар: ~${Math.round(targetValue).toLocaleString('ru-RU')} ₽`;
+          badgeEl._animFrame = null;
+        }
+      }
+
+      badgeEl._animFrame = requestAnimationFrame(step);
+    }
+
     function renderCards() {
       const container = document.getElementById('modelsList');
       container.innerHTML = '';
@@ -3706,7 +3830,7 @@ const POPULAR_TEMPLATES = [
           </div>
 
           <div class="card-footer" style="display:flex; justify-content:space-between; align-items:center;">
-            <span class="profit-badge ${profit < 0 ? 'negative' : ''}">Навар: ~${profit.toLocaleString('ru-RU')} ₽</span>
+            <span class="profit-badge ${profit < 0 ? 'negative' : ''}" data-current-value="${profit}">Навар: ~${profit.toLocaleString('ru-RU')} ₽</span>
             <button type="button" class="btn-toggle-config ${activeItem.enabled ? 'active' : ''}" title="Отслеживать именно этот объем памяти">
               <span class="config-check-icon">${activeItem.enabled ? '🟢 Включен' : '⚪️ Отключен'}</span>
             </button>
@@ -3722,11 +3846,7 @@ const POPULAR_TEMPLATES = [
 
         function updateProfitBadge() {
           const p = (activeItem.market || 0) - (activeItem.price || 0);
-          profitBadge.textContent = `Навар: ~${p.toLocaleString('ru-RU')} ₽`;
-          profitBadge.classList.toggle('negative', p < 0);
-          profitBadge.classList.remove('pulse');
-          void profitBadge.offsetWidth;
-          profitBadge.classList.add('pulse');
+          animateProfitBadge(profitBadge, p);
         }
 
         function updateConfigToggleBtn() {
@@ -5550,18 +5670,34 @@ const POPULAR_TEMPLATES = [
       tabAnalytics?.classList.remove('active');
       tabSettings?.classList.remove('active');
 
+      function triggerKeynoteEntrance(el) {
+        if (!el) return;
+        el.classList.remove('keynote-scene-enter');
+        void el.offsetWidth;
+        el.classList.add('keynote-scene-enter');
+      }
+
       if (tab === 'catalog') {
-        if (catalogView) catalogView.style.display = 'block';
+        if (catalogView) {
+          catalogView.style.display = 'block';
+          triggerKeynoteEntrance(catalogView);
+        }
         if (saveBar) saveBar.style.display = 'flex';
         tabCatalog?.classList.add('active');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (tab === 'analytics') {
-        if (analyticsView) analyticsView.style.display = 'block';
+        if (analyticsView) {
+          analyticsView.style.display = 'block';
+          triggerKeynoteEntrance(analyticsView);
+        }
         tabAnalytics?.classList.add('active');
         renderAnalyticsDashboard();
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (tab === 'settings') {
-        if (settingsView) settingsView.style.display = 'block';
+        if (settingsView) {
+          settingsView.style.display = 'block';
+          triggerKeynoteEntrance(settingsView);
+        }
         tabSettings?.classList.add('active');
         syncSettingsTabUI();
         window.scrollTo({ top: 0, behavior: 'smooth' });
