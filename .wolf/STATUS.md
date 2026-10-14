@@ -1,0 +1,48 @@
+---
+description: session handoff, regenerate with /handoff when a quest finishes
+budget_tokens: 1000
+---
+# STATUS — Бот по перекупу (Бредли Перекупер)
+
+> Single source of truth for resuming work. Read this FIRST when starting a session.
+> Last updated: 2026-10-14
+
+---
+
+## ✅ Done
+
+- **Блокировка дублирования (Single Instance Lock):** Внедрён PID-файл `bot.pid` в `main.py`, исключающий параллельный запуск копий бота и спам дублирующими сообщениями.
+- **Баннер Apple Keynote:** Сгенерирован статичный баннер `assets/banner.jpg` и интегрирован анимированный 3D-видеобаннер `assets/banner.mp4` в люксовом стиле бордового титанового iPhone 16 Pro.
+- **Формат Telegram «Статья» (`send_rich_message`):** Реализована блочная структура статьи по аналогии с отправкой через скрепку 📎 (заголовок над видео, видео-баннер в центре, `***` под видео, затем текст дашборда и кнопки).
+- **Разделитель `•••` под медиа:** Добавлен во все сервисные экраны и фотокарточки объявлений.
+- **Telegram Premium смайлики:** Внедрены нативные теги `<tg-emoji>` для интерактивных анимаций.
+- **Режим 1 Living Message:** Старые сервисные экраны удаляются перед отправкой нового.
+- **Интеграция OpenWolf:**
+  - Установлен глобальный CLI `openwolf` v2.5.2 (`~/.local/bin/openwolf`).
+  - Создан глобальный скилл Antigravity в `~/.gemini/config/skills/openwolf/SKILL.md`.
+  - Создан проектный скилл в `.agents/skills/openwolf/SKILL.md`.
+  - Инициализирована база `.wolf/` (индекс 57 файлов, cerebrum, status).
+
+---
+
+## 🚀 Next phase
+
+**Goal:** Эксплуатация бота в Telegram и мониторинг поисковых потоков.
+
+### Acceptance criteria
+1. Бот активно перехватывает лоты Авито и Юлы в выбранном регионе.
+2. При нажатии на кнопки меню отображается статья с видеобаннером без спама.
+3. Прокси подключены при необходимости обхода лимитов Авито.
+
+### Closed decisions
+- **Баннер:** Используется `send_rich_message` с кэшированным `file_id` (видео `баннер.mp4`), fallback на `send_animation` и `send_photo`.
+- **Клавиатура:** 1 кнопка WebApp на всю ширину + Инфо и Избранное во 2-м ряду.
+
+---
+
+## 📁 Active architecture
+
+- **Stack:** Python 3.12, aiogram 3.25+, asyncio, Redis / SQLite fallback, curl_cffi.
+- **Daemon PID:** `main.py` запущен в фоновом режиме через `.venv`.
+- **Active Bot:** `@perekypo4ka_bot`.
+- **OpenWolf:** v2.5.2, локальный индекс символов, статус и протокол памяти.

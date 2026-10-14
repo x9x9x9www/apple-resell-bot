@@ -1,0 +1,2620 @@
+{
+  "version": 1,
+  "meta": {
+    "lastScanned": "2026-10-14T05:16:40.095Z",
+    "fileCount": 57,
+    "hits": 0,
+    "misses": 0,
+    "renderedHash": "39ac9be05d31abdf70921d862b309a8b5deceda1780d7d2815ea9fdce5e5964e",
+    "storeUpdatedAt": "2026-10-14T05:16:40.096Z",
+    "rootHash": "cad2f1898109b2c3"
+  },
+  "files": {
+    "_headers": {
+      "description": "",
+      "tokens": 51,
+      "hash": "b2bd8bdffe4ce82e",
+      "size": 191,
+      "mtimeMs": 1791909984476.2212,
+      "updatedAt": "2026-10-14T05:16:39.941Z",
+      "source": "scan",
+      "importance": 0.0791
+    },
+    ".github/workflows/deploy-pages.yml": {
+      "description": "CI: Deploy Telegram Mini App to GitHub Pages",
+      "tokens": 213,
+      "hash": "7bfe5eb192097636",
+      "size": 744,
+      "mtimeMs": 1791913808027.6294,
+      "updatedAt": "2026-10-14T05:16:39.943Z",
+      "source": "scan",
+      "importance": 0.0791
+    },
+    ".gitignore": {
+      "description": "Git ignore rules",
+      "tokens": 119,
+      "hash": "78daf57562d036ff",
+      "size": 444,
+      "mtimeMs": 1791943476829.1216,
+      "updatedAt": "2026-10-14T05:16:39.943Z",
+      "source": "scan",
+      "importance": 0.0791
+    },
+    "AGENTS.md": {
+      "description": "OpenWolf",
+      "tokens": 75,
+      "hash": "e401f79554a8d796",
+      "size": 297,
+      "mtimeMs": 1791954758040.2817,
+      "updatedAt": "2026-10-14T05:16:39.943Z",
+      "source": "scan",
+      "importance": 0.0791
+    },
+    "article.html": {
+      "description": "⚡️ БРЕДЛИ ПЕРЕКУПЕР",
+      "tokens": 559,
+      "hash": "fbada56f4c7dd083",
+      "size": 2315,
+      "mtimeMs": 1791913499661.1985,
+      "updatedAt": "2026-10-14T05:16:39.943Z",
+      "source": "scan",
+      "importance": 0.0791
+    },
+    "bot/__init__.py": {
+      "description": "",
+      "tokens": 85,
+      "hash": "e0a6da51900cbc2f",
+      "size": 295,
+      "mtimeMs": 1791913808033.096,
+      "updatedAt": "2026-10-14T05:16:39.944Z",
+      "source": "scan",
+      "imports": [
+        "bot/bot.py",
+        "bot/dispatcher.py",
+        "bot/keyboards.py"
+      ],
+      "importance": 0.0791
+    },
+    "bot/bot.py": {
+      "description": "register_worker_query_listener, broadcast_worker_query, cleanup_user_message, send_or_replace_functional_message + 1 more",
+      "tokens": 27967,
+      "hash": "afa86038e6bfd82d",
+      "size": 111800,
+      "mtimeMs": 1791947356640.4443,
+      "updatedAt": "2026-10-14T05:16:39.947Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "register_worker_query_listener",
+          "kind": "fn",
+          "startLine": 84,
+          "endLine": 86,
+          "tokens": 59
+        },
+        {
+          "name": "broadcast_worker_query",
+          "kind": "fn",
+          "startLine": 89,
+          "endLine": 98,
+          "tokens": 101
+        },
+        {
+          "name": "cleanup_user_message",
+          "kind": "fn",
+          "startLine": 117,
+          "endLine": 128,
+          "tokens": 160
+        },
+        {
+          "name": "send_or_replace_functional_message",
+          "kind": "fn",
+          "startLine": 138,
+          "endLine": 273,
+          "tokens": 1738
+        },
+        {
+          "name": "send_rich_message",
+          "kind": "fn",
+          "startLine": 276,
+          "endLine": 292,
+          "tokens": 159
+        },
+        {
+          "name": "_show_city_selection_guide",
+          "kind": "fn",
+          "startLine": 295,
+          "endLine": 316,
+          "tokens": 332
+        },
+        {
+          "name": "create_bot",
+          "kind": "fn",
+          "startLine": 319,
+          "endLine": 324,
+          "tokens": 58
+        },
+        {
+          "name": "setup_bot_commands",
+          "kind": "fn",
+          "startLine": 327,
+          "endLine": 333,
+          "tokens": 115
+        },
+        {
+          "name": "create_bot_dispatcher",
+          "kind": "fn",
+          "startLine": 336,
+          "endLine": 2000,
+          "tokens": 21636
+        },
+        {
+          "name": "_build_stream_dashboard_text",
+          "kind": "fn",
+          "startLine": 2003,
+          "endLine": 2034,
+          "tokens": 496
+        },
+        {
+          "name": "_build_favorites_view",
+          "kind": "fn",
+          "startLine": 2037,
+          "endLine": 2071,
+          "tokens": 483
+        },
+        {
+          "name": "_build_dashboard_text",
+          "kind": "fn",
+          "startLine": 2074,
+          "endLine": 2110,
+          "tokens": 496
+        },
+        {
+          "name": "_build_status_text",
+          "kind": "fn",
+          "startLine": 2113,
+          "endLine": 2131,
+          "tokens": 396
+        },
+        {
+          "name": "_send_excel_file",
+          "kind": "fn",
+          "startLine": 2134,
+          "endLine": 2182,
+          "tokens": 677
+        }
+      ],
+      "symbolSource": "ts",
+      "skeleton": "def register_worker_query_listener(callback: Callable[[str], None]) -> None:\ndef broadcast_worker_query(query: str) -> None:\nasync def cleanup_user_message(message: types.Message) -> None:\nasync def send_or_replace_functional_message(\nasync def send_rich_message(\nasync def _show_city_selection_guide(message: types.Message, reg_manager: RegionManager) -> None:\ndef create_bot() -> Bot:\nasync def setup_bot_commands(bot: Bot) -> None:\ndef create_bot_dispatcher(\ndef _build_stream_dashboard_text(stream: SearchStream) -> str:\ndef _build_favorites_view(user_id: int | str, page: int = 0, per_page: int = 5) -> tuple[str, InlineKeyboardMarkup]:\ndef _build_dashboard_text(\ndef _build_status_text(\nasync def _send_excel_file(message: types.Message, filter_instance: MarginFilter) -> None:",
+      "imports": [
+        "config.py",
+        "core/margin_filter.py",
+        "core/excel_manager.py",
+        "core/regions.py",
+        "core/link_stream.py",
+        "core/user_profile.py",
+        "core/favorites.py",
+        "bot/keyboards.py"
+      ],
+      "importance": 0.124
+    },
+    "bot/dispatcher.py": {
+      "description": "ItemDispatcher: format_lot_message, start",
+      "tokens": 4868,
+      "hash": "d2a22f15721e2882",
+      "size": 18924,
+      "mtimeMs": 1791946712797.0823,
+      "updatedAt": "2026-10-14T05:16:39.948Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "format_lot_message",
+          "kind": "fn",
+          "startLine": 28,
+          "endLine": 135,
+          "tokens": 1324
+        },
+        {
+          "name": "ItemDispatcher",
+          "kind": "class",
+          "startLine": 138,
+          "endLine": 396,
+          "tokens": 3303
+        },
+        {
+          "name": "ItemDispatcher.__init__",
+          "kind": "method",
+          "startLine": 145,
+          "endLine": 164,
+          "tokens": 236
+        },
+        {
+          "name": "ItemDispatcher.start",
+          "kind": "method",
+          "startLine": 166,
+          "endLine": 182,
+          "tokens": 202
+        },
+        {
+          "name": "ItemDispatcher._process_single_item",
+          "kind": "method",
+          "startLine": 184,
+          "endLine": 393,
+          "tokens": 2776
+        },
+        {
+          "name": "ItemDispatcher.stop",
+          "kind": "method",
+          "startLine": 395,
+          "endLine": 396,
+          "tokens": 17
+        }
+      ],
+      "symbolSource": "ts",
+      "skeleton": "def format_lot_message(item: ParsedIPhone) -> str:\nclass ItemDispatcher:\n    def __init__(\n    async def start(self) -> None:\n    async def _process_single_item(self, raw_item: RawItem) -> None:\n    def stop(self) -> None:",
+      "imports": [
+        "config.py",
+        "core/models.py",
+        "core/parser.py",
+        "core/margin_filter.py",
+        "core/deduplicator.py",
+        "core/regions.py",
+        "core/user_profile.py",
+        "core/favorites.py",
+        "bot/keyboards.py"
+      ],
+      "importance": 0.1968
+    },
+    "bot/keyboards.py": {
+      "description": "get_item_keyboard, get_favorites_keyboard, get_main_menu_keyboard, get_reply_keyboard + 6 more",
+      "tokens": 3524,
+      "hash": "fb7e01fd9b8ae09e",
+      "size": 13789,
+      "mtimeMs": 1791913808035.022,
+      "updatedAt": "2026-10-14T05:16:39.949Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "get_item_keyboard",
+          "kind": "fn",
+          "startLine": 19,
+          "endLine": 43,
+          "tokens": 201
+        },
+        {
+          "name": "get_favorites_keyboard",
+          "kind": "fn",
+          "startLine": 46,
+          "endLine": 107,
+          "tokens": 579
+        },
+        {
+          "name": "get_main_menu_keyboard",
+          "kind": "fn",
+          "startLine": 110,
+          "endLine": 185,
+          "tokens": 618
+        },
+        {
+          "name": "get_reply_keyboard",
+          "kind": "fn",
+          "startLine": 188,
+          "endLine": 232,
+          "tokens": 401
+        },
+        {
+          "name": "get_hide_keyboard",
+          "kind": "fn",
+          "startLine": 235,
+          "endLine": 237,
+          "tokens": 37
+        },
+        {
+          "name": "get_regions_keyboard",
+          "kind": "fn",
+          "startLine": 241,
+          "endLine": 290,
+          "tokens": 506
+        },
+        {
+          "name": "get_models_menu_keyboard",
+          "kind": "fn",
+          "startLine": 293,
+          "endLine": 313,
+          "tokens": 209
+        },
+        {
+          "name": "get_back_to_menu_keyboard",
+          "kind": "fn",
+          "startLine": 316,
+          "endLine": 327,
+          "tokens": 102
+        },
+        {
+          "name": "get_stream_control_keyboard",
+          "kind": "fn",
+          "startLine": 330,
+          "endLine": 361,
+          "tokens": 318
+        },
+        {
+          "name": "get_stream_filters_keyboard",
+          "kind": "fn",
+          "startLine": 364,
+          "endLine": 403,
+          "tokens": 449
+        }
+      ],
+      "symbolSource": "ts",
+      "skeleton": "def get_item_keyboard(\ndef get_favorites_keyboard(\ndef get_main_menu_keyboard(\ndef get_reply_keyboard(\ndef get_hide_keyboard() -> ReplyKeyboardRemove:\ndef get_regions_keyboard(current_key: str = \"moskva\", page: int = 0, per_page: int = 12) -> InlineKeyboardMarkup:\ndef get_models_menu_keyboard(margin_filter: MarginFilter) -> InlineKeyboardMarkup:\ndef get_back_to_menu_keyboard() -> InlineKeyboardMarkup:\ndef get_stream_control_keyboard(stream: Any) -> InlineKeyboardMarkup:\ndef get_stream_filters_keyboard(stream: Any) -> InlineKeyboardMarkup:",
+      "imports": [
+        "config.py",
+        "core/margin_filter.py"
+      ],
+      "importance": 0.1669
+    },
+    "CLAUDE.md": {
+      "description": "OpenWolf",
+      "tokens": 99,
+      "hash": "074d6b42b583729a",
+      "size": 395,
+      "mtimeMs": 1791954758022.6733,
+      "updatedAt": "2026-10-14T05:16:39.949Z",
+      "source": "scan",
+      "importance": 0.0791
+    },
+    "config.py": {
+      "description": "Settings: parse_target_chat_id, load_pricing_matrix, load_proxies",
+      "tokens": 777,
+      "hash": "8ea0809bdba23552",
+      "size": 2822,
+      "mtimeMs": 1791913808035.1384,
+      "updatedAt": "2026-10-14T05:16:39.949Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "Settings",
+          "kind": "class",
+          "startLine": 10,
+          "endLine": 72,
+          "tokens": 705
+        },
+        {
+          "name": "Settings.load_pricing_matrix",
+          "kind": "method",
+          "startLine": 56,
+          "endLine": 64,
+          "tokens": 124
+        },
+        {
+          "name": "Settings.load_proxies",
+          "kind": "method",
+          "startLine": 66,
+          "endLine": 72,
+          "tokens": 92
+        }
+      ],
+      "symbolSource": "ts",
+      "importance": 0.8492
+    },
+    "core/__init__.py": {
+      "description": "",
+      "tokens": 92,
+      "hash": "6479c5fa576ca977",
+      "size": 322,
+      "mtimeMs": 1791913808035.2935,
+      "updatedAt": "2026-10-14T05:16:39.950Z",
+      "source": "scan",
+      "imports": [
+        "core/models.py",
+        "core/deduplicator.py",
+        "core/parser.py",
+        "core/margin_filter.py"
+      ],
+      "importance": 0.0791
+    },
+    "core/deduplicator.py": {
+      "description": "RedisDeduplicator: extract_image_key, normalize_text_fingerprint, normalize_location, connect + 3 more",
+      "tokens": 4262,
+      "hash": "ffc39de7f0e69622",
+      "size": 17005,
+      "mtimeMs": 1791913808035.405,
+      "updatedAt": "2026-10-14T05:16:39.951Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "extract_image_key",
+          "kind": "fn",
+          "startLine": 18,
+          "endLine": 31,
+          "tokens": 138
+        },
+        {
+          "name": "normalize_text_fingerprint",
+          "kind": "fn",
+          "startLine": 34,
+          "endLine": 40,
+          "tokens": 118
+        },
+        {
+          "name": "normalize_location",
+          "kind": "fn",
+          "startLine": 43,
+          "endLine": 48,
+          "tokens": 58
+        },
+        {
+          "name": "RedisDeduplicator",
+          "kind": "class",
+          "startLine": 51,
+          "endLine": 372,
+          "tokens": 3854
+        },
+        {
+          "name": "RedisDeduplicator.__init__",
+          "kind": "method",
+          "startLine": 64,
+          "endLine": 90,
+          "tokens": 328
+        },
+        {
+          "name": "RedisDeduplicator.connect",
+          "kind": "method",
+          "startLine": 92,
+          "endLine": 118,
+          "tokens": 307
+        },
+        {
+          "name": "RedisDeduplicator._init_sqlite",
+          "kind": "method",
+          "startLine": 120,
+          "endLine": 181,
+          "tokens": 690
+        },
+        {
+          "name": "RedisDeduplicator.close",
+          "kind": "method",
+          "startLine": 183,
+          "endLine": 190,
+          "tokens": 80
+        },
+        {
+          "name": "RedisDeduplicator._make_key",
+          "kind": "method",
+          "startLine": 192,
+          "endLine": 193,
+          "tokens": 32
+        },
+        {
+          "name": "RedisDeduplicator.check_and_update",
+          "kind": "method",
+          "startLine": 195,
+          "endLine": 254,
+          "tokens": 736
+        },
+        {
+          "name": "RedisDeduplicator._save_item_sqlite",
+          "kind": "method",
+          "startLine": 256,
+          "endLine": 267,
+          "tokens": 167
+        },
+        {
+          "name": "RedisDeduplicator.check_and_mark_semantic_duplicate",
+          "kind": "method",
+          "startLine": 269,
+          "endLine": 329,
+          "tokens": 729
+        },
+        {
+          "name": "RedisDeduplicator._record_fingerprints",
+          "kind": "method",
+          "startLine": 331,
+          "endLine": 356,
+          "tokens": 342
+        },
+        {
+          "name": "RedisDeduplicator._update_item_fingerprints",
+          "kind": "method",
+          "startLine": 358,
+          "endLine": 367,
+          "tokens": 162
+        },
+        {
+          "name": "RedisDeduplicator.is_new_and_mark",
+          "kind": "method",
+          "startLine": 369,
+          "endLine": 372,
+          "tokens": 88
+        }
+      ],
+      "symbolSource": "ts",
+      "skeleton": "def extract_image_key(url: Optional[str]) -> Optional[str]:\ndef normalize_text_fingerprint(title: str, description: str = \"\") -> str:\ndef normalize_location(loc: str) -> str:\nclass RedisDeduplicator:\n    def __init__(\n    async def connect(self) -> None:\n    def _init_sqlite(self) -> None:\n    async def close(self) -> None:\n    def _make_key(self, platform: str, item_id: str) -> str:\n    async def check_and_update(\n    def _save_item_sqlite(self, key: str, price: int, expires_at: float) -> None:\n    async def check_and_mark_semantic_duplicate(\n    def _record_fingerprints(self, item: ParsedIPhone, fingerprints: list[str]) -> None:\n    def _update_item_fingerprints(self, item: ParsedIPhone) -> None:\n    async def is_new_and_mark(self, platform: str, item_id: str, price: int = 0) -> bool:",
+      "imports": [
+        "config.py",
+        "core/models.py"
+      ],
+      "importance": 0.2065
+    },
+    "core/excel_manager.py": {
+      "description": "ExcelPricingManager: export_matrix_to_bytes, parse_excel_to_matrix, import_matrix_from_bytes",
+      "tokens": 2265,
+      "hash": "d67b7f8f4dc1224d",
+      "size": 8678,
+      "mtimeMs": 1791913808036.1284,
+      "updatedAt": "2026-10-14T05:16:39.951Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "ExcelPricingManager",
+          "kind": "class",
+          "startLine": 15,
+          "endLine": 215,
+          "tokens": 2174
+        }
+      ],
+      "symbolSource": "ts",
+      "skeleton": "class ExcelPricingManager:",
+      "importance": 0.1596
+    },
+    "core/favorites.py": {
+      "description": "URL configuration",
+      "tokens": 1516,
+      "hash": "3366f6ff776545ff",
+      "size": 5784,
+      "mtimeMs": 1791913808036.2498,
+      "updatedAt": "2026-10-14T05:16:39.951Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "FavoritesManager",
+          "kind": "class",
+          "startLine": 20,
+          "endLine": 140,
+          "tokens": 1395
+        },
+        {
+          "name": "FavoritesManager.__init__",
+          "kind": "method",
+          "startLine": 26,
+          "endLine": 32,
+          "tokens": 106
+        },
+        {
+          "name": "FavoritesManager._load",
+          "kind": "method",
+          "startLine": 34,
+          "endLine": 47,
+          "tokens": 151
+        },
+        {
+          "name": "FavoritesManager._save",
+          "kind": "method",
+          "startLine": 49,
+          "endLine": 56,
+          "tokens": 109
+        },
+        {
+          "name": "FavoritesManager.cache_dispatched_lot",
+          "kind": "method",
+          "startLine": 58,
+          "endLine": 79,
+          "tokens": 332
+        },
+        {
+          "name": "FavoritesManager.get_cached_lot",
+          "kind": "method",
+          "startLine": 81,
+          "endLine": 82,
+          "tokens": 39
+        },
+        {
+          "name": "FavoritesManager.get_favorites",
+          "kind": "method",
+          "startLine": 84,
+          "endLine": 86,
+          "tokens": 43
+        },
+        {
+          "name": "FavoritesManager.is_favorite",
+          "kind": "method",
+          "startLine": 88,
+          "endLine": 92,
+          "tokens": 69
+        },
+        {
+          "name": "FavoritesManager.add_favorite",
+          "kind": "method",
+          "startLine": 94,
+          "endLine": 119,
+          "tokens": 260
+        },
+        {
+          "name": "FavoritesManager.remove_favorite",
+          "kind": "method",
+          "startLine": 121,
+          "endLine": 131,
+          "tokens": 142
+        },
+        {
+          "name": "FavoritesManager.clear_favorites",
+          "kind": "method",
+          "startLine": 133,
+          "endLine": 140,
+          "tokens": 94
+        }
+      ],
+      "symbolSource": "ts",
+      "imports": [
+        "core/models.py"
+      ],
+      "importance": 0.1781
+    },
+    "core/link_stream.py": {
+      "description": "SearchStream: to_dict, from_dict, extract_prices_from_query, parse_search_url",
+      "tokens": 6590,
+      "hash": "74ed14514d6bfe1b",
+      "size": 24811,
+      "mtimeMs": 1791913808036.3784,
+      "updatedAt": "2026-10-14T05:16:39.952Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "SearchStream",
+          "kind": "class",
+          "startLine": 62,
+          "endLine": 173,
+          "tokens": 1397
+        },
+        {
+          "name": "SearchStream.__init__",
+          "kind": "method",
+          "startLine": 65,
+          "endLine": 115,
+          "tokens": 632
+        },
+        {
+          "name": "SearchStream.to_dict",
+          "kind": "method",
+          "startLine": 117,
+          "endLine": 143,
+          "tokens": 328
+        },
+        {
+          "name": "extract_prices_from_query",
+          "kind": "fn",
+          "startLine": 176,
+          "endLine": 248,
+          "tokens": 874
+        },
+        {
+          "name": "parse_search_url",
+          "kind": "fn",
+          "startLine": 251,
+          "endLine": 386,
+          "tokens": 1377
+        },
+        {
+          "name": "StreamManager",
+          "kind": "class",
+          "startLine": 389,
+          "endLine": 598,
+          "tokens": 2452
+        },
+        {
+          "name": "StreamManager.__init__",
+          "kind": "method",
+          "startLine": 392,
+          "endLine": 395,
+          "tokens": 76
+        },
+        {
+          "name": "StreamManager.load",
+          "kind": "method",
+          "startLine": 397,
+          "endLine": 425,
+          "tokens": 434
+        },
+        {
+          "name": "StreamManager.save",
+          "kind": "method",
+          "startLine": 427,
+          "endLine": 435,
+          "tokens": 135
+        },
+        {
+          "name": "StreamManager.create_or_update_stream",
+          "kind": "method",
+          "startLine": 437,
+          "endLine": 478,
+          "tokens": 511
+        },
+        {
+          "name": "StreamManager.get_stream",
+          "kind": "method",
+          "startLine": 480,
+          "endLine": 481,
+          "tokens": 31
+        },
+        {
+          "name": "StreamManager.get_all_streams",
+          "kind": "method",
+          "startLine": 483,
+          "endLine": 484,
+          "tokens": 28
+        },
+        {
+          "name": "StreamManager.get_all_active_streams",
+          "kind": "method",
+          "startLine": 486,
+          "endLine": 487,
+          "tokens": 36
+        },
+        {
+          "name": "StreamManager.toggle_active",
+          "kind": "method",
+          "startLine": 489,
+          "endLine": 495,
+          "tokens": 72
+        },
+        {
+          "name": "StreamManager.toggle_filter",
+          "kind": "method",
+          "startLine": 497,
+          "endLine": 507,
+          "tokens": 120
+        },
+        {
+          "name": "StreamManager.add_blacklist_word",
+          "kind": "method",
+          "startLine": 509,
+          "endLine": 518,
+          "tokens": 102
+        },
+        {
+          "name": "StreamManager.remove_blacklist_word",
+          "kind": "method",
+          "startLine": 520,
+          "endLine": 529,
+          "tokens": 100
+        },
+        {
+          "name": "StreamManager.delete_stream",
+          "kind": "method",
+          "startLine": 531,
+          "endLine": 536,
+          "tokens": 56
+        },
+        {
+          "name": "StreamManager.increment_lots_found",
+          "kind": "method",
+          "startLine": 538,
+          "endLine": 543,
+          "tokens": 73
+        },
+        {
+          "name": "StreamManager.evaluate_item_for_stream",
+          "kind": "method",
+          "startLine": 545,
+          "endLine": 598,
+          "tokens": 650
+        }
+      ],
+      "symbolSource": "ts",
+      "skeleton": "class SearchStream:\n    def __init__(\n    def to_dict(self) -> dict[str, Any]:\ndef extract_prices_from_query(query_params: dict[str, list[str]], clean_url: str) -> tuple[Optional[int], Optional[int]]:\ndef parse_search_url(raw_url: str) -> Optional[dict[str, Any]]:\nclass StreamManager:\n    def __init__(self, file_path: Optional[Path | str] = None):\n    def load(self) -> None:\n    def save(self) -> None:\n    def create_or_update_stream(self, chat_id: int, url: str) -> Optional[SearchStream]:\n    def get_stream(self, chat_id: int) -> Optional[SearchStream]:\n    def get_all_streams(self) -> list[SearchStream]:\n    def get_all_active_streams(self) -> list[SearchStream]:\n    def toggle_active(self, chat_id: int) -> Optional[bool]:\n    def toggle_filter(self, chat_id: int, filter_key: str) -> Optional[bool]:\n    def add_blacklist_word(self, chat_id: int, word: str) -> bool:\n    def remove_blacklist_word(self, chat_id: int, word: str) -> bool:\n    def delete_stream(self, chat_id: int) -> bool:\n    def increment_lots_found(self, chat_id: int) -> None:\n    def evaluate_item_for_stream(self, stream: SearchStream, item: RawItem) -> tuple[bool, Optional[str]]:",
+      "imports": [
+        "config.py",
+        "core/models.py",
+        "core/regions.py"
+      ],
+      "importance": 0.127
+    },
+    "core/margin_filter.py": {
+      "description": "MarginFilter: reload_matrix, save_matrix, is_series_enabled, toggle_series + 2 more",
+      "tokens": 2134,
+      "hash": "e9f8e07a1e13f482",
+      "size": 8446,
+      "mtimeMs": 1791913808037.3918,
+      "updatedAt": "2026-10-14T05:16:39.952Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "MarginFilter",
+          "kind": "class",
+          "startLine": 13,
+          "endLine": 180,
+          "tokens": 2067
+        },
+        {
+          "name": "MarginFilter.__init__",
+          "kind": "method",
+          "startLine": 34,
+          "endLine": 35,
+          "tokens": 50
+        },
+        {
+          "name": "MarginFilter.reload_matrix",
+          "kind": "method",
+          "startLine": 37,
+          "endLine": 40,
+          "tokens": 60
+        },
+        {
+          "name": "MarginFilter.save_matrix",
+          "kind": "method",
+          "startLine": 42,
+          "endLine": 59,
+          "tokens": 306
+        },
+        {
+          "name": "MarginFilter.is_series_enabled",
+          "kind": "method",
+          "startLine": 61,
+          "endLine": 68,
+          "tokens": 116
+        },
+        {
+          "name": "MarginFilter.toggle_series",
+          "kind": "method",
+          "startLine": 70,
+          "endLine": 80,
+          "tokens": 157
+        },
+        {
+          "name": "MarginFilter._matches_series",
+          "kind": "method",
+          "startLine": 82,
+          "endLine": 102,
+          "tokens": 294
+        },
+        {
+          "name": "MarginFilter.get_stats",
+          "kind": "method",
+          "startLine": 104,
+          "endLine": 115,
+          "tokens": 144
+        },
+        {
+          "name": "MarginFilter.evaluate",
+          "kind": "method",
+          "startLine": 117,
+          "endLine": 180,
+          "tokens": 758
+        }
+      ],
+      "symbolSource": "ts",
+      "skeleton": "class MarginFilter:\n    def __init__(self, matrix: Optional[dict[str, dict[str, dict[str, Any]]]] = None):\n    def reload_matrix(self) -> None:\n    def save_matrix(self, path: Optional[Path | str] = None) -> None:\n    def is_series_enabled(self, series_key: str) -> bool:\n    def toggle_series(self, series_key: str, save: bool = True) -> bool:\n    def _matches_series(self, model_name: str, series_key: str) -> bool:\n    def get_stats(self) -> dict[str, int]:\n    def evaluate(self, item: ParsedIPhone) -> bool:",
+      "imports": [
+        "config.py",
+        "core/models.py"
+      ],
+      "importance": 0.2267
+    },
+    "core/models.py": {
+      "description": "Pydantic: RawItem (51 fields)",
+      "tokens": 853,
+      "hash": "a855e5909bb01576",
+      "size": 3565,
+      "mtimeMs": 1791913808037.4905,
+      "updatedAt": "2026-10-14T05:16:39.953Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "Platform",
+          "kind": "class",
+          "startLine": 9,
+          "endLine": 11,
+          "tokens": 19
+        },
+        {
+          "name": "RawItem",
+          "kind": "class",
+          "startLine": 14,
+          "endLine": 35,
+          "tokens": 237
+        },
+        {
+          "name": "ParsedGadget",
+          "kind": "class",
+          "startLine": 38,
+          "endLine": 73,
+          "tokens": 528
+        }
+      ],
+      "symbolSource": "ts",
+      "importance": 1
+    },
+    "core/parser.py": {
+      "description": "Регулярные выражения для фильтрации мусора, копий и брака (Blacklist)",
+      "tokens": 6926,
+      "hash": "a69fadf0137d48b5",
+      "size": 28261,
+      "mtimeMs": 1791913808037.606,
+      "updatedAt": "2026-10-14T05:16:39.953Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "_has_unnegated_match",
+          "kind": "fn",
+          "startLine": 55,
+          "endLine": 66,
+          "tokens": 147
+        },
+        {
+          "name": "detect_category",
+          "kind": "fn",
+          "startLine": 249,
+          "endLine": 266,
+          "tokens": 164
+        },
+        {
+          "name": "IPhoneNLPParser",
+          "kind": "class",
+          "startLine": 269,
+          "endLine": 487,
+          "tokens": 2223
+        },
+        {
+          "name": "parse_marketplace_datetime",
+          "kind": "fn",
+          "startLine": 498,
+          "endLine": 584,
+          "tokens": 882
+        }
+      ],
+      "symbolSource": "ts",
+      "skeleton": "def _has_unnegated_match(pattern: re.Pattern, text: str) -> bool:\ndef detect_category(model_name: str) -> str:\nclass IPhoneNLPParser:\ndef parse_marketplace_datetime(raw_val: Any) -> Optional[datetime]:",
+      "imports": [
+        "core/models.py"
+      ],
+      "importance": 0.2085
+    },
+    "core/regions.py": {
+      "description": "",
+      "tokens": 7823,
+      "hash": "e0d46fca1d79832b",
+      "size": 31241,
+      "mtimeMs": 1791913808038.236,
+      "updatedAt": "2026-10-14T05:16:39.954Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "RegionManager",
+          "kind": "class",
+          "startLine": 338,
+          "endLine": 521,
+          "tokens": 2122
+        },
+        {
+          "name": "RegionManager.__init__",
+          "kind": "method",
+          "startLine": 344,
+          "endLine": 347,
+          "tokens": 87
+        },
+        {
+          "name": "RegionManager._load",
+          "kind": "method",
+          "startLine": 349,
+          "endLine": 367,
+          "tokens": 225
+        },
+        {
+          "name": "RegionManager._save",
+          "kind": "method",
+          "startLine": 369,
+          "endLine": 375,
+          "tokens": 100
+        },
+        {
+          "name": "RegionManager.add_listener",
+          "kind": "method",
+          "startLine": 382,
+          "endLine": 384,
+          "tokens": 61
+        },
+        {
+          "name": "RegionManager.set_region",
+          "kind": "method",
+          "startLine": 386,
+          "endLine": 427,
+          "tokens": 440
+        },
+        {
+          "name": "RegionManager.find_cities",
+          "kind": "method",
+          "startLine": 429,
+          "endLine": 462,
+          "tokens": 366
+        },
+        {
+          "name": "RegionManager.is_item_matching_current_region",
+          "kind": "method",
+          "startLine": 464,
+          "endLine": 521,
+          "tokens": 757
+        }
+      ],
+      "symbolSource": "ts",
+      "skeleton": "class RegionManager:\n    def __init__(self, config_file: Optional[Path | str] = None):\n    def _load(self) -> dict[str, str]:\n    def _save(self) -> None:\n    def add_listener(self, callback: Callable[[dict[str, str]], None]) -> None:\n    def set_region(self, city_key_or_name: str) -> Optional[dict[str, str]]:\n    def find_cities(self, query: str) -> list[tuple[str, dict[str, str]]]:\n    def is_item_matching_current_region(self, location: str, url: str = \"\") -> bool:",
+      "imports": [
+        "config.py"
+      ],
+      "importance": 0.2197
+    },
+    "core/user_profile.py": {
+      "description": "Pydantic: UserConditionRules (34 fields)",
+      "tokens": 3529,
+      "hash": "376fefb0ab26c3e0",
+      "size": 14483,
+      "mtimeMs": 1791913808038.3667,
+      "updatedAt": "2026-10-14T05:16:39.955Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "UserConditionRules",
+          "kind": "class",
+          "startLine": 15,
+          "endLine": 23,
+          "tokens": 240
+        },
+        {
+          "name": "CustomCategory",
+          "kind": "class",
+          "startLine": 26,
+          "endLine": 31,
+          "tokens": 127
+        },
+        {
+          "name": "UserModelConfig",
+          "kind": "class",
+          "startLine": 34,
+          "endLine": 43,
+          "tokens": 182
+        },
+        {
+          "name": "UserResellProfile",
+          "kind": "class",
+          "startLine": 46,
+          "endLine": 80,
+          "tokens": 489
+        },
+        {
+          "name": "UserResellProfile.get_config",
+          "kind": "method",
+          "startLine": 63,
+          "endLine": 72,
+          "tokens": 126
+        },
+        {
+          "name": "UserResellProfile.apply_global_margin",
+          "kind": "method",
+          "startLine": 74,
+          "endLine": 80,
+          "tokens": 114
+        },
+        {
+          "name": "UserProfileManager",
+          "kind": "class",
+          "startLine": 83,
+          "endLine": 270,
+          "tokens": 2407
+        },
+        {
+          "name": "UserProfileManager.__init__",
+          "kind": "method",
+          "startLine": 86,
+          "endLine": 89,
+          "tokens": 74
+        },
+        {
+          "name": "UserProfileManager.load_all",
+          "kind": "method",
+          "startLine": 91,
+          "endLine": 113,
+          "tokens": 281
+        },
+        {
+          "name": "UserProfileManager.save_all",
+          "kind": "method",
+          "startLine": 115,
+          "endLine": 128,
+          "tokens": 185
+        },
+        {
+          "name": "UserProfileManager.get_or_create_profile",
+          "kind": "method",
+          "startLine": 130,
+          "endLine": 138,
+          "tokens": 116
+        },
+        {
+          "name": "UserProfileManager.save_profile",
+          "kind": "method",
+          "startLine": 140,
+          "endLine": 143,
+          "tokens": 56
+        },
+        {
+          "name": "UserProfileManager._build_default_profile",
+          "kind": "method",
+          "startLine": 145,
+          "endLine": 173,
+          "tokens": 368
+        },
+        {
+          "name": "UserProfileManager.evaluate_item",
+          "kind": "method",
+          "startLine": 175,
+          "endLine": 270,
+          "tokens": 1298
+        }
+      ],
+      "symbolSource": "ts",
+      "skeleton": "class UserConditionRules(BaseModel):\nclass CustomCategory(BaseModel):\nclass UserModelConfig(BaseModel):\nclass UserResellProfile(BaseModel):\n    def get_config(self, model: str, storage: int) -> Optional[UserModelConfig]:\n    def apply_global_margin(self, margin_rub: int) -> None:\nclass UserProfileManager:\n    def __init__(self, storage_path: Optional[Path | str] = None):\n    def load_all(self) -> None:\n    def save_all(self) -> None:\n    def get_or_create_profile(self, user_id: int) -> UserResellProfile:\n    def save_profile(self, profile: UserResellProfile) -> None:\n    def _build_default_profile(self, user_id: int) -> UserResellProfile:\n    def evaluate_item(",
+      "imports": [
+        "config.py",
+        "core/models.py"
+      ],
+      "importance": 0.1669
+    },
+    "docker-compose.yml": {
+      "description": "Docker Compose services",
+      "tokens": 172,
+      "hash": "2655ec0d7db5df9b",
+      "size": 601,
+      "mtimeMs": 1791913808038.8894,
+      "updatedAt": "2026-10-14T05:16:39.955Z",
+      "source": "scan",
+      "importance": 0.0791
+    },
+    "Dockerfile": {
+      "description": "Docker container definition",
+      "tokens": 127,
+      "hash": "e555ed68180d60ef",
+      "size": 581,
+      "mtimeMs": 1791913808027.809,
+      "updatedAt": "2026-10-14T05:16:39.955Z",
+      "source": "scan",
+      "importance": 0.0791
+    },
+    "docs/_headers": {
+      "description": "",
+      "tokens": 51,
+      "hash": "b2bd8bdffe4ce82e",
+      "size": 191,
+      "mtimeMs": 1791909984476.4534,
+      "updatedAt": "2026-10-14T05:16:39.956Z",
+      "source": "scan",
+      "importance": 0.0791
+    },
+    "docs/article.html": {
+      "description": "⚡️ БРЕДЛИ ПЕРЕКУПЕР",
+      "tokens": 559,
+      "hash": "fbada56f4c7dd083",
+      "size": 2315,
+      "mtimeMs": 1791913808039.5605,
+      "updatedAt": "2026-10-14T05:16:39.956Z",
+      "source": "scan",
+      "importance": 0.0791
+    },
+    "docs/index.html": {
+      "description": "⚡️ БРЕДЛИ ПЕРЕКУПЕР",
+      "tokens": 57453,
+      "hash": "a956d32e742b075a",
+      "size": 225785,
+      "mtimeMs": 1791913808043.5833,
+      "updatedAt": "2026-10-14T05:16:39.957Z",
+      "source": "scan",
+      "importance": 0.0791
+    },
+    "docs/pricing_matrix_default.json": {
+      "description": "",
+      "tokens": 2900,
+      "hash": "d480e7b08a74fc01",
+      "size": 10148,
+      "mtimeMs": 1791909984485.2683,
+      "updatedAt": "2026-10-14T05:16:39.957Z",
+      "source": "scan",
+      "importance": 0.0791
+    },
+    "GEMINI.md": {
+      "description": "OpenWolf",
+      "tokens": 75,
+      "hash": "e401f79554a8d796",
+      "size": 297,
+      "mtimeMs": 1791954758048.601,
+      "updatedAt": "2026-10-14T05:16:39.958Z",
+      "source": "scan",
+      "importance": 0.0791
+    },
+    "index.html": {
+      "description": "⚡️ БРЕДЛИ ПЕРЕКУПЕР",
+      "tokens": 57453,
+      "hash": "a956d32e742b075a",
+      "size": 225785,
+      "mtimeMs": 1791913499668.2566,
+      "updatedAt": "2026-10-14T05:16:39.959Z",
+      "source": "scan",
+      "importance": 0.0791
+    },
+    "main.py": {
+      "description": "acquire_single_instance_lock, main",
+      "tokens": 2156,
+      "hash": "0a08c3e5cd216b9f",
+      "size": 8586,
+      "mtimeMs": 1791943292150.0916,
+      "updatedAt": "2026-10-14T05:16:39.959Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "acquire_single_instance_lock",
+          "kind": "fn",
+          "startLine": 36,
+          "endLine": 64,
+          "tokens": 292
+        },
+        {
+          "name": "main",
+          "kind": "fn",
+          "startLine": 67,
+          "endLine": 207,
+          "tokens": 1561
+        }
+      ],
+      "symbolSource": "ts",
+      "skeleton": "def acquire_single_instance_lock() -> None:\nasync def main() -> None:",
+      "imports": [
+        "config.py",
+        "core/models.py",
+        "core/deduplicator.py",
+        "core/margin_filter.py",
+        "core/regions.py",
+        "core/link_stream.py",
+        "core/user_profile.py",
+        "parsers/network.py",
+        "parsers/avito.py",
+        "parsers/youla.py",
+        "bot/bot.py",
+        "bot/dispatcher.py"
+      ],
+      "importance": 0.0791
+    },
+    "parsers/__init__.py": {
+      "description": "",
+      "tokens": 81,
+      "hash": "791632ede74c21f3",
+      "size": 282,
+      "mtimeMs": 1791913808043.839,
+      "updatedAt": "2026-10-14T05:16:39.959Z",
+      "source": "scan",
+      "imports": [
+        "parsers/base.py",
+        "parsers/network.py",
+        "parsers/avito.py",
+        "parsers/youla.py"
+      ],
+      "importance": 0.0791
+    },
+    "parsers/avito.py": {
+      "description": "AvitoWorker: add_custom_query, set_location, fetch_fresh_items",
+      "tokens": 3424,
+      "hash": "622e62e0a9605bd6",
+      "size": 13064,
+      "mtimeMs": 1791913808044.4248,
+      "updatedAt": "2026-10-14T05:16:39.960Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "AvitoWorker",
+          "kind": "class",
+          "startLine": 22,
+          "endLine": 307,
+          "tokens": 3268
+        },
+        {
+          "name": "AvitoWorker.__init__",
+          "kind": "method",
+          "startLine": 29,
+          "endLine": 60,
+          "tokens": 343
+        },
+        {
+          "name": "AvitoWorker.add_custom_query",
+          "kind": "method",
+          "startLine": 62,
+          "endLine": 70,
+          "tokens": 128
+        },
+        {
+          "name": "AvitoWorker.set_location",
+          "kind": "method",
+          "startLine": 72,
+          "endLine": 77,
+          "tokens": 102
+        },
+        {
+          "name": "AvitoWorker._parse_time",
+          "kind": "method",
+          "startLine": 79,
+          "endLine": 84,
+          "tokens": 86
+        },
+        {
+          "name": "AvitoWorker._parse_items_from_json",
+          "kind": "method",
+          "startLine": 86,
+          "endLine": 206,
+          "tokens": 1501
+        },
+        {
+          "name": "AvitoWorker._fetch_stream_items",
+          "kind": "method",
+          "startLine": 208,
+          "endLine": 260,
+          "tokens": 536
+        },
+        {
+          "name": "AvitoWorker.fetch_fresh_items",
+          "kind": "method",
+          "startLine": 262,
+          "endLine": 307,
+          "tokens": 484
+        }
+      ],
+      "symbolSource": "ts",
+      "skeleton": "class AvitoWorker(BaseWorker):\n    def __init__(\n    def add_custom_query(self, query: str, cat_id: str = \"\") -> None:\n    def set_location(self, location_id: str, city_name: Optional[str] = None) -> None:\n    def _parse_time(self, raw_time: Any) -> Optional[datetime]:\n    def _parse_items_from_json(\n    async def _fetch_stream_items(self, stream: Any) -> List[RawItem]:\n    async def fetch_fresh_items(self) -> List[RawItem]:",
+      "imports": [
+        "core/models.py",
+        "core/deduplicator.py",
+        "core/parser.py",
+        "parsers/base.py",
+        "parsers/network.py",
+        "config.py",
+        "core/link_stream.py"
+      ],
+      "importance": 0.1015
+    },
+    "parsers/base.py": {
+      "description": "BaseWorker: fetch_fresh_items, is_fresh, run, stop",
+      "tokens": 1281,
+      "hash": "603f668c6682688d",
+      "size": 5212,
+      "mtimeMs": 1791913808044.521,
+      "updatedAt": "2026-10-14T05:16:39.960Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "BaseWorker",
+          "kind": "class",
+          "startLine": 18,
+          "endLine": 120,
+          "tokens": 1168
+        },
+        {
+          "name": "BaseWorker.__init__",
+          "kind": "method",
+          "startLine": 24,
+          "endLine": 39,
+          "tokens": 153
+        },
+        {
+          "name": "BaseWorker.is_fresh",
+          "kind": "method",
+          "startLine": 49,
+          "endLine": 65,
+          "tokens": 211
+        },
+        {
+          "name": "BaseWorker.run",
+          "kind": "method",
+          "startLine": 67,
+          "endLine": 117,
+          "tokens": 656
+        },
+        {
+          "name": "BaseWorker.stop",
+          "kind": "method",
+          "startLine": 119,
+          "endLine": 120,
+          "tokens": 17
+        }
+      ],
+      "symbolSource": "ts",
+      "imports": [
+        "core/models.py",
+        "core/deduplicator.py",
+        "parsers/network.py",
+        "config.py"
+      ],
+      "importance": 0.1227
+    },
+    "parsers/network.py": {
+      "description": "ProxyPool: get_proxy, mark_bad, mark_good, total + 4 more",
+      "tokens": 1994,
+      "hash": "821276c2fad2154d",
+      "size": 7460,
+      "mtimeMs": 1791913808044.6133,
+      "updatedAt": "2026-10-14T05:16:39.960Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "ProxyPool",
+          "kind": "class",
+          "startLine": 12,
+          "endLine": 41,
+          "tokens": 316
+        },
+        {
+          "name": "ProxyPool.__init__",
+          "kind": "method",
+          "startLine": 15,
+          "endLine": 18,
+          "tokens": 68
+        },
+        {
+          "name": "ProxyPool.get_proxy",
+          "kind": "method",
+          "startLine": 20,
+          "endLine": 25,
+          "tokens": 59
+        },
+        {
+          "name": "ProxyPool.mark_bad",
+          "kind": "method",
+          "startLine": 27,
+          "endLine": 33,
+          "tokens": 105
+        },
+        {
+          "name": "ProxyPool.mark_good",
+          "kind": "method",
+          "startLine": 35,
+          "endLine": 37,
+          "tokens": 37
+        },
+        {
+          "name": "StealthHttpClient",
+          "kind": "class",
+          "startLine": 44,
+          "endLine": 191,
+          "tokens": 1618
+        },
+        {
+          "name": "StealthHttpClient.__init__",
+          "kind": "method",
+          "startLine": 51,
+          "endLine": 54,
+          "tokens": 69
+        },
+        {
+          "name": "StealthHttpClient.get_session",
+          "kind": "method",
+          "startLine": 56,
+          "endLine": 63,
+          "tokens": 91
+        },
+        {
+          "name": "StealthHttpClient.close",
+          "kind": "method",
+          "startLine": 65,
+          "endLine": 68,
+          "tokens": 52
+        },
+        {
+          "name": "StealthHttpClient.get",
+          "kind": "method",
+          "startLine": 70,
+          "endLine": 138,
+          "tokens": 774
+        },
+        {
+          "name": "StealthHttpClient.post",
+          "kind": "method",
+          "startLine": 140,
+          "endLine": 191,
+          "tokens": 559
+        }
+      ],
+      "symbolSource": "ts",
+      "imports": [
+        "config.py"
+      ],
+      "importance": 0.1543
+    },
+    "parsers/youla.py": {
+      "description": "YoulaWorker: add_custom_query, set_location",
+      "tokens": 4892,
+      "hash": "cdbc8b6803848eac",
+      "size": 18309,
+      "mtimeMs": 1791913808044.716,
+      "updatedAt": "2026-10-14T05:16:39.961Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "YoulaWorker",
+          "kind": "class",
+          "startLine": 21,
+          "endLine": 438,
+          "tokens": 4757
+        },
+        {
+          "name": "YoulaWorker.__init__",
+          "kind": "method",
+          "startLine": 28,
+          "endLine": 53,
+          "tokens": 319
+        },
+        {
+          "name": "YoulaWorker.add_custom_query",
+          "kind": "method",
+          "startLine": 55,
+          "endLine": 63,
+          "tokens": 119
+        },
+        {
+          "name": "YoulaWorker.set_location",
+          "kind": "method",
+          "startLine": 65,
+          "endLine": 71,
+          "tokens": 121
+        },
+        {
+          "name": "YoulaWorker._fetch_via_graphql",
+          "kind": "method",
+          "startLine": 73,
+          "endLine": 189,
+          "tokens": 1285
+        },
+        {
+          "name": "YoulaWorker._fetch_via_rest",
+          "kind": "method",
+          "startLine": 191,
+          "endLine": 215,
+          "tokens": 231
+        },
+        {
+          "name": "YoulaWorker._parse_items_list",
+          "kind": "method",
+          "startLine": 217,
+          "endLine": 297,
+          "tokens": 967
+        },
+        {
+          "name": "YoulaWorker._fetch_via_web_api",
+          "kind": "method",
+          "startLine": 299,
+          "endLine": 429,
+          "tokens": 1551
+        },
+        {
+          "name": "YoulaWorker.fetch_fresh_items",
+          "kind": "method",
+          "startLine": 431,
+          "endLine": 438,
+          "tokens": 90
+        }
+      ],
+      "symbolSource": "ts",
+      "skeleton": "class YoulaWorker(BaseWorker):\n    def __init__(\n    def add_custom_query(self, query: str) -> None:\n    def set_location(self, city_id: str, city_slug: str = \"moskva\", city_name: Optional[str] = None) -> None:\n    async def _fetch_via_graphql(self) -> List[RawItem]:\n    async def _fetch_via_rest(self) -> List[RawItem]:\n    def _parse_items_list(self, items: list[dict[str, Any]]) -> List[RawItem]:\n    async def _fetch_via_web_api(self) -> List[RawItem]:\n    async def fetch_fresh_items(self) -> List[RawItem]:",
+      "imports": [
+        "core/models.py",
+        "core/deduplicator.py",
+        "core/parser.py",
+        "parsers/base.py",
+        "parsers/network.py",
+        "config.py"
+      ],
+      "importance": 0.1015
+    },
+    "pricing_matrix_default.json": {
+      "description": "",
+      "tokens": 2900,
+      "hash": "d480e7b08a74fc01",
+      "size": 10148,
+      "mtimeMs": 1791909867639.9692,
+      "updatedAt": "2026-10-14T05:16:39.961Z",
+      "source": "scan",
+      "importance": 0.0791
+    },
+    "pricing_matrix.json": {
+      "description": "",
+      "tokens": 1,
+      "hash": "44136fa355b3678a",
+      "size": 2,
+      "mtimeMs": 1791947438847.5676,
+      "updatedAt": "2026-10-14T05:16:39.962Z",
+      "source": "scan",
+      "importance": 0.0791
+    },
+    "proxies.txt.example": {
+      "description": "Добавьте сюда ваши HTTP / SOCKS5 прокси (по одному на строку):",
+      "tokens": 49,
+      "hash": "0736f59716025dfe",
+      "size": 220,
+      "mtimeMs": 1791913808046.6504,
+      "updatedAt": "2026-10-14T05:16:39.962Z",
+      "source": "scan",
+      "importance": 0.0791
+    },
+    "README.md": {
+      "description": "Project documentation",
+      "tokens": 1470,
+      "hash": "c7bd38f03529adc9",
+      "size": 8822,
+      "mtimeMs": 1791913808027.914,
+      "updatedAt": "2026-10-14T05:16:39.962Z",
+      "source": "scan",
+      "importance": 0.0791
+    },
+    "requirements.txt": {
+      "description": "Python dependencies",
+      "tokens": 55,
+      "hash": "286f2cc090a06804",
+      "size": 219,
+      "mtimeMs": 1791913808046.7363,
+      "updatedAt": "2026-10-14T05:16:39.962Z",
+      "source": "scan",
+      "importance": 0.0791
+    },
+    "search_streams.json": {
+      "description": "",
+      "tokens": 742,
+      "hash": "f1013118dfa8778d",
+      "size": 2714,
+      "mtimeMs": 1791913808046.8281,
+      "updatedAt": "2026-10-14T05:16:39.962Z",
+      "source": "scan",
+      "importance": 0.0791
+    },
+    "tests/test_custom_categories.py": {
+      "description": "Tests: custom_category_profile, broadcast_worker_query, parser_with_custom_category_model",
+      "tokens": 787,
+      "hash": "f6b92dcd349c5163",
+      "size": 2808,
+      "mtimeMs": 1791913808046.9636,
+      "updatedAt": "2026-10-14T05:16:39.963Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "TestCustomCategoriesAndQueries",
+          "kind": "class",
+          "startLine": 8,
+          "endLine": 62,
+          "tokens": 699
+        },
+        {
+          "name": "TestCustomCategoriesAndQueries.test_custom_category_profile",
+          "kind": "method",
+          "startLine": 9,
+          "endLine": 39,
+          "tokens": 404
+        },
+        {
+          "name": "TestCustomCategoriesAndQueries.test_broadcast_worker_query",
+          "kind": "method",
+          "startLine": 41,
+          "endLine": 47,
+          "tokens": 90
+        },
+        {
+          "name": "TestCustomCategoriesAndQueries.test_parser_with_custom_category_model",
+          "kind": "method",
+          "startLine": 49,
+          "endLine": 62,
+          "tokens": 189
+        }
+      ],
+      "symbolSource": "ts",
+      "imports": [
+        "core/user_profile.py",
+        "core/parser.py",
+        "core/models.py",
+        "bot/bot.py"
+      ],
+      "importance": 0.0791
+    },
+    "tests/test_deduplicator.py": {
+      "description": "Tests: in_memory_deduplication, price_drop_detection, semantic_crossplatform_duplicate, semantic_photo_duplicate + 2 more",
+      "tokens": 2326,
+      "hash": "12cf2ec482b2ae2a",
+      "size": 9215,
+      "mtimeMs": 1791913808047.0588,
+      "updatedAt": "2026-10-14T05:16:39.964Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "TestRedisDeduplicator",
+          "kind": "class",
+          "startLine": 8,
+          "endLine": 197,
+          "tokens": 2278
+        },
+        {
+          "name": "TestRedisDeduplicator.test_in_memory_deduplication",
+          "kind": "method",
+          "startLine": 9,
+          "endLine": 26,
+          "tokens": 260
+        },
+        {
+          "name": "TestRedisDeduplicator.test_price_drop_detection",
+          "kind": "method",
+          "startLine": 28,
+          "endLine": 56,
+          "tokens": 366
+        },
+        {
+          "name": "TestRedisDeduplicator.test_semantic_crossplatform_duplicate",
+          "kind": "method",
+          "startLine": 58,
+          "endLine": 105,
+          "tokens": 560
+        },
+        {
+          "name": "TestRedisDeduplicator.test_semantic_photo_duplicate",
+          "kind": "method",
+          "startLine": 107,
+          "endLine": 150,
+          "tokens": 470
+        },
+        {
+          "name": "TestRedisDeduplicator.test_micro_price_drop_filtered",
+          "kind": "method",
+          "startLine": 152,
+          "endLine": 170,
+          "tokens": 265
+        },
+        {
+          "name": "TestRedisDeduplicator.test_persistent_storage_across_restarts",
+          "kind": "method",
+          "startLine": 172,
+          "endLine": 197,
+          "tokens": 337
+        }
+      ],
+      "symbolSource": "ts",
+      "skeleton": "class TestRedisDeduplicator(unittest.IsolatedAsyncioTestCase):\n    async def test_in_memory_deduplication(self):\n    async def test_price_drop_detection(self):\n    async def test_semantic_crossplatform_duplicate(self):\n    async def test_semantic_photo_duplicate(self):\n    async def test_micro_price_drop_filtered(self):\n    async def test_persistent_storage_across_restarts(self):",
+      "imports": [
+        "core/deduplicator.py",
+        "core/models.py"
+      ],
+      "importance": 0.0791
+    },
+    "tests/test_excel_manager.py": {
+      "description": "Tests: export_and_read_back, import_modified_excel, import_invalid_data_handles_cleanly",
+      "tokens": 994,
+      "hash": "fb2c6080cbe1c6ef",
+      "size": 3895,
+      "mtimeMs": 1791913808047.1497,
+      "updatedAt": "2026-10-14T05:16:39.964Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "TestExcelPricingManager",
+          "kind": "class",
+          "startLine": 9,
+          "endLine": 79,
+          "tokens": 938
+        },
+        {
+          "name": "TestExcelPricingManager.setUp",
+          "kind": "method",
+          "startLine": 10,
+          "endLine": 19,
+          "tokens": 112
+        },
+        {
+          "name": "TestExcelPricingManager.test_export_and_read_back",
+          "kind": "method",
+          "startLine": 21,
+          "endLine": 43,
+          "tokens": 307
+        },
+        {
+          "name": "TestExcelPricingManager.test_import_modified_excel",
+          "kind": "method",
+          "startLine": 45,
+          "endLine": 73,
+          "tokens": 421
+        },
+        {
+          "name": "TestExcelPricingManager.test_import_invalid_data_handles_cleanly",
+          "kind": "method",
+          "startLine": 75,
+          "endLine": 79,
+          "tokens": 84
+        }
+      ],
+      "symbolSource": "ts",
+      "imports": [
+        "core/excel_manager.py"
+      ],
+      "importance": 0.0791
+    },
+    "tests/test_favorites.py": {
+      "description": "Tests: add_and_get_favorite, remove_favorite, clear_favorites, lot_caching",
+      "tokens": 860,
+      "hash": "c9259cffe26a5fc4",
+      "size": 3083,
+      "mtimeMs": 1791913808047.236,
+      "updatedAt": "2026-10-14T05:16:39.964Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "TestFavoritesManager",
+          "kind": "class",
+          "startLine": 9,
+          "endLine": 85,
+          "tokens": 810
+        },
+        {
+          "name": "TestFavoritesManager.setUp",
+          "kind": "method",
+          "startLine": 10,
+          "endLine": 13,
+          "tokens": 59
+        },
+        {
+          "name": "TestFavoritesManager.tearDown",
+          "kind": "method",
+          "startLine": 15,
+          "endLine": 17,
+          "tokens": 33
+        },
+        {
+          "name": "TestFavoritesManager.test_add_and_get_favorite",
+          "kind": "method",
+          "startLine": 19,
+          "endLine": 40,
+          "tokens": 235
+        },
+        {
+          "name": "TestFavoritesManager.test_remove_favorite",
+          "kind": "method",
+          "startLine": 42,
+          "endLine": 57,
+          "tokens": 177
+        },
+        {
+          "name": "TestFavoritesManager.test_clear_favorites",
+          "kind": "method",
+          "startLine": 59,
+          "endLine": 70,
+          "tokens": 146
+        },
+        {
+          "name": "TestFavoritesManager.test_lot_caching",
+          "kind": "method",
+          "startLine": 72,
+          "endLine": 85,
+          "tokens": 146
+        }
+      ],
+      "symbolSource": "ts",
+      "imports": [
+        "core/favorites.py"
+      ],
+      "importance": 0.0791
+    },
+    "tests/test_formatting.py": {
+      "description": "Tests: format_fresh_lot, format_price_drop, format_battery_penalty_notice",
+      "tokens": 794,
+      "hash": "6b7a8e0fff010765",
+      "size": 2956,
+      "mtimeMs": 1791946826354.896,
+      "updatedAt": "2026-10-14T05:16:39.964Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "TestFormatting",
+          "kind": "class",
+          "startLine": 9,
+          "endLine": 77,
+          "tokens": 726
+        },
+        {
+          "name": "TestFormatting.test_format_fresh_lot",
+          "kind": "method",
+          "startLine": 10,
+          "endLine": 34,
+          "tokens": 284
+        },
+        {
+          "name": "TestFormatting.test_format_price_drop",
+          "kind": "method",
+          "startLine": 36,
+          "endLine": 58,
+          "tokens": 250
+        },
+        {
+          "name": "TestFormatting.test_format_battery_penalty_notice",
+          "kind": "method",
+          "startLine": 60,
+          "endLine": 77,
+          "tokens": 180
+        }
+      ],
+      "symbolSource": "ts",
+      "imports": [
+        "core/models.py",
+        "bot/dispatcher.py"
+      ],
+      "importance": 0.0791
+    },
+    "tests/test_link_streams.py": {
+      "description": "Tests: parse_search_url_avito, parse_search_url_avito_f_param_pricing, parse_search_url_ekb_and_categories, parse_search_url_youla + 4 more",
+      "tokens": 3365,
+      "hash": "6b882ea80f07aca9",
+      "size": 12646,
+      "mtimeMs": 1791913808047.4236,
+      "updatedAt": "2026-10-14T05:16:39.965Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "TestLinkStreamSystem",
+          "kind": "class",
+          "startLine": 20,
+          "endLine": 293,
+          "tokens": 3211
+        },
+        {
+          "name": "TestLinkStreamSystem.test_parse_search_url_avito",
+          "kind": "method",
+          "startLine": 21,
+          "endLine": 31,
+          "tokens": 177
+        },
+        {
+          "name": "TestLinkStreamSystem.test_parse_search_url_avito_f_param_pricing",
+          "kind": "method",
+          "startLine": 33,
+          "endLine": 40,
+          "tokens": 195
+        },
+        {
+          "name": "TestLinkStreamSystem.test_parse_search_url_ekb_and_categories",
+          "kind": "method",
+          "startLine": 42,
+          "endLine": 49,
+          "tokens": 126
+        },
+        {
+          "name": "TestLinkStreamSystem.test_parse_search_url_youla",
+          "kind": "method",
+          "startLine": 51,
+          "endLine": 58,
+          "tokens": 128
+        },
+        {
+          "name": "TestLinkStreamSystem.test_stream_manager_lifecycle_and_persistence",
+          "kind": "method",
+          "startLine": 60,
+          "endLine": 112,
+          "tokens": 605
+        },
+        {
+          "name": "TestLinkStreamSystem.test_evaluate_item_filters",
+          "kind": "method",
+          "startLine": 114,
+          "endLine": 242,
+          "tokens": 1349
+        },
+        {
+          "name": "TestLinkStreamSystem.test_formatted_lot_message_seller_and_reserve",
+          "kind": "method",
+          "startLine": 244,
+          "endLine": 267,
+          "tokens": 254
+        },
+        {
+          "name": "TestLinkStreamSystem.test_stream_keyboards_generation",
+          "kind": "method",
+          "startLine": 269,
+          "endLine": 293,
+          "tokens": 362
+        }
+      ],
+      "symbolSource": "ts",
+      "skeleton": "class TestLinkStreamSystem(unittest.TestCase):\n    def test_parse_search_url_avito(self):\n    def test_parse_search_url_avito_f_param_pricing(self):\n    def test_parse_search_url_ekb_and_categories(self):\n    def test_parse_search_url_youla(self):\n    def test_stream_manager_lifecycle_and_persistence(self):\n    def test_evaluate_item_filters(self):\n    def test_formatted_lot_message_seller_and_reserve(self):\n    def test_stream_keyboards_generation(self):",
+      "imports": [
+        "core/models.py",
+        "core/link_stream.py",
+        "bot/dispatcher.py",
+        "bot/keyboards.py"
+      ],
+      "importance": 0.0791
+    },
+    "tests/test_margin_filter.py": {
+      "description": "Tests: profitable_item, unprofitable_item, battery_penalty, disabled_model_configuration + 1 more",
+      "tokens": 1740,
+      "hash": "fa2d0a24fb11526d",
+      "size": 6378,
+      "mtimeMs": 1791913808047.5051,
+      "updatedAt": "2026-10-14T05:16:39.965Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "TestMarginFilterAndFormatting",
+          "kind": "class",
+          "startLine": 10,
+          "endLine": 161,
+          "tokens": 1660
+        },
+        {
+          "name": "TestMarginFilterAndFormatting.setUp",
+          "kind": "method",
+          "startLine": 11,
+          "endLine": 18,
+          "tokens": 84
+        },
+        {
+          "name": "TestMarginFilterAndFormatting.test_profitable_item",
+          "kind": "method",
+          "startLine": 20,
+          "endLine": 48,
+          "tokens": 315
+        },
+        {
+          "name": "TestMarginFilterAndFormatting.test_unprofitable_item",
+          "kind": "method",
+          "startLine": 50,
+          "endLine": 66,
+          "tokens": 180
+        },
+        {
+          "name": "TestMarginFilterAndFormatting.test_battery_penalty",
+          "kind": "method",
+          "startLine": 68,
+          "endLine": 121,
+          "tokens": 607
+        },
+        {
+          "name": "TestMarginFilterAndFormatting.test_disabled_model_configuration",
+          "kind": "method",
+          "startLine": 123,
+          "endLine": 144,
+          "tokens": 223
+        },
+        {
+          "name": "TestMarginFilterAndFormatting.test_toggle_series",
+          "kind": "method",
+          "startLine": 146,
+          "endLine": 161,
+          "tokens": 234
+        }
+      ],
+      "symbolSource": "ts",
+      "imports": [
+        "core/models.py",
+        "core/margin_filter.py",
+        "bot/dispatcher.py"
+      ],
+      "importance": 0.0791
+    },
+    "tests/test_modern_bot_features.py": {
+      "description": "Tests: expandable_blockquote_in_formatting, item_keyboard_with_bargain_and_fav, custom_model_extraction, macbook_multi_spec_parsing + 9 more",
+      "tokens": 9358,
+      "hash": "40f0790c8dddc45c",
+      "size": 35206,
+      "mtimeMs": 1791947387207.8533,
+      "updatedAt": "2026-10-14T05:16:39.966Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "TestModernBotFeatures",
+          "kind": "class",
+          "startLine": 11,
+          "endLine": 791,
+          "tokens": 9261
+        },
+        {
+          "name": "TestModernBotFeatures.test_expandable_blockquote_in_formatting",
+          "kind": "method",
+          "startLine": 12,
+          "endLine": 30,
+          "tokens": 214
+        },
+        {
+          "name": "TestModernBotFeatures.test_item_keyboard_with_bargain_and_fav",
+          "kind": "method",
+          "startLine": 32,
+          "endLine": 39,
+          "tokens": 142
+        },
+        {
+          "name": "TestModernBotFeatures.test_custom_model_extraction",
+          "kind": "method",
+          "startLine": 41,
+          "endLine": 69,
+          "tokens": 358
+        },
+        {
+          "name": "TestModernBotFeatures.test_macbook_multi_spec_parsing",
+          "kind": "method",
+          "startLine": 71,
+          "endLine": 94,
+          "tokens": 281
+        },
+        {
+          "name": "TestModernBotFeatures.test_samsung_galaxy_parsing",
+          "kind": "method",
+          "startLine": 96,
+          "endLine": 116,
+          "tokens": 246
+        },
+        {
+          "name": "TestModernBotFeatures.test_google_pixel_parsing",
+          "kind": "method",
+          "startLine": 118,
+          "endLine": 134,
+          "tokens": 203
+        },
+        {
+          "name": "TestModernBotFeatures.test_playstation_console_parsing",
+          "kind": "method",
+          "startLine": 136,
+          "endLine": 155,
+          "tokens": 228
+        },
+        {
+          "name": "TestModernBotFeatures.test_custom_model_matrix_evaluation",
+          "kind": "method",
+          "startLine": 157,
+          "endLine": 197,
+          "tokens": 394
+        },
+        {
+          "name": "TestModernBotFeatures.test_custom_series_toggle",
+          "kind": "method",
+          "startLine": 199,
+          "endLine": 210,
+          "tokens": 131
+        },
+        {
+          "name": "TestModernBotFeatures.test_main_keyboard_features",
+          "kind": "method",
+          "startLine": 212,
+          "endLine": 218,
+          "tokens": 117
+        },
+        {
+          "name": "TestModernBotFeatures.test_webapp_sync_payload_processing",
+          "kind": "method",
+          "startLine": 220,
+          "endLine": 272,
+          "tokens": 524
+        },
+        {
+          "name": "TestModernBotFeatures.test_reply_keyboard_and_hide_keyboard",
+          "kind": "method",
+          "startLine": 274,
+          "endLine": 303,
+          "tokens": 439
+        },
+        {
+          "name": "TestModernBotFeatures.test_single_functional_message_without_spam",
+          "kind": "method",
+          "startLine": 305,
+          "endLine": 387,
+          "tokens": 1130
+        },
+        {
+          "name": "TestModernBotFeatures.test_region_gatekeeper_blocks_moscow_when_ekb_selected",
+          "kind": "method",
+          "startLine": 389,
+          "endLine": 461,
+          "tokens": 958
+        },
+        {
+          "name": "TestModernBotFeatures.test_save_resell_profile_with_search_links",
+          "kind": "method",
+          "startLine": 463,
+          "endLine": 557,
+          "tokens": 1148
+        },
+        {
+          "name": "TestModernBotFeatures.test_pause_and_resume_search",
+          "kind": "method",
+          "startLine": 559,
+          "endLine": 629,
+          "tokens": 834
+        },
+        {
+          "name": "TestModernBotFeatures.test_platform_filtering_in_dispatcher",
+          "kind": "method",
+          "startLine": 631,
+          "endLine": 708,
+          "tokens": 904
+        },
+        {
+          "name": "TestModernBotFeatures.test_setup_bot_commands",
+          "kind": "method",
+          "startLine": 710,
+          "endLine": 720,
+          "tokens": 126
+        },
+        {
+          "name": "TestModernBotFeatures.test_enhanced_dashboard_text_with_platform_modes",
+          "kind": "method",
+          "startLine": 722,
+          "endLine": 752,
+          "tokens": 404
+        },
+        {
+          "name": "TestModernBotFeatures.test_city_text_search_persists_user_profile",
+          "kind": "method",
+          "startLine": 754,
+          "endLine": 791,
+          "tokens": 465
+        }
+      ],
+      "symbolSource": "ts",
+      "skeleton": "class TestModernBotFeatures(unittest.TestCase):\n    def test_expandable_blockquote_in_formatting(self):\n    def test_item_keyboard_with_bargain_and_fav(self):\n    def test_custom_model_extraction(self):\n    def test_macbook_multi_spec_parsing(self):\n    def test_samsung_galaxy_parsing(self):\n    def test_google_pixel_parsing(self):\n    def test_playstation_console_parsing(self):\n    def test_custom_model_matrix_evaluation(self):\n    def test_custom_series_toggle(self):\n    def test_main_keyboard_features(self):\n    def test_webapp_sync_payload_processing(self):\n    def test_reply_keyboard_and_hide_keyboard(self):\n    def test_single_functional_message_without_spam(self):\n    def test_region_gatekeeper_blocks_moscow_when_ekb_selected(self):\n    def test_save_resell_profile_with_search_links(self):\n    def test_pause_and_resume_search(self):\n    def test_platform_filtering_in_dispatcher(self):\n    def test_setup_bot_commands(self):\n    def test_enhanced_dashboard_text_with_platform_modes(self):\n    def test_city_text_search_persists_user_profile(self):",
+      "imports": [
+        "core/models.py",
+        "bot/dispatcher.py",
+        "bot/keyboards.py",
+        "core/parser.py"
+      ],
+      "importance": 0.0791
+    },
+    "tests/test_regex_parser.py": {
+      "description": "Tests: model_extraction, storage_extraction, battery_extraction, blacklist_rejection + 3 more",
+      "tokens": 1709,
+      "hash": "6b2ad8a845e67ad3",
+      "size": 7062,
+      "mtimeMs": 1791913808047.7302,
+      "updatedAt": "2026-10-14T05:16:39.966Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "TestIPhoneNLPParser",
+          "kind": "class",
+          "startLine": 9,
+          "endLine": 124,
+          "tokens": 1644
+        },
+        {
+          "name": "TestIPhoneNLPParser.test_model_extraction",
+          "kind": "method",
+          "startLine": 10,
+          "endLine": 22,
+          "tokens": 190
+        },
+        {
+          "name": "TestIPhoneNLPParser.test_storage_extraction",
+          "kind": "method",
+          "startLine": 24,
+          "endLine": 35,
+          "tokens": 164
+        },
+        {
+          "name": "TestIPhoneNLPParser.test_battery_extraction",
+          "kind": "method",
+          "startLine": 37,
+          "endLine": 48,
+          "tokens": 173
+        },
+        {
+          "name": "TestIPhoneNLPParser.test_blacklist_rejection",
+          "kind": "method",
+          "startLine": 50,
+          "endLine": 63,
+          "tokens": 237
+        },
+        {
+          "name": "TestIPhoneNLPParser.test_smart_context_allows_valid_items",
+          "kind": "method",
+          "startLine": 65,
+          "endLine": 76,
+          "tokens": 268
+        },
+        {
+          "name": "TestIPhoneNLPParser.test_full_pipeline_valid_item",
+          "kind": "method",
+          "startLine": 78,
+          "endLine": 94,
+          "tokens": 214
+        },
+        {
+          "name": "TestIPhoneNLPParser.test_parse_marketplace_datetime",
+          "kind": "method",
+          "startLine": 96,
+          "endLine": 124,
+          "tokens": 384
+        }
+      ],
+      "symbolSource": "ts",
+      "imports": [
+        "core/models.py",
+        "core/parser.py"
+      ],
+      "importance": 0.0791
+    },
+    "tests/test_regions.py": {
+      "description": "Tests: default_region, set_region_by_key, set_region_by_alias, set_region_by_russian_name + 8 more",
+      "tokens": 1553,
+      "hash": "d60c5d53fa276390",
+      "size": 5901,
+      "mtimeMs": 1791913808047.8184,
+      "updatedAt": "2026-10-14T05:16:39.966Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "TestRegionManager",
+          "kind": "class",
+          "startLine": 10,
+          "endLine": 141,
+          "tokens": 1486
+        },
+        {
+          "name": "TestRegionManager.setUp",
+          "kind": "method",
+          "startLine": 11,
+          "endLine": 14,
+          "tokens": 62
+        },
+        {
+          "name": "TestRegionManager.tearDown",
+          "kind": "method",
+          "startLine": 16,
+          "endLine": 17,
+          "tokens": 16
+        },
+        {
+          "name": "TestRegionManager.test_default_region",
+          "kind": "method",
+          "startLine": 19,
+          "endLine": 24,
+          "tokens": 72
+        },
+        {
+          "name": "TestRegionManager.test_set_region_by_key",
+          "kind": "method",
+          "startLine": 26,
+          "endLine": 31,
+          "tokens": 82
+        },
+        {
+          "name": "TestRegionManager.test_set_region_by_alias",
+          "kind": "method",
+          "startLine": 33,
+          "endLine": 44,
+          "tokens": 144
+        },
+        {
+          "name": "TestRegionManager.test_set_region_by_russian_name",
+          "kind": "method",
+          "startLine": 46,
+          "endLine": 54,
+          "tokens": 107
+        },
+        {
+          "name": "TestRegionManager.test_unknown_region",
+          "kind": "method",
+          "startLine": 56,
+          "endLine": 60,
+          "tokens": 66
+        },
+        {
+          "name": "TestRegionManager.test_listeners_notification",
+          "kind": "method",
+          "startLine": 62,
+          "endLine": 73,
+          "tokens": 114
+        },
+        {
+          "name": "TestRegionManager.test_persistence_across_instances",
+          "kind": "method",
+          "startLine": 75,
+          "endLine": 82,
+          "tokens": 115
+        },
+        {
+          "name": "TestRegionManager.test_find_cities",
+          "kind": "method",
+          "startLine": 84,
+          "endLine": 87,
+          "tokens": 57
+        },
+        {
+          "name": "TestRegionManager.test_popular_regions_presence",
+          "kind": "method",
+          "startLine": 89,
+          "endLine": 91,
+          "tokens": 54
+        },
+        {
+          "name": "TestRegionManager.test_yakutsk_region_support",
+          "kind": "method",
+          "startLine": 93,
+          "endLine": 113,
+          "tokens": 234
+        },
+        {
+          "name": "TestRegionManager.test_expanded_cities_support",
+          "kind": "method",
+          "startLine": 115,
+          "endLine": 130,
+          "tokens": 183
+        },
+        {
+          "name": "TestRegionManager.test_regions_pagination",
+          "kind": "method",
+          "startLine": 132,
+          "endLine": 141,
+          "tokens": 165
+        }
+      ],
+      "symbolSource": "ts",
+      "imports": [
+        "core/regions.py"
+      ],
+      "importance": 0.0791
+    },
+    "tests/test_user_profile.py": {
+      "description": "Tests: evaluate_item_clean_deal, evaluate_item_worn_battery_applies_discount, evaluate_item_defect_rejected_when_not_allowed, evaluate_item_defect_...",
+      "tokens": 3293,
+      "hash": "323a2431b1ba64bc",
+      "size": 12033,
+      "mtimeMs": 1791913808047.9153,
+      "updatedAt": "2026-10-14T05:16:39.967Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "TestUserProfile",
+          "kind": "class",
+          "startLine": 16,
+          "endLine": 302,
+          "tokens": 3196
+        },
+        {
+          "name": "TestUserProfile.setUp",
+          "kind": "method",
+          "startLine": 17,
+          "endLine": 43,
+          "tokens": 249
+        },
+        {
+          "name": "TestUserProfile.test_evaluate_item_clean_deal",
+          "kind": "method",
+          "startLine": 45,
+          "endLine": 65,
+          "tokens": 250
+        },
+        {
+          "name": "TestUserProfile.test_evaluate_item_worn_battery_applies_discount",
+          "kind": "method",
+          "startLine": 67,
+          "endLine": 92,
+          "tokens": 328
+        },
+        {
+          "name": "TestUserProfile.test_evaluate_item_defect_rejected_when_not_allowed",
+          "kind": "method",
+          "startLine": 94,
+          "endLine": 112,
+          "tokens": 217
+        },
+        {
+          "name": "TestUserProfile.test_evaluate_item_defect_discount_when_allowed",
+          "kind": "method",
+          "startLine": 114,
+          "endLine": 138,
+          "tokens": 298
+        },
+        {
+          "name": "TestUserProfile.test_evaluate_item_min_price_junk_filter",
+          "kind": "method",
+          "startLine": 140,
+          "endLine": 156,
+          "tokens": 196
+        },
+        {
+          "name": "TestUserProfile.test_evaluate_item_no_face_id_filter",
+          "kind": "method",
+          "startLine": 158,
+          "endLine": 174,
+          "tokens": 189
+        },
+        {
+          "name": "TestUserProfile.test_apply_global_margin",
+          "kind": "method",
+          "startLine": 176,
+          "endLine": 182,
+          "tokens": 96
+        },
+        {
+          "name": "TestUserProfile.test_save_and_reload_profile",
+          "kind": "method",
+          "startLine": 184,
+          "endLine": 206,
+          "tokens": 276
+        },
+        {
+          "name": "TestUserProfile.test_search_link_defaults_and_custom_values",
+          "kind": "method",
+          "startLine": 208,
+          "endLine": 227,
+          "tokens": 278
+        },
+        {
+          "name": "TestUserProfile.test_profile_persistence_with_search_links",
+          "kind": "method",
+          "startLine": 229,
+          "endLine": 274,
+          "tokens": 528
+        },
+        {
+          "name": "TestUserProfile.test_platforms_setting_persistence",
+          "kind": "method",
+          "startLine": 276,
+          "endLine": 302,
+          "tokens": 279
+        }
+      ],
+      "symbolSource": "ts",
+      "skeleton": "class TestUserProfile(unittest.TestCase):\n    def setUp(self):\n    def test_evaluate_item_clean_deal(self):\n    def test_evaluate_item_worn_battery_applies_discount(self):\n    def test_evaluate_item_defect_rejected_when_not_allowed(self):\n    def test_evaluate_item_defect_discount_when_allowed(self):\n    def test_evaluate_item_min_price_junk_filter(self):\n    def test_evaluate_item_no_face_id_filter(self):\n    def test_apply_global_margin(self):\n    def test_save_and_reload_profile(self):\n    def test_search_link_defaults_and_custom_values(self):\n    def test_profile_persistence_with_search_links(self):\n    def test_platforms_setting_persistence(self):",
+      "imports": [
+        "core/models.py",
+        "core/user_profile.py"
+      ],
+      "importance": 0.0791
+    },
+    "webapp/_headers": {
+      "description": "",
+      "tokens": 51,
+      "hash": "b2bd8bdffe4ce82e",
+      "size": 191,
+      "mtimeMs": 1791909984485.5242,
+      "updatedAt": "2026-10-14T05:16:39.967Z",
+      "source": "scan",
+      "importance": 0.0791
+    },
+    "webapp/article.html": {
+      "description": "⚡️ БРЕДЛИ ПЕРЕКУПЕР",
+      "tokens": 559,
+      "hash": "fbada56f4c7dd083",
+      "size": 2315,
+      "mtimeMs": 1791913808049.2734,
+      "updatedAt": "2026-10-14T05:16:39.967Z",
+      "source": "scan",
+      "importance": 0.0791
+    },
+    "webapp/index.html": {
+      "description": "⚡️ БРЕДЛИ ПЕРЕКУПЕР",
+      "tokens": 57453,
+      "hash": "a956d32e742b075a",
+      "size": 225785,
+      "mtimeMs": 1791913808052.1394,
+      "updatedAt": "2026-10-14T05:16:39.968Z",
+      "source": "scan",
+      "importance": 0.0791
+    },
+    "webapp/pricing_matrix_default.json": {
+      "description": "",
+      "tokens": 2900,
+      "hash": "d480e7b08a74fc01",
+      "size": 10148,
+      "mtimeMs": 1791387931601.8145,
+      "updatedAt": "2026-10-14T05:16:39.969Z",
+      "source": "scan",
+      "importance": 0.0791
+    },
+    "webapp/pricing_matrix.json": {
+      "description": "",
+      "tokens": 1,
+      "hash": "44136fa355b3678a",
+      "size": 2,
+      "mtimeMs": 1791947438848.8882,
+      "updatedAt": "2026-10-14T05:16:39.969Z",
+      "source": "scan",
+      "importance": 0.0791
+    }
+  },
+  "preamble": [
+    "> Project structure index. Auto-maintained by OpenWolf hooks and daemon.",
+    "> Run `openwolf scan` to generate, or wait for the first Claude Code session.",
+    "> Status: Pending initial scan"
+  ]
+}
