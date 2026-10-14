@@ -2087,7 +2087,7 @@ def _build_dashboard_text(
             pass
 
     return (
-        "<u><i><b>БРЕДЛИ ПЕРЕКУПЕР | ЦЕНТР УПРАВЛЕНИЯ</b></i></u>\n\n"
+        "<u><i><b>БРЕДЛИ ПЕРЕКУПЕР</b></i></u>\n\n"
         f"📍 <b>Текущий регион:</b> {current_reg['name']}\n"
         f"📡 <b>Мониторинг:</b> Авито + Юла ({platform_label})\n"
         f"🎯 <b>Конфигураций в радаре:</b> {active_configs} из {total_configs}\n"
