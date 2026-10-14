@@ -23,6 +23,14 @@ from aiogram.types import (
     ErrorEvent,
     BotCommand,
     BotCommandScopeDefault,
+    InputRichMessage,
+    InputRichBlockSectionHeading,
+    InputRichBlockVideo,
+    InputRichBlockParagraph,
+    InputMediaVideo,
+    RichTextBold,
+    RichTextItalic,
+    RichTextUnderline,
 )
 from typing import Optional, Callable
 
@@ -168,29 +176,73 @@ async def send_or_replace_functional_message(
     global _cached_banner_file_id
 
     if with_banner:
-        # 1. Пробуем отправить анимированный баннер .mp4 (через send_animation)
-        anim_target = video or _cached_banner_file_id
-        if not anim_target and BANNER_VIDEO_PATH.exists():
-            anim_target = FSInputFile(str(BANNER_VIDEO_PATH))
-
-        if anim_target and hasattr(bot, "send_animation"):
+        # 1. Приоритет: отправка сообщения в формате Telegram «Статья» (через скрепку / send_rich_message)
+        if hasattr(bot, "send_rich_message"):
             try:
-                msg = await bot.send_animation(
-                    chat_id=chat_id,
-                    animation=anim_target,
-                    caption=caption_text,
-                    parse_mode="HTML",
-                    reply_markup=reply_markup,
-                    show_caption_above_media=False,
-                )
-                if hasattr(msg, "video") and msg.video:
-                    _cached_banner_file_id = msg.video.file_id
-                elif hasattr(msg, "animation") and msg.animation:
-                    _cached_banner_file_id = msg.animation.file_id
-            except Exception as anim_err:
-                logger.debug("Не удалось отправить анимированный баннер: %s. Переход к фото...", anim_err)
+                # Извлекаем заголовок из текста или используем «Бредли Перекупер»
+                heading_title = "Бредли Перекупер"
+                raw_lines = [line.strip() for line in text.split("\n") if line.strip()]
+                clean_lines = []
+                for line in raw_lines:
+                    clean_line = re.sub(r"<[^>]+>", "", line).strip()
+                    if clean_line.startswith("•••") or clean_line.startswith("***"):
+                        continue
+                    if "БРЕДЛИ ПЕРЕКУПЕР" in clean_line.upper():
+                        heading_title = clean_line.replace("|", "—").strip()
+                    else:
+                        clean_lines.append(clean_line)
 
-        # 2. Fallback на статичный роскошный фото-баннер
+                heading_block = InputRichBlockSectionHeading(
+                    text=RichTextUnderline(text=RichTextItalic(text=RichTextBold(text=heading_title))),
+                    size=1,
+                )
+                video_target = video or _cached_banner_file_id
+                video_block = InputRichBlockVideo(
+                    video=InputMediaVideo(media=video_target)
+                )
+                dots_block = InputRichBlockParagraph(text="***")
+                body_block = InputRichBlockParagraph(text="\n".join(clean_lines))
+
+                rm = InputRichMessage(
+                    blocks=[
+                        heading_block,
+                        video_block,
+                        dots_block,
+                        body_block,
+                    ]
+                )
+                msg = await bot.send_rich_message(
+                    chat_id=chat_id,
+                    rich_message=rm,
+                    reply_markup=reply_markup,
+                )
+            except Exception as rich_err:
+                logger.debug("send_rich_message не удался: %s. Переход к fallback...", rich_err)
+
+        # 2. Fallback: отправка анимированного баннера .mp4 (через send_animation)
+        if msg is None:
+            anim_target = video or _cached_banner_file_id
+            if not anim_target and BANNER_VIDEO_PATH.exists():
+                anim_target = FSInputFile(str(BANNER_VIDEO_PATH))
+
+            if anim_target and hasattr(bot, "send_animation"):
+                try:
+                    msg = await bot.send_animation(
+                        chat_id=chat_id,
+                        animation=anim_target,
+                        caption=caption_text,
+                        parse_mode="HTML",
+                        reply_markup=reply_markup,
+                        show_caption_above_media=False,
+                    )
+                    if hasattr(msg, "video") and msg.video:
+                        _cached_banner_file_id = msg.video.file_id
+                    elif hasattr(msg, "animation") and msg.animation:
+                        _cached_banner_file_id = msg.animation.file_id
+                except Exception as anim_err:
+                    logger.debug("Не удалось отправить анимированный баннер: %s. Переход к фото...", anim_err)
+
+        # 3. Fallback: статичный роскошный фото-баннер
         if msg is None and BANNER_FILE_PATH.exists() and hasattr(bot, "send_photo"):
             photo_obj = FSInputFile(str(BANNER_FILE_PATH)) if photo is None else (
                 FSInputFile(photo) if isinstance(photo, str) else photo
@@ -207,7 +259,7 @@ async def send_or_replace_functional_message(
             except Exception as photo_err:
                 logger.warning("Не удалось отправить фото баннера: %s", photo_err)
 
-    # 3. Финальный fallback на текстовое сообщение
+    # 4. Финальный fallback на текстовое сообщение
     if msg is None:
         msg = await bot.send_message(
             chat_id=chat_id,

@@ -332,6 +332,7 @@ class TestModernBotFeatures(unittest.TestCase):
         bot_mock.send_photo = AsyncMock(return_value=new_msg_mock)
         bot_mock.send_message = AsyncMock(return_value=new_msg_mock)
         bot_mock.send_animation = AsyncMock(return_value=new_msg_mock)
+        bot_mock.send_rich_message = AsyncMock(return_value=new_msg_mock)
 
         # Симулируем наличие старого сообщения с ID 888
         _last_functional_messages[123456] = 888
@@ -347,8 +348,13 @@ class TestModernBotFeatures(unittest.TestCase):
 
         # Проверяем, что старое сообщение было удалено
         bot_mock.delete_message.assert_awaited_once_with(chat_id=123456, message_id=888)
-        # Проверяем, что новое функциональное сообщение отправлено с баннером (анимация или фото)
-        self.assertTrue(bot_mock.send_animation.called or bot_mock.send_photo.called or bot_mock.send_message.called)
+        # Проверяем, что новое функциональное сообщение отправлено как Telegram Article / Banner
+        self.assertTrue(
+            bot_mock.send_rich_message.called
+            or bot_mock.send_animation.called
+            or bot_mock.send_photo.called
+            or bot_mock.send_message.called
+        )
         # Проверяем, что сохранен новый ID
         self.assertEqual(_last_functional_messages[123456], 999)
         self.assertEqual(res.message_id, 999)
