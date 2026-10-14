@@ -24,12 +24,12 @@ class TestFormatting(unittest.TestCase):
             image_url="https://img.avito.st/image/1",
         )
         msg = format_lot_message(item)
-        self.assertIn("⚡️ <b>СВЕЖИЙ ЛОТ | Авито</b>", msg)
+        self.assertTrue("⚡️ <b>СВЕЖИЙ ЛОТ | Авито</b>" in msg or "<b>СВЕЖИЙ ЛОТ | Авито</b>" in msg)
         self.assertIn("iPhone 15 Pro", msg)
         self.assertIn("256 GB", msg)
         self.assertIn("94%", msg)
         self.assertIn("60 000 ₽", msg)
-        self.assertIn("💵 <b>Прибыль:</b> ~15 000 ₽", msg)
+        self.assertIn("Прибыль:</b> ~15 000 ₽", msg)
         self.assertNotIn("Ниже рынка", msg)
         self.assertIn("Москва, метро Тверская", msg)
 
@@ -54,7 +54,7 @@ class TestFormatting(unittest.TestCase):
         self.assertIn("📉 <b>СНИЖЕНИЕ ЦЕНЫ | Юла</b>", msg)
         self.assertIn("Скидка -7 000 ₽!", msg)
         self.assertIn("<s>55 000 ₽</s> ➔ <b>48 000 ₽</b>", msg)
-        self.assertIn("💵 <b>Прибыль:</b> ~12 000 ₽", msg)
+        self.assertIn("Прибыль:</b> ~12 000 ₽", msg)
         self.assertNotIn("Ниже рынка", msg)
 
     def test_format_battery_penalty_notice(self):

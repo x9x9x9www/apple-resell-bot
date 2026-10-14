@@ -90,20 +90,20 @@ def format_lot_message(item: ParsedIPhone) -> str:
         header = f"📉 <b>СНИЖЕНИЕ ЦЕНЫ | {item.platform.value}</b> <i>(Скидка -{diff_formatted} ₽!)</i>"
         price_line = f"💰 <b>Цена:</b> <s>{old_formatted} ₽</s> ➔ <b>{price_formatted} ₽</b>"
     else:
-        header = f"⚡️ <b>СВЕЖИЙ ЛОТ | {item.platform.value}</b>"
+        header = f"<tg-emoji emoji-id=\"5352784059871284236\">⚡️</tg-emoji> <b>СВЕЖИЙ ЛОТ | {item.platform.value}</b>"
         price_line = f"💰 <b>Цена:</b> {price_formatted} ₽"
 
     # Расчетная прибыль перекупщика
     profit_line = ""
     if getattr(item, "profit", None) and item.profit > 0:
         profit_fmt = f"{item.profit:,}".replace(",", " ")
-        profit_line = f"\n💵 <b>Прибыль:</b> ~{profit_fmt} ₽"
+        profit_line = f"\n<tg-emoji emoji-id=\"5197434882321567830\">💵</tg-emoji> <b>Прибыль:</b> ~{profit_fmt} ₽"
 
     # Профиль продавца (рейтинг и отзывы)
     seller_line = ""
     if getattr(item, "seller_name", None):
         s_name = item.seller_name
-        rating_part = f" ⭐ {item.seller_rating}" if getattr(item, "seller_rating", None) else ""
+        rating_part = f" <tg-emoji emoji-id=\"5267500801240092311\">⭐️</tg-emoji> {item.seller_rating}" if getattr(item, "seller_rating", None) else ""
         rev_part = f" ({item.seller_reviews_count} отзывов)" if getattr(item, "seller_reviews_count", None) else ""
         seller_line = f"\n👤 <b>Продавец:</b> {s_name}{rating_part}{rev_part}"
 
@@ -319,10 +319,11 @@ class ItemDispatcher:
                 # Если у лота есть фотография — отправляем фотокарточку с описанием
                 if parsed_item.image_url:
                     try:
+                        photo_caption = f"•••\n\n{text}" if not text.startswith("•••") else text
                         send_kwargs = {
                             "chat_id": target_chat,
                             "photo": parsed_item.image_url,
-                            "caption": text,
+                            "caption": photo_caption,
                             "parse_mode": "HTML",
                             "reply_markup": keyboard,
                         }

@@ -123,6 +123,8 @@ async def cleanup_user_message(message: types.Message) -> None:
 from pathlib import Path
 
 BANNER_FILE_PATH = Path(__file__).resolve().parent.parent / "assets" / "banner.jpg"
+BANNER_VIDEO_PATH = Path(__file__).resolve().parent.parent / "assets" / "banner.mp4"
+_cached_banner_file_id: Optional[str] = "BAACAgIAAxUAAWrO6h_5oPYpDeylG7EzN1AuG6TAAAJQowAC1gt4SjGoXYWb75KoPQQ"
 
 
 async def send_or_replace_functional_message(
@@ -131,14 +133,14 @@ async def send_or_replace_functional_message(
     text: str,
     reply_markup: Optional[types.ReplyKeyboardMarkup | types.ReplyKeyboardRemove | types.InlineKeyboardMarkup] = None,
     photo: Optional[str | FSInputFile] = None,
+    video: Optional[str | FSInputFile] = None,
     link_preview_options: Optional[LinkPreviewOptions] = None,
     with_banner: bool = True,
 ) -> types.Message:
     """
-    Отправляет сервисное/функциональное сообщение бота с баннером 'БРЕДЛИ ПЕРЕКУПЕР', предварительно
+    Отправляет сервисное/функциональное сообщение бота с анимированным баннером 'БРЕДЛИ ПЕРЕКУПЕР', предварительно
     удаляя предыдущее функциональное сообщение в этом чате.
-    Благодаря этому чат не захламляется дублирующимися меню и статусами
-    (функционал всегда представлен ровно одним актуальным сообщением, без спама).
+    Соблюдает правило 'одного живого сообщения' и оформление с разделителем '•••' под медиа.
     """
     old_msg_id = _last_functional_messages.get(chat_id)
     if old_msg_id:
@@ -156,31 +158,57 @@ async def send_or_replace_functional_message(
             current_reg_name = _active_region_manager.current["name"] if _active_region_manager else "Москва"
             reply_markup = get_reply_keyboard(current_region=current_reg_name)
 
-    # Прикрепляем баннер 'БРЕДЛИ ПЕРЕКУПЕР' на всех служебных/функциональных сообщениях бота
-    if photo is None and with_banner and BANNER_FILE_PATH.exists():
-        photo = FSInputFile(str(BANNER_FILE_PATH))
+    # Гарантируем разделитель '•••' под баннером/фотографией
+    caption_text = text
+    if with_banner and not caption_text.startswith("•••"):
+        caption_text = f"•••\n\n{caption_text}"
 
-    if photo:
-        photo_obj = FSInputFile(photo) if isinstance(photo, str) else photo
-        try:
-            msg = await bot.send_photo(
-                chat_id=chat_id,
-                photo=photo_obj,
-                caption=text,
-                parse_mode="HTML",
-                reply_markup=reply_markup,
-                show_caption_above_media=True,
+    # Отправка анимированного видео-баннера или фото
+    msg = None
+    global _cached_banner_file_id
+
+    if with_banner:
+        # 1. Пробуем отправить анимированный баннер .mp4 (через send_animation)
+        anim_target = video or _cached_banner_file_id
+        if not anim_target and BANNER_VIDEO_PATH.exists():
+            anim_target = FSInputFile(str(BANNER_VIDEO_PATH))
+
+        if anim_target and hasattr(bot, "send_animation"):
+            try:
+                msg = await bot.send_animation(
+                    chat_id=chat_id,
+                    animation=anim_target,
+                    caption=caption_text,
+                    parse_mode="HTML",
+                    reply_markup=reply_markup,
+                    show_caption_above_media=False,
+                )
+                if hasattr(msg, "video") and msg.video:
+                    _cached_banner_file_id = msg.video.file_id
+                elif hasattr(msg, "animation") and msg.animation:
+                    _cached_banner_file_id = msg.animation.file_id
+            except Exception as anim_err:
+                logger.debug("Не удалось отправить анимированный баннер: %s. Переход к фото...", anim_err)
+
+        # 2. Fallback на статичный роскошный фото-баннер
+        if msg is None and BANNER_FILE_PATH.exists() and hasattr(bot, "send_photo"):
+            photo_obj = FSInputFile(str(BANNER_FILE_PATH)) if photo is None else (
+                FSInputFile(photo) if isinstance(photo, str) else photo
             )
-        except Exception as photo_err:
-            logger.warning("Не удалось отправить фото баннера (%s): %s. Отправка текстом...", photo, photo_err)
-            msg = await bot.send_message(
-                chat_id=chat_id,
-                text=text,
-                parse_mode="HTML",
-                reply_markup=reply_markup,
-                link_preview_options=link_preview_options,
-            )
-    else:
+            try:
+                msg = await bot.send_photo(
+                    chat_id=chat_id,
+                    photo=photo_obj,
+                    caption=caption_text,
+                    parse_mode="HTML",
+                    reply_markup=reply_markup,
+                    show_caption_above_media=False,
+                )
+            except Exception as photo_err:
+                logger.warning("Не удалось отправить фото баннера: %s", photo_err)
+
+    # 3. Финальный fallback на текстовое сообщение
+    if msg is None:
         msg = await bot.send_message(
             chat_id=chat_id,
             text=text,
@@ -188,6 +216,7 @@ async def send_or_replace_functional_message(
             reply_markup=reply_markup,
             link_preview_options=link_preview_options,
         )
+
     _last_functional_messages[chat_id] = msg.message_id
     return msg
 
@@ -2016,15 +2045,15 @@ def _build_dashboard_text(
             pass
 
     return (
-        "⚡️ <b>БРЕДЛИ ПЕРЕКУПЕР | ЦЕНТР УПРАВЛЕНИЯ</b>\n\n"
+        "<u><i><b>БРЕДЛИ ПЕРЕКУПЕР | ЦЕНТР УПРАВЛЕНИЯ</b></i></u>\n\n"
         f"📍 <b>Текущий регион:</b> {current_reg['name']}\n"
         f"📡 <b>Мониторинг:</b> Авито + Юла ({platform_label})\n"
         f"🎯 <b>Конфигураций в радаре:</b> {active_configs} из {total_configs}\n"
         "⚡️ <b>Скорость реакции:</b> до 2.5 сек (Real-time)\n\n"
         "<i>💡 Управление ботом:</i>\n"
-        "• <b>⚡️ Бредли Перекупер</b> — открыть панель управления и матрицу цен\n"
+        "• <b><tg-emoji emoji-id=\"6032596946680548890\">📱</tg-emoji> Бредли Перекупер</b> — открыть панель управления и матрицу цен\n"
         "• <b>Название города в чат</b> — мгновенная смена региона поиска\n"
-        "• <b>⭐️ Избранное</b> — просмотр сохраненных предложений\n"
+        "• <b><tg-emoji emoji-id=\"5267500801240092311\">⭐️</tg-emoji> Избранное</b> — просмотр сохраненных предложений\n"
         "• <b>Ссылка на поиск в чат</b> — персональный поток мониторинга"
     )
 
@@ -2037,15 +2066,15 @@ def _build_status_text(
     stats = filter_instance.get_stats()
     region_name = region_manager.current["name"] if region_manager else "Москва"
     return (
-        "🟢 <b>Статус мониторинга лотов:</b>\n\n"
-        f"• Текущий регион: <b>{region_name}</b>\n"
-        "• Воркер Авито: <b>АКТИВЕН ⚡️</b> (sort=104, первые 20 позиций)\n"
-        "• Воркер Юла: <b>АКТИВЕН ⚡️</b> (web-api & REST выдача)\n"
-        "• Дедупликация: <b>Redis + SQLite Local Fallback (48h)</b>\n"
-        "• Детекция снижения цен: <b>АКТИВНА 📉</b>\n"
-        "• Фотокарточки объявлений: <b>АКТИВНЫ 📸</b>\n"
-        f"• Активных конфигураций гаджетов: <b>{stats['active_configs']} из {stats['total_configs']}</b>\n"
-        "• Скорость реакции: <b>до 2.5 сек</b>\n\n"
+        "<u><i><b>СТАТУС МОНИТОРИНГА | БРЕДЛИ ПЕРЕКУПЕР</b></i></u>\n\n"
+        f"• <tg-emoji emoji-id=\"5181912917758444171\">✅</tg-emoji> Текущий регион: <b>{region_name}</b>\n"
+        "• <tg-emoji emoji-id=\"5352784059871284236\">🔥</tg-emoji> Воркер Авито: <b>АКТИВЕН ⚡️</b> (sort=104, первые 20 позиций)\n"
+        "• <tg-emoji emoji-id=\"5352784059871284236\">🔥</tg-emoji> Воркер Юла: <b>АКТИВЕН ⚡️</b> (web-api & REST выдача)\n"
+        "• <tg-emoji emoji-id=\"5181912917758444171\">✅</tg-emoji> Дедупликация: <b>Redis + SQLite Local Fallback (48h)</b>\n"
+        "• 📉 Детекция снижения цен: <b>АКТИВНА</b>\n"
+        "• 📸 Фотокарточки объявлений: <b>АКТИВНЫ</b>\n"
+        f"• <tg-emoji emoji-id=\"6032596946680548890\">📱</tg-emoji> Активных конфигураций гаджетов: <b>{stats['active_configs']} из {stats['total_configs']}</b>\n"
+        "• ⚡️ Скорость реакции: <b>до 2.5 сек</b>\n\n"
         "<i>💡 Чтобы сменить регион, просто напишите название города прямо в этот чат (например: <code>Якутск</code>, <code>Спб</code>, <code>Казань</code>).</i>"
     )
 
