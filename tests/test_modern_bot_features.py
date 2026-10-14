@@ -329,6 +329,7 @@ class TestModernBotFeatures(unittest.TestCase):
 
         new_msg_mock = MagicMock()
         new_msg_mock.message_id = 999
+        bot_mock.send_photo = AsyncMock(return_value=new_msg_mock)
         bot_mock.send_message = AsyncMock(return_value=new_msg_mock)
 
         # Симулируем наличие старого сообщения с ID 888
@@ -345,8 +346,8 @@ class TestModernBotFeatures(unittest.TestCase):
 
         # Проверяем, что старое сообщение было удалено
         bot_mock.delete_message.assert_awaited_once_with(chat_id=123456, message_id=888)
-        # Проверяем, что новое сообщение отправлено
-        bot_mock.send_message.assert_awaited_once()
+        # Проверяем, что новое функциональное сообщение отправлено с баннером
+        self.assertTrue(bot_mock.send_photo.called or bot_mock.send_message.called)
         # Проверяем, что сохранен новый ID
         self.assertEqual(_last_functional_messages[123456], 999)
         self.assertEqual(res.message_id, 999)

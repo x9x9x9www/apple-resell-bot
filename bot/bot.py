@@ -156,16 +156,9 @@ async def send_or_replace_functional_message(
             current_reg_name = _active_region_manager.current["name"] if _active_region_manager else "Москва"
             reply_markup = get_reply_keyboard(current_region=current_reg_name)
 
-    # При отправке с баннером без явного указания фото используем карточку Telegram Rich Message:
-    # (Структура: Заголовок -> Баннер -> Текст сообщения как единое целое)
-    if photo is None and with_banner and link_preview_options is None:
-        webapp_base = getattr(settings, "WEBAPP_URL", "https://x9x9x9www.github.io/apple-resell-bot").rstrip("/")
-        article_url = f"{webapp_base}/article.html"
-        link_preview_options = LinkPreviewOptions(
-            url=article_url,
-            prefer_large_media=True,
-            show_above_text=True,
-        )
+    # Прикрепляем баннер 'БРЕДЛИ ПЕРЕКУПЕР' на всех служебных/функциональных сообщениях бота
+    if photo is None and with_banner and BANNER_FILE_PATH.exists():
+        photo = FSInputFile(str(BANNER_FILE_PATH))
 
     if photo:
         photo_obj = FSInputFile(photo) if isinstance(photo, str) else photo
@@ -207,25 +200,13 @@ async def send_rich_message(
     article_url: Optional[str] = None,
 ) -> types.Message:
     """
-    Отправляет главное меню / сервисное сообщение через Telegram Rich Message:
-    Название -> Баннер -> Текст сообщения (в одном целом сообщении с WebPage preview).
+    Отправляет главное меню / сервисное сообщение с гарантированным показом баннера 'БРЕДЛИ ПЕРЕКУПЕР'.
     """
-    if article_url is None:
-        webapp_base = getattr(settings, "WEBAPP_URL", "https://x9x9x9www.github.io/apple-resell-bot").rstrip("/")
-        article_url = f"{webapp_base}/article.html"
-
-    link_preview = LinkPreviewOptions(
-        url=article_url,
-        prefer_large_media=True,
-        show_above_text=True,
-    )
-
     return await send_or_replace_functional_message(
         chat_id=chat_id,
         bot=bot,
         text=text,
         reply_markup=reply_markup,
-        link_preview_options=link_preview,
         with_banner=True,
     )
 

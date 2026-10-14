@@ -27,7 +27,45 @@ logging.basicConfig(
 logger = logging.getLogger("MAIN")
 
 
+import atexit
+import os
+
+PID_FILE = settings.BASE_DIR / "bot.pid"
+
+
+def acquire_single_instance_lock() -> None:
+    """Гарантирует запуск ровно одного экземпляра бота, автоматически завершая старые копии."""
+    if PID_FILE.exists():
+        try:
+            old_pid = int(PID_FILE.read_text().strip())
+            if old_pid != os.getpid():
+                try:
+                    os.kill(old_pid, signal.SIGTERM)
+                    logger.info("Завершен предыдущий процесс бота (PID %d)", old_pid)
+                except ProcessLookupError:
+                    pass
+                except Exception as e:
+                    logger.debug("Не удалось завершить старый PID %d: %s", old_pid, e)
+        except Exception:
+            pass
+
+    try:
+        PID_FILE.write_text(str(os.getpid()))
+    except Exception:
+        pass
+
+    def _cleanup_pid() -> None:
+        try:
+            if PID_FILE.exists() and PID_FILE.read_text().strip() == str(os.getpid()):
+                PID_FILE.unlink(missing_ok=True)
+        except Exception:
+            pass
+
+    atexit.register(_cleanup_pid)
+
+
 async def main() -> None:
+    acquire_single_instance_lock()
     logger.info("==================================================")
     logger.info("   ⚡️ APPLE RESELL BOT (AVITO & YOULA RADAR) ⚡️   ")
     logger.info("==================================================")
