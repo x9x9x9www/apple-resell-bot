@@ -1,13 +1,13 @@
 {
   "version": 1,
   "meta": {
-    "lastScanned": "2026-10-14T05:16:40.095Z",
+    "lastScanned": "2026-10-14T05:23:33.458Z",
     "fileCount": 57,
     "hits": 0,
     "misses": 0,
-    "renderedHash": "39ac9be05d31abdf70921d862b309a8b5deceda1780d7d2815ea9fdce5e5964e",
-    "storeUpdatedAt": "2026-10-14T05:16:40.096Z",
-    "rootHash": "cad2f1898109b2c3"
+    "renderedHash": "6454ca81c76e011e0f85bba65f950239f22abefbf4c9c95203ea7b5a538f7f6c",
+    "storeUpdatedAt": "2026-10-14T05:23:33.460Z",
+    "rootHash": "ff5644f91931a427"
   },
   "files": {
     "_headers": {
@@ -16,9 +16,9 @@
       "hash": "b2bd8bdffe4ce82e",
       "size": 191,
       "mtimeMs": 1791909984476.2212,
-      "updatedAt": "2026-10-14T05:16:39.941Z",
+      "updatedAt": "2026-10-14T05:23:33.300Z",
       "source": "scan",
-      "importance": 0.0791
+      "importance": 0.0917
     },
     ".github/workflows/deploy-pages.yml": {
       "description": "CI: Deploy Telegram Mini App to GitHub Pages",
@@ -26,9 +26,9 @@
       "hash": "7bfe5eb192097636",
       "size": 744,
       "mtimeMs": 1791913808027.6294,
-      "updatedAt": "2026-10-14T05:16:39.943Z",
+      "updatedAt": "2026-10-14T05:23:33.303Z",
       "source": "scan",
-      "importance": 0.0791
+      "importance": 0.0917
     },
     ".gitignore": {
       "description": "Git ignore rules",
@@ -36,9 +36,9 @@
       "hash": "78daf57562d036ff",
       "size": 444,
       "mtimeMs": 1791943476829.1216,
-      "updatedAt": "2026-10-14T05:16:39.943Z",
+      "updatedAt": "2026-10-14T05:23:33.304Z",
       "source": "scan",
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "AGENTS.md": {
       "description": "OpenWolf",
@@ -46,9 +46,9 @@
       "hash": "e401f79554a8d796",
       "size": 297,
       "mtimeMs": 1791954758040.2817,
-      "updatedAt": "2026-10-14T05:16:39.943Z",
+      "updatedAt": "2026-10-14T05:23:33.304Z",
       "source": "scan",
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "article.html": {
       "description": "⚡️ БРЕДЛИ ПЕРЕКУПЕР",
@@ -56,9 +56,9 @@
       "hash": "fbada56f4c7dd083",
       "size": 2315,
       "mtimeMs": 1791913499661.1985,
-      "updatedAt": "2026-10-14T05:16:39.943Z",
+      "updatedAt": "2026-10-14T05:23:33.304Z",
       "source": "scan",
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "bot/__init__.py": {
       "description": "",
@@ -66,120 +66,120 @@
       "hash": "e0a6da51900cbc2f",
       "size": 295,
       "mtimeMs": 1791913808033.096,
-      "updatedAt": "2026-10-14T05:16:39.944Z",
+      "updatedAt": "2026-10-14T05:23:33.305Z",
       "source": "scan",
       "imports": [
         "bot/bot.py",
         "bot/dispatcher.py",
         "bot/keyboards.py"
       ],
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "bot/bot.py": {
       "description": "register_worker_query_listener, broadcast_worker_query, cleanup_user_message, send_or_replace_functional_message + 1 more",
-      "tokens": 27967,
-      "hash": "afa86038e6bfd82d",
-      "size": 111800,
-      "mtimeMs": 1791947356640.4443,
-      "updatedAt": "2026-10-14T05:16:39.947Z",
+      "tokens": 27866,
+      "hash": "cac5a403b6529f8c",
+      "size": 111432,
+      "mtimeMs": 1791955339043.2083,
+      "updatedAt": "2026-10-14T05:23:33.308Z",
       "source": "scan",
       "symbols": [
         {
           "name": "register_worker_query_listener",
           "kind": "fn",
-          "startLine": 84,
-          "endLine": 86,
+          "startLine": 78,
+          "endLine": 80,
           "tokens": 59
         },
         {
           "name": "broadcast_worker_query",
           "kind": "fn",
-          "startLine": 89,
-          "endLine": 98,
+          "startLine": 83,
+          "endLine": 92,
           "tokens": 101
         },
         {
           "name": "cleanup_user_message",
           "kind": "fn",
-          "startLine": 117,
-          "endLine": 128,
+          "startLine": 111,
+          "endLine": 122,
           "tokens": 160
         },
         {
           "name": "send_or_replace_functional_message",
           "kind": "fn",
-          "startLine": 138,
-          "endLine": 273,
+          "startLine": 132,
+          "endLine": 267,
           "tokens": 1738
         },
         {
           "name": "send_rich_message",
           "kind": "fn",
-          "startLine": 276,
-          "endLine": 292,
+          "startLine": 270,
+          "endLine": 286,
           "tokens": 159
         },
         {
           "name": "_show_city_selection_guide",
           "kind": "fn",
-          "startLine": 295,
-          "endLine": 316,
+          "startLine": 289,
+          "endLine": 310,
           "tokens": 332
         },
         {
           "name": "create_bot",
           "kind": "fn",
-          "startLine": 319,
-          "endLine": 324,
+          "startLine": 313,
+          "endLine": 318,
           "tokens": 58
         },
         {
           "name": "setup_bot_commands",
           "kind": "fn",
-          "startLine": 327,
-          "endLine": 333,
+          "startLine": 321,
+          "endLine": 327,
           "tokens": 115
         },
         {
           "name": "create_bot_dispatcher",
           "kind": "fn",
-          "startLine": 336,
-          "endLine": 2000,
-          "tokens": 21636
+          "startLine": 330,
+          "endLine": 1990,
+          "tokens": 21574
         },
         {
           "name": "_build_stream_dashboard_text",
           "kind": "fn",
-          "startLine": 2003,
-          "endLine": 2034,
+          "startLine": 1993,
+          "endLine": 2024,
           "tokens": 496
         },
         {
           "name": "_build_favorites_view",
           "kind": "fn",
-          "startLine": 2037,
-          "endLine": 2071,
+          "startLine": 2027,
+          "endLine": 2061,
           "tokens": 483
         },
         {
           "name": "_build_dashboard_text",
           "kind": "fn",
-          "startLine": 2074,
-          "endLine": 2110,
+          "startLine": 2064,
+          "endLine": 2100,
           "tokens": 496
         },
         {
           "name": "_build_status_text",
           "kind": "fn",
-          "startLine": 2113,
-          "endLine": 2131,
+          "startLine": 2103,
+          "endLine": 2121,
           "tokens": 396
         },
         {
           "name": "_send_excel_file",
           "kind": "fn",
-          "startLine": 2134,
-          "endLine": 2182,
+          "startLine": 2124,
+          "endLine": 2172,
           "tokens": 677
         }
       ],
@@ -195,7 +195,7 @@
         "core/favorites.py",
         "bot/keyboards.py"
       ],
-      "importance": 0.124
+      "importance": 0.1436
     },
     "bot/dispatcher.py": {
       "description": "ItemDispatcher: format_lot_message, start",
@@ -203,7 +203,7 @@
       "hash": "d2a22f15721e2882",
       "size": 18924,
       "mtimeMs": 1791946712797.0823,
-      "updatedAt": "2026-10-14T05:16:39.948Z",
+      "updatedAt": "2026-10-14T05:23:33.309Z",
       "source": "scan",
       "symbols": [
         {
@@ -262,7 +262,7 @@
         "core/favorites.py",
         "bot/keyboards.py"
       ],
-      "importance": 0.1968
+      "importance": 0.2281
     },
     "bot/keyboards.py": {
       "description": "get_item_keyboard, get_favorites_keyboard, get_main_menu_keyboard, get_reply_keyboard + 6 more",
@@ -270,7 +270,7 @@
       "hash": "fb7e01fd9b8ae09e",
       "size": 13789,
       "mtimeMs": 1791913808035.022,
-      "updatedAt": "2026-10-14T05:16:39.949Z",
+      "updatedAt": "2026-10-14T05:23:33.310Z",
       "source": "scan",
       "symbols": [
         {
@@ -350,7 +350,7 @@
         "config.py",
         "core/margin_filter.py"
       ],
-      "importance": 0.1669
+      "importance": 0.1934
     },
     "CLAUDE.md": {
       "description": "OpenWolf",
@@ -358,17 +358,17 @@
       "hash": "074d6b42b583729a",
       "size": 395,
       "mtimeMs": 1791954758022.6733,
-      "updatedAt": "2026-10-14T05:16:39.949Z",
+      "updatedAt": "2026-10-14T05:23:33.310Z",
       "source": "scan",
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "config.py": {
       "description": "Settings: parse_target_chat_id, load_pricing_matrix, load_proxies",
-      "tokens": 777,
-      "hash": "8ea0809bdba23552",
-      "size": 2822,
-      "mtimeMs": 1791913808035.1384,
-      "updatedAt": "2026-10-14T05:16:39.949Z",
+      "tokens": 772,
+      "hash": "2132750e7c3cef96",
+      "size": 2806,
+      "mtimeMs": 1791955313757.873,
+      "updatedAt": "2026-10-14T05:23:33.310Z",
       "source": "scan",
       "symbols": [
         {
@@ -394,7 +394,7 @@
         }
       ],
       "symbolSource": "ts",
-      "importance": 0.8492
+      "importance": 0.9655
     },
     "core/__init__.py": {
       "description": "",
@@ -402,7 +402,7 @@
       "hash": "6479c5fa576ca977",
       "size": 322,
       "mtimeMs": 1791913808035.2935,
-      "updatedAt": "2026-10-14T05:16:39.950Z",
+      "updatedAt": "2026-10-14T05:23:33.311Z",
       "source": "scan",
       "imports": [
         "core/models.py",
@@ -410,7 +410,7 @@
         "core/parser.py",
         "core/margin_filter.py"
       ],
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "core/deduplicator.py": {
       "description": "RedisDeduplicator: extract_image_key, normalize_text_fingerprint, normalize_location, connect + 3 more",
@@ -418,7 +418,7 @@
       "hash": "ffc39de7f0e69622",
       "size": 17005,
       "mtimeMs": 1791913808035.405,
-      "updatedAt": "2026-10-14T05:16:39.951Z",
+      "updatedAt": "2026-10-14T05:23:33.311Z",
       "source": "scan",
       "symbols": [
         {
@@ -533,15 +533,15 @@
         "config.py",
         "core/models.py"
       ],
-      "importance": 0.2065
+      "importance": 0.2525
     },
     "core/excel_manager.py": {
       "description": "ExcelPricingManager: export_matrix_to_bytes, parse_excel_to_matrix, import_matrix_from_bytes",
-      "tokens": 2265,
-      "hash": "d67b7f8f4dc1224d",
-      "size": 8678,
-      "mtimeMs": 1791913808036.1284,
-      "updatedAt": "2026-10-14T05:16:39.951Z",
+      "tokens": 2261,
+      "hash": "06edaf7ff8cbbdae",
+      "size": 8665,
+      "mtimeMs": 1791955313760.365,
+      "updatedAt": "2026-10-14T05:23:33.311Z",
       "source": "scan",
       "symbols": [
         {
@@ -554,15 +554,15 @@
       ],
       "symbolSource": "ts",
       "skeleton": "class ExcelPricingManager:",
-      "importance": 0.1596
+      "importance": 0.1849
     },
     "core/favorites.py": {
       "description": "URL configuration",
-      "tokens": 1516,
-      "hash": "3366f6ff776545ff",
-      "size": 5784,
-      "mtimeMs": 1791913808036.2498,
-      "updatedAt": "2026-10-14T05:16:39.951Z",
+      "tokens": 1506,
+      "hash": "ef48f5a1f0113705",
+      "size": 5752,
+      "mtimeMs": 1791955313758.31,
+      "updatedAt": "2026-10-14T05:23:33.312Z",
       "source": "scan",
       "symbols": [
         {
@@ -644,18 +644,15 @@
         }
       ],
       "symbolSource": "ts",
-      "imports": [
-        "core/models.py"
-      ],
-      "importance": 0.1781
+      "importance": 0.2064
     },
     "core/link_stream.py": {
       "description": "SearchStream: to_dict, from_dict, extract_prices_from_query, parse_search_url",
-      "tokens": 6590,
-      "hash": "74ed14514d6bfe1b",
-      "size": 24811,
-      "mtimeMs": 1791913808036.3784,
-      "updatedAt": "2026-10-14T05:16:39.952Z",
+      "tokens": 6584,
+      "hash": "3053f06d77bf64b8",
+      "size": 24792,
+      "mtimeMs": 1791955313761.287,
+      "updatedAt": "2026-10-14T05:23:33.312Z",
       "source": "scan",
       "symbols": [
         {
@@ -806,15 +803,15 @@
         "core/models.py",
         "core/regions.py"
       ],
-      "importance": 0.127
+      "importance": 0.1329
     },
     "core/margin_filter.py": {
       "description": "MarginFilter: reload_matrix, save_matrix, is_series_enabled, toggle_series + 2 more",
-      "tokens": 2134,
-      "hash": "e9f8e07a1e13f482",
-      "size": 8446,
-      "mtimeMs": 1791913808037.3918,
-      "updatedAt": "2026-10-14T05:16:39.952Z",
+      "tokens": 2132,
+      "hash": "2cbd5ac81f03b203",
+      "size": 8440,
+      "mtimeMs": 1791955313760.698,
+      "updatedAt": "2026-10-14T05:23:33.313Z",
       "source": "scan",
       "symbols": [
         {
@@ -887,7 +884,7 @@
         "config.py",
         "core/models.py"
       ],
-      "importance": 0.2267
+      "importance": 0.2627
     },
     "core/models.py": {
       "description": "Pydantic: RawItem (51 fields)",
@@ -895,7 +892,7 @@
       "hash": "a855e5909bb01576",
       "size": 3565,
       "mtimeMs": 1791913808037.4905,
-      "updatedAt": "2026-10-14T05:16:39.953Z",
+      "updatedAt": "2026-10-14T05:23:33.313Z",
       "source": "scan",
       "symbols": [
         {
@@ -925,11 +922,11 @@
     },
     "core/parser.py": {
       "description": "Регулярные выражения для фильтрации мусора, копий и брака (Blacklist)",
-      "tokens": 6926,
-      "hash": "a69fadf0137d48b5",
-      "size": 28261,
-      "mtimeMs": 1791913808037.606,
-      "updatedAt": "2026-10-14T05:16:39.953Z",
+      "tokens": 6922,
+      "hash": "ba1c224c82f35f7a",
+      "size": 28244,
+      "mtimeMs": 1791955313758.0767,
+      "updatedAt": "2026-10-14T05:23:33.314Z",
       "source": "scan",
       "symbols": [
         {
@@ -966,23 +963,23 @@
       "imports": [
         "core/models.py"
       ],
-      "importance": 0.2085
+      "importance": 0.244
     },
     "core/regions.py": {
       "description": "",
-      "tokens": 7823,
-      "hash": "e0d46fca1d79832b",
-      "size": 31241,
-      "mtimeMs": 1791913808038.236,
-      "updatedAt": "2026-10-14T05:16:39.954Z",
+      "tokens": 7811,
+      "hash": "6b77da9e1f9e36ad",
+      "size": 31199,
+      "mtimeMs": 1791955313761.2961,
+      "updatedAt": "2026-10-14T05:23:33.314Z",
       "source": "scan",
       "symbols": [
         {
           "name": "RegionManager",
           "kind": "class",
           "startLine": 338,
-          "endLine": 521,
-          "tokens": 2122
+          "endLine": 520,
+          "tokens": 2117
         },
         {
           "name": "RegionManager.__init__",
@@ -1016,21 +1013,21 @@
           "name": "RegionManager.set_region",
           "kind": "method",
           "startLine": 386,
-          "endLine": 427,
-          "tokens": 440
+          "endLine": 426,
+          "tokens": 435
         },
         {
           "name": "RegionManager.find_cities",
           "kind": "method",
-          "startLine": 429,
-          "endLine": 462,
+          "startLine": 428,
+          "endLine": 461,
           "tokens": 366
         },
         {
           "name": "RegionManager.is_item_matching_current_region",
           "kind": "method",
-          "startLine": 464,
-          "endLine": 521,
+          "startLine": 463,
+          "endLine": 520,
           "tokens": 757
         }
       ],
@@ -1039,15 +1036,15 @@
       "imports": [
         "config.py"
       ],
-      "importance": 0.2197
+      "importance": 0.2506
     },
     "core/user_profile.py": {
       "description": "Pydantic: UserConditionRules (34 fields)",
-      "tokens": 3529,
-      "hash": "376fefb0ab26c3e0",
-      "size": 14483,
-      "mtimeMs": 1791913808038.3667,
-      "updatedAt": "2026-10-14T05:16:39.955Z",
+      "tokens": 3527,
+      "hash": "7cb5bc293f96076d",
+      "size": 14477,
+      "mtimeMs": 1791955313760.9514,
+      "updatedAt": "2026-10-14T05:23:33.315Z",
       "source": "scan",
       "symbols": [
         {
@@ -1155,7 +1152,7 @@
         "config.py",
         "core/models.py"
       ],
-      "importance": 0.1669
+      "importance": 0.1934
     },
     "docker-compose.yml": {
       "description": "Docker Compose services",
@@ -1163,9 +1160,9 @@
       "hash": "2655ec0d7db5df9b",
       "size": 601,
       "mtimeMs": 1791913808038.8894,
-      "updatedAt": "2026-10-14T05:16:39.955Z",
+      "updatedAt": "2026-10-14T05:23:33.315Z",
       "source": "scan",
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "Dockerfile": {
       "description": "Docker container definition",
@@ -1173,9 +1170,9 @@
       "hash": "e555ed68180d60ef",
       "size": 581,
       "mtimeMs": 1791913808027.809,
-      "updatedAt": "2026-10-14T05:16:39.955Z",
+      "updatedAt": "2026-10-14T05:23:33.315Z",
       "source": "scan",
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "docs/_headers": {
       "description": "",
@@ -1183,9 +1180,9 @@
       "hash": "b2bd8bdffe4ce82e",
       "size": 191,
       "mtimeMs": 1791909984476.4534,
-      "updatedAt": "2026-10-14T05:16:39.956Z",
+      "updatedAt": "2026-10-14T05:23:33.315Z",
       "source": "scan",
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "docs/article.html": {
       "description": "⚡️ БРЕДЛИ ПЕРЕКУПЕР",
@@ -1193,9 +1190,9 @@
       "hash": "fbada56f4c7dd083",
       "size": 2315,
       "mtimeMs": 1791913808039.5605,
-      "updatedAt": "2026-10-14T05:16:39.956Z",
+      "updatedAt": "2026-10-14T05:23:33.315Z",
       "source": "scan",
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "docs/index.html": {
       "description": "⚡️ БРЕДЛИ ПЕРЕКУПЕР",
@@ -1203,9 +1200,9 @@
       "hash": "a956d32e742b075a",
       "size": 225785,
       "mtimeMs": 1791913808043.5833,
-      "updatedAt": "2026-10-14T05:16:39.957Z",
+      "updatedAt": "2026-10-14T05:23:33.317Z",
       "source": "scan",
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "docs/pricing_matrix_default.json": {
       "description": "",
@@ -1213,9 +1210,9 @@
       "hash": "d480e7b08a74fc01",
       "size": 10148,
       "mtimeMs": 1791909984485.2683,
-      "updatedAt": "2026-10-14T05:16:39.957Z",
+      "updatedAt": "2026-10-14T05:23:33.317Z",
       "source": "scan",
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "GEMINI.md": {
       "description": "OpenWolf",
@@ -1223,9 +1220,9 @@
       "hash": "e401f79554a8d796",
       "size": 297,
       "mtimeMs": 1791954758048.601,
-      "updatedAt": "2026-10-14T05:16:39.958Z",
+      "updatedAt": "2026-10-14T05:23:33.318Z",
       "source": "scan",
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "index.html": {
       "description": "⚡️ БРЕДЛИ ПЕРЕКУПЕР",
@@ -1233,9 +1230,9 @@
       "hash": "a956d32e742b075a",
       "size": 225785,
       "mtimeMs": 1791913499668.2566,
-      "updatedAt": "2026-10-14T05:16:39.959Z",
+      "updatedAt": "2026-10-14T05:23:33.319Z",
       "source": "scan",
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "main.py": {
       "description": "acquire_single_instance_lock, main",
@@ -1243,7 +1240,7 @@
       "hash": "0a08c3e5cd216b9f",
       "size": 8586,
       "mtimeMs": 1791943292150.0916,
-      "updatedAt": "2026-10-14T05:16:39.959Z",
+      "updatedAt": "2026-10-14T05:23:33.319Z",
       "source": "scan",
       "symbols": [
         {
@@ -1277,7 +1274,7 @@
         "bot/bot.py",
         "bot/dispatcher.py"
       ],
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "parsers/__init__.py": {
       "description": "",
@@ -1285,7 +1282,7 @@
       "hash": "791632ede74c21f3",
       "size": 282,
       "mtimeMs": 1791913808043.839,
-      "updatedAt": "2026-10-14T05:16:39.959Z",
+      "updatedAt": "2026-10-14T05:23:33.319Z",
       "source": "scan",
       "imports": [
         "parsers/base.py",
@@ -1293,71 +1290,71 @@
         "parsers/avito.py",
         "parsers/youla.py"
       ],
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "parsers/avito.py": {
       "description": "AvitoWorker: add_custom_query, set_location, fetch_fresh_items",
-      "tokens": 3424,
-      "hash": "622e62e0a9605bd6",
-      "size": 13064,
-      "mtimeMs": 1791913808044.4248,
-      "updatedAt": "2026-10-14T05:16:39.960Z",
+      "tokens": 3403,
+      "hash": "2421b13b5e262b6c",
+      "size": 12992,
+      "mtimeMs": 1791955313758.395,
+      "updatedAt": "2026-10-14T05:23:33.320Z",
       "source": "scan",
       "symbols": [
         {
           "name": "AvitoWorker",
           "kind": "class",
-          "startLine": 22,
-          "endLine": 307,
+          "startLine": 21,
+          "endLine": 306,
           "tokens": 3268
         },
         {
           "name": "AvitoWorker.__init__",
           "kind": "method",
-          "startLine": 29,
-          "endLine": 60,
+          "startLine": 28,
+          "endLine": 59,
           "tokens": 343
         },
         {
           "name": "AvitoWorker.add_custom_query",
           "kind": "method",
-          "startLine": 62,
-          "endLine": 70,
+          "startLine": 61,
+          "endLine": 69,
           "tokens": 128
         },
         {
           "name": "AvitoWorker.set_location",
           "kind": "method",
-          "startLine": 72,
-          "endLine": 77,
+          "startLine": 71,
+          "endLine": 76,
           "tokens": 102
         },
         {
           "name": "AvitoWorker._parse_time",
           "kind": "method",
-          "startLine": 79,
-          "endLine": 84,
+          "startLine": 78,
+          "endLine": 83,
           "tokens": 86
         },
         {
           "name": "AvitoWorker._parse_items_from_json",
           "kind": "method",
-          "startLine": 86,
-          "endLine": 206,
+          "startLine": 85,
+          "endLine": 205,
           "tokens": 1501
         },
         {
           "name": "AvitoWorker._fetch_stream_items",
           "kind": "method",
-          "startLine": 208,
-          "endLine": 260,
+          "startLine": 207,
+          "endLine": 259,
           "tokens": 536
         },
         {
           "name": "AvitoWorker.fetch_fresh_items",
           "kind": "method",
-          "startLine": 262,
-          "endLine": 307,
+          "startLine": 261,
+          "endLine": 306,
           "tokens": 484
         }
       ],
@@ -1369,53 +1366,52 @@
         "core/parser.py",
         "parsers/base.py",
         "parsers/network.py",
-        "config.py",
-        "core/link_stream.py"
+        "config.py"
       ],
-      "importance": 0.1015
+      "importance": 0.1177
     },
     "parsers/base.py": {
       "description": "BaseWorker: fetch_fresh_items, is_fresh, run, stop",
-      "tokens": 1281,
-      "hash": "603f668c6682688d",
-      "size": 5212,
-      "mtimeMs": 1791913808044.521,
-      "updatedAt": "2026-10-14T05:16:39.960Z",
+      "tokens": 1273,
+      "hash": "47ceb934263cdc43",
+      "size": 5184,
+      "mtimeMs": 1791955313759.301,
+      "updatedAt": "2026-10-14T05:23:33.320Z",
       "source": "scan",
       "symbols": [
         {
           "name": "BaseWorker",
           "kind": "class",
-          "startLine": 18,
-          "endLine": 120,
+          "startLine": 17,
+          "endLine": 119,
           "tokens": 1168
         },
         {
           "name": "BaseWorker.__init__",
           "kind": "method",
-          "startLine": 24,
-          "endLine": 39,
+          "startLine": 23,
+          "endLine": 38,
           "tokens": 153
         },
         {
           "name": "BaseWorker.is_fresh",
           "kind": "method",
-          "startLine": 49,
-          "endLine": 65,
+          "startLine": 48,
+          "endLine": 64,
           "tokens": 211
         },
         {
           "name": "BaseWorker.run",
           "kind": "method",
-          "startLine": 67,
-          "endLine": 117,
+          "startLine": 66,
+          "endLine": 116,
           "tokens": 656
         },
         {
           "name": "BaseWorker.stop",
           "kind": "method",
-          "startLine": 119,
-          "endLine": 120,
+          "startLine": 118,
+          "endLine": 119,
           "tokens": 17
         }
       ],
@@ -1423,95 +1419,94 @@
       "imports": [
         "core/models.py",
         "core/deduplicator.py",
-        "parsers/network.py",
-        "config.py"
+        "parsers/network.py"
       ],
-      "importance": 0.1227
+      "importance": 0.1445
     },
     "parsers/network.py": {
       "description": "ProxyPool: get_proxy, mark_bad, mark_good, total + 4 more",
-      "tokens": 1994,
-      "hash": "821276c2fad2154d",
-      "size": 7460,
-      "mtimeMs": 1791913808044.6133,
-      "updatedAt": "2026-10-14T05:16:39.960Z",
+      "tokens": 1990,
+      "hash": "145c0b4a782db34b",
+      "size": 7446,
+      "mtimeMs": 1791955313760.1516,
+      "updatedAt": "2026-10-14T05:23:33.320Z",
       "source": "scan",
       "symbols": [
         {
           "name": "ProxyPool",
           "kind": "class",
-          "startLine": 12,
-          "endLine": 41,
+          "startLine": 11,
+          "endLine": 40,
           "tokens": 316
         },
         {
           "name": "ProxyPool.__init__",
           "kind": "method",
-          "startLine": 15,
-          "endLine": 18,
+          "startLine": 14,
+          "endLine": 17,
           "tokens": 68
         },
         {
           "name": "ProxyPool.get_proxy",
           "kind": "method",
-          "startLine": 20,
-          "endLine": 25,
+          "startLine": 19,
+          "endLine": 24,
           "tokens": 59
         },
         {
           "name": "ProxyPool.mark_bad",
           "kind": "method",
-          "startLine": 27,
-          "endLine": 33,
+          "startLine": 26,
+          "endLine": 32,
           "tokens": 105
         },
         {
           "name": "ProxyPool.mark_good",
           "kind": "method",
-          "startLine": 35,
-          "endLine": 37,
+          "startLine": 34,
+          "endLine": 36,
           "tokens": 37
         },
         {
           "name": "StealthHttpClient",
           "kind": "class",
-          "startLine": 44,
-          "endLine": 191,
+          "startLine": 43,
+          "endLine": 190,
           "tokens": 1618
         },
         {
           "name": "StealthHttpClient.__init__",
           "kind": "method",
-          "startLine": 51,
-          "endLine": 54,
+          "startLine": 50,
+          "endLine": 53,
           "tokens": 69
         },
         {
           "name": "StealthHttpClient.get_session",
           "kind": "method",
-          "startLine": 56,
-          "endLine": 63,
+          "startLine": 55,
+          "endLine": 62,
           "tokens": 91
         },
         {
           "name": "StealthHttpClient.close",
           "kind": "method",
-          "startLine": 65,
-          "endLine": 68,
+          "startLine": 64,
+          "endLine": 67,
           "tokens": 52
         },
         {
           "name": "StealthHttpClient.get",
           "kind": "method",
-          "startLine": 70,
-          "endLine": 138,
+          "startLine": 69,
+          "endLine": 137,
           "tokens": 774
         },
         {
           "name": "StealthHttpClient.post",
           "kind": "method",
-          "startLine": 140,
-          "endLine": 191,
+          "startLine": 139,
+          "endLine": 190,
           "tokens": 559
         }
       ],
@@ -1519,23 +1514,23 @@
       "imports": [
         "config.py"
       ],
-      "importance": 0.1543
+      "importance": 0.192
     },
     "parsers/youla.py": {
       "description": "YoulaWorker: add_custom_query, set_location",
-      "tokens": 4892,
-      "hash": "cdbc8b6803848eac",
-      "size": 18309,
-      "mtimeMs": 1791913808044.716,
-      "updatedAt": "2026-10-14T05:16:39.961Z",
+      "tokens": 4880,
+      "hash": "5d301ba373a1e3f5",
+      "size": 18268,
+      "mtimeMs": 1791955351354.1304,
+      "updatedAt": "2026-10-14T05:23:33.321Z",
       "source": "scan",
       "symbols": [
         {
           "name": "YoulaWorker",
           "kind": "class",
           "startLine": 21,
-          "endLine": 438,
-          "tokens": 4757
+          "endLine": 437,
+          "tokens": 4746
         },
         {
           "name": "YoulaWorker.__init__",
@@ -1576,21 +1571,21 @@
           "name": "YoulaWorker._parse_items_list",
           "kind": "method",
           "startLine": 217,
-          "endLine": 297,
-          "tokens": 967
+          "endLine": 296,
+          "tokens": 955
         },
         {
           "name": "YoulaWorker._fetch_via_web_api",
           "kind": "method",
-          "startLine": 299,
-          "endLine": 429,
+          "startLine": 298,
+          "endLine": 428,
           "tokens": 1551
         },
         {
           "name": "YoulaWorker.fetch_fresh_items",
           "kind": "method",
-          "startLine": 431,
-          "endLine": 438,
+          "startLine": 430,
+          "endLine": 437,
           "tokens": 90
         }
       ],
@@ -1604,7 +1599,7 @@
         "parsers/network.py",
         "config.py"
       ],
-      "importance": 0.1015
+      "importance": 0.1177
     },
     "pricing_matrix_default.json": {
       "description": "",
@@ -1612,9 +1607,9 @@
       "hash": "d480e7b08a74fc01",
       "size": 10148,
       "mtimeMs": 1791909867639.9692,
-      "updatedAt": "2026-10-14T05:16:39.961Z",
+      "updatedAt": "2026-10-14T05:23:33.321Z",
       "source": "scan",
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "pricing_matrix.json": {
       "description": "",
@@ -1622,9 +1617,9 @@
       "hash": "44136fa355b3678a",
       "size": 2,
       "mtimeMs": 1791947438847.5676,
-      "updatedAt": "2026-10-14T05:16:39.962Z",
+      "updatedAt": "2026-10-14T05:23:33.321Z",
       "source": "scan",
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "proxies.txt.example": {
       "description": "Добавьте сюда ваши HTTP / SOCKS5 прокси (по одному на строку):",
@@ -1632,9 +1627,9 @@
       "hash": "0736f59716025dfe",
       "size": 220,
       "mtimeMs": 1791913808046.6504,
-      "updatedAt": "2026-10-14T05:16:39.962Z",
+      "updatedAt": "2026-10-14T05:23:33.321Z",
       "source": "scan",
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "README.md": {
       "description": "Project documentation",
@@ -1642,9 +1637,9 @@
       "hash": "c7bd38f03529adc9",
       "size": 8822,
       "mtimeMs": 1791913808027.914,
-      "updatedAt": "2026-10-14T05:16:39.962Z",
+      "updatedAt": "2026-10-14T05:23:33.321Z",
       "source": "scan",
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "requirements.txt": {
       "description": "Python dependencies",
@@ -1652,9 +1647,9 @@
       "hash": "286f2cc090a06804",
       "size": 219,
       "mtimeMs": 1791913808046.7363,
-      "updatedAt": "2026-10-14T05:16:39.962Z",
+      "updatedAt": "2026-10-14T05:23:33.322Z",
       "source": "scan",
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "search_streams.json": {
       "description": "",
@@ -1662,9 +1657,9 @@
       "hash": "f1013118dfa8778d",
       "size": 2714,
       "mtimeMs": 1791913808046.8281,
-      "updatedAt": "2026-10-14T05:16:39.962Z",
+      "updatedAt": "2026-10-14T05:23:33.322Z",
       "source": "scan",
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "tests/test_custom_categories.py": {
       "description": "Tests: custom_category_profile, broadcast_worker_query, parser_with_custom_category_model",
@@ -1672,7 +1667,7 @@
       "hash": "f6b92dcd349c5163",
       "size": 2808,
       "mtimeMs": 1791913808046.9636,
-      "updatedAt": "2026-10-14T05:16:39.963Z",
+      "updatedAt": "2026-10-14T05:23:33.323Z",
       "source": "scan",
       "symbols": [
         {
@@ -1711,64 +1706,64 @@
         "core/models.py",
         "bot/bot.py"
       ],
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "tests/test_deduplicator.py": {
       "description": "Tests: in_memory_deduplication, price_drop_detection, semantic_crossplatform_duplicate, semantic_photo_duplicate + 2 more",
-      "tokens": 2326,
-      "hash": "12cf2ec482b2ae2a",
-      "size": 9215,
-      "mtimeMs": 1791913808047.0588,
-      "updatedAt": "2026-10-14T05:16:39.964Z",
+      "tokens": 2321,
+      "hash": "0eda013d711fe967",
+      "size": 9200,
+      "mtimeMs": 1791955313758.1108,
+      "updatedAt": "2026-10-14T05:23:33.323Z",
       "source": "scan",
       "symbols": [
         {
           "name": "TestRedisDeduplicator",
           "kind": "class",
-          "startLine": 8,
-          "endLine": 197,
+          "startLine": 7,
+          "endLine": 196,
           "tokens": 2278
         },
         {
           "name": "TestRedisDeduplicator.test_in_memory_deduplication",
           "kind": "method",
-          "startLine": 9,
-          "endLine": 26,
+          "startLine": 8,
+          "endLine": 25,
           "tokens": 260
         },
         {
           "name": "TestRedisDeduplicator.test_price_drop_detection",
           "kind": "method",
-          "startLine": 28,
-          "endLine": 56,
+          "startLine": 27,
+          "endLine": 55,
           "tokens": 366
         },
         {
           "name": "TestRedisDeduplicator.test_semantic_crossplatform_duplicate",
           "kind": "method",
-          "startLine": 58,
-          "endLine": 105,
+          "startLine": 57,
+          "endLine": 104,
           "tokens": 560
         },
         {
           "name": "TestRedisDeduplicator.test_semantic_photo_duplicate",
           "kind": "method",
-          "startLine": 107,
-          "endLine": 150,
+          "startLine": 106,
+          "endLine": 149,
           "tokens": 470
         },
         {
           "name": "TestRedisDeduplicator.test_micro_price_drop_filtered",
           "kind": "method",
-          "startLine": 152,
-          "endLine": 170,
+          "startLine": 151,
+          "endLine": 169,
           "tokens": 265
         },
         {
           "name": "TestRedisDeduplicator.test_persistent_storage_across_restarts",
           "kind": "method",
-          "startLine": 172,
-          "endLine": 197,
+          "startLine": 171,
+          "endLine": 196,
           "tokens": 337
         }
       ],
@@ -1778,7 +1773,7 @@
         "core/deduplicator.py",
         "core/models.py"
       ],
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "tests/test_excel_manager.py": {
       "description": "Tests: export_and_read_back, import_modified_excel, import_invalid_data_handles_cleanly",
@@ -1786,7 +1781,7 @@
       "hash": "fb2c6080cbe1c6ef",
       "size": 3895,
       "mtimeMs": 1791913808047.1497,
-      "updatedAt": "2026-10-14T05:16:39.964Z",
+      "updatedAt": "2026-10-14T05:23:33.323Z",
       "source": "scan",
       "symbols": [
         {
@@ -1829,7 +1824,7 @@
       "imports": [
         "core/excel_manager.py"
       ],
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "tests/test_favorites.py": {
       "description": "Tests: add_and_get_favorite, remove_favorite, clear_favorites, lot_caching",
@@ -1837,7 +1832,7 @@
       "hash": "c9259cffe26a5fc4",
       "size": 3083,
       "mtimeMs": 1791913808047.236,
-      "updatedAt": "2026-10-14T05:16:39.964Z",
+      "updatedAt": "2026-10-14T05:23:33.323Z",
       "source": "scan",
       "symbols": [
         {
@@ -1894,7 +1889,7 @@
       "imports": [
         "core/favorites.py"
       ],
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "tests/test_formatting.py": {
       "description": "Tests: format_fresh_lot, format_price_drop, format_battery_penalty_notice",
@@ -1902,7 +1897,7 @@
       "hash": "6b7a8e0fff010765",
       "size": 2956,
       "mtimeMs": 1791946826354.896,
-      "updatedAt": "2026-10-14T05:16:39.964Z",
+      "updatedAt": "2026-10-14T05:23:33.324Z",
       "source": "scan",
       "symbols": [
         {
@@ -1939,78 +1934,78 @@
         "core/models.py",
         "bot/dispatcher.py"
       ],
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "tests/test_link_streams.py": {
       "description": "Tests: parse_search_url_avito, parse_search_url_avito_f_param_pricing, parse_search_url_ekb_and_categories, parse_search_url_youla + 4 more",
-      "tokens": 3365,
-      "hash": "6b882ea80f07aca9",
-      "size": 12646,
-      "mtimeMs": 1791913808047.4236,
-      "updatedAt": "2026-10-14T05:16:39.965Z",
+      "tokens": 3343,
+      "hash": "13db5411a47478d4",
+      "size": 12568,
+      "mtimeMs": 1791955313758.4001,
+      "updatedAt": "2026-10-14T05:23:33.324Z",
       "source": "scan",
       "symbols": [
         {
           "name": "TestLinkStreamSystem",
           "kind": "class",
-          "startLine": 20,
-          "endLine": 293,
+          "startLine": 18,
+          "endLine": 291,
           "tokens": 3211
         },
         {
           "name": "TestLinkStreamSystem.test_parse_search_url_avito",
           "kind": "method",
-          "startLine": 21,
-          "endLine": 31,
+          "startLine": 19,
+          "endLine": 29,
           "tokens": 177
         },
         {
           "name": "TestLinkStreamSystem.test_parse_search_url_avito_f_param_pricing",
           "kind": "method",
-          "startLine": 33,
-          "endLine": 40,
+          "startLine": 31,
+          "endLine": 38,
           "tokens": 195
         },
         {
           "name": "TestLinkStreamSystem.test_parse_search_url_ekb_and_categories",
           "kind": "method",
-          "startLine": 42,
-          "endLine": 49,
+          "startLine": 40,
+          "endLine": 47,
           "tokens": 126
         },
         {
           "name": "TestLinkStreamSystem.test_parse_search_url_youla",
           "kind": "method",
-          "startLine": 51,
-          "endLine": 58,
+          "startLine": 49,
+          "endLine": 56,
           "tokens": 128
         },
         {
           "name": "TestLinkStreamSystem.test_stream_manager_lifecycle_and_persistence",
           "kind": "method",
-          "startLine": 60,
-          "endLine": 112,
+          "startLine": 58,
+          "endLine": 110,
           "tokens": 605
         },
         {
           "name": "TestLinkStreamSystem.test_evaluate_item_filters",
           "kind": "method",
-          "startLine": 114,
-          "endLine": 242,
+          "startLine": 112,
+          "endLine": 240,
           "tokens": 1349
         },
         {
           "name": "TestLinkStreamSystem.test_formatted_lot_message_seller_and_reserve",
           "kind": "method",
-          "startLine": 244,
-          "endLine": 267,
+          "startLine": 242,
+          "endLine": 265,
           "tokens": 254
         },
         {
           "name": "TestLinkStreamSystem.test_stream_keyboards_generation",
           "kind": "method",
-          "startLine": 269,
-          "endLine": 293,
+          "startLine": 267,
+          "endLine": 291,
           "tokens": 362
         }
       ],
@@ -2022,7 +2017,7 @@
         "bot/dispatcher.py",
         "bot/keyboards.py"
       ],
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "tests/test_margin_filter.py": {
       "description": "Tests: profitable_item, unprofitable_item, battery_penalty, disabled_model_configuration + 1 more",
@@ -2030,7 +2025,7 @@
       "hash": "fa2d0a24fb11526d",
       "size": 6378,
       "mtimeMs": 1791913808047.5051,
-      "updatedAt": "2026-10-14T05:16:39.965Z",
+      "updatedAt": "2026-10-14T05:23:33.324Z",
       "source": "scan",
       "symbols": [
         {
@@ -2089,23 +2084,23 @@
         "core/margin_filter.py",
         "bot/dispatcher.py"
       ],
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "tests/test_modern_bot_features.py": {
       "description": "Tests: expandable_blockquote_in_formatting, item_keyboard_with_bargain_and_fav, custom_model_extraction, macbook_multi_spec_parsing + 9 more",
-      "tokens": 9358,
-      "hash": "40f0790c8dddc45c",
-      "size": 35206,
-      "mtimeMs": 1791947387207.8533,
-      "updatedAt": "2026-10-14T05:16:39.966Z",
+      "tokens": 9333,
+      "hash": "5a9dd5a8941c79db",
+      "size": 35119,
+      "mtimeMs": 1791955313758.1904,
+      "updatedAt": "2026-10-14T05:23:33.325Z",
       "source": "scan",
       "symbols": [
         {
           "name": "TestModernBotFeatures",
           "kind": "class",
           "startLine": 11,
-          "endLine": 791,
-          "tokens": 9261
+          "endLine": 790,
+          "tokens": 9245
         },
         {
           "name": "TestModernBotFeatures.test_expandable_blockquote_in_formatting",
@@ -2195,56 +2190,56 @@
           "name": "TestModernBotFeatures.test_single_functional_message_without_spam",
           "kind": "method",
           "startLine": 305,
-          "endLine": 387,
-          "tokens": 1130
+          "endLine": 386,
+          "tokens": 1121
         },
         {
           "name": "TestModernBotFeatures.test_region_gatekeeper_blocks_moscow_when_ekb_selected",
           "kind": "method",
-          "startLine": 389,
-          "endLine": 461,
-          "tokens": 958
+          "startLine": 388,
+          "endLine": 460,
+          "tokens": 954
         },
         {
           "name": "TestModernBotFeatures.test_save_resell_profile_with_search_links",
           "kind": "method",
-          "startLine": 463,
-          "endLine": 557,
+          "startLine": 462,
+          "endLine": 556,
           "tokens": 1148
         },
         {
           "name": "TestModernBotFeatures.test_pause_and_resume_search",
           "kind": "method",
-          "startLine": 559,
-          "endLine": 629,
+          "startLine": 558,
+          "endLine": 628,
           "tokens": 834
         },
         {
           "name": "TestModernBotFeatures.test_platform_filtering_in_dispatcher",
           "kind": "method",
-          "startLine": 631,
-          "endLine": 708,
-          "tokens": 904
+          "startLine": 630,
+          "endLine": 707,
+          "tokens": 901
         },
         {
           "name": "TestModernBotFeatures.test_setup_bot_commands",
           "kind": "method",
-          "startLine": 710,
-          "endLine": 720,
+          "startLine": 709,
+          "endLine": 719,
           "tokens": 126
         },
         {
           "name": "TestModernBotFeatures.test_enhanced_dashboard_text_with_platform_modes",
           "kind": "method",
-          "startLine": 722,
-          "endLine": 752,
+          "startLine": 721,
+          "endLine": 751,
           "tokens": 404
         },
         {
           "name": "TestModernBotFeatures.test_city_text_search_persists_user_profile",
           "kind": "method",
-          "startLine": 754,
-          "endLine": 791,
+          "startLine": 753,
+          "endLine": 790,
           "tokens": 465
         }
       ],
@@ -2256,7 +2251,7 @@
         "bot/keyboards.py",
         "core/parser.py"
       ],
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "tests/test_regex_parser.py": {
       "description": "Tests: model_extraction, storage_extraction, battery_extraction, blacklist_rejection + 3 more",
@@ -2264,7 +2259,7 @@
       "hash": "6b2ad8a845e67ad3",
       "size": 7062,
       "mtimeMs": 1791913808047.7302,
-      "updatedAt": "2026-10-14T05:16:39.966Z",
+      "updatedAt": "2026-10-14T05:23:33.325Z",
       "source": "scan",
       "symbols": [
         {
@@ -2329,15 +2324,15 @@
         "core/models.py",
         "core/parser.py"
       ],
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "tests/test_regions.py": {
       "description": "Tests: default_region, set_region_by_key, set_region_by_alias, set_region_by_russian_name + 8 more",
-      "tokens": 1553,
-      "hash": "d60c5d53fa276390",
-      "size": 5901,
-      "mtimeMs": 1791913808047.8184,
-      "updatedAt": "2026-10-14T05:16:39.966Z",
+      "tokens": 1549,
+      "hash": "84c4d07ad329dc0a",
+      "size": 5887,
+      "mtimeMs": 1791955313760.6987,
+      "updatedAt": "2026-10-14T05:23:33.325Z",
       "source": "scan",
       "symbols": [
         {
@@ -2450,7 +2445,7 @@
       "imports": [
         "core/regions.py"
       ],
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "tests/test_user_profile.py": {
       "description": "Tests: evaluate_item_clean_deal, evaluate_item_worn_battery_applies_discount, evaluate_item_defect_rejected_when_not_allowed, evaluate_item_defect_...",
@@ -2458,7 +2453,7 @@
       "hash": "323a2431b1ba64bc",
       "size": 12033,
       "mtimeMs": 1791913808047.9153,
-      "updatedAt": "2026-10-14T05:16:39.967Z",
+      "updatedAt": "2026-10-14T05:23:33.326Z",
       "source": "scan",
       "symbols": [
         {
@@ -2559,7 +2554,7 @@
         "core/models.py",
         "core/user_profile.py"
       ],
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "webapp/_headers": {
       "description": "",
@@ -2567,9 +2562,9 @@
       "hash": "b2bd8bdffe4ce82e",
       "size": 191,
       "mtimeMs": 1791909984485.5242,
-      "updatedAt": "2026-10-14T05:16:39.967Z",
+      "updatedAt": "2026-10-14T05:23:33.326Z",
       "source": "scan",
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "webapp/article.html": {
       "description": "⚡️ БРЕДЛИ ПЕРЕКУПЕР",
@@ -2577,9 +2572,9 @@
       "hash": "fbada56f4c7dd083",
       "size": 2315,
       "mtimeMs": 1791913808049.2734,
-      "updatedAt": "2026-10-14T05:16:39.967Z",
+      "updatedAt": "2026-10-14T05:23:33.326Z",
       "source": "scan",
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "webapp/index.html": {
       "description": "⚡️ БРЕДЛИ ПЕРЕКУПЕР",
@@ -2587,9 +2582,9 @@
       "hash": "a956d32e742b075a",
       "size": 225785,
       "mtimeMs": 1791913808052.1394,
-      "updatedAt": "2026-10-14T05:16:39.968Z",
+      "updatedAt": "2026-10-14T05:23:33.327Z",
       "source": "scan",
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "webapp/pricing_matrix_default.json": {
       "description": "",
@@ -2597,9 +2592,9 @@
       "hash": "d480e7b08a74fc01",
       "size": 10148,
       "mtimeMs": 1791387931601.8145,
-      "updatedAt": "2026-10-14T05:16:39.969Z",
+      "updatedAt": "2026-10-14T05:23:33.328Z",
       "source": "scan",
-      "importance": 0.0791
+      "importance": 0.0917
     },
     "webapp/pricing_matrix.json": {
       "description": "",
@@ -2607,9 +2602,9 @@
       "hash": "44136fa355b3678a",
       "size": 2,
       "mtimeMs": 1791947438848.8882,
-      "updatedAt": "2026-10-14T05:16:39.969Z",
+      "updatedAt": "2026-10-14T05:23:33.328Z",
       "source": "scan",
-      "importance": 0.0791
+      "importance": 0.0917
     }
   },
   "preamble": [

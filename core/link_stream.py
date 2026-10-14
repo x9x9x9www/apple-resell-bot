@@ -8,7 +8,7 @@ import urllib.parse
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Optional, Any, Dict, List, Tuple
+from typing import Optional, Any
 
 from config import settings
 from core.models import Platform, RawItem

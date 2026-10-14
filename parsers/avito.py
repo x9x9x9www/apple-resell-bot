@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 import asyncio
-from datetime import datetime, timezone
+from datetime import datetime
 import logging
-import re
 from typing import List, Optional, Any, TYPE_CHECKING
 
 from core.models import RawItem, Platform
@@ -14,7 +13,7 @@ from parsers.network import StealthHttpClient
 from config import settings
 
 if TYPE_CHECKING:
-    from core.link_stream import StreamManager, SearchStream
+    pass
 
 logger = logging.getLogger(__name__)
 

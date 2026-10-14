@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import logging
 from pathlib import Path
-from typing import Dict, Any, Optional, List, Tuple, Callable
+from typing import Optional, Callable
 from config import settings
 
 logger = logging.getLogger(__name__)
@@ -388,7 +388,6 @@ class RegionManager:
         Устанавливает новый регион поиска по ключу или названию.
         Мгновенно уведомляет всех зарегистрированных воркеров.
         """
-        import re
         raw = city_key_or_name.strip()
         normalized_query = raw.lower()
 

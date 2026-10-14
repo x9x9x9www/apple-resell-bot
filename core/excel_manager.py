@@ -4,7 +4,7 @@ import io
 import json
 import logging
 from pathlib import Path
-from typing import Dict, Any, Tuple, Optional
+from typing import Any, Optional
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter

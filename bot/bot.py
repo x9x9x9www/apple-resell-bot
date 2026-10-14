@@ -3,7 +3,6 @@ from __future__ import annotations
 import io
 import json
 import logging
-import os
 import re
 import time
 from typing import Optional
@@ -15,13 +14,10 @@ from aiogram.types import (
     BufferedInputFile,
     FSInputFile,
     LinkPreviewOptions,
-    MenuButtonWebApp,
     MenuButtonDefault,
-    WebAppInfo,
     InlineKeyboardMarkup,
     InlineKeyboardButton,
     ErrorEvent,
-    BotCommand,
     BotCommandScopeDefault,
     InputRichMessage,
     InputRichBlockSectionHeading,
@@ -38,17 +34,15 @@ from config import settings
 from core.margin_filter import MarginFilter
 from core.excel_manager import ExcelPricingManager
 from core.regions import RegionManager
-from core.link_stream import StreamManager, SearchStream, parse_search_url
+from core.link_stream import StreamManager, SearchStream
 from core.user_profile import (
     UserProfileManager,
-    UserResellProfile,
     UserConditionRules,
     UserModelConfig,
     CustomCategory,
 )
 from core.favorites import favorites_manager
 from bot.keyboards import (
-    get_main_menu_keyboard,
     get_regions_keyboard,
     get_models_menu_keyboard,
     get_back_to_menu_keyboard,
@@ -360,7 +354,6 @@ def create_bot_dispatcher(
     async def cmd_start(message: types.Message):
         chat_id = message.chat.id
         _keyboard_hidden_users[chat_id] = False
-        webapp_url = getattr(settings, "WEBAPP_URL", "")
         text = _build_dashboard_text(filter_instance, reg_manager, chat_id)
         current_reg_name = reg_manager.current["name"]
         bot = message.bot
@@ -888,11 +881,8 @@ def create_bot_dispatcher(
                 models_data = raw_payload.get("models", [])
                 categories_data = raw_payload.get("categories", [])
                 selected_region = raw_payload.get("region")
-                reg_info = ""
                 if selected_region:
                     updated_reg = reg_manager.set_region(str(selected_region).strip())
-                    if updated_reg:
-                        reg_info = f"📍 <b>Активный регион:</b> <b>{updated_reg['name']}</b>\n"
 
                 condition_rules = UserConditionRules(
                     battery_threshold=int(cond_data.get("battery_threshold", 80)),

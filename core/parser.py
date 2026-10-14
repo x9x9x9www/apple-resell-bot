@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import re
 from datetime import datetime, timezone, timedelta
-from typing import Optional, Tuple, Any
-from core.models import RawItem, ParsedIPhone, Platform
+from typing import Optional, Any
+from core.models import RawItem, ParsedIPhone
 
 
 # =====================================================================

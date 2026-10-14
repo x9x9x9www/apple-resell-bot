@@ -216,7 +216,6 @@ class YoulaWorker(BaseWorker):
 
     def _parse_items_list(self, items: list[dict[str, Any]]) -> List[RawItem]:
         raw_items: List[RawItem] = []
-        now = datetime.now(timezone.utc)
 
         for it in items:
             try:

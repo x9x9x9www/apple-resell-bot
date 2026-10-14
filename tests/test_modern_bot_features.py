@@ -4,7 +4,7 @@ import unittest
 from datetime import datetime, timezone
 
 from core.models import ParsedIPhone, Platform
-from bot.dispatcher import format_lot_message, FIRE_EFFECT_ID, PARTY_EFFECT_ID
+from bot.dispatcher import format_lot_message
 from bot.keyboards import get_item_keyboard, get_main_menu_keyboard
 
 
@@ -307,7 +307,6 @@ class TestModernBotFeatures(unittest.TestCase):
         from unittest.mock import AsyncMock, MagicMock
         from bot.bot import (
             _build_dashboard_text,
-            _build_status_text,
             _last_functional_messages,
             send_or_replace_functional_message,
         )
@@ -392,7 +391,7 @@ class TestModernBotFeatures(unittest.TestCase):
         from core.models import RawItem, Platform
         from bot.dispatcher import ItemDispatcher
         import asyncio
-        from unittest.mock import AsyncMock, MagicMock
+        from unittest.mock import AsyncMock
 
         rm = RegionManager()
         rm.set_region("ekaterinburg")
@@ -630,7 +629,7 @@ class TestModernBotFeatures(unittest.TestCase):
 
     def test_platform_filtering_in_dispatcher(self):
         import asyncio
-        from unittest.mock import AsyncMock, MagicMock
+        from unittest.mock import AsyncMock
         from core.models import RawItem, Platform
         from core.user_profile import UserProfileManager, UserModelConfig
         from bot.dispatcher import ItemDispatcher

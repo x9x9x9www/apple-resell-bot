@@ -4,7 +4,7 @@ import unittest
 import tempfile
 from pathlib import Path
 
-from core.regions import RegionManager, CITY_DATABASE, CITY_ALIASES, POPULAR_REGIONS
+from core.regions import RegionManager, CITY_DATABASE, POPULAR_REGIONS
 
 
 class TestRegionManager(unittest.TestCase):

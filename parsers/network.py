@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import logging
-import random
 from typing import Optional, Any
 from curl_cffi.requests import AsyncSession
 from config import settings

@@ -10,7 +10,6 @@ from typing import List, Optional
 from core.models import RawItem, Platform
 from core.deduplicator import RedisDeduplicator
 from parsers.network import StealthHttpClient
-from config import settings
 
 logger = logging.getLogger(__name__)
 

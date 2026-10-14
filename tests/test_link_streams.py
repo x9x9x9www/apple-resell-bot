@@ -1,11 +1,9 @@
 from __future__ import annotations
 
-import asyncio
 import tempfile
 import unittest
 from datetime import datetime, timezone
 from pathlib import Path
-from unittest.mock import AsyncMock, MagicMock
 
 from core.models import Platform, RawItem, ParsedGadget
 from core.link_stream import (
@@ -13,7 +11,7 @@ from core.link_stream import (
     StreamManager,
     parse_search_url,
 )
-from bot.dispatcher import format_lot_message, ItemDispatcher
+from bot.dispatcher import format_lot_message
 from bot.keyboards import get_stream_control_keyboard, get_stream_filters_keyboard
 
 

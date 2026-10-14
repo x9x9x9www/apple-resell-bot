@@ -7,7 +7,7 @@ import time
 from typing import Any, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from core.models import ParsedIPhone
+    pass
 
 logger = logging.getLogger(__name__)
 
