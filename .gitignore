@@ -1,0 +1,42 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments
+.venv/
+env/
+venv/
+ENV/
+
+# Secrets and Local Configurations (CRITICAL)
+.env
+proxies.txt
+
+# IDE & OS metadata
+.idea/
+.vscode/
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Logs & temp files
+*.log
+logs/
+~$*.xlsx
+*.tmp
+*.db
+*.pid
+bot.pid
+*.db-wal
+*.db-shm
+*.sqlite*
+region_settings.json
+user_profiles.json
+favorites.json
+*.mp4
+*.MP4
+scratch/
+
