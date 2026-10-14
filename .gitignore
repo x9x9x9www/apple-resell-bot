@@ -28,6 +28,8 @@ logs/
 ~$*.xlsx
 *.tmp
 *.db
+*.pid
+bot.pid
 *.db-wal
 *.db-shm
 *.sqlite*
