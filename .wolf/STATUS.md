@@ -17,11 +17,15 @@ budget_tokens: 1000
 - **Разделитель `•••` под медиа:** Добавлен во все сервисные экраны и фотокарточки объявлений.
 - **Telegram Premium смайлики:** Внедрены нативные теги `<tg-emoji>` для интерактивных анимаций.
 - **Режим 1 Living Message:** Старые сервисные экраны удаляются перед отправкой нового.
-- **Интеграция OpenWolf:**
-  - Установлен глобальный CLI `openwolf` v2.5.2 (`~/.local/bin/openwolf`).
-  - Создан глобальный скилл Antigravity в `~/.gemini/config/skills/openwolf/SKILL.md`.
-  - Создан проектный скилл в `.agents/skills/openwolf/SKILL.md`.
-  - Инициализирована база `.wolf/` (индекс 57 файлов, cerebrum, status).
+- **Интеграция OpenWolf & Toolkits:**
+  - Установлен глобальный CLI `openwolf` v2.5.2 (`~/.local/bin/openwolf`) и CLI `oc` (OpenContext).
+  - Установлены скиллы Hallmark, Ponytail, Motion Design, Matt Pocock, OpenContext, Awesome Toolkit.
+- **Редизайн WebApp (Apple iPhone 18 Pro & Motion Design):**
+  - Эстетика Deep Cosmic Titanium & Burgundy Wine с сапфировым стеклом и зеркальными микро-фасками.
+  - Интерактивный Dynamic Island в шапке с пульсирующим радаром и морфингом при сохранении/событиях.
+  - Пружинная физика Apple Fluid Springs (`scale(0.96)`) и тактильный виброотклик Telegram Haptic Feedback.
+  - Скользящий индикатор переключения табов в нижнем Tab Bar (`.tab-pill-slider`).
+  - Каскадный анимационный вход карточек Keynote Entrance.
 
 ---
 

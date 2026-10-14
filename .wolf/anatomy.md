@@ -1,6 +1,6 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-10-14T05:36:17.430Z
+> Auto-maintained by OpenWolf. Last scanned: 2026-10-14T06:00:53.160Z
 > Files: 57 tracked | Anatomy hits: 0 | Misses: 0
 
 > Project structure index. Auto-maintained by OpenWolf hooks and daemon.
@@ -18,7 +18,7 @@
 - `docker-compose.yml` — Docker Compose services (~172 tok)
 - `Dockerfile` — Docker container definition (~127 tok)
 - `GEMINI.md` — OpenWolf (~75 tok)
-- `index.html` — ⚡️ БРЕДЛИ ПЕРЕКУПЕР (~57453 tok)
+- `index.html` — ⚡️ БРЕДЛИ ПЕРЕКУПЕР (~59889 tok)
 - `main.py` — acquire_single_instance_lock, main (~2156 tok)
 - `pricing_matrix_default.json` (~2900 tok)
 - `pricing_matrix.json` (~1 tok)
