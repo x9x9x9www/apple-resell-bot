@@ -116,23 +116,22 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 10px;
-      flex-wrap: nowrap;
+      gap: 8px;
+      flex-wrap: wrap;
       margin-bottom: 10px;
     }
 
     .ios-large-title {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 800;
       letter-spacing: -0.4px;
       line-height: 1.15;
       color: #fff;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       margin: 0;
       white-space: nowrap;
-      flex-shrink: 0;
     }
 
     .ios-large-title .title-accent {
@@ -198,7 +197,7 @@
       background: rgba(255, 255, 255, 0.08);
       border: 0.5px solid rgba(255, 255, 255, 0.14);
       color: #fff;
-      padding: 6px 13px;
+      padding: 6px 11px;
       border-radius: 20px;
       font-size: 12px;
       font-weight: 600;
@@ -210,6 +209,12 @@
       box-shadow: var(--card-specular);
       transition: transform 0.15s var(--spring-press), background 0.15s ease;
       white-space: nowrap;
+      max-width: 130px;
+    }
+    .btn-region-badge span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .btn-region-badge:active {
       transform: scale(0.95);
@@ -217,7 +222,7 @@
     }
 
     /* ========================================================
-       iOS Bottom Navigation Tab Bar (Glassmorphism & Sliding Pill)
+       iOS Bottom Navigation Tab Bar (Glassmorphism & Pure CSS Active Pill)
        ======================================================== */
     .ios-tab-bar {
       position: fixed;
@@ -225,7 +230,7 @@
       left: 0;
       right: 0;
       height: calc(58px + env(safe-area-inset-bottom, 0px));
-      padding: 5px 16px calc(5px + env(safe-area-inset-bottom, 0px));
+      padding: 5px 12px calc(5px + env(safe-area-inset-bottom, 0px));
       box-sizing: border-box;
       background: rgba(10, 10, 14, 0.94);
       backdrop-filter: blur(32px) saturate(210%);
@@ -234,21 +239,9 @@
       display: flex;
       justify-content: space-around;
       align-items: center;
+      gap: 8px;
       z-index: 1050;
       box-shadow: 0 -4px 32px rgba(0, 0, 0, 0.8), inset 0 0.5px 0 rgba(255, 255, 255, 0.18);
-    }
-
-    .tab-pill-slider {
-      position: absolute;
-      top: 5px;
-      height: 48px;
-      border-radius: 14px;
-      background: var(--accent-subtle);
-      border: 0.5px solid var(--accent-border);
-      box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.28), 0 2px 14px var(--accent-glow);
-      z-index: 1;
-      pointer-events: none;
-      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .tab-item {
@@ -256,14 +249,14 @@
       max-width: 140px;
       height: 48px;
       background: transparent;
-      border: none;
+      border: 0.5px solid transparent;
       color: var(--text-muted);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       gap: 2px;
-      padding: 4px 12px;
+      padding: 4px 10px;
       border-radius: 14px;
       cursor: pointer;
       user-select: none;
@@ -272,7 +265,6 @@
       touch-action: manipulation;
       transition: all 0.22s var(--spring-smooth);
       position: relative;
-      z-index: 2;
     }
 
     .tab-item:active {
@@ -294,6 +286,9 @@
 
     .tab-item.active {
       color: #fff;
+      background: var(--accent-subtle);
+      border-color: var(--accent-border);
+      box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.22), 0 2px 12px var(--accent-glow);
     }
 
     .tab-item.active .tab-icon {
@@ -2479,7 +2474,6 @@
 
   <!-- iOS Bottom Navigation Tab Bar -->
   <nav class="ios-tab-bar" id="iosTabBar">
-    <div class="tab-pill-slider" id="tabPillSlider"></div>
     <button type="button" class="tab-item active" id="tabCatalog" data-tab="catalog">
       <span class="tab-icon">🏷️</span>
       <span class="tab-label">Прайс-лист</span>
@@ -5578,19 +5572,6 @@ const POPULAR_TEMPLATES = [
       if (ignoreMdmEl) ignoreMdmEl.checked = conditionRules.ignore_mdm_rsim !== false;
     }
 
-    function updateTabSlider() {
-      const activeBtn = document.querySelector('.tab-item.active');
-      const slider = document.getElementById('tabPillSlider');
-      const nav = document.getElementById('iosTabBar');
-      if (activeBtn && slider && nav) {
-        const navRect = nav.getBoundingClientRect();
-        const btnRect = activeBtn.getBoundingClientRect();
-        const offsetLeft = btnRect.left - navRect.left;
-        slider.style.transform = `translateX(${offsetLeft}px)`;
-        slider.style.width = `${btnRect.width}px`;
-      }
-    }
-
     function switchAppTab(tab) {
       currentAppTab = tab;
       const catalogView = document.getElementById('catalogView');
@@ -5643,7 +5624,6 @@ const POPULAR_TEMPLATES = [
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
-      updateTabSlider();
       if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
     }
 
@@ -5653,10 +5633,6 @@ const POPULAR_TEMPLATES = [
         if (target) switchAppTab(target);
       });
     });
-
-    window.addEventListener('resize', updateTabSlider);
-    window.addEventListener('DOMContentLoaded', () => setTimeout(updateTabSlider, 120));
-    setTimeout(updateTabSlider, 250);
 
     // Генератор SVG Sparklines
     function generateSparklineSvg(dataPoints, isPositive = true, svgId = 'spark') {
