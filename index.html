@@ -87,7 +87,7 @@
       color: var(--text-main);
       font-family: var(--font-family);
       padding: 0 16px;
-      padding-top: calc(56px + env(safe-area-inset-top, 0px));
+      padding-top: calc(14px + env(safe-area-inset-top, 0px));
       padding-bottom: calc(105px + env(safe-area-inset-bottom, 0px));
       min-height: 100vh;
       overflow-x: hidden;
@@ -733,255 +733,105 @@
     }
 
     /* ========================================================
-       Apple iPhone 18 Pro: Living Interactive Dynamic Island
+       Master Bot Status Bar & iOS Floating Toast
        ======================================================== */
-    .dynamic-island-wrapper {
-      position: fixed;
-      top: calc(8px + env(safe-area-inset-top, 0px));
-      left: 0;
-      right: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 10000;
-      pointer-events: none;
-    }
-
-    .dynamic-island {
-      pointer-events: auto;
-      background: rgba(10, 10, 14, 0.94);
-      backdrop-filter: blur(32px) saturate(210%);
-      -webkit-backdrop-filter: blur(32px) saturate(210%);
-      border: 0.5px solid rgba(255, 255, 255, 0.16);
-      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.75),
-                  inset 0 0.5px 0 rgba(255, 255, 255, 0.25),
-                  0 0 24px rgba(184, 29, 76, 0.22);
-      border-radius: 28px;
-      padding: 0 14px;
-      height: 38px;
-      min-width: 250px;
-      max-width: 92vw;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      user-select: none;
-      -webkit-user-select: none;
-      transition: transform 0.35s var(--spring-bounce),
-                  width 0.4s var(--spring-smooth),
-                  height 0.4s var(--spring-smooth),
-                  border-radius 0.35s var(--spring-smooth),
-                  box-shadow 0.35s ease,
-                  background 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .dynamic-island:active {
-      transform: scale(0.95);
-    }
-
-    .island-collapsed-view {
+    .master-bot-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      width: 100%;
-      gap: 10px;
-      transition: opacity 0.2s ease, transform 0.25s var(--spring-smooth);
+      background: rgba(255, 255, 255, 0.05);
+      border: 0.5px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      padding: 9px 14px;
+      margin-bottom: 10px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: var(--card-specular);
+      cursor: pointer;
+      transition: all 0.25s ease;
     }
-
-    .island-left {
+    .master-bot-bar.active {
+      background: rgba(48, 209, 88, 0.09);
+      border-color: rgba(48, 209, 88, 0.32);
+      box-shadow: 0 0 20px rgba(48, 209, 88, 0.14);
+    }
+    .master-bot-bar.paused {
+      background: rgba(255, 159, 10, 0.08);
+      border-color: rgba(255, 159, 10, 0.3);
+      box-shadow: 0 0 16px rgba(255, 159, 10, 0.12);
+    }
+    .master-bot-status {
       display: flex;
       align-items: center;
-      gap: 7px;
+      gap: 9px;
     }
-
-    .island-radar-dot {
-      position: relative;
-      width: 10px;
-      height: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .radar-core {
-      width: 8px;
-      height: 8px;
+    .master-bot-dot {
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
       background: #30D158;
       box-shadow: 0 0 8px #30D158;
-    }
-
-    .radar-ping {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      border: 1.5px solid #30D158;
-      animation: radarRipple 1.8s cubic-bezier(0, 0.2, 0.8, 1) infinite;
-    }
-
-    @keyframes radarRipple {
-      0% {
-        transform: scale(0.8);
-        opacity: 0.9;
-      }
-      100% {
-        transform: scale(2.6);
-        opacity: 0;
-      }
-    }
-
-    .island-brand {
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 0.6px;
-      color: #fff;
-    }
-
-    .island-center {
-      display: flex;
-      align-items: center;
-    }
-
-    .island-status-pill {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.3px;
-      color: rgba(255, 255, 255, 0.9);
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .pulse-live {
-      font-size: 9px;
-      font-weight: 800;
-      background: rgba(48, 209, 88, 0.18);
-      color: #30D158;
-      border: 0.5px solid rgba(48, 209, 88, 0.4);
-      padding: 1px 5px;
-      border-radius: 6px;
-      letter-spacing: 0.5px;
-    }
-
-    .island-count-text {
-      font-variant-numeric: tabular-nums;
-      font-size: 11px;
-      color: #FFFFFF;
-    }
-
-    .island-right {
-      display: flex;
-      align-items: center;
-    }
-
-    .island-region-badge {
-      font-size: 9px;
-      font-weight: 700;
-      color: var(--accent-highlight);
-      background: var(--accent-subtle);
-      border: 0.5px solid var(--accent-border);
-      padding: 2px 7px;
-      border-radius: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-      white-space: nowrap;
-      max-width: 80px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* Morphing / Expanded State */
-    .island-expanded-view {
-      display: none;
-      align-items: center;
-      gap: 12px;
-      width: 100%;
-      opacity: 0;
-      transform: scale(0.92);
-      transition: opacity 0.25s ease, transform 0.25s var(--spring-bounce);
-    }
-
-    .dynamic-island.expanded {
-      height: 52px;
-      padding: 6px 16px;
-      min-width: 290px;
-      max-width: 92vw;
-      border-radius: 26px;
-      border-color: var(--accent-border);
-      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85),
-                  0 0 28px var(--accent-glow),
-                  inset 0 0.5px 0 rgba(255, 255, 255, 0.3);
-    }
-
-    .dynamic-island.expanded .island-collapsed-view {
-      display: none;
-    }
-
-    .dynamic-island.expanded .island-expanded-view {
-      display: flex;
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    .island-expanded-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: var(--accent-gradient);
-      border: 0.5px solid rgba(255, 255, 255, 0.35);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
+      transition: all 0.25s ease;
       flex-shrink: 0;
-      box-shadow: 0 4px 14px var(--accent-glow);
+    }
+    .master-bot-bar.paused .master-bot-dot {
+      background: #FF9F0A;
+      box-shadow: 0 0 8px #FF9F0A;
+    }
+    .master-bot-text {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      color: #fff;
+      user-select: none;
+    }
+    .master-switch {
+      margin: 0;
+      pointer-events: auto;
     }
 
-    .island-expanded-content {
+    /* iOS Floating Toast Notification */
+    .dynamic-toast {
+      position: fixed;
+      top: calc(14px + env(safe-area-inset-top, 0px));
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: rgba(14, 14, 18, 0.94);
+      backdrop-filter: blur(28px) saturate(200%);
+      -webkit-backdrop-filter: blur(28px) saturate(200%);
+      border: 0.5px solid rgba(255, 255, 255, 0.16);
+      border-radius: 20px;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 99999;
+      pointer-events: none;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.8), 0 0 20px var(--accent-glow);
+      transition: transform 0.35s var(--spring-bounce), opacity 0.25s ease;
+      opacity: 0;
+      max-width: 90vw;
+    }
+    .dynamic-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    .dynamic-toast-icon {
+      font-size: 18px;
+    }
+    .dynamic-toast-body {
       display: flex;
       flex-direction: column;
       gap: 1px;
-      overflow: hidden;
     }
-
-    .island-expanded-title {
+    .dynamic-toast-title {
       font-size: 13px;
       font-weight: 700;
       color: #fff;
-      letter-spacing: -0.2px;
     }
-
-    .island-expanded-desc {
+    .dynamic-toast-desc {
       font-size: 11px;
-      color: rgba(255, 255, 255, 0.75);
-      font-weight: 500;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .dynamic-island.island--error {
-      border-color: rgba(255, 69, 58, 0.5);
-      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85), 0 0 28px rgba(255, 69, 58, 0.35);
-    }
-    .dynamic-island.island--error .island-expanded-icon {
-      background: linear-gradient(135deg, #FF453A 0%, #B81D4C 100%);
-    }
-
-    .dynamic-island.island--warning {
-      border-color: rgba(255, 159, 10, 0.5);
-      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85), 0 0 28px rgba(255, 159, 10, 0.35);
-    }
-    .dynamic-island.island--warning .island-expanded-icon {
-      background: linear-gradient(135deg, #FF9F0A 0%, #D46B08 100%);
-    }
-
-    /* Legacy toast fallback */
-    .dynamic-toast {
-      display: none !important;
+      color: var(--text-muted);
     }
 
     /* ========================================================
@@ -2181,44 +2031,12 @@
 </head>
 <body>
 
-  <!-- Apple iPhone 18 Pro Dynamic Island (Interactive HUD) -->
-  <div class="dynamic-island-wrapper" id="dynamicIslandWrapper">
-    <div class="dynamic-island" id="dynamicIsland" role="button" tabindex="0" title="Нажмите для сводки радара">
-      <div class="island-collapsed-view" id="islandCollapsedView">
-        <div class="island-left">
-          <div class="island-radar-dot">
-            <span class="radar-core"></span>
-            <span class="radar-ping"></span>
-          </div>
-          <span class="island-brand">RADAR 18 PRO</span>
-        </div>
-        <div class="island-center">
-          <span class="island-status-pill" id="islandStatusPill">
-            <span class="pulse-live">LIVE</span>
-            <span class="island-count-text"><b id="islandActiveCount">0</b> МОДЕЛЕЙ</span>
-          </span>
-        </div>
-        <div class="island-right">
-          <span class="island-region-badge" id="islandRegionBadge">МОСКВА</span>
-        </div>
-      </div>
-      <!-- Expanded State on event or click -->
-      <div class="island-expanded-view" id="islandExpandedView">
-        <div class="island-expanded-icon" id="islandExpandedIcon">⚡️</div>
-        <div class="island-expanded-content">
-          <div class="island-expanded-title" id="islandExpandedTitle">Синхронизация</div>
-          <div class="island-expanded-desc" id="islandExpandedDesc">Все цены обновлены в боте</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Legacy Toast Fallback Element -->
-  <div class="dynamic-toast" id="dynamicToast" style="display:none;">
+  <!-- Floating Toast Notification -->
+  <div class="dynamic-toast" id="dynamicToast">
     <div class="dynamic-toast-icon" id="dynamicToastIcon">⚡️</div>
     <div class="dynamic-toast-body">
-      <div class="dynamic-toast-title" id="dynamicToastTitle">Регион обновлен</div>
-      <div class="dynamic-toast-desc" id="dynamicToastDesc">Якутск • Воркеры переключены</div>
+      <div class="dynamic-toast-title" id="dynamicToastTitle">Уведомление</div>
+      <div class="dynamic-toast-desc" id="dynamicToastDesc">Действие выполнено</div>
     </div>
   </div>
 
@@ -2253,6 +2071,19 @@
           </button>
         </div>
       </div>
+
+      <!-- Главный тумблер работы бота: Мониторинг поиска -->
+      <div class="master-bot-bar" id="masterBotBar" title="Нажмите, чтобы включить/выключить поиск">
+        <div class="master-bot-status">
+          <span class="master-bot-dot" id="masterBotDot"></span>
+          <span class="master-bot-text" id="masterBotText">🟢 Поиск активен</span>
+        </div>
+        <label class="switch master-switch">
+          <input type="checkbox" id="toggleGlobalSearch" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
       <div class="stats-bar">
         <span>Всего: <b class="stats-pill" id="statTotal">0</b></span>
         <span>Активных: <b class="stats-pill" id="statActive">0</b></span>
@@ -2368,20 +2199,9 @@
       Если выключить обе площадки, мониторинг автоматически ставится на паузу.
     </div>
 
-    <!-- Секция 2: Мониторинг и каталог -->
-    <div class="ios-section-header">Мониторинг и каталог</div>
+    <!-- Секция 2: Управление каталогом -->
+    <div class="ios-section-header">Каталог и управление</div>
     <div class="ios-inset-card">
-      <div class="setting-item">
-        <div class="ios-icon-badge" style="background: rgba(0, 122, 255, 0.15); color: #007aff;">📡</div>
-        <div class="setting-info">
-          <div class="setting-title">Мониторинг всех моделей</div>
-          <div class="setting-desc">Включить или отключить поиск для всего каталога</div>
-        </div>
-        <label class="switch">
-          <input type="checkbox" id="toggleGlobalSearch" checked>
-          <span class="slider"></span>
-        </label>
-      </div>
       <div class="setting-item clickable" id="btnRowResetDefaults" style="cursor: pointer;">
         <div class="ios-icon-badge" style="background: rgba(255, 59, 48, 0.15); color: #ff3b30;">🔄</div>
         <div class="setting-info">
@@ -3321,6 +3141,9 @@ const POPULAR_TEMPLATES = [
 
       if (typeof updateIslandStatus === 'function') {
         updateIslandStatus();
+      }
+      if (typeof updateGlobalSearchSwitchUI === 'function') {
+        updateGlobalSearchSwitchUI();
       }
 
       const btnToggle = document.getElementById('btnToggleAllSearch');
@@ -4790,57 +4613,40 @@ const POPULAR_TEMPLATES = [
     let currentPlatformFilter = localStorage.getItem('resell_platform_filter') || 'all';
 
     function updateIslandStatus() {
-      const countEl = document.getElementById('islandActiveCount');
-      const regionEl = document.getElementById('islandRegionBadge');
       const headerRegionEl = document.getElementById('headerRegionName');
-      if (countEl && window.currentMatrix) {
-        const active = currentMatrix.filter(m => m.enabled !== false).length;
-        countEl.textContent = active;
-      }
-      if (regionEl && currentSelectedRegion) {
-        regionEl.textContent = currentSelectedRegion.toUpperCase();
-      }
       if (headerRegionEl && currentSelectedRegion) {
         headerRegionEl.textContent = currentSelectedRegion;
       }
+      if (typeof updateGlobalSearchSwitchUI === 'function') {
+        updateGlobalSearchSwitchUI();
+      }
     }
 
-    let islandMorphTimeout = null;
-    function showDynamicIsland(title, desc, icon = "⚡️", theme = "default") {
-      const island = document.getElementById('dynamicIsland');
-      const titleEl = document.getElementById('islandExpandedTitle');
-      const descEl = document.getElementById('islandExpandedDesc');
-      const iconEl = document.getElementById('islandExpandedIcon');
-
-      if (island && titleEl && descEl && iconEl) {
-        titleEl.textContent = title;
-        descEl.textContent = desc;
-        iconEl.textContent = icon;
-
-        island.classList.remove('island--error', 'island--warning');
-        if (theme === 'error') island.classList.add('island--error');
-        else if (theme === 'warning') island.classList.add('island--warning');
-
-        island.classList.remove('expanded');
-        void island.offsetWidth; // force reflow for bouncy spring animation
-        island.classList.add('expanded');
-
-        if (islandMorphTimeout) clearTimeout(islandMorphTimeout);
-        islandMorphTimeout = setTimeout(() => {
-          island.classList.remove('expanded');
-          updateIslandStatus();
-        }, theme === 'error' ? 3400 : 2700);
-      }
-
-      // Legacy toast fallback
+    let toastTimeout = null;
+    function showDynamicToast(title, desc, theme = "default") {
       const toast = document.getElementById('dynamicToast');
-      if (toast) {
-        const tTitle = document.getElementById('dynamicToastTitle');
-        const tDesc = document.getElementById('dynamicToastDesc');
-        const tIcon = document.getElementById('dynamicToastIcon');
-        if (tTitle) tTitle.textContent = title;
-        if (tDesc) tDesc.textContent = desc;
-        if (tIcon) tIcon.textContent = icon;
+      const tTitle = document.getElementById('dynamicToastTitle');
+      const tDesc = document.getElementById('dynamicToastDesc');
+      const tIcon = document.getElementById('dynamicToastIcon');
+      if (toast && tTitle && tDesc) {
+        tTitle.textContent = title;
+        tDesc.textContent = desc;
+        if (tIcon) {
+          if (theme === 'error') tIcon.textContent = "⚠️";
+          else if (theme === 'warning') tIcon.textContent = "⏸";
+          else if (theme === 'success') tIcon.textContent = "✅";
+          else tIcon.textContent = "⚡️";
+        }
+        toast.classList.remove('toast-error', 'toast-warning', 'show');
+        if (theme === 'error') toast.classList.add('toast-error');
+        else if (theme === 'warning') toast.classList.add('toast-warning');
+
+        void toast.offsetWidth;
+        toast.classList.add('show');
+        if (toastTimeout) clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+          toast.classList.remove('show');
+        }, theme === 'error' ? 3200 : 2500);
       }
 
       if (tg?.HapticFeedback) {
@@ -4850,13 +4656,8 @@ const POPULAR_TEMPLATES = [
       }
     }
 
-    function showDynamicToast(title, desc, theme = "default") {
-      let icon = "⚡️";
-      if (theme === 'error') icon = "⚠️";
-      else if (theme === 'warning') icon = "⏸";
-      else if (theme === 'success') icon = "✅";
-      else if (theme === 'info') icon = "ℹ️";
-      showDynamicIsland(title, desc, icon, theme);
+    function showDynamicIsland(title, desc, icon = "⚡️", theme = "default") {
+      showDynamicToast(title, desc, theme);
     }
     window.showDynamicIsland = showDynamicIsland;
     window.showDynamicToast = showDynamicToast;
@@ -5102,21 +4903,6 @@ const POPULAR_TEMPLATES = [
       saveLocal();
     }
 
-    // Dynamic Island interactive click HUD
-    document.getElementById('dynamicIsland')?.addEventListener('click', () => {
-      const island = document.getElementById('dynamicIsland');
-      if (island && !island.classList.contains('expanded')) {
-        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-        const activeCount = (window.currentMatrix || []).filter(m => m.enabled !== false).length;
-        const total = (window.currentMatrix || []).length;
-        showDynamicIsland(
-          `Радар активен: ${activeCount}/${total}`,
-          `${currentSelectedRegion} • Мониторинг в реальном времени`,
-          "⚡️"
-        );
-      }
-    });
-
     const btnOpenRegionModal = document.getElementById('btnOpenRegionModal');
     if (btnOpenRegionModal) {
       btnOpenRegionModal.addEventListener('click', () => {
@@ -5197,7 +4983,7 @@ const POPULAR_TEMPLATES = [
       if (saveBtn) saveBtn.click();
     });
 
-    // Мониторинг всех моделей из вкладки Настройки
+    // Главный тумблер мониторинга всех моделей
     const toggleGlobalSearchEl = document.getElementById('toggleGlobalSearch');
     if (toggleGlobalSearchEl) {
       toggleGlobalSearchEl.addEventListener('change', (e) => {
@@ -5210,6 +4996,7 @@ const POPULAR_TEMPLATES = [
         updateStats();
         renderCards();
         triggerDirty();
+        updateGlobalSearchSwitchUI();
         if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
         if (newState) {
           showDynamicToast('▶️ Поиск включен', `Активировано моделей: ${currentMatrix.length}`, 'success');
@@ -5219,10 +5006,29 @@ const POPULAR_TEMPLATES = [
       });
     }
 
+    document.getElementById('masterBotBar')?.addEventListener('click', (e) => {
+      if (e.target.closest('.switch')) return;
+      const toggle = document.getElementById('toggleGlobalSearch');
+      if (toggle) {
+        toggle.checked = !toggle.checked;
+        toggle.dispatchEvent(new Event('change'));
+      }
+    });
+
     function updateGlobalSearchSwitchUI() {
       const toggleEl = document.getElementById('toggleGlobalSearch');
-      if (!toggleEl || !currentMatrix) return;
-      toggleEl.checked = currentMatrix.some(m => m.enabled !== false);
+      const barEl = document.getElementById('masterBotBar');
+      const textEl = document.getElementById('masterBotText');
+      if (!toggleEl || !window.currentMatrix) return;
+      const isActive = currentMatrix.some(m => m.enabled !== false);
+      toggleEl.checked = isActive;
+      if (barEl) {
+        barEl.classList.toggle('active', isActive);
+        barEl.classList.toggle('paused', !isActive);
+      }
+      if (textEl) {
+        textEl.textContent = isActive ? '🟢 Поиск активен' : '⏸ На паузе';
+      }
     }
 
     document.getElementById('btnCloseCatalogManageModal').addEventListener('click', () => {
