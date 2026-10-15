@@ -236,7 +236,6 @@
       align-items: center;
       z-index: 1050;
       box-shadow: 0 -4px 32px rgba(0, 0, 0, 0.8), inset 0 0.5px 0 rgba(255, 255, 255, 0.18);
-      position: relative;
     }
 
     .tab-pill-slider {
@@ -1503,25 +1502,7 @@
       background: var(--success-subtle);
     }
 
-    /* ========================================================
-       Floating Action Dock / Apple Pay Style Save Bar
-       ======================================================== */
-    .save-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 12px 16px;
-      padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-      background: rgba(10, 10, 12, 0.88);
-      backdrop-filter: blur(25px) saturate(190%);
-      -webkit-backdrop-filter: blur(25px) saturate(190%);
-      border-top: 0.5px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      gap: 10px;
-      z-index: 1000;
-      box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.6);
-    }
+
 
     @keyframes keynoteGleam {
       0% {
@@ -2269,6 +2250,9 @@
           <span>БРЕДЛИ ПЕРЕКУПЕР</span>
         </h1>
         <div class="header-actions">
+          <button type="button" class="btn-region-badge" id="btnOpenRegionModal" title="Сменить регион поиска">
+            📍 <span id="headerRegionName">Москва</span>
+          </button>
           <button class="btn-add-model" id="btnOpenAddModal">
             <span>➕ Модель</span>
           </button>
@@ -4728,19 +4712,19 @@ const POPULAR_TEMPLATES = [
     // ВЫБОР РЕГИОНА ПОИСКА
     // -------------------------------------------------------------
     const ALL_CITIES = [
-      { key: "yakutsk", name: "Якутск" },
       { key: "moskva", name: "Москва и МО" },
       { key: "spb", name: "Санкт-Петербург и ЛО" },
-      { key: "ekaterinburg", name: "Екатеринбург" },
       { key: "novosibirsk", name: "Новосибирск" },
+      { key: "ekaterinburg", name: "Екатеринбург" },
       { key: "kazan", name: "Казань" },
       { key: "krasnodar", name: "Краснодар" },
-      { key: "rostov", name: "Ростов-на-Дону" },
       { key: "nn", name: "Нижний Новгород" },
+      { key: "rostov", name: "Ростов-на-Дону" },
       { key: "samara", name: "Самара" },
+      { key: "chelyabinsk", name: "Челябинск" },
+      { key: "omsk", name: "Омск" },
       { key: "sochi", name: "Сочи" },
       { key: "ufa", name: "Уфа" },
-      { key: "chelyabinsk", name: "Челябинск" },
       { key: "krasnoyarsk", name: "Красноярск" },
       { key: "perm", name: "Пермь" },
       { key: "volgograd", name: "Волгоград" },
@@ -4750,6 +4734,7 @@ const POPULAR_TEMPLATES = [
       { key: "khabarovsk", name: "Хабаровск" },
       { key: "irkutsk", name: "Иркутск" },
       { key: "surgut", name: "Сургут" },
+      { key: "yakutsk", name: "Якутск" },
       { key: "barnaul", name: "Барнаул" },
       { key: "yaroslavl", name: "Ярославль" },
       { key: "tomsk", name: "Томск" },
@@ -4769,7 +4754,7 @@ const POPULAR_TEMPLATES = [
       { key: "all_russia", name: "Вся Россия" }
     ];
 
-    const POPULAR_KEYS = ["yakutsk", "moskva", "spb", "ekaterinburg", "novosibirsk", "kazan", "krasnodar", "all_russia"];
+    const POPULAR_KEYS = ["moskva", "spb", "novosibirsk", "ekaterinburg", "kazan", "krasnodar", "all_russia", "yakutsk"];
 
     function getInitialRegion() {
       let hashRegion = null;
@@ -4804,7 +4789,7 @@ const POPULAR_TEMPLATES = [
         return incomingBotRegion;
       }
 
-      return "Якутск";
+      return "Москва и МО";
     }
 
     let currentSelectedRegion = getInitialRegion();
@@ -4813,12 +4798,16 @@ const POPULAR_TEMPLATES = [
     function updateIslandStatus() {
       const countEl = document.getElementById('islandActiveCount');
       const regionEl = document.getElementById('islandRegionBadge');
+      const headerRegionEl = document.getElementById('headerRegionName');
       if (countEl && window.currentMatrix) {
         const active = currentMatrix.filter(m => m.enabled !== false).length;
         countEl.textContent = active;
       }
       if (regionEl && currentSelectedRegion) {
         regionEl.textContent = currentSelectedRegion.toUpperCase();
+      }
+      if (headerRegionEl && currentSelectedRegion) {
+        headerRegionEl.textContent = currentSelectedRegion;
       }
     }
 
