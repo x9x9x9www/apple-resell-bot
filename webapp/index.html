@@ -17,12 +17,6 @@
   <meta name="twitter:image" content="https://x9x9x9www.github.io/apple-resell-bot/banner.jpg">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    @property --laser-angle {
-      syntax: '<angle>';
-      initial-value: 0deg;
-      inherits: false;
-    }
-
     :root {
       /* Apple iPhone 18 Pro Cosmic Titanium Palette */
       --bg-color: #050507;
@@ -1182,107 +1176,47 @@
       gap: 12px;
     }
 
-    @keyframes keynoteEntrance {
-      from {
-        opacity: 0;
-        transform: translateY(16px) scale(0.98);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
     @keyframes keynoteSceneEnter {
       0% {
         opacity: 0;
-        transform: scale(0.975) translateY(12px);
-        filter: blur(5px);
-      }
-      70% {
-        filter: blur(0px);
+        transform: scale(0.985) translateY(8px);
       }
       100% {
         opacity: 1;
         transform: scale(1) translateY(0);
-        filter: blur(0px);
       }
     }
 
     .keynote-scene-enter {
-      animation: keynoteSceneEnter 0.36s cubic-bezier(0.16, 1, 0.3, 1) both;
-      will-change: transform, opacity, filter;
-    }
-
-    @keyframes laserSpin {
-      0% {
-        --laser-angle: 0deg;
-      }
-      100% {
-        --laser-angle: 360deg;
-      }
+      animation: keynoteSceneEnter 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
     .model-card {
-      background: var(--card-bg);
-      backdrop-filter: blur(28px) saturate(190%);
-      -webkit-backdrop-filter: blur(28px) saturate(190%);
+      background: var(--card-bg-elevated);
       border: 0.5px solid var(--card-border);
       border-radius: 20px;
       padding: 14px 16px;
       display: flex;
       flex-direction: column;
       gap: 11px;
-      box-shadow: var(--card-specular), 0 8px 26px rgba(0, 0, 0, 0.55), 0 0 16px rgba(255, 59, 112, 0.05);
-      transition: transform 0.22s var(--spring-press), border-color 0.25s ease, box-shadow 0.25s ease, opacity 0.2s ease;
-      animation: keynoteEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
-      will-change: transform, opacity;
+      box-shadow: var(--card-specular), 0 6px 20px rgba(0, 0, 0, 0.45);
+      transition: transform 0.15s var(--spring-press), border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
       position: relative;
-    }
-    .model-card::before {
-      content: '';
-      position: absolute;
-      inset: -1px;
-      border-radius: 21px;
-      padding: 1px;
-      background: conic-gradient(
-        from var(--laser-angle, 0deg) at 50% 50%,
-        transparent 0deg,
-        transparent 250deg,
-        rgba(184, 29, 76, 0.25) 290deg,
-        rgba(255, 59, 112, 0.85) 330deg,
-        #FFFFFF 352deg,
-        rgba(255, 133, 162, 0.95) 358deg,
-        transparent 360deg
-      );
-      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
-      opacity: 0.7;
-      animation: laserSpin 5s linear infinite;
-      transition: opacity 0.3s ease;
-      z-index: 2;
+      content-visibility: auto;
+      contain-intrinsic-size: 0 160px;
     }
     .model-card:hover {
       border-color: var(--card-border-hover);
-      box-shadow: var(--card-specular), 0 12px 36px rgba(0, 0, 0, 0.65), 0 0 24px rgba(255, 59, 112, 0.18);
-    }
-    .model-card:hover::before {
-      opacity: 1;
-      animation-duration: 3s;
+      box-shadow: var(--card-specular), 0 8px 28px rgba(0, 0, 0, 0.6), 0 0 16px rgba(255, 59, 112, 0.12);
     }
     .model-card:active {
-      transform: scale(0.988);
+      transform: scale(0.992);
     }
     .model-card.custom-card {
       border-color: rgba(255, 59, 112, 0.45);
     }
     .model-card.disabled {
       opacity: 0.44;
-    }
-    .model-card.disabled::before {
-      display: none;
     }
 
     .card-top {
@@ -2265,9 +2199,6 @@
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
-      }
-      .model-card::before {
-        display: none !important;
       }
     }
   </style>
@@ -3606,7 +3537,7 @@ const POPULAR_TEMPLATES = [
 
     const selectedStorageMap = new Map();
 
-    function animateProfitBadge(badgeEl, targetValue, duration = 280) {
+    function animateProfitBadge(badgeEl, targetValue, duration = 180) {
       if (!badgeEl) return;
       const currentValAttr = badgeEl.dataset.currentValue;
       const startValue = currentValAttr !== undefined ? parseFloat(currentValAttr) : targetValue;
@@ -3748,6 +3679,8 @@ const POPULAR_TEMPLATES = [
         }
         groupMap.get(groupKey).items.push(item);
       });
+
+      const fragment = document.createDocumentFragment();
 
       modelGroups.forEach(group => {
         // Сортируем память по возрастанию
@@ -3989,13 +3922,24 @@ const POPULAR_TEMPLATES = [
           });
         }
 
-        container.appendChild(card);
+        fragment.appendChild(card);
       });
 
+      container.appendChild(fragment);
       updateStats();
     }
 
+    let saveLocalTimer = null;
     function saveLocal() {
+      if (saveLocalTimer) clearTimeout(saveLocalTimer);
+      saveLocalTimer = setTimeout(saveLocalImmediate, 200);
+    }
+
+    function saveLocalImmediate() {
+      if (saveLocalTimer) {
+        clearTimeout(saveLocalTimer);
+        saveLocalTimer = null;
+      }
       try {
         localStorage.setItem('gadget_resell_matrix_clean', JSON.stringify({
           matrix: currentMatrix,
@@ -4006,10 +3950,17 @@ const POPULAR_TEMPLATES = [
       } catch (e) {}
     }
 
-    // Слушатель поиска
+    window.addEventListener('beforeunload', saveLocalImmediate);
+    window.addEventListener('pagehide', saveLocalImmediate);
+
+    // Слушатель поиска с дебаунсом
+    let searchDebounceTimer = null;
     document.getElementById('searchInput').addEventListener('input', (e) => {
       searchQuery = e.target.value;
-      renderCards();
+      if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
+      searchDebounceTimer = setTimeout(() => {
+        renderCards();
+      }, 120);
     });
 
     // Управление категориями / папками
@@ -5492,7 +5443,7 @@ const POPULAR_TEMPLATES = [
       localStorage.setItem('resell_selected_region', currentSelectedRegion);
       localStorage.setItem('resell_last_bot_region', currentSelectedRegion);
       localStorage.setItem('resell_platform_filter', currentPlatformFilter);
-      saveLocal();
+      saveLocalImmediate();
       snapshotInitialMatrix(currentMatrix, true);
 
       const jsonPayload = buildResellPayload();

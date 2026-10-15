@@ -2,3 +2,6 @@
   Access-Control-Allow-Origin: *
   Content-Security-Policy: frame-ancestors 'self' https://web.telegram.org https://*.telegram.org telegram: t.me https://t.me;
   X-Frame-Options: ALLOWALL
+  Cache-Control: no-cache, no-store, must-revalidate
+  Pragma: no-cache
+  Expires: 0
