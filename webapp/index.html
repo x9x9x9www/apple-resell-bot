@@ -2032,189 +2032,6 @@
       }
     }
   
-    /* ========================================================
-       APPLE TITANIUM LIQUID GLASS & 3D IPHONE SHOWCASE
-       ======================================================== */
-    .hero-3d-stage {
-      position: relative;
-      border-radius: 24px;
-      padding: 18px 20px;
-      margin-bottom: 16px;
-      overflow: hidden;
-      perspective: 1200px;
-      background: linear-gradient(135deg, rgba(26, 29, 38, 0.75) 0%, rgba(14, 15, 20, 0.85) 100%) !important;
-      backdrop-filter: blur(28px) saturate(190%) !important;
-      -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
-      border: 1px solid rgba(255, 255, 255, 0.1) !important;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 16px 40px rgba(0, 0, 0, 0.6) !important;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-      cursor: grab;
-    }
-    .hero-3d-stage:active {
-      cursor: grabbing;
-    }
-    .hero-3d-stage:hover {
-      border-color: rgba(255, 255, 255, 0.18) !important;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 20px 48px rgba(0, 0, 0, 0.7) !important;
-    }
-
-    .hero-3d-ambient-glow {
-      position: absolute;
-      top: -60%;
-      right: -20%;
-      width: 140%;
-      height: 220%;
-      background: radial-gradient(circle at 65% 35%, rgba(255, 255, 255, 0.08) 0%, rgba(150, 175, 215, 0.04) 35%, transparent 70%);
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    .hero-3d-content {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    .hero-3d-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .hero-tag-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 0.5px solid rgba(255, 255, 255, 0.14);
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.6px;
-      color: #f5f5f7;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-
-    .hero-tag-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #30d158;
-      box-shadow: 0 0 8px #30d158;
-      animation: pulseDot 2s infinite ease-in-out;
-    }
-
-    @keyframes pulseDot {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.4); opacity: 0.6; }
-    }
-
-    .hero-headline {
-      font-size: 19px;
-      font-weight: 800;
-      line-height: 1.15;
-      letter-spacing: -0.5px;
-      color: #fff;
-      margin-bottom: 5px;
-    }
-
-    .hero-headline-gradient {
-      background: linear-gradient(135deg, #ffffff 0%, #c4c4c8 45%, #8e8e93 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .hero-subline {
-      font-size: 11px;
-      line-height: 1.4;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-    }
-
-    .hero-stats-row {
-      display: flex;
-      gap: 8px;
-    }
-
-    .hero-stat-card {
-      flex: 1;
-      background: rgba(255, 255, 255, 0.05);
-      border: 0.5px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 6px 6px;
-      text-align: center;
-      transition: background 0.2s ease;
-    }
-    .hero-stat-card:hover {
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .hero-stat-val {
-      display: block;
-      font-size: 12px;
-      font-weight: 700;
-      color: #ffffff;
-    }
-
-    .hero-stat-label {
-      display: block;
-      font-size: 9px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.2px;
-      margin-top: 2px;
-    }
-
-    .hero-3d-visual {
-      position: relative;
-      width: 140px;
-      height: 140px;
-      flex-shrink: 0;
-      perspective: 1000px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .hero-3d-phone-container {
-      position: relative;
-      width: 132px;
-      height: 132px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transform-style: preserve-3d;
-      transform: rotateY(-14deg) rotateX(8deg) rotateZ(-2deg);
-      transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
-      will-change: transform;
-    }
-
-    .hero-3d-phone-img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.75));
-      user-select: none;
-      -webkit-user-drag: none;
-      pointer-events: none;
-    }
-
-    .hero-3d-shadow {
-      position: absolute;
-      bottom: -4px;
-      left: 10%;
-      width: 80%;
-      height: 16px;
-      background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.85) 0%, transparent 75%);
-      filter: blur(4px);
-      pointer-events: none;
-      z-index: 1;
-    }
-
     /* SVG Icons General Styling */
     .svg-icon {
       display: inline-flex;
@@ -2228,45 +2045,12 @@
       height: 100%;
     }
 
-    /* Glassmorphism Refinements across UI */
-    .ios-inset-card,
-    .model-card,
-    .kpi-card,
-    .deals-section,
-    .search-wrapper,
-    .master-bot-bar,
-    .save-bar,
-    .ios-tab-bar,
-    .modal-sheet {
-      background: rgba(18, 20, 26, 0.65) !important;
-      backdrop-filter: blur(28px) saturate(190%) !important;
-      -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
-      border: 1px solid rgba(255, 255, 255, 0.08) !important;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 12px 32px rgba(0, 0, 0, 0.45) !important;
-    }
-
-    .model-card:hover {
-      border-color: rgba(255, 255, 255, 0.18) !important;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 16px 40px rgba(0, 0, 0, 0.55) !important;
-    }
-
-    .btn-save, .btn-add-model, .btn-add-deal {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.08) 100%) !important;
-      border: 1px solid rgba(255, 255, 255, 0.16) !important;
-      color: #fff !important;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 4px 16px rgba(0, 0, 0, 0.4) !important;
-    }
-    .btn-save:hover, .btn-add-model:hover, .btn-add-deal:hover {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0.12) 100%) !important;
-      border-color: rgba(255, 255, 255, 0.25) !important;
-    }
-
-    /* Active Tab Bar Pill in Titanium Style */
+    /* Active Tab Bar Pill in Titanium Liquid Glass */
     .tab-item.active {
       color: #ffffff !important;
-      background: rgba(255, 255, 255, 0.12) !important;
-      border: 1px solid rgba(255, 255, 255, 0.18) !important;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+      background: rgba(255, 255, 255, 0.14) !important;
+      border: 1px solid rgba(255, 255, 255, 0.22) !important;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 4px 16px rgba(0, 0, 0, 0.4) !important;
     }
     .tab-item.active .tab-label {
       color: #ffffff !important;
@@ -2276,7 +2060,6 @@
       color: #ffffff !important;
       filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.4));
     }
-    
 
     /* ========================================================
        TOP & BOTTOM ETHEREAL RADIANT GLOW (HIGH VISIBILITY)
@@ -2317,257 +2100,6 @@
     @keyframes pulseBottomAtmosphere {
       0% { opacity: 0.85; transform: translateX(-50%) scale(0.98); }
       100% { opacity: 1.15; transform: translateX(-50%) scale(1.03); }
-    }
-
-    /* ========================================================
-       CENTRAL 3D IPHONE HUB & STAGE
-       ======================================================== */
-    .hero-center-stage {
-      position: relative;
-      border-radius: 36px !important;
-      padding: 24px 18px 22px;
-      margin-bottom: 20px;
-      overflow: hidden;
-      perspective: 1200px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      background: linear-gradient(145deg, rgba(28, 32, 42, 0.65) 0%, rgba(15, 17, 24, 0.78) 100%) !important;
-      backdrop-filter: blur(36px) saturate(210%) brightness(1.06) !important;
-      -webkit-backdrop-filter: blur(36px) saturate(210%) brightness(1.06) !important;
-      border: 1.2px solid rgba(255, 255, 255, 0.36) !important;
-      box-shadow:
-        inset 0 2px 3px 0 rgba(255, 255, 255, 0.8),
-        inset 0 -2px 3px 0 rgba(0, 0, 0, 0.45),
-        inset 2px 0 2.5px 0 rgba(255, 255, 255, 0.35),
-        inset -2px 0 2.5px 0 rgba(255, 255, 255, 0.2),
-        0 24px 50px -10px rgba(0, 0, 0, 0.75),
-        0 0 30px rgba(180, 215, 255, 0.16) !important;
-      z-index: 2;
-    }
-
-    .hero-stage-aura {
-      position: absolute;
-      top: 10%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 280px;
-      height: 280px;
-      background: radial-gradient(circle, rgba(200, 230, 255, 0.18) 0%, rgba(140, 180, 240, 0.08) 45%, transparent 75%);
-      pointer-events: none;
-      z-index: 1;
-      filter: blur(30px);
-    }
-
-    /* 3D Scene containing ONE single iPhone at ~30 degrees in the Center */
-    .iphone-3d-scene {
-      position: relative;
-      width: 220px;
-      height: 270px;
-      perspective: 1200px;
-      perspective-origin: 50% 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 4px auto 16px;
-      cursor: grab;
-      touch-action: pan-y;
-      z-index: 2;
-    }
-    .iphone-3d-scene:active {
-      cursor: grabbing;
-    }
-
-    .iphone-3d-device {
-      position: relative;
-      width: 140px;
-      height: 280px;
-      transform-style: preserve-3d;
-      transform: rotateY(-30deg) rotateX(10deg) rotateZ(-2deg);
-      transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
-      will-change: transform;
-    }
-
-    .iphone-face {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border-radius: 32px;
-      backface-visibility: hidden;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .iphone-face-front {
-      z-index: 2;
-      transform: translateZ(4px);
-      box-shadow:
-        1px 1px 0 #3a3a3e,
-        2px 2px 0 #28282c,
-        3px 3px 0 #1c1c1f,
-        4px 4px 0 #101012,
-        5px 5px 0 #050506,
-        14px 26px 42px rgba(0, 0, 0, 0.85);
-    }
-
-    .iphone-face-back {
-      transform: rotateY(180deg) translateZ(4px);
-      box-shadow:
-        -1px 1px 0 #3a3a3e,
-        -2px 2px 0 #28282c,
-        -3px 3px 0 #1c1c1f,
-        -4px 4px 0 #101012,
-        -5px 5px 0 #050506,
-        -14px 26px 42px rgba(0, 0, 0, 0.85);
-    }
-
-    .iphone-render-img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      user-select: none;
-      -webkit-user-drag: none;
-      pointer-events: none;
-    }
-
-    .iphone-glass-sheen {
-      position: absolute;
-      top: -20%;
-      left: -60%;
-      width: 180%;
-      height: 160%;
-      background: linear-gradient(125deg, transparent 40%, rgba(255, 255, 255, 0.22) 50%, transparent 60%);
-      pointer-events: none;
-      border-radius: 32px;
-      mix-blend-mode: overlay;
-    }
-
-    .iphone-3d-ground-shadow {
-      position: absolute;
-      bottom: -16px;
-      left: 10%;
-      width: 80%;
-      height: 22px;
-      background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.45) 50%, transparent 75%);
-      filter: blur(8px);
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    /* Central Info Typography */
-    .hero-center-info {
-      position: relative;
-      z-index: 2;
-      margin-bottom: 16px;
-    }
-
-    .liquid-glass-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 14px;
-      border-radius: 9999px;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.12) 100%);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      box-shadow:
-        inset 0 1.5px 2px rgba(255, 255, 255, 0.7),
-        inset 0 -1.5px 2px rgba(0, 0, 0, 0.35),
-        0 8px 20px rgba(0, 0, 0, 0.4);
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 0.8px;
-      color: #ffffff;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-
-    .liquid-glass-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #30d158;
-      box-shadow: 0 0 10px #30d158;
-      animation: pulseDot 2s infinite ease-in-out;
-    }
-
-    .hero-center-headline {
-      font-size: 21px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      color: #ffffff;
-      margin-bottom: 4px;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-    }
-
-    .hero-center-subline {
-      font-size: 12px;
-      color: var(--text-muted);
-      max-width: 290px;
-      margin: 0 auto;
-    }
-
-    /* Central Liquid Glass Navigation Hub (Buttons directly from the 3D iPhone) */
-    .hero-central-glass-nav {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      flex-wrap: wrap;
-    }
-
-    .liquid-glass-hub-pill {
-      flex: 1;
-      min-width: 95px;
-      height: 44px;
-      padding: 0 14px;
-      border-radius: 9999px !important;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.20) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.12) 100%) !important;
-      backdrop-filter: blur(28px) saturate(200%) !important;
-      -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
-      border: 1.2px solid rgba(255, 255, 255, 0.42) !important;
-      box-shadow:
-        inset 0 2px 3px 0 rgba(255, 255, 255, 0.85),
-        inset 0 -2px 3px 0 rgba(0, 0, 0, 0.45),
-        inset 2px 0 2.5px 0 rgba(255, 255, 255, 0.35),
-        inset -2px 0 2.5px 0 rgba(255, 255, 255, 0.2),
-        0 12px 28px -4px rgba(0, 0, 0, 0.65),
-        0 0 18px rgba(180, 215, 255, 0.14) !important;
-      color: #f5f5f7 !important;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: -0.2px;
-      cursor: pointer;
-      user-select: none;
-      transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .liquid-glass-hub-pill:active {
-      transform: scale(0.95);
-    }
-
-    .liquid-glass-hub-pill.active {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.14) 50%, rgba(255, 255, 255, 0.25) 100%) !important;
-      border-color: rgba(255, 255, 255, 0.65) !important;
-      color: #ffffff !important;
-      box-shadow:
-        inset 0 2px 4px 0 rgba(255, 255, 255, 0.95),
-        inset 0 -2px 3px 0 rgba(0, 0, 0, 0.5),
-        0 8px 24px rgba(0, 0, 0, 0.5),
-        0 0 26px rgba(200, 230, 255, 0.32) !important;
     }
 
     /* ========================================================
@@ -2657,137 +2189,46 @@
         0 18px 42px rgba(0, 0, 0, 0.75),
         0 0 24px rgba(180, 215, 255, 0.18) !important;
     }
-    
 
-    /* ========================================================
-       MULTI-ANGLE 3D IPHONE ANIMATION SYSTEM (APPLE KEYNOTE)
-       ======================================================== */
-    .iphone-multiangle-stage {
-      position: relative;
-      width: 250px;
-      height: 270px;
-      perspective: 1200px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 4px auto 10px;
-      cursor: grab;
-      touch-action: pan-y;
-      z-index: 2;
-    }
-    .iphone-multiangle-stage:active {
-      cursor: grabbing;
-    }
-
-    .iphone-angle-layers {
-      position: relative;
-      width: 230px;
-      height: 250px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transform-style: preserve-3d;
-      transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .angle-frame {
-      position: absolute;
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      opacity: 0;
-      transform: scale(0.92) translateZ(-15px) rotateY(-5deg);
-      filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.85));
-      transition: opacity 0.42s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-      pointer-events: none;
-      user-select: none;
-      -webkit-user-drag: none;
-    }
-
-    .angle-frame.active {
-      opacity: 1;
-      transform: scale(1) translateZ(0px) rotateY(0deg);
-      filter: drop-shadow(0 22px 42px rgba(0, 0, 0, 0.95));
-    }
-
-    .iphone-dynamic-sheen {
-      position: absolute;
-      top: -10%;
-      left: -20%;
-      width: 140%;
-      height: 120%;
-      border-radius: 36px;
-      background: linear-gradient(130deg, transparent 35%, rgba(255, 255, 255, 0.35) 48%, transparent 62%);
-      pointer-events: none;
-      opacity: 0;
-      transform: translateX(-60px);
-      transition: opacity 0.25s ease, transform 0.5s ease;
-      mix-blend-mode: overlay;
-      z-index: 3;
-    }
-    .iphone-dynamic-sheen.flash {
-      opacity: 1;
-      transform: translateX(60px);
-    }
-
-    .iphone-dynamic-shadow {
-      position: absolute;
-      bottom: -10px;
-      left: 10%;
-      width: 80%;
-      height: 24px;
-      background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.4) 45%, transparent 75%);
-      filter: blur(8px);
-      pointer-events: none;
-      z-index: 1;
-      transition: all 0.45s ease;
-    }
-
-    /* Angle Picker Pills (Interactive Multi-Angle Switcher) */
-    .angle-picker-pills {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 4px 6px;
-      border-radius: 9999px;
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(24px) saturate(190%);
-      -webkit-backdrop-filter: blur(24px) saturate(190%);
-      border: 1.2px solid rgba(255, 255, 255, 0.32);
+    /* Liquid Glass Series Filter Pills */
+    .series-pill {
+      border-radius: 9999px !important;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(20, 24, 32, 0.75) 50%, rgba(255, 255, 255, 0.06) 100%) !important;
+      backdrop-filter: blur(20px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+      border: 1.1px solid rgba(255, 255, 255, 0.24) !important;
       box-shadow:
-        inset 0 1.5px 2px rgba(255, 255, 255, 0.7),
-        inset 0 -1.5px 2px rgba(0, 0, 0, 0.4),
-        0 8px 20px rgba(0, 0, 0, 0.5);
-      margin-bottom: 14px;
-      z-index: 2;
+        inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.65),
+        inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.4),
+        0 4px 14px rgba(0, 0, 0, 0.45) !important;
+      color: var(--text-secondary) !important;
+      padding: 8px 16px !important;
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
-
-    .angle-pill {
-      padding: 4px 10px;
-      border-radius: 9999px;
-      background: transparent;
-      border: 1px solid transparent;
-      color: var(--text-muted);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: -0.1px;
-      cursor: pointer;
-      user-select: none;
-      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    .series-pill:active {
+      transform: scale(0.95);
     }
-
-    .angle-pill:active {
-      transform: scale(0.94);
-    }
-
-    .angle-pill.active {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.12) 100%);
-      border-color: rgba(255, 255, 255, 0.65);
-      color: #ffffff;
+    .series-pill.active {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.36) 0%, rgba(255, 255, 255, 0.14) 50%, rgba(255, 255, 255, 0.24) 100%) !important;
+      border-color: rgba(255, 255, 255, 0.65) !important;
+      color: #ffffff !important;
+      font-weight: 800 !important;
       box-shadow:
-        inset 0 1.5px 2px rgba(255, 255, 255, 0.9),
-        0 4px 12px rgba(0, 0, 0, 0.4),
-        0 0 16px rgba(200, 230, 255, 0.28);
+        inset 0 2px 3.5px 0 rgba(255, 255, 255, 0.95),
+        inset 0 -2px 3px 0 rgba(0, 0, 0, 0.5),
+        0 6px 20px rgba(0, 0, 0, 0.55),
+        0 0 20px rgba(200, 230, 255, 0.24) !important;
+    }
+
+    /* Stats Pill Liquid Glass */
+    .stats-pill {
+      background: rgba(255, 255, 255, 0.10) !important;
+      border: 0.5px solid rgba(255, 255, 255, 0.20) !important;
+      box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.5) !important;
+      border-radius: 9999px !important;
+      padding: 2px 9px !important;
     }
     
 </style>
@@ -2863,65 +2304,6 @@
     </div>
 
     
-    <!-- ==================== CENTRAL 3D IPHONE LIQUID GLASS HUB ==================== -->
-    <div class="hero-center-stage" id="heroCenterStage">
-      <div class="hero-stage-aura"></div>
-
-      <!-- Interactive Single 3D iPhone in the Center (angled at ~30 deg) -->
-      <div class="iphone-multiangle-stage" id="iphoneMultiStage" title="Проведите пальцем для смены ракурса">
-        <div class="iphone-angle-layers" id="iphoneAngleLayers">
-          <img src="./assets/angles/angle_a_45.png" class="angle-frame active" id="angleA" data-angle="a" alt="iPhone 45° Экран">
-          <img src="./assets/angles/angle_b_30.png" class="angle-frame" id="angleB" data-angle="b" alt="iPhone 30° Задняя панель">
-          <img src="./assets/angles/angle_c_60.png" class="angle-frame" id="angleC" data-angle="c" alt="iPhone 60° Грани">
-          <img src="./assets/angles/angle_d_15.png" class="angle-frame" id="angleD" data-angle="d" alt="iPhone 15° Кинематографичный">
-        </div>
-        <!-- Liquid Glass Specular Shine across phone -->
-        <div class="iphone-dynamic-sheen" id="iphoneDynamicSheen"></div>
-        <!-- 3D Ground Shadow that morphs with angle -->
-        <div class="iphone-dynamic-shadow" id="iphoneDynamicShadow"></div>
-      </div>
-
-      <!-- Quick Angle Indicator Pills (Interactive 360 Selector) -->
-      <div class="angle-picker-pills" id="anglePickerPills">
-        <button type="button" class="angle-pill active" data-target="a" title="Ракурс А: 45° Экран">45° Экран</button>
-        <button type="button" class="angle-pill" data-target="b" title="Ракурс Б: 30° Титан">30° Титан</button>
-        <button type="button" class="angle-pill" data-target="c" title="Ракурс В: 60° Грани">60° Грани</button>
-        <button type="button" class="angle-pill" data-target="d" title="Ракурс Г: 15° Студия">15° Студия</button>
-      </div>
-
-      <!-- Central Info Badge -->
-      <div class="hero-center-info">
-        <div class="liquid-glass-badge">
-          <span class="liquid-glass-dot"></span>
-          <span>APPLE RESELL PRO</span>
-        </div>
-        <h2 class="hero-center-headline">Интеллектуальный радар</h2>
-        <p class="hero-center-subline">Мониторинг и моментальный выкуп с Авито и Юлы</p>
-      </div>
-
-      <!-- Central Liquid Glass Navigation Hub Buttons (from the center 3D iPhone) -->
-      <div class="hero-central-glass-nav" id="heroCentralGlassNav">
-        <button type="button" class="liquid-glass-hub-pill active" id="hubBtnCatalog" data-tab="catalog">
-          <span class="svg-icon" style="width:16px; height:16px;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><circle cx="7" cy="7" r=".5" fill="currentColor"/></svg>
-          </span>
-          <span>Прайс-лист</span>
-        </button>
-        <button type="button" class="liquid-glass-hub-pill" id="hubBtnAnalytics" data-tab="analytics">
-          <span class="svg-icon" style="width:16px; height:16px;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
-          </span>
-          <span>Аналитика</span>
-        </button>
-        <button type="button" class="liquid-glass-hub-pill" id="hubBtnSettings" data-tab="settings">
-          <span class="svg-icon" style="width:16px; height:16px;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          </span>
-          <span>Настройки</span>
-        </button>
-      </div>
-    </div>
-
     <!-- Поиск -->
     <div class="search-wrapper">
       <span class="search-icon svg-icon" style="width: 15px; height: 15px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
@@ -6250,42 +5632,6 @@ const POPULAR_TEMPLATES = [
       }
 
       
-      // Central 3D iPhone Dynamic Orientation (Single iPhone at ~30 deg)
-      const phone3d = document.getElementById('iphone3dDevice');
-      function update3DHeroOrientation(tabName) {
-        if (!phone3d) return;
-        if (tabName === 'catalog') {
-          phone3d.style.transform = 'rotateY(-30deg) rotateX(10deg) rotateZ(-2deg)';
-        } else if (tabName === 'analytics') {
-          phone3d.style.transform = 'rotateY(30deg) rotateX(10deg) rotateZ(2deg)';
-        } else if (tabName === 'settings') {
-          phone3d.style.transform = 'rotateY(-180deg) rotateX(10deg) rotateZ(0deg)';
-        }
-
-        // Sync Central Hub Buttons
-        document.querySelectorAll('.liquid-glass-hub-pill').forEach(btn => {
-          btn.classList.toggle('active', btn.dataset.tab === tabName);
-        });
-      }
-      update3DHeroOrientation(tab);
-      syncAngleWithAppTab(tab);
-
-
-      // Update 3D Hero Metrics
-      try {
-        const heroStatModels = document.getElementById('heroStatModels');
-        const heroStatRegion = document.getElementById('heroStatRegion');
-        const heroStatStatus = document.getElementById('heroStatStatus');
-        const activeModels = Object.values(priceMatrix || {}).filter(m => m.active !== false).length;
-        if (heroStatModels) heroStatModels.textContent = activeModels || '0';
-        if (heroStatRegion) heroStatRegion.textContent = selectedRegion || 'Москва';
-        const isMasterActive = document.getElementById('toggleGlobalSearch')?.checked;
-        if (heroStatStatus) {
-          heroStatStatus.textContent = isMasterActive ? 'В сети' : 'Пауза';
-          heroStatStatus.style.color = isMasterActive ? '#30d158' : '#8e8e93';
-        }
-      } catch (e) {}
-
       if (tab === 'catalog') {
         if (catalogView) {
           catalogView.style.display = 'block';
@@ -6824,194 +6170,6 @@ const POPULAR_TEMPLATES = [
     renderCards();
     loadLivePrices();
   
-    
-    // Wire Central Liquid Glass Hub Buttons
-    document.querySelectorAll('.liquid-glass-hub-pill').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const target = btn.dataset.tab;
-        if (target) switchAppTab(target);
-      });
-    });
-
-    // Interactive 3D Single iPhone Swivel with Natural Drag Physics
-    (function init3DCenteriPhone() {
-      const scene = document.getElementById('iphone3dScene');
-      const device = document.getElementById('iphone3dDevice');
-      if (!scene || !device) return;
-
-      let isDragging = false;
-      let startX = 0;
-      let startY = 0;
-      let baseRotY = -30;
-      let baseRotX = 10;
-      let curRotY = -30;
-      let curRotX = 10;
-
-      function onStart(x, y) {
-        isDragging = true;
-        startX = x;
-        startY = y;
-        device.style.transition = 'none';
-      }
-
-      function onMove(x, y) {
-        if (!isDragging) return;
-        const dx = x - startX;
-        const dy = y - startY;
-        curRotY = baseRotY + (dx * 0.7);
-        curRotX = Math.max(-35, Math.min(35, baseRotX - (dy * 0.5)));
-        device.style.transform = `rotateY(${curRotY.toFixed(1)}deg) rotateX(${curRotX.toFixed(1)}deg)`;
-      }
-
-      function onEnd() {
-        if (!isDragging) return;
-        isDragging = false;
-        device.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)';
-        const activeTab = currentAppTab || 'catalog';
-        if (activeTab === 'catalog') {
-          baseRotY = -30; baseRotX = 10;
-          device.style.transform = 'rotateY(-30deg) rotateX(10deg) rotateZ(-2deg)';
-        } else if (activeTab === 'analytics') {
-          baseRotY = 30; baseRotX = 10;
-          device.style.transform = 'rotateY(30deg) rotateX(10deg) rotateZ(2deg)';
-        } else {
-          baseRotY = -180; baseRotX = 10;
-          device.style.transform = 'rotateY(-180deg) rotateX(10deg) rotateZ(0deg)';
-        }
-      }
-
-      scene.addEventListener('mousedown', (e) => onStart(e.clientX, e.clientY));
-      window.addEventListener('mousemove', (e) => onMove(e.clientX, e.clientY));
-      window.addEventListener('mouseup', onEnd);
-
-      scene.addEventListener('touchstart', (e) => {
-        if (e.touches && e.touches[0]) onStart(e.touches[0].clientX, e.touches[0].clientY);
-      }, { passive: true });
-
-      window.addEventListener('touchmove', (e) => {
-        if (e.touches && e.touches[0]) onMove(e.touches[0].clientX, e.touches[0].clientY);
-      }, { passive: true });
-
-      window.addEventListener('touchend', onEnd);
-    })();
-
-  
-    // Multi-Angle 3D iPhone Keynote Animation Controller
-    let currentIphoneAngle = 'a';
-    const angleOrder = ['a', 'b', 'c', 'd'];
-
-    function setIphoneAngle(targetAngle) {
-      if (!targetAngle || currentIphoneAngle === targetAngle) return;
-      currentIphoneAngle = targetAngle;
-
-      const frames = {
-        a: document.getElementById('angleA'),
-        b: document.getElementById('angleB'),
-        c: document.getElementById('angleC'),
-        d: document.getElementById('angleD'),
-      };
-
-      Object.keys(frames).forEach(k => {
-        if (frames[k]) {
-          frames[k].classList.toggle('active', k === targetAngle);
-        }
-      });
-
-      // Update Angle Pills
-      document.querySelectorAll('.angle-pill').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.target === targetAngle);
-      });
-
-      // Trigger specular light flash
-      const sheen = document.getElementById('iphoneDynamicSheen');
-      if (sheen) {
-        sheen.classList.remove('flash');
-        void sheen.offsetWidth;
-        sheen.classList.add('flash');
-      }
-
-      // Dynamic shadow adjustments
-      const shadow = document.getElementById('iphoneDynamicShadow');
-      if (shadow) {
-        if (targetAngle === 'd') {
-          shadow.style.width = '95%';
-          shadow.style.height = '18px';
-          shadow.style.bottom = '-4px';
-        } else if (targetAngle === 'c') {
-          shadow.style.width = '65%';
-          shadow.style.height = '24px';
-          shadow.style.bottom = '-10px';
-        } else {
-          shadow.style.width = '80%';
-          shadow.style.height = '24px';
-          shadow.style.bottom = '-10px';
-        }
-      }
-
-      if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
-    }
-
-    // Wire Angle Picker Buttons
-    document.querySelectorAll('.angle-pill').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const target = btn.dataset.target;
-        if (target) setIphoneAngle(target);
-      });
-    });
-
-    // Sync angle with Tab switching
-    function syncAngleWithAppTab(tab) {
-      if (tab === 'catalog') {
-        setIphoneAngle('a'); // 45° Экран
-      } else if (tab === 'analytics') {
-        setIphoneAngle('b'); // 30° Титан
-      } else if (tab === 'settings') {
-        setIphoneAngle('c'); // 60° Грани
-      }
-    }
-
-    // Wire Swipe / Drag Gesture across the 3D stage
-    (function initMultiAngleDrag() {
-      const stage = document.getElementById('iphoneMultiStage');
-      if (!stage) return;
-
-      let startX = 0;
-      let isDragging = false;
-
-      function onStart(x) {
-        startX = x;
-        isDragging = true;
-      }
-
-      function onEnd(endX) {
-        if (!isDragging) return;
-        isDragging = false;
-        const diffX = endX - startX;
-        if (Math.abs(diffX) > 35) {
-          const currentIdx = angleOrder.indexOf(currentIphoneAngle);
-          if (diffX < 0) {
-            // swipe left -> next angle
-            const nextIdx = (currentIdx + 1) % angleOrder.length;
-            setIphoneAngle(angleOrder[nextIdx]);
-          } else {
-            // swipe right -> prev angle
-            const prevIdx = (currentIdx - 1 + angleOrder.length) % angleOrder.length;
-            setIphoneAngle(angleOrder[prevIdx]);
-          }
-        }
-      }
-
-      stage.addEventListener('mousedown', (e) => onStart(e.clientX));
-      window.addEventListener('mouseup', (e) => onEnd(e.clientX));
-
-      stage.addEventListener('touchstart', (e) => {
-        if (e.touches && e.touches[0]) onStart(e.touches[0].clientX);
-      }, { passive: true });
-
-      stage.addEventListener('touchend', (e) => {
-        if (e.changedTouches && e.changedTouches[0]) onEnd(e.changedTouches[0].clientX);
-      });
-    })();
     
 </script>
 </body>
