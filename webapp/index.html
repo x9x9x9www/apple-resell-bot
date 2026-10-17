@@ -3,55 +3,56 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>⚡️ БРЕДЛИ ПЕРЕКУПЕР</title>
+  <title>БРЕДЛИ ПЕРЕКУПЕР | Apple Resell Pro</title>
   <!-- OpenGraph Metadata для статьи через скрепку / Link Preview в Telegram -->
   <meta property="og:type" content="article">
-  <meta property="og:site_name" content="⚡️ БРЕДЛИ ПЕРЕКУПЕР">
-  <meta property="og:title" content="⚡️ БРЕДЛИ ПЕРЕКУПЕР">
+  <meta property="og:site_name" content="БРЕДЛИ ПЕРЕКУПЕР | Apple Resell Pro">
+  <meta property="og:title" content="БРЕДЛИ ПЕРЕКУПЕР | Apple Resell Pro">
   <meta property="og:description" content="Умный радар выгодных предложений Apple: Авито + Юла">
   <meta property="og:image" content="https://x9x9x9www.github.io/apple-resell-bot/banner.jpg">
   <meta property="og:image:width" content="1376">
   <meta property="og:image:height" content="768">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="⚡️ БРЕДЛИ ПЕРЕКУПЕР">
+  <meta name="twitter:title" content="БРЕДЛИ ПЕРЕКУПЕР | Apple Resell Pro">
   <meta name="twitter:image" content="https://x9x9x9www.github.io/apple-resell-bot/banner.jpg">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
-      /* Apple iPhone 18 Pro Cosmic Titanium Palette */
-      --bg-color: #050507;
-      --card-bg: rgba(18, 18, 22, 0.78);
-      --card-bg-elevated: rgba(28, 28, 34, 0.94);
+      /* Apple Pro Matte Space Black & Pure Titanium Palette */
+      --bg-color: #07080a;
+      --bg-secondary: #0f1115;
+      --card-bg: rgba(20, 22, 28, 0.65);
+      --card-bg-elevated: rgba(28, 30, 38, 0.88);
       --card-border: rgba(255, 255, 255, 0.08);
-      --card-border-hover: rgba(255, 59, 112, 0.35);
-      --card-specular: inset 0 0.5px 0 rgba(255, 255, 255, 0.22);
+      --card-border-hover: rgba(255, 255, 255, 0.22);
+      --card-specular: inset 0 1px 0 rgba(255, 255, 255, 0.12), inset 0 0.5px 0.5px rgba(255, 255, 255, 0.25);
 
-      /* iPhone 18 Pro Deep Burgundy Wine Accent */
-      --accent-color: #B81D4C;
-      --accent-highlight: #FF3B70;
-      --accent-glow: rgba(255, 59, 112, 0.40);
-      --accent-subtle: rgba(184, 29, 76, 0.16);
-      --accent-border: rgba(255, 59, 112, 0.38);
-      --accent-gradient: linear-gradient(135deg, #E62865 0%, #7D0E32 100%);
-      --accent-gradient-hover: linear-gradient(135deg, #F03875 0%, #941740 100%);
+      /* Apple Pro Titanium Silver & Monochrome Highlights (Zero Saturated Reds) */
+      --accent-color: #f5f5f7;
+      --accent-highlight: #ffffff;
+      --accent-glow: rgba(255, 255, 255, 0.16);
+      --accent-subtle: rgba(255, 255, 255, 0.08);
+      --accent-border: rgba(255, 255, 255, 0.16);
+      --accent-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.06) 100%);
+      --accent-gradient-hover: linear-gradient(135deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0.12) 100%);
 
       /* Apple System Colors */
       --success-color: #30D158;
-      --success-subtle: rgba(48, 209, 88, 0.16);
+      --success-subtle: rgba(48, 209, 88, 0.14);
       --success-gradient: linear-gradient(135deg, #30D158 0%, #208738 100%);
       --danger-color: #FF453A;
-      --danger-subtle: rgba(255, 69, 58, 0.16);
+      --danger-subtle: rgba(255, 69, 58, 0.14);
       --warning-color: #FF9F0A;
-      --warning-subtle: rgba(255, 159, 10, 0.16);
+      --warning-subtle: rgba(255, 159, 10, 0.14);
 
       /* Typography & Neutral Shades */
-      --text-main: #FFFFFF;
-      --text-muted: #98989E;
-      --text-tertiary: #636366;
-      --tag-bg: rgba(255, 255, 255, 0.08);
+      --text-main: #F5F5F7;
+      --text-muted: #8E8E93;
+      --text-tertiary: #545458;
+      --tag-bg: rgba(255, 255, 255, 0.06);
       --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', system-ui, sans-serif;
 
-      /* Motion Design: Apple Fluid Spring Physics Curves */
+      /* Motion Design */
       --spring-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
       --spring-smooth: cubic-bezier(0.32, 0.72, 0, 1);
       --spring-press: cubic-bezier(0.2, 0, 0, 1);
@@ -82,7 +83,10 @@
     }
 
     body {
-      background: radial-gradient(130% 70% at 50% -12%, rgba(184, 29, 76, 0.18) 0%, rgba(125, 14, 50, 0.05) 45%, rgba(5, 5, 7, 1) 80%), #050507;
+      background-color: #07080a;
+      background-image:
+        radial-gradient(ellipse 110% 48% at 50% -5%, rgba(255, 255, 255, 0.08) 0%, rgba(140, 160, 190, 0.035) 45%, transparent 75%),
+        radial-gradient(ellipse 95% 42% at 50% 105%, rgba(150, 175, 210, 0.09) 0%, rgba(255, 255, 255, 0.02) 40%, transparent 75%);
       background-attachment: fixed;
       color: var(--text-main);
       font-family: var(--font-family);
@@ -2027,13 +2031,259 @@
         scroll-behavior: auto !important;
       }
     }
-  </style>
+  
+    /* ========================================================
+       APPLE TITANIUM LIQUID GLASS & 3D IPHONE SHOWCASE
+       ======================================================== */
+    .hero-3d-stage {
+      position: relative;
+      border-radius: 24px;
+      padding: 18px 20px;
+      margin-bottom: 16px;
+      overflow: hidden;
+      perspective: 1200px;
+      background: linear-gradient(135deg, rgba(26, 29, 38, 0.75) 0%, rgba(14, 15, 20, 0.85) 100%) !important;
+      backdrop-filter: blur(28px) saturate(190%) !important;
+      -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 16px 40px rgba(0, 0, 0, 0.6) !important;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      cursor: grab;
+    }
+    .hero-3d-stage:active {
+      cursor: grabbing;
+    }
+    .hero-3d-stage:hover {
+      border-color: rgba(255, 255, 255, 0.18) !important;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 20px 48px rgba(0, 0, 0, 0.7) !important;
+    }
+
+    .hero-3d-ambient-glow {
+      position: absolute;
+      top: -60%;
+      right: -20%;
+      width: 140%;
+      height: 220%;
+      background: radial-gradient(circle at 65% 35%, rgba(255, 255, 255, 0.08) 0%, rgba(150, 175, 215, 0.04) 35%, transparent 70%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .hero-3d-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .hero-3d-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .hero-tag-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 0.5px solid rgba(255, 255, 255, 0.14);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      color: #f5f5f7;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .hero-tag-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #30d158;
+      box-shadow: 0 0 8px #30d158;
+      animation: pulseDot 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.4); opacity: 0.6; }
+    }
+
+    .hero-headline {
+      font-size: 19px;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.5px;
+      color: #fff;
+      margin-bottom: 5px;
+    }
+
+    .hero-headline-gradient {
+      background: linear-gradient(135deg, #ffffff 0%, #c4c4c8 45%, #8e8e93 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subline {
+      font-size: 11px;
+      line-height: 1.4;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .hero-stats-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .hero-stat-card {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 0.5px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 6px 6px;
+      text-align: center;
+      transition: background 0.2s ease;
+    }
+    .hero-stat-card:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .hero-stat-val {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .hero-stat-label {
+      display: block;
+      font-size: 9px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+      margin-top: 2px;
+    }
+
+    .hero-3d-visual {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      flex-shrink: 0;
+      perspective: 1000px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-3d-phone-container {
+      position: relative;
+      width: 132px;
+      height: 132px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform-style: preserve-3d;
+      transform: rotateY(-14deg) rotateX(8deg) rotateZ(-2deg);
+      transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform;
+    }
+
+    .hero-3d-phone-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.75));
+      user-select: none;
+      -webkit-user-drag: none;
+      pointer-events: none;
+    }
+
+    .hero-3d-shadow {
+      position: absolute;
+      bottom: -4px;
+      left: 10%;
+      width: 80%;
+      height: 16px;
+      background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.85) 0%, transparent 75%);
+      filter: blur(4px);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* SVG Icons General Styling */
+    .svg-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      flex-shrink: 0;
+    }
+    .svg-icon svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Glassmorphism Refinements across UI */
+    .ios-inset-card,
+    .model-card,
+    .kpi-card,
+    .deals-section,
+    .search-wrapper,
+    .master-bot-bar,
+    .save-bar,
+    .ios-tab-bar,
+    .modal-sheet {
+      background: rgba(18, 20, 26, 0.65) !important;
+      backdrop-filter: blur(28px) saturate(190%) !important;
+      -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 12px 32px rgba(0, 0, 0, 0.45) !important;
+    }
+
+    .model-card:hover {
+      border-color: rgba(255, 255, 255, 0.18) !important;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 16px 40px rgba(0, 0, 0, 0.55) !important;
+    }
+
+    .btn-save, .btn-add-model, .btn-add-deal {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.08) 100%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.16) !important;
+      color: #fff !important;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+    }
+    .btn-save:hover, .btn-add-model:hover, .btn-add-deal:hover {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0.12) 100%) !important;
+      border-color: rgba(255, 255, 255, 0.25) !important;
+    }
+
+    /* Active Tab Bar Pill in Titanium Style */
+    .tab-item.active {
+      color: #ffffff !important;
+      background: rgba(255, 255, 255, 0.12) !important;
+      border: 1px solid rgba(255, 255, 255, 0.18) !important;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+    }
+    .tab-item.active .tab-label {
+      color: #ffffff !important;
+      text-shadow: 0 0 12px rgba(255, 255, 255, 0.3) !important;
+    }
+    .tab-item.active .tab-icon {
+      color: #ffffff !important;
+      filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.4));
+    }
+    
+</style>
 </head>
 <body>
 
   <!-- Floating Toast Notification -->
   <div class="dynamic-toast" id="dynamicToast">
-    <div class="dynamic-toast-icon" id="dynamicToastIcon">⚡️</div>
+    <div class="dynamic-toast-icon svg-icon" id="dynamicToastIcon" style="width:16px; height:16px; color:#fff;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
     <div class="dynamic-toast-body">
       <div class="dynamic-toast-title" id="dynamicToastTitle">Уведомление</div>
       <div class="dynamic-toast-desc" id="dynamicToastDesc">Действие выполнено</div>
@@ -2059,15 +2309,19 @@
     <div class="ios-large-header" id="iosLargeHeader">
       <div class="ios-large-title-row">
         <h1 class="ios-large-title">
-          <span>⚡️</span>
+          <span class="svg-icon" style="color: #fff; width: 18px; height: 18px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </span>
           <span>БРЕДЛИ ПЕРЕКУПЕР</span>
         </h1>
         <div class="header-actions">
           <button type="button" class="btn-region-badge" id="btnOpenRegionModal" title="Сменить регион поиска">
-            📍 <span id="headerRegionName">Москва</span>
+            <span class="svg-icon" style="width: 13px; height: 13px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></span>
+            <span id="headerRegionName">Москва</span>
           </button>
           <button class="btn-add-model" id="btnOpenAddModal">
-            <span>➕ Модель</span>
+            <span class="svg-icon" style="width: 13px; height: 13px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="M12 5v14"/></svg></span>
+            <span>Модель</span>
           </button>
         </div>
       </div>
@@ -2076,7 +2330,7 @@
       <div class="master-bot-bar" id="masterBotBar" title="Нажмите, чтобы включить/выключить поиск">
         <div class="master-bot-status">
           <span class="master-bot-dot" id="masterBotDot"></span>
-          <span class="master-bot-text" id="masterBotText">🟢 Поиск активен</span>
+          <span class="master-bot-text" id="masterBotText">Поиск активен</span>
         </div>
         <label class="switch master-switch">
           <input type="checkbox" id="toggleGlobalSearch" checked>
@@ -2091,9 +2345,45 @@
       </div>
     </div>
 
+    
+    <!-- ==================== 3D IPHONE SHOWCASE HERO ==================== -->
+    <div class="hero-3d-stage" id="hero3dStage" title="Потяните для 3D вращения">
+      <div class="hero-3d-ambient-glow"></div>
+      <div class="hero-3d-content">
+        <div class="hero-3d-info">
+          <div class="hero-tag-pill">
+            <span class="hero-tag-dot"></span>
+            <span>APPLE RESELL PRO</span>
+          </div>
+          <h2 class="hero-headline">Мониторинг <br><span class="hero-headline-gradient">техники Apple</span></h2>
+          <p class="hero-subline">Аналитика цен и моментальный выкуп с Авито и Юлы</p>
+          <div class="hero-stats-row">
+            <div class="hero-stat-card">
+              <span class="hero-stat-val" id="heroStatModels">0</span>
+              <span class="hero-stat-label">Моделей</span>
+            </div>
+            <div class="hero-stat-card">
+              <span class="hero-stat-val" id="heroStatRegion">Москва</span>
+              <span class="hero-stat-label">Регион</span>
+            </div>
+            <div class="hero-stat-card">
+              <span class="hero-stat-val" id="heroStatStatus" style="color: #30d158;">В сети</span>
+              <span class="hero-stat-label">Статус</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-3d-visual" id="hero3dVisual">
+          <div class="hero-3d-phone-container" id="hero3dPhoneContainer">
+            <img src="./iphone_3d.png" alt="3D iPhone Titanium" class="hero-3d-phone-img" id="hero3dPhoneImg">
+          </div>
+          <div class="hero-3d-shadow"></div>
+        </div>
+      </div>
+    </div>
+    
     <!-- Поиск -->
     <div class="search-wrapper">
-      <span class="search-icon">🔍</span>
+      <span class="search-icon svg-icon" style="width: 15px; height: 15px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
       <input type="text" class="search-input" id="searchInput" placeholder="Поиск (MacBook, S24, Pixel, iPad, iPhone...)">
     </div>
 
@@ -2114,12 +2404,13 @@
     <div class="ios-large-header">
       <div class="ios-large-title-row">
         <h1 class="ios-large-title">
-          <span>📊</span>
+          <span class="svg-icon" style="width: 18px; height: 18px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></span>
           <span>АНАЛИТИКА</span>
         </h1>
         <div class="header-actions">
           <button class="btn-add-deal" id="btnOpenAddDealModal">
-            <span>➕ Сделка</span>
+            <span class="svg-icon" style="width: 13px; height: 13px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="M12 5v14"/></svg></span>
+            <span>Сделка</span>
           </button>
         </div>
       </div>
@@ -2130,7 +2421,7 @@
           <button type="button" class="period-btn" data-period="all">Всё время</button>
         </div>
         <button type="button" class="btn-condition" id="btnResetDealsDemo" style="font-size: 11px; padding: 5px 10px;" title="Сбросить к стартовым демо-сделкам">
-          🔄 Демо
+          <span class="svg-icon" style="width: 12px; height: 12px; margin-right: 4px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></span> Демо
         </button>
       </div>
     </div>
@@ -2144,11 +2435,11 @@
     <div class="deals-section">
       <div class="deals-section-header">
         <div class="deals-section-title">
-          <span>📝 Недавние продажи</span>
+          <span style="display:flex; align-items:center; gap:6px;"><span class="svg-icon" style="width: 14px; height: 14px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></span><span>Недавние продажи</span></span>
           <span class="deals-count-pill" id="dealsCountPill">0</span>
         </div>
         <button type="button" class="btn-secondary" id="btnQuickAddDeal" style="padding: 5px 10px; font-size: 11px; border-radius: 8px;">
-          ➕ Записать
+          <span class="svg-icon" style="width: 11px; height: 11px; margin-right: 3px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="M12 5v14"/></svg></span> Записать
         </button>
       </div>
       <div id="dealsListContainer">
@@ -2163,7 +2454,7 @@
     <div class="ios-large-header">
       <div class="ios-large-title-row">
         <h1 class="ios-large-title">
-          <span>⚙️</span>
+          <span class="svg-icon" style="width: 18px; height: 18px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
           <span>НАСТРОЙКИ</span>
         </h1>
       </div>
@@ -2173,7 +2464,7 @@
     <div class="ios-section-header">Площадки поиска</div>
     <div class="ios-inset-card">
       <div class="setting-item">
-        <div class="ios-icon-badge" style="background: rgba(4, 194, 127, 0.15); color: #04c27f;">🟢</div>
+        <div class="ios-icon-badge" style="background: rgba(255, 255, 255, 0.08); color: #30d158;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
         <div class="setting-info">
           <div class="setting-title">Авито</div>
           <div class="setting-desc">Парсинг объявлений avito.ru</div>
@@ -2184,7 +2475,7 @@
         </label>
       </div>
       <div class="setting-item">
-        <div class="ios-icon-badge" style="background: rgba(186, 104, 200, 0.15); color: #ba68c8;">🟣</div>
+        <div class="ios-icon-badge" style="background: rgba(255, 255, 255, 0.08); color: #bf5af2;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg></div>
         <div class="setting-info">
           <div class="setting-title">Юла</div>
           <div class="setting-desc">Парсинг объявлений youla.ru</div>
@@ -2203,7 +2494,7 @@
     <div class="ios-section-header">Каталог и управление</div>
     <div class="ios-inset-card">
       <div class="setting-item clickable" id="btnRowResetDefaults" style="cursor: pointer;">
-        <div class="ios-icon-badge" style="background: rgba(255, 59, 48, 0.15); color: #ff3b30;">🔄</div>
+        <div class="ios-icon-badge" style="background: rgba(255, 69, 58, 0.14); color: #ff453a;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></div>
         <div class="setting-info">
           <div class="setting-title" style="color: #ff453a;">Сброс к заводским ценам</div>
           <div class="setting-desc">Восстановить базовый каталог и вернуть дефолтные цены</div>
@@ -2216,7 +2507,7 @@
     <div class="ios-section-header">Регион поиска</div>
     <div class="ios-inset-card">
       <div class="setting-item clickable" id="btnRowSelectRegion" style="cursor: pointer;">
-        <div class="ios-icon-badge" style="background: rgba(255, 149, 0, 0.15); color: #ff9500;">📍</div>
+        <div class="ios-icon-badge" style="background: rgba(255, 255, 255, 0.08); color: #ff9f0a;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></div>
         <div class="setting-info">
           <div class="setting-title">Город мониторинга</div>
           <div class="setting-desc">Авито и Юла ищут объявления в этом регионе</div>
@@ -2232,7 +2523,7 @@
     <div class="ios-section-header">Правила состояния устройств</div>
     <div class="ios-inset-card">
       <div class="setting-item">
-        <div class="ios-icon-badge" style="background: rgba(52, 199, 89, 0.15); color: #34c759;">🔋</div>
+        <div class="ios-icon-badge" style="background: rgba(48, 209, 88, 0.14); color: #30d158;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="16" height="10" x="2" y="7" rx="2" ry="2"/><line x1="22" x2="22" y1="11" y2="13"/></svg></div>
         <div class="setting-info">
           <div class="setting-title">Порог износа АКБ</div>
           <div class="setting-desc">Если АКБ ниже порога, применяется скидка</div>
@@ -2243,7 +2534,7 @@
         </div>
       </div>
       <div class="setting-item">
-        <div class="ios-icon-badge" style="background: rgba(255, 214, 10, 0.15); color: #ffd60a;">💸</div>
+        <div class="ios-icon-badge" style="background: rgba(255, 214, 10, 0.14); color: #ffd60a;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" x2="5" y1="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></div>
         <div class="setting-info">
           <div class="setting-title">Скидка на замену АКБ</div>
           <div class="setting-desc">Вычитается из порога выкупа при слабом АКБ</div>
@@ -2254,7 +2545,7 @@
         </div>
       </div>
       <div class="setting-item">
-        <div class="ios-icon-badge" style="background: rgba(175, 82, 222, 0.15); color: #af52de;">👤</div>
+        <div class="ios-icon-badge" style="background: rgba(191, 90, 242, 0.14); color: #bf5af2;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M9 9h.01"/><path d="M15 9h.01"/><path d="M10 13a2 2 0 0 0 4 0"/><path d="M8 17a5 5 0 0 0 8 0"/></svg></div>
         <div class="setting-info">
           <div class="setting-title">Отсекать без Face ID / Touch ID</div>
           <div class="setting-desc">Игнорировать лоты без биометрии</div>
@@ -2265,7 +2556,7 @@
         </label>
       </div>
       <div class="setting-item">
-        <div class="ios-icon-badge" style="background: rgba(255, 69, 58, 0.15); color: #ff453a;">🔒</div>
+        <div class="ios-icon-badge" style="background: rgba(255, 69, 58, 0.14); color: #ff453a;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
         <div class="setting-info">
           <div class="setting-title">Отсекать MDM / Demo / R-Sim</div>
           <div class="setting-desc">Блокировать залоченные устройства</div>
@@ -2280,7 +2571,7 @@
     <!-- Кнопка принудительной синхронизации -->
     <div style="padding: 18px 16px;">
       <button type="button" class="btn-save" id="btnSyncSettingsToBot" style="width: 100%;">
-        <span>💾 Применить настройки в бота</span>
+        <span style="display:inline-flex; align-items:center; gap:6px;"><span class="svg-icon" style="width:15px; height:15px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span><span>Применить настройки</span></span>
       </button>
     </div>
   </div>
@@ -2288,22 +2579,28 @@
   <!-- Нижняя панель сохранения (только для прайса) -->
   <div class="save-bar" id="saveBar">
     <button class="btn-save" id="btnSave">
-      <span>💾 Применить в бота</span>
+      <span style="display:inline-flex; align-items:center; gap:6px;"><span class="svg-icon" style="width:15px; height:15px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span><span>Применить в бота</span></span>
     </button>
   </div>
 
-  <!-- iOS Bottom Navigation Tab Bar -->
+  <!-- iOS Bottom Navigation Tab Bar (Liquid Titanium Glass) -->
   <nav class="ios-tab-bar" id="iosTabBar">
     <button type="button" class="tab-item active" id="tabCatalog" data-tab="catalog">
-      <span class="tab-icon">🏷️</span>
+      <span class="tab-icon svg-icon" style="width: 20px; height: 20px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><circle cx="7" cy="7" r=".5" fill="currentColor"/></svg>
+      </span>
       <span class="tab-label">Прайс-лист</span>
     </button>
     <button type="button" class="tab-item" id="tabAnalytics" data-tab="analytics">
-      <span class="tab-icon">📊</span>
+      <span class="tab-icon svg-icon" style="width: 20px; height: 20px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+      </span>
       <span class="tab-label">Аналитика</span>
     </button>
     <button type="button" class="tab-item" id="tabSettings" data-tab="settings">
-      <span class="tab-icon">⚙️</span>
+      <span class="tab-icon svg-icon" style="width: 20px; height: 20px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </span>
       <span class="tab-label">Настройки</span>
     </button>
   </nav>
@@ -2313,8 +2610,8 @@
     <div class="modal-sheet">
       <div class="modal-grabber"></div>
       <div class="modal-header">
-        <h3 class="modal-title">💰 Записать сделку</h3>
-        <button class="btn-close-modal" id="btnCloseDealModal">✕</button>
+        <h3 class="modal-title"><span class="svg-icon" style="width:16px; height:16px; margin-right:6px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg></span>Записать сделку</h3>
+        <button class="btn-close-modal" id="btnCloseDealModal"><span class="svg-icon" style="width: 12px; height: 12px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span></button>
       </div>
 
       <div class="form-group">
@@ -2365,7 +2662,7 @@
       </div>
 
       <button type="button" class="btn-save" id="btnSubmitDeal" style="width: 100%; margin-top: 10px;">
-        <span>✅ Сохранить сделку</span>
+        <span>Сохранить сделку</span>
       </button>
     </div>
   </div>
@@ -2375,13 +2672,13 @@
     <div class="modal-sheet" style="max-height: 85vh; display: flex; flex-direction: column;">
       <div class="modal-grabber"></div>
       <div class="modal-header">
-        <h3 class="modal-title">📍 Регион поиска лотов</h3>
-        <button class="btn-close-modal" id="btnCloseRegionModal">✕</button>
+        <h3 class="modal-title"><span class="svg-icon" style="width:16px; height:16px; margin-right:6px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></span>Регион поиска лотов</h3>
+        <button class="btn-close-modal" id="btnCloseRegionModal"><span class="svg-icon" style="width: 12px; height: 12px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span></button>
       </div>
 
       <div style="padding: 10px 0 6px 0;">
         <div class="search-wrapper" style="margin: 0;">
-          <span class="search-icon">🔍</span>
+          <span class="search-icon svg-icon" style="width: 15px; height: 15px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
           <input type="text" class="search-input" id="regionSearchInput" placeholder="Поиск города (Москва, Якутск, Казань...)">
         </div>
       </div>
@@ -2389,7 +2686,7 @@
       <!-- Быстрый выбор популярных городов -->
       <div style="margin-top: 8px;">
         <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px;">
-          🔥 Популярные регионы
+          Популярные регионы
         </div>
         <div class="chips-scroll-bar" id="popularRegionsBar" style="display: flex; gap: 6px; flex-wrap: wrap;"></div>
       </div>
@@ -2398,7 +2695,7 @@
       <div style="margin-top: 12px; flex: 1; overflow-y: auto; max-height: 280px; padding-right: 4px;" id="regionsListContainer"></div>
 
       <div style="margin-top: 14px; display: flex; justify-content: center;">
-        <button class="btn-cancel-modal" id="btnCancelRegion" style="width: 100%;">✕ Закрыть</button>
+        <button class="btn-cancel-modal" id="btnCancelRegion" style="width: 100%;"><span class="svg-icon" style="width: 12px; height: 12px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span> Закрыть</button>
       </div>
     </div>
   </div>
@@ -2408,13 +2705,13 @@
     <div class="modal-sheet">
       <div class="modal-grabber"></div>
       <div class="modal-header">
-        <h3 class="modal-title">📁 Добавить папку / Бренд</h3>
-        <button class="btn-close-modal" id="btnCloseCreateCategoryModal">✕</button>
+        <h3 class="modal-title"><span class="svg-icon" style="width:16px; height:16px; margin-right:6px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg></span>Добавить папку / Бренд</h3>
+        <button class="btn-close-modal" id="btnCloseCreateCategoryModal"><span class="svg-icon" style="width: 12px; height: 12px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span></button>
       </div>
 
       <!-- Раздел готовых шаблонов -->
       <div class="form-group" style="margin-bottom:12px;">
-        <label class="form-label">⚡️ Готовые категории (добавить в 1 клик):</label>
+        <label class="form-label">Готовые категории (добавить в 1 клик):</label>
         <div class="template-chips-grid" id="categoryTemplatesGrid">
           <!-- Генерируется через JS -->
         </div>
@@ -2428,10 +2725,10 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label">🔗 Ссылка на поиск для всей папки (опционально):</label>
+        <label class="form-label">Ссылка на поиск для всей папки (опционально):</label>
         <input type="text" class="form-input" id="newCatSearchLink" placeholder="https://avito.ru/... или https://youla.ru/...">
         <div style="font-size:11px; color:var(--text-muted); margin-top:3px;">
-          💡 Бот будет отслеживать поток объявлений по этой точной ссылке.
+          Бот будет отслеживать поток объявлений по этой точной ссылке.
         </div>
       </div>
 
@@ -2458,7 +2755,7 @@
       </div>
 
       <button class="btn-save" id="btnSubmitCreateCategory" style="width:100%; margin-top:8px">
-        <span>✅ Создать свою папку</span>
+        <span>Создать свою папку</span>
       </button>
     </div>
   </div>
@@ -2468,8 +2765,8 @@
     <div class="modal-sheet">
       <div class="modal-grabber"></div>
       <div class="modal-header">
-        <h3 class="modal-title" id="presetModalTitle">⚡️ Добавление папки</h3>
-        <button class="btn-close-modal" id="btnClosePresetModal">✕</button>
+        <h3 class="modal-title" id="presetModalTitle">Добавление папки</h3>
+        <button class="btn-close-modal" id="btnClosePresetModal"><span class="svg-icon" style="width: 12px; height: 12px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span></button>
       </div>
 
       <div style="font-size: 12px; color: var(--text-muted); line-height: 1.4; margin-bottom: 8px;">
@@ -2489,10 +2786,10 @@
 
       <div style="display:flex; flex-direction:column; gap:8px; margin-top:10px;">
         <button class="btn-save" id="btnConfirmAddPresetModels" style="width:100%;">
-          <span id="btnConfirmPresetLabel">✅ Добавить выбранные модели</span>
+          <span id="btnConfirmPresetLabel">Добавить выбранные модели</span>
         </button>
         <button type="button" class="btn-step" id="btnAddEmptyCategoryOnly" style="width:100%; height:38px; border-radius:10px; font-size:12px; font-weight:700; background:rgba(255,255,255,0.06);">
-          📁 Создать только пустую папку
+          Создать только пустую папку
         </button>
       </div>
     </div>
@@ -2503,8 +2800,8 @@
     <div class="modal-sheet">
       <div class="modal-grabber"></div>
       <div class="modal-header">
-        <h3 class="modal-title">⚙️ Управление папкой</h3>
-        <button class="btn-close-modal" id="btnCloseManageCategoryModal">✕</button>
+        <h3 class="modal-title">Управление папкой</h3>
+        <button class="btn-close-modal" id="btnCloseManageCategoryModal"><span class="svg-icon" style="width: 12px; height: 12px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span></button>
       </div>
 
       <input type="hidden" id="editCatId">
@@ -2537,15 +2834,15 @@
       </div>
 
       <button type="button" class="btn-step" id="btnManageAddPresetModels" style="width:100%; margin-top:6px; margin-bottom:8px; height:38px; border-radius:10px; font-weight:700; background:rgba(10, 132, 255, 0.12); border:1px solid rgba(10, 132, 255, 0.35); color:var(--accent-color); font-size:12px; display:none;">
-        ⚡️ Добавить популярные модели бренда...
+        Добавить популярные модели бренда...
       </button>
 
       <button class="btn-save" id="btnSaveCategoryEdit" style="width:100%; margin-top:4px">
-        <span>💾 Сохранить изменения</span>
+        <span>Сохранить изменения</span>
       </button>
 
       <button class="btn-step" id="btnDeleteCategory" style="width:100%; margin-top:12px; height:42px; background:rgba(255,69,58,0.15); border:1px solid rgba(255,69,58,0.3); color:var(--danger-color); font-weight:700">
-        🗑 Удалить / скрыть папку
+        Удалить / скрыть папку
       </button>
     </div>
   </div>
@@ -2555,21 +2852,21 @@
     <div class="modal-sheet">
       <div class="modal-grabber"></div>
       <div class="modal-header">
-        <h3 class="modal-title">➕ Добавить модель</h3>
-        <button class="btn-close-modal" id="btnCloseAddModal">✕</button>
+        <h3 class="modal-title">Добавить модель</h3>
+        <button class="btn-close-modal" id="btnCloseAddModal"><span class="svg-icon" style="width: 12px; height: 12px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span></button>
       </div>
 
       <div class="form-group">
         <label class="form-label">Папка / Бренд:</label>
         <select class="form-input" id="newModelCategory">
-          <option value="iphone">📱 iPhone</option>
-          <option value="macbook">💻 Mac</option>
-          <option value="samsung">📱 Samsung</option>
-          <option value="pixel">📱 Pixel</option>
-          <option value="ipad">📟 iPad</option>
-          <option value="consoles">🎮 Консоли</option>
+          <option value="iphone">iPhone</option>
+          <option value="macbook">Mac</option>
+          <option value="samsung">Samsung</option>
+          <option value="pixel">Pixel</option>
+          <option value="ipad">iPad</option>
+          <option value="consoles">Консоли</option>
           <optgroup label="Ваши папки" id="customCatOptionsGroup"></optgroup>
-          <option value="__new__">➕ Создать новую папку...</option>
+          <option value="__new__">Создать новую папку...</option>
         </select>
       </div>
 
@@ -2585,12 +2882,12 @@
       <!-- Поле умной вставки ссылки с Авито или Юлы -->
       <div class="form-group" style="margin-bottom:12px;">
         <label class="form-label" style="display:flex; justify-content:space-between; align-items:center;">
-          <span>🔗 Ссылка на поиск Авито/Юлы</span>
+          <span>Ссылка на поиск Авито/Юлы</span>
           <span style="font-size:11px; color:var(--accent-highlight); font-weight:normal;">Автозаполнение ⚡️</span>
         </label>
         <input type="text" class="form-input" id="newModelSearchLink" placeholder="Вставьте ссылку на поиск (например, с фильтрами)...">
         <div style="font-size:11px; color:var(--text-muted); margin-top:3px;">
-          💡 Опционально. Если вставить ссылку, параметры заполнятся сами, а бот будет мониторить по ней.
+          Опционально. Если вставить ссылку, параметры заполнятся сами, а бот будет мониторить по ней.
         </div>
       </div>
 
@@ -2624,7 +2921,7 @@
       </div>
 
       <button class="btn-save" id="btnSubmitNewModel" style="width:100%; margin-top:8px">
-        <span id="btnSubmitNewModelText">✅ Добавить в матрицу</span>
+        <span id="btnSubmitNewModelText">Добавить в матрицу</span>
       </button>
     </div>
   </div>
@@ -2634,8 +2931,8 @@
     <div class="modal-sheet">
       <div class="modal-grabber"></div>
       <div class="modal-header">
-        <h3 class="modal-title" id="quickAddStorageTitle">➕ Добавить объем</h3>
-        <button class="btn-close-modal" id="btnCloseQuickAddStorageModal">✕</button>
+        <h3 class="modal-title" id="quickAddStorageTitle">Добавить объем</h3>
+        <button class="btn-close-modal" id="btnCloseQuickAddStorageModal"><span class="svg-icon" style="width: 12px; height: 12px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span></button>
       </div>
 
       <input type="hidden" id="quickAddModelName">
@@ -2663,7 +2960,7 @@
       </div>
 
       <button class="btn-save" id="btnSubmitQuickAddStorage" style="width:100%; margin-top:8px">
-        <span>✅ Добавить объем в модель</span>
+        <span>Добавить объем в модель</span>
       </button>
     </div>
   </div>
@@ -2673,8 +2970,8 @@
     <div class="modal-sheet">
       <div class="modal-grabber"></div>
       <div class="modal-header">
-        <h3 class="modal-title" id="editLinkModalTitle">🔗 Ссылка поиска</h3>
-        <button class="btn-close-modal" id="btnCloseEditLinkModal">✕</button>
+        <h3 class="modal-title" id="editLinkModalTitle">Ссылка поиска</h3>
+        <button class="btn-close-modal" id="btnCloseEditLinkModal"><span class="svg-icon" style="width: 12px; height: 12px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span></button>
       </div>
 
       <div style="font-size: 12px; color: var(--text-muted); line-height: 1.4; margin-bottom: 12px;">
@@ -2690,7 +2987,7 @@
 
       <div style="display: flex; gap: 8px; margin-top: 14px;">
         <button class="btn-save" id="btnSaveEditLink" style="flex: 2;">
-          <span>💾 Сохранить ссылку</span>
+          <span>Сохранить ссылку</span>
         </button>
         <button class="btn-secondary" id="btnDeleteEditLink" style="flex: 1; color: var(--danger-color); border-color: rgba(255, 69, 58, 0.3);">
           <span>Удалить</span>
@@ -2704,8 +3001,8 @@
     <div class="modal-sheet">
       <div class="modal-grabber"></div>
       <div class="modal-header">
-        <h3 class="modal-title">⚙️ Управление каталогом</h3>
-        <button class="btn-close-modal" id="btnCloseCatalogManageModal">✕</button>
+        <h3 class="modal-title">Управление каталогом</h3>
+        <button class="btn-close-modal" id="btnCloseCatalogManageModal"><span class="svg-icon" style="width: 12px; height: 12px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span></button>
       </div>
 
       <div style="padding: 10px 0 6px 0; display: flex; flex-direction: column; gap: 10px;">
@@ -2939,22 +3236,29 @@ const POPULAR_TEMPLATES = [
 
     let categories = []; // Пользовательские папки в настраиваемом порядке
 
-    function getDeviceIcon(name, series) {
-      const cat = categories.find(c => c.id === series || (c.name && c.name.toLowerCase() === (series || '').toLowerCase()));
-      if (cat && cat.icon) return cat.icon;
-
-      const lower = ((name || '') + ' ' + (series || '')).toLowerCase();
-      if (lower.includes('macbook') || lower.includes('mac')) return '💻';
-      if (lower.includes('ipad')) return '📟';
-      if (lower.includes('playstation') || lower.includes('ps5') || lower.includes('steam deck') || lower.includes('xbox')) return '🎮';
-      if (lower.includes('samsung') || lower.includes('galaxy')) return '📱';
-      if (lower.includes('pixel')) return '📱';
-      if (lower.includes('iphone')) return '📱';
-      if (lower.includes('dyson') || lower.includes('airwrap') || lower.includes('фен')) return '💨';
-      if (lower.includes('наушники') || lower.includes('airpods') || lower.includes('wh-') || lower.includes('sony')) return '🎧';
-      if (lower.includes('watch') || lower.includes('часы')) return '⌚️';
-      return '📱';
+    
+    function getCategoryIconSvg(iconKey) {
+      if (!iconKey) return AppIcons.folder;
+      const k = String(iconKey).toLowerCase();
+      if (k === 'laptop' || k.includes('mac') || k.includes('💻')) return AppIcons.laptop;
+      if (k === 'tablet' || k.includes('ipad') || k.includes('📟')) return AppIcons.tablet;
+      if (k === 'gamepad' || k.includes('playstation') || k.includes('xbox') || k.includes('🎮')) return AppIcons.gamepad;
+      if (k === 'headphones' || k.includes('audio') || k.includes('airpods') || k.includes('🎧')) return AppIcons.headphones;
+      if (k === 'watch' || k.includes('часы') || k.includes('⌚')) return AppIcons.watch;
+      if (k === 'phone' || k.includes('iphone') || k.includes('samsung') || k.includes('pixel') || k.includes('📱')) return AppIcons.phone;
+      return AppIcons.folder;
     }
+
+    function getDeviceIcon(name, series) {
+      const lower = ((name || '') + ' ' + (series || '')).toLowerCase();
+      if (lower.includes('macbook') || lower.includes('mac')) return AppIcons.laptop;
+      if (lower.includes('ipad')) return AppIcons.tablet;
+      if (lower.includes('playstation') || lower.includes('ps5') || lower.includes('steam deck') || lower.includes('xbox')) return AppIcons.gamepad;
+      if (lower.includes('watch') || lower.includes('часы')) return AppIcons.watch;
+      if (lower.includes('наушники') || lower.includes('airpods') || lower.includes('sony') || lower.includes('wh-')) return AppIcons.headphones;
+      return AppIcons.phone;
+    }
+    
 
     function detectSeries(name) {
       const lower = (name || '').toLowerCase();
@@ -3149,11 +3453,11 @@ const POPULAR_TEMPLATES = [
       const btnToggle = document.getElementById('btnToggleAllSearch');
       if (btnToggle) {
         if (active > 0) {
-          btnToggle.innerHTML = '⏸ Выкл. всё';
+          btnToggle.innerHTML = 'Выкл. всё';
           btnToggle.classList.remove('is-all-off');
           btnToggle.title = 'Выключить поиск всех моделей (сохранив цены и настройки)';
         } else {
-          btnToggle.innerHTML = '▶️ Вкл. всё';
+          btnToggle.innerHTML = 'Вкл. всё';
           btnToggle.classList.add('is-all-off');
           btnToggle.title = 'Включить поиск всех моделей';
         }
@@ -3200,12 +3504,12 @@ const POPULAR_TEMPLATES = [
         pill.draggable = true;
 
         const titleSpan = document.createElement('span');
-        titleSpan.textContent = `${cat.icon || '📁'} ${cat.name}`;
+        titleSpan.innerHTML = `<span class="svg-icon" style="width:13px; height:13px; margin-right:4px; opacity:0.85;">${getCategoryIconSvg(cat.icon)}</span>${escapeHtml(cat.name)}`;
         pill.appendChild(titleSpan);
 
         const editBtn = document.createElement('span');
         editBtn.className = 'btn-pill-edit';
-        editBtn.textContent = '✏️';
+        editBtn.innerHTML = AppIcons.edit;
         editBtn.title = 'Настроить папку';
         editBtn.addEventListener('click', (e) => {
           e.stopPropagation();
@@ -3316,7 +3620,7 @@ const POPULAR_TEMPLATES = [
       const addBtn = document.createElement('div');
       addBtn.className = 'series-pill btn-add-pill';
       addBtn.id = 'btnAddCategoryBtn';
-      addBtn.innerHTML = '<span>➕ Папка</span>';
+      addBtn.innerHTML = `<span class="svg-icon" style="width:11px; height:11px; margin-right:3px;">${AppIcons.plus}</span><span>Папка</span>`;
       addBtn.title = 'Добавить или создать папку';
       addBtn.addEventListener('click', () => {
         openCreateCategoryModal();
@@ -3409,7 +3713,7 @@ const POPULAR_TEMPLATES = [
         if (currentMatrix.length === 0) {
           container.innerHTML = `
             <div style="text-align:center; padding: 45px 15px; color: var(--text-muted)">
-              <p style="font-size: 32px; margin-bottom: 8px">📭</p>
+              <div class="svg-icon" style="width: 44px; height: 44px; margin: 0 auto 12px; color: var(--text-tertiary);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div>
               <p style="font-size: 15px; font-weight: 700; color: #fff;">Каталог полностью очищен</p>
               <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px; line-height: 1.4;">Вы можете выстроить свой собственный список моделей с нуля с помощью кнопки «➕ Модель» или восстановить базовый каталог через «🔄 Сброс».</p>
               <button type="button" class="btn-save" id="btnEmptyAddFirstModel" style="margin: 14px auto 0 auto; padding: 9px 18px; font-size: 13px; max-width: 240px;">➕ Добавить первую модель</button>
@@ -3427,7 +3731,7 @@ const POPULAR_TEMPLATES = [
           const tpl = POPULAR_TEMPLATES.find(t => t.id === activeFilter || (t.name && cat && t.name.toLowerCase() === cat.name.toLowerCase()));
           container.innerHTML = `
             <div style="text-align:center; padding: 40px 15px; color: var(--text-muted)">
-              <p style="font-size: 32px; margin-bottom: 8px">📁</p>
+              <div class="svg-icon" style="width: 44px; height: 44px; margin: 0 auto 12px; color: var(--text-tertiary);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg></div>
               <p style="font-size: 15px; font-weight: 700; color: #fff;">Папка «${catName}» пуста</p>
               <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px; line-height: 1.4;">В этой папке пока нет моделей. Добавьте модель вручную${tpl ? ' или загрузите готовые модели бренда' : ''}.</p>
               <div style="display: flex; gap: 8px; justify-content: center; margin-top: 14px; flex-wrap: wrap;">
@@ -3451,7 +3755,7 @@ const POPULAR_TEMPLATES = [
         } else {
           container.innerHTML = `
             <div style="text-align:center; padding: 40px 10px; color: var(--text-muted)">
-              <p style="font-size: 26px; margin-bottom: 6px">🔍</p>
+              <div class="svg-icon" style="width: 38px; height: 38px; margin: 0 auto 10px; color: var(--text-tertiary);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></div>
               <p style="font-size: 14px; font-weight: 600">В этой вкладке пока нет моделей</p>
               <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px">Нажмите «➕ Добавить модель», чтобы добавить сюда гаджет</p>
             </div>
@@ -3499,7 +3803,7 @@ const POPULAR_TEMPLATES = [
 
         const icon = getDeviceIcon(group.model, group.series);
         const categoryBadgeHtml = catObj
-          ? `<span class="badge-category">${catObj.icon || '📁'} ${catObj.name}</span>`
+          ? `<span class="badge-category"><span class="svg-icon" style="width:11px; height:11px; margin-right:3px;">${getCategoryIconSvg(catObj.icon)}</span>${catObj.name}</span>`
           : (group.isCustom ? '<span style="font-size:10px; background:rgba(48,209,88,0.2); color:var(--success-color); padding:1px 5px; border-radius:5px">Своя</span>' : '');
 
         function formatStorageLabel(s) {
@@ -3524,11 +3828,11 @@ const POPULAR_TEMPLATES = [
               <span class="card-title">${group.model}</span>
               ${categoryBadgeHtml}
               ${activeItem.search_link 
-                ? `<button type="button" class="badge-link-pill btn-edit-model-link" data-key="${activeItem.key}" title="Нажмите, чтобы изменить ссылку: ${activeItem.search_link}">🔗 По ссылке</button>` 
-                : `<button type="button" class="badge-link-add btn-edit-model-link" data-key="${activeItem.key}" title="Привязать ссылку поиска с Авито/Юлы">+ 🔗 ссылка</button>`}
+                ? `<button type="button" class="badge-link-pill btn-edit-model-link" data-key="${activeItem.key}" title="Нажмите, чтобы изменить ссылку: ${activeItem.search_link}"><span class="svg-icon" style="width:11px; height:11px; margin-right:3px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>По ссылке</button>` 
+                : `<button type="button" class="badge-link-add btn-edit-model-link" data-key="${activeItem.key}" title="Привязать ссылку поиска с Авито/Юлы"><span class="svg-icon" style="width:11px; height:11px; margin-right:3px;">${AppIcons.plus}</span>Ссылка</button>`}
             </div>
             <div class="card-actions">
-              <button class="btn-delete" title="Удалить выбранную конфигурацию">✕</button>
+              <button class="btn-delete" title="Удалить выбранную конфигурацию"><span class="svg-icon" style="width:12px; height:12px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg></span></button>
               <label class="switch" title="Включить/выключить всю модель">
                 <input type="checkbox" class="master-switch" ${isModelActive ? 'checked' : ''}>
                 <span class="slider"></span>
@@ -3781,7 +4085,7 @@ const POPULAR_TEMPLATES = [
         chip.type = 'button';
         const isAdded = categories.some(c => c.id === tpl.id || (c.name && c.name.toLowerCase() === tpl.name.toLowerCase()));
         chip.className = `template-chip ${isAdded ? 'added' : ''}`;
-        chip.innerHTML = `${tpl.icon} <span>${tpl.name}</span>${isAdded ? ' ✓' : ' ➕'}`;
+        chip.innerHTML = `<span class="svg-icon" style="width:13px; height:13px; margin-right:4px;">${getCategoryIconSvg(tpl.icon)}</span> <span>${tpl.name}</span>${isAdded ? ' ✓' : ''}`;
 
         if (!isAdded) {
           chip.addEventListener('click', () => {
@@ -3796,7 +4100,7 @@ const POPULAR_TEMPLATES = [
       activePresetTemplate = tpl;
       selectedPresetIndices = new Set((tpl.models || []).map((_, idx) => idx));
 
-      document.getElementById('presetModalTitle').textContent = `${tpl.icon} Добавить: ${tpl.name}`;
+      document.getElementById('presetModalTitle').innerHTML = `<span class="svg-icon" style="width:16px; height:16px; margin-right:6px;">${getCategoryIconSvg(tpl.icon)}</span>Добавить: ${tpl.name}`;
       updatePresetModalCounter();
       renderPresetModelsList();
 
@@ -5221,7 +5525,7 @@ const POPULAR_TEMPLATES = [
       const saveBtn = document.getElementById('btnSave');
       const originalSaveHtml = saveBtn.innerHTML;
       saveBtn.classList.add('success-state');
-      saveBtn.innerHTML = `<span>✨ Настройки применены в бота!</span>`;
+      saveBtn.innerHTML = `<span>Настройки применены в бота!</span>`;
       setTimeout(() => {
         saveBtn.classList.remove('success-state');
         saveBtn.innerHTML = originalSaveHtml;
@@ -5403,6 +5707,35 @@ const POPULAR_TEMPLATES = [
         void el.offsetWidth;
         el.classList.add('keynote-scene-enter');
       }
+
+      // 3D iPhone Dynamic Orientation based on Active Tab
+      const phone3d = document.getElementById('hero3dPhoneContainer');
+      function update3DHeroOrientation(tabName) {
+        if (!phone3d) return;
+        if (tabName === 'catalog') {
+          phone3d.style.transform = 'rotateY(-14deg) rotateX(8deg) rotateZ(-2deg) scale(1)';
+        } else if (tabName === 'analytics') {
+          phone3d.style.transform = 'rotateY(24deg) rotateX(10deg) rotateZ(3deg) scale(0.96)';
+        } else if (tabName === 'settings') {
+          phone3d.style.transform = 'rotateY(-24deg) rotateX(-8deg) rotateZ(-3deg) scale(0.96)';
+        }
+      }
+      update3DHeroOrientation(tab);
+
+      // Update 3D Hero Metrics
+      try {
+        const heroStatModels = document.getElementById('heroStatModels');
+        const heroStatRegion = document.getElementById('heroStatRegion');
+        const heroStatStatus = document.getElementById('heroStatStatus');
+        const activeModels = Object.values(priceMatrix || {}).filter(m => m.active !== false).length;
+        if (heroStatModels) heroStatModels.textContent = activeModels || '0';
+        if (heroStatRegion) heroStatRegion.textContent = selectedRegion || 'Москва';
+        const isMasterActive = document.getElementById('toggleGlobalSearch')?.checked;
+        if (heroStatStatus) {
+          heroStatStatus.textContent = isMasterActive ? 'В сети' : 'Пауза';
+          heroStatStatus.style.color = isMasterActive ? '#30d158' : '#8e8e93';
+        }
+      } catch (e) {}
 
       if (tab === 'catalog') {
         if (catalogView) {
@@ -5638,7 +5971,7 @@ const POPULAR_TEMPLATES = [
         <div class="kpi-card">
           <div class="kpi-card-header">
             <div class="kpi-title-block">
-              <div class="kpi-icon-badge">💰</div>
+              <div class="kpi-icon-badge" style="background:rgba(255,255,255,0.08); color:#f5f5f7;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg></div>
               <div class="kpi-card-title">${periodProfitTitle}</div>
             </div>
             <div class="trend-badge ${trendProfit.isUp ? 'up' : 'down'}">
@@ -5660,7 +5993,7 @@ const POPULAR_TEMPLATES = [
         <div class="kpi-card">
           <div class="kpi-card-header">
             <div class="kpi-title-block">
-              <div class="kpi-icon-badge">📱</div>
+              <div class="kpi-icon-badge" style="background:rgba(255,255,255,0.08); color:#f5f5f7;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg></div>
               <div class="kpi-card-title">${periodCountTitle}</div>
             </div>
             <div class="trend-badge ${trendCount.isUp ? 'up' : 'down'}">
@@ -5682,7 +6015,7 @@ const POPULAR_TEMPLATES = [
         <div class="kpi-card">
           <div class="kpi-card-header">
             <div class="kpi-title-block">
-              <div class="kpi-icon-badge">🎯</div>
+              <div class="kpi-icon-badge" style="background:rgba(255,255,255,0.08); color:#f5f5f7;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div>
               <div class="kpi-card-title">Средняя прибыль за телефон</div>
             </div>
             <div class="trend-badge ${trendAvg.isUp ? 'up' : 'down'}">
@@ -5708,9 +6041,9 @@ const POPULAR_TEMPLATES = [
       if (userDeals.length === 0) {
         dealsListEl.innerHTML = `
           <div style="text-align: center; padding: 30px 10px; color: var(--text-muted); background: var(--card-bg); border-radius: 16px; border: 0.5px solid var(--card-border);">
-            <p style="font-size: 28px; margin-bottom: 6px;">📭</p>
+            <div class="svg-icon" style="width: 32px; height: 32px; margin: 0 auto 8px; color: var(--text-tertiary);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></div>
             <p style="font-size: 14px; font-weight: 600; color: #fff;">Нет записанных продаж</p>
-            <p style="font-size: 12px; margin-top: 4px;">Нажмите «➕ Записать сделку», чтобы вести учет продаж</p>
+            <p style="font-size: 12px; margin-top: 4px;">Нажмите «<span class="svg-icon" style="width: 11px; height: 11px; margin-right: 3px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="M12 5v14"/></svg></span> Записать сделку», чтобы вести учет продаж</p>
           </div>
         `;
         return;
@@ -5724,14 +6057,14 @@ const POPULAR_TEMPLATES = [
           <div class="deal-item-row" data-id="${d.id}">
             <div class="deal-left">
               <div class="deal-model-title">
-                <span>📱 ${d.model}</span>
+                <span>${d.model}</span>
                 ${d.storage ? `<span class="deal-storage-badge">${d.storage} GB</span>` : ''}
               </div>
               <div class="deal-meta-line">
-                <span>📅 ${dDate}</span>
+                <span>${dDate}</span>
                 <span>•</span>
-                <span>Выкуп: ${(d.buyPrice || 0).toLocaleString('ru-RU')} ₽ ➔ ${(d.sellPrice || 0).toLocaleString('ru-RU')} ₽</span>
-                ${d.note ? `<span>• 💬 ${d.note}</span>` : ''}
+                <span>Выкуп: ${(d.buyPrice || 0).toLocaleString('ru-RU')} ₽ → ${(d.sellPrice || 0).toLocaleString('ru-RU')} ₽</span>
+                ${d.note ? `<span>• ${d.note}</span>` : ''}
               </div>
             </div>
             <div style="display: flex; align-items: center; gap: 8px;">
@@ -5739,7 +6072,7 @@ const POPULAR_TEMPLATES = [
                 +${(d.profit || 0).toLocaleString('ru-RU')} ₽
                 <div style="font-size: 10px; color: var(--text-muted); font-weight: 600;">+${marginPct}% маржа</div>
               </div>
-              <button type="button" class="btn-delete-deal" data-id="${d.id}" title="Удалить сделку">✕</button>
+              <button type="button" class="btn-delete-deal" data-id="${d.id}" title="Удалить сделку"><span class="svg-icon" style="width:11px; height:11px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span></button>
             </div>
           </div>
         `;
@@ -5941,6 +6274,49 @@ const POPULAR_TEMPLATES = [
     renderSeriesBar();
     renderCards();
     loadLivePrices();
+  
+    // 3D iPhone Interactive Parallax & Swivel
+    (function init3DHeroParallax() {
+      const stage = document.getElementById('hero3dStage');
+      const phone = document.getElementById('hero3dPhoneContainer');
+      if (!stage || !phone) return;
+
+      function handleMove(clientX, clientY) {
+        const rect = stage.getBoundingClientRect();
+        const x = (clientX - rect.left) / rect.width - 0.5; // -0.5 to 0.5
+        const y = (clientY - rect.top) / rect.height - 0.5;
+
+        const rotY = -14 + (x * 40); // Base -14deg +/- 20deg
+        const rotX = 8 - (y * 30);   // Base 8deg +/- 15deg
+        phone.style.transform = `rotateY(${rotY.toFixed(1)}deg) rotateX(${rotX.toFixed(1)}deg) rotateZ(${(x * -4).toFixed(1)}deg) scale(1.04)`;
+      }
+
+      stage.addEventListener('mousemove', (e) => {
+        handleMove(e.clientX, e.clientY);
+      });
+
+      stage.addEventListener('mouseleave', () => {
+        const activeTab = currentAppTab || 'catalog';
+        if (activeTab === 'catalog') {
+          phone.style.transform = 'rotateY(-14deg) rotateX(8deg) rotateZ(-2deg) scale(1)';
+        } else if (activeTab === 'analytics') {
+          phone.style.transform = 'rotateY(24deg) rotateX(10deg) rotateZ(3deg) scale(0.96)';
+        } else {
+          phone.style.transform = 'rotateY(-24deg) rotateX(-8deg) rotateZ(-3deg) scale(0.96)';
+        }
+      });
+
+      stage.addEventListener('touchmove', (e) => {
+        if (e.touches && e.touches[0]) {
+          handleMove(e.touches[0].clientX, e.touches[0].clientY);
+        }
+      }, { passive: true });
+
+      stage.addEventListener('touchend', () => {
+        phone.style.transform = 'rotateY(-14deg) rotateX(8deg) rotateZ(-2deg) scale(1)';
+      });
+    })();
   </script>
 </body>
+
 </html>
