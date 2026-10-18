@@ -629,6 +629,47 @@
       line-height: 1.2;
     }
 
+    .btn-card-to-analytics {
+      background: rgba(255, 255, 255, 0.08);
+      border: 0.5px solid var(--card-border);
+      color: #fff;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      box-shadow: var(--card-specular);
+      transition: transform 0.15s var(--spring-press), background 0.15s ease;
+      white-space: nowrap;
+    }
+    .btn-card-to-analytics:active {
+      transform: scale(0.94);
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .btn-edit-deal {
+      background: transparent;
+      border: none;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      font-size: 13px;
+      padding: 4px;
+      border-radius: 6px;
+      transition: color 0.15s ease, background 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .btn-edit-deal:hover {
+      color: var(--accent-highlight);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
     .btn-delete-deal {
       background: transparent;
       border: none;
@@ -2603,9 +2644,10 @@
     <div class="modal-sheet">
       <div class="modal-grabber"></div>
       <div class="modal-header">
-        <h3 class="modal-title"><span class="svg-icon" style="width:16px; height:16px; margin-right:6px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg></span>Записать сделку</h3>
+        <h3 class="modal-title"><span class="svg-icon" style="width:16px; height:16px; margin-right:6px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg></span><span id="dealModalTitleText">Записать сделку</span></h3>
         <button class="btn-close-modal" id="btnCloseDealModal"><span class="svg-icon" style="width: 12px; height: 12px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span></button>
       </div>
+      <input type="hidden" id="dealEditingId" value="">
 
       <div class="form-group">
         <label class="form-label">Модель телефона:</label>
@@ -2655,7 +2697,7 @@
       </div>
 
       <button type="button" class="btn-save" id="btnSubmitDeal" style="width: 100%; margin-top: 10px;">
-        <span>Сохранить сделку</span>
+        <span id="btnSubmitDealText">Сохранить сделку</span>
       </button>
     </div>
   </div>
@@ -3873,13 +3915,34 @@ const POPULAR_TEMPLATES = [
             </div>
           </div>
 
-          <div class="card-footer" style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="card-footer" style="display:flex; justify-content:space-between; align-items:center; gap: 8px;">
             <span class="profit-badge ${profit < 0 ? 'negative' : ''}" data-current-value="${profit}">Навар: ~${profit.toLocaleString('ru-RU')} ₽</span>
-            <button type="button" class="btn-toggle-config ${activeItem.enabled ? 'active' : ''}" title="Отслеживать именно этот объем памяти">
-              <span class="config-check-icon">${activeItem.enabled ? '<span class="config-dot active"></span>Включен' : '<span class="config-dot"></span>Отключен'}</span>
-            </button>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <button type="button" class="btn-card-to-analytics" title="Записать продажу этой модели в аналитику">
+                <span class="svg-icon" style="width:11px; height:11px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></span>
+                <span>В аналитику</span>
+              </button>
+              <button type="button" class="btn-toggle-config ${activeItem.enabled ? 'active' : ''}" title="Отслеживать именно этот объем памяти">
+                <span class="config-check-icon">${activeItem.enabled ? '<span class="config-dot active"></span>Включен' : '<span class="config-dot"></span>Отключен'}</span>
+              </button>
+            </div>
           </div>
         `;
+
+        const btnToAnalytics = card.querySelector('.btn-card-to-analytics');
+        if (btnToAnalytics) {
+          btnToAnalytics.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+            openDealModal({
+              model: group.model,
+              storage: activeItem.storage || 128,
+              buyPrice: activeItem.price || 0,
+              sellPrice: activeItem.market || Math.round((activeItem.price || 0) * 1.2),
+              note: ''
+            });
+          });
+        }
 
         const masterSwitch = card.querySelector('.master-switch');
         const buyInput = card.querySelector('.input-buy');
@@ -6035,7 +6098,7 @@ const POPULAR_TEMPLATES = [
         const dDate = d.date ? new Date(d.date).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' }) : '';
         const marginPct = d.buyPrice > 0 ? Math.round(((d.profit || 0) / d.buyPrice) * 100) : 0;
         return `
-          <div class="deal-item-row" data-id="${d.id}">
+          <div class="deal-item-row" data-id="${d.id}" style="cursor: pointer;" title="Нажмите, чтобы редактировать сделку">
             <div class="deal-left">
               <div class="deal-model-title">
                 <span>${d.model}</span>
@@ -6053,11 +6116,38 @@ const POPULAR_TEMPLATES = [
                 +${(d.profit || 0).toLocaleString('ru-RU')} ₽
                 <div style="font-size: 10px; color: var(--text-muted); font-weight: 600;">+${marginPct}% маржа</div>
               </div>
+              <button type="button" class="btn-edit-deal" data-id="${d.id}" title="Редактировать сделку"><span class="svg-icon" style="width:11px; height:11px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></span></button>
               <button type="button" class="btn-delete-deal" data-id="${d.id}" title="Удалить сделку"><span class="svg-icon" style="width:11px; height:11px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span></button>
             </div>
           </div>
         `;
       }).join('');
+
+      // Клик по строке сделки для редактирования
+      dealsListEl.querySelectorAll('.deal-item-row').forEach(row => {
+        row.addEventListener('click', (e) => {
+          if (e.target.closest('.btn-delete-deal')) return;
+          const dealId = row.dataset.id;
+          const found = userDeals.find(d => d.id === dealId);
+          if (found) {
+            if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+            openDealModal(found, true);
+          }
+        });
+      });
+
+      // Клик по кнопке редактирования сделки
+      dealsListEl.querySelectorAll('.btn-edit-deal').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const dealId = btn.dataset.id;
+          const found = userDeals.find(d => d.id === dealId);
+          if (found) {
+            if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+            openDealModal(found, true);
+          }
+        });
+      });
 
       // Привязка удаления сделки
       dealsListEl.querySelectorAll('.btn-delete-deal').forEach(btn => {
@@ -6121,7 +6211,7 @@ const POPULAR_TEMPLATES = [
     const dealNoteInput = document.getElementById('dealNote');
     const dealStorageHidden = document.getElementById('dealStorage');
 
-    function openAddDealModal() {
+    function openDealModal(presetOrDeal, isEdit = false) {
       // Заполняем datalist предложениями моделей из текущего каталога
       const dl = document.getElementById('dealModelSuggestions');
       if (dl && currentMatrix) {
@@ -6129,26 +6219,70 @@ const POPULAR_TEMPLATES = [
         dl.innerHTML = uniqueModels.map(m => `<option value="${m}">`).join('');
       }
 
-      dealModelInput.value = '';
-      dealBuyInput.value = '';
-      dealSellInput.value = '';
-      dealNoteInput.value = '';
-      dealStorageHidden.value = '128';
-      document.querySelectorAll('#dealMemoryChips .mem-chip').forEach(c => {
-        c.classList.toggle('active', c.dataset.val === '128');
-      });
+      const modalTitleText = document.getElementById('dealModalTitleText');
+      const submitBtnText = document.getElementById('btnSubmitDealText');
+      const editingIdInput = document.getElementById('dealEditingId');
 
-      // По умолчанию сегодня
-      const todayStr = new Date().toISOString().split('T')[0];
-      dealDateInput.value = todayStr;
+      if (isEdit && presetOrDeal && presetOrDeal.id) {
+        // Режим редактирования существующей сделки
+        if (modalTitleText) modalTitleText.textContent = "Редактировать сделку";
+        if (submitBtnText) submitBtnText.textContent = "Сохранить изменения";
+        if (editingIdInput) editingIdInput.value = presetOrDeal.id;
+
+        dealModelInput.value = presetOrDeal.model || '';
+        dealBuyInput.value = presetOrDeal.buyPrice || '';
+        dealSellInput.value = presetOrDeal.sellPrice || '';
+        dealDateInput.value = presetOrDeal.date || new Date().toISOString().split('T')[0];
+        dealNoteInput.value = presetOrDeal.note || '';
+
+        const storageVal = String(presetOrDeal.storage || 128);
+        dealStorageHidden.value = storageVal;
+        document.querySelectorAll('#dealMemoryChips .mem-chip').forEach(c => {
+          c.classList.toggle('active', c.dataset.val === storageVal);
+        });
+      } else {
+        // Режим новой сделки (пустая или предзаполненная из карточки каталога)
+        if (modalTitleText) modalTitleText.textContent = "Записать сделку";
+        if (submitBtnText) submitBtnText.textContent = "Сохранить сделку";
+        if (editingIdInput) editingIdInput.value = '';
+
+        if (presetOrDeal) {
+          dealModelInput.value = presetOrDeal.model || '';
+          dealBuyInput.value = presetOrDeal.buyPrice || '';
+          dealSellInput.value = presetOrDeal.sellPrice || '';
+          dealNoteInput.value = presetOrDeal.note || '';
+          const storageVal = String(presetOrDeal.storage || 128);
+          dealStorageHidden.value = storageVal;
+          document.querySelectorAll('#dealMemoryChips .mem-chip').forEach(c => {
+            c.classList.toggle('active', c.dataset.val === storageVal);
+          });
+        } else {
+          dealModelInput.value = '';
+          dealBuyInput.value = '';
+          dealSellInput.value = '';
+          dealNoteInput.value = '';
+          dealStorageHidden.value = '128';
+          document.querySelectorAll('#dealMemoryChips .mem-chip').forEach(c => {
+            c.classList.toggle('active', c.dataset.val === '128');
+          });
+        }
+        dealDateInput.value = new Date().toISOString().split('T')[0];
+      }
 
       updateDealProfitPreview();
       addDealModal.classList.add('active');
-      setTimeout(() => dealModelInput.focus(), 100);
+      setTimeout(() => {
+        if (!dealModelInput.value) dealModelInput.focus();
+        else dealBuyInput.focus();
+      }, 100);
     }
 
-    document.getElementById('btnOpenAddDealModal')?.addEventListener('click', openAddDealModal);
-    document.getElementById('btnQuickAddDeal')?.addEventListener('click', openAddDealModal);
+    function openAddDealModal() {
+      openDealModal();
+    }
+
+    document.getElementById('btnOpenAddDealModal')?.addEventListener('click', () => openDealModal());
+    document.getElementById('btnQuickAddDeal')?.addEventListener('click', () => openDealModal());
     document.getElementById('btnCloseDealModal')?.addEventListener('click', () => {
       addDealModal.classList.remove('active');
     });
@@ -6229,6 +6363,32 @@ const POPULAR_TEMPLATES = [
       }
 
       const profit = sellPrice - buyPrice;
+      const editingId = document.getElementById('dealEditingId')?.value;
+
+      if (editingId) {
+        // Обновляем существующую сделку
+        const dealIndex = userDeals.findIndex(d => d.id === editingId);
+        if (dealIndex !== -1) {
+          userDeals[dealIndex] = {
+            ...userDeals[dealIndex],
+            model,
+            storage,
+            buyPrice,
+            sellPrice,
+            profit,
+            date,
+            note
+          };
+          saveUserDeals();
+          renderAnalyticsDashboard();
+          addDealModal.classList.remove('active');
+          if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+          showDynamicIsland("Сделка обновлена", `«${model}» сохранена`, "");
+          return;
+        }
+      }
+
+      // Создаем новую сделку
       const newDeal = {
         id: 'deal_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
         model,
