@@ -27,6 +27,7 @@ budget_tokens: 2000
 - **Telegram Article (`send_rich_message`):** Встроенный в Telegram интерфейс статьи через скрепку соответствует API-методу `send_rich_message`.
 - **Кэширование медиа в Telegram:** Сохранение `file_id` загруженного видео (`BAACAgIAAxUAAWrO6h_5oPYpDeylG7EzN1AuG6TAAAJQowAC1gt4SjGoXYWb75KoPQQ`) ускоряет отправку баннера до ~50 мс без расхода трафика на повторную загрузку.
 - **OpenWolf 2.5.2:** Установлен глобально в `~/.local/bin/openwolf`. Позволяет мгновенно находить функции и символы через `openwolf find <name>`.
+- **Деплой Telegram WebApp на GitHub Pages:** GitHub Pages в репозитории настроен на ветку `gh-pages` (legacy branch deploy), а не на GitHub Actions. Чтобы изменения в WebApp отображались в Telegram-боте, файлы интерфейса (`index.html`, `webapp/index.html`, `docs/index.html` и ассеты) необходимо пушить напрямую в ветку `gh-pages`.
 
 ## Do-Not-Repeat
 
