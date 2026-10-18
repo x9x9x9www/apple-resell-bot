@@ -2066,40 +2066,28 @@
        ======================================================== */
     .glow-atmosphere-top {
       position: fixed;
-      top: -100px;
+      top: -40px;
       left: 50%;
-      transform: translateX(-50%);
-      width: 140vw;
-      height: 420px;
-      background: radial-gradient(ellipse 65% 65% at 50% 18%, rgba(200, 230, 255, 0.40) 0%, rgba(140, 190, 255, 0.22) 30%, rgba(70, 130, 220, 0.10) 55%, transparent 75%);
-      filter: blur(50px);
+      transform: translateX(-50%) translateZ(0);
+      width: 120vw;
+      height: 300px;
+      background: radial-gradient(ellipse 60% 60% at 50% 18%, rgba(180, 215, 255, 0.16) 0%, rgba(100, 160, 240, 0.05) 45%, transparent 70%);
       pointer-events: none;
       z-index: 0;
-      animation: pulseTopAtmosphere 8s infinite alternate ease-in-out;
+      will-change: transform;
     }
 
     .glow-atmosphere-bottom {
       position: fixed;
-      bottom: -80px;
+      bottom: -40px;
       left: 50%;
-      transform: translateX(-50%);
-      width: 140vw;
-      height: 380px;
-      background: radial-gradient(ellipse 65% 65% at 50% 82%, rgba(210, 235, 255, 0.38) 0%, rgba(150, 200, 255, 0.20) 30%, rgba(80, 140, 230, 0.08) 55%, transparent 75%);
-      filter: blur(50px);
+      transform: translateX(-50%) translateZ(0);
+      width: 120vw;
+      height: 280px;
+      background: radial-gradient(ellipse 60% 60% at 50% 82%, rgba(180, 215, 255, 0.14) 0%, rgba(90, 150, 230, 0.04) 45%, transparent 70%);
       pointer-events: none;
       z-index: 0;
-      animation: pulseBottomAtmosphere 8s infinite alternate ease-in-out;
-    }
-
-    @keyframes pulseTopAtmosphere {
-      0% { opacity: 0.85; transform: translateX(-50%) scale(0.98); }
-      100% { opacity: 1.15; transform: translateX(-50%) scale(1.03); }
-    }
-
-    @keyframes pulseBottomAtmosphere {
-      0% { opacity: 0.85; transform: translateX(-50%) scale(0.98); }
-      100% { opacity: 1.15; transform: translateX(-50%) scale(1.03); }
+      will-change: transform;
     }
 
     /* ========================================================
@@ -2110,44 +2098,47 @@
     .kpi-card,
     .deals-section,
     .search-wrapper,
-    .master-bot-bar,
+    .master-bot-bar {
+      border-radius: 24px !important;
+      background: rgba(22, 26, 36, 0.92) !important;
+      border: 1px solid rgba(255, 255, 255, 0.16) !important;
+      box-shadow:
+        inset 0 1px 1px 0 rgba(255, 255, 255, 0.35),
+        0 8px 24px rgba(0, 0, 0, 0.45) !important;
+      contain: content;
+      transform: translateZ(0);
+    }
+
     .modal-sheet {
       border-radius: 28px !important;
-      background: linear-gradient(145deg, rgba(26, 30, 40, 0.68) 0%, rgba(14, 16, 22, 0.78) 100%) !important;
-      backdrop-filter: blur(32px) saturate(200%) brightness(1.05) !important;
-      -webkit-backdrop-filter: blur(32px) saturate(200%) brightness(1.05) !important;
-      border: 1.2px solid rgba(255, 255, 255, 0.32) !important;
+      background: rgba(20, 24, 34, 0.96) !important;
+      border: 1px solid rgba(255, 255, 255, 0.22) !important;
       box-shadow:
-        inset 0 2px 3px 0 rgba(255, 255, 255, 0.75),
-        inset 0 -2px 3px 0 rgba(0, 0, 0, 0.45),
-        inset 2px 0 2px 0 rgba(255, 255, 255, 0.3),
-        inset -2px 0 2px 0 rgba(255, 255, 255, 0.2),
-        0 20px 48px -8px rgba(0, 0, 0, 0.7),
-        0 0 22px rgba(180, 215, 255, 0.12) !important;
+        inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.5),
+        0 20px 48px rgba(0, 0, 0, 0.85) !important;
+      transform: translateZ(0);
     }
 
     .model-card:hover {
-      border-color: rgba(255, 255, 255, 0.45) !important;
+      border-color: rgba(255, 255, 255, 0.28) !important;
       box-shadow:
-        inset 0 2px 4px 0 rgba(255, 255, 255, 0.9),
-        inset 0 -2px 3px 0 rgba(0, 0, 0, 0.5),
-        0 24px 54px -6px rgba(0, 0, 0, 0.8),
-        0 0 28px rgba(190, 225, 255, 0.22) !important;
+        inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.55),
+        0 10px 28px rgba(0, 0, 0, 0.55) !important;
     }
 
-    /* Floating Capsule Tab Bar (Liquid Glass Style) */
+    /* Floating Capsule Tab Bar (High-Performance Glass) */
     .ios-tab-bar {
       margin: 0 14px calc(10px + env(safe-area-inset-bottom, 0px)) !important;
       border-radius: 9999px !important;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.20) 0%, rgba(18, 22, 30, 0.82) 50%, rgba(255, 255, 255, 0.12) 100%) !important;
-      backdrop-filter: blur(36px) saturate(210%) !important;
-      -webkit-backdrop-filter: blur(36px) saturate(210%) !important;
-      border: 1.2px solid rgba(255, 255, 255, 0.42) !important;
+      background: rgba(18, 22, 30, 0.88) !important;
+      backdrop-filter: blur(20px) !important;
+      -webkit-backdrop-filter: blur(20px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.28) !important;
       box-shadow:
-        inset 0 2px 3px 0 rgba(255, 255, 255, 0.8),
-        inset 0 -2px 3px 0 rgba(0, 0, 0, 0.5),
-        0 20px 48px rgba(0, 0, 0, 0.8),
-        0 0 30px rgba(180, 215, 255, 0.20) !important;
+        inset 0 1px 1px 0 rgba(255, 255, 255, 0.6),
+        0 12px 32px rgba(0, 0, 0, 0.7) !important;
+      will-change: transform;
+      transform: translateZ(0);
     }
 
     /* Capsule Pill Buttons */
@@ -2175,19 +2166,19 @@
         0 0 24px rgba(200, 230, 255, 0.28) !important;
     }
 
-    /* Save Bar floating liquid glass */
+    /* Save Bar floating glass */
     .save-bar {
       margin: 0 14px calc(72px + env(safe-area-inset-bottom, 0px)) !important;
       border-radius: 9999px !important;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.20) 0%, rgba(18, 22, 30, 0.85) 50%, rgba(255, 255, 255, 0.12) 100%) !important;
-      backdrop-filter: blur(32px) saturate(200%) !important;
-      -webkit-backdrop-filter: blur(32px) saturate(200%) !important;
-      border: 1.2px solid rgba(255, 255, 255, 0.42) !important;
+      background: rgba(18, 22, 30, 0.90) !important;
+      backdrop-filter: blur(20px) !important;
+      -webkit-backdrop-filter: blur(20px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.28) !important;
       box-shadow:
-        inset 0 2px 3px 0 rgba(255, 255, 255, 0.8),
-        inset 0 -2px 3px 0 rgba(0, 0, 0, 0.5),
-        0 18px 42px rgba(0, 0, 0, 0.75),
-        0 0 24px rgba(180, 215, 255, 0.18) !important;
+        inset 0 1px 1px 0 rgba(255, 255, 255, 0.6),
+        0 12px 32px rgba(0, 0, 0, 0.7) !important;
+      will-change: transform;
+      transform: translateZ(0);
     }
 
     /* Liquid Glass Series Filter Pills */
@@ -2231,6 +2222,21 @@
       padding: 2px 9px !important;
     }
     
+
+    .config-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+    .config-dot.active {
+      background: var(--success-color);
+      box-shadow: 0 0 6px rgba(48, 209, 88, 0.6);
+    }
+    
 </style>
 </head>
 <body>
@@ -2253,7 +2259,7 @@
     <div class="ios-nav-content">
       <div class="ios-nav-left">
         <div class="ios-nav-inline-title" id="iosNavInlineTitle">
-          <span style="font-size:16px;">⚡️</span>
+          <span class="svg-icon" style="width:16px; height:16px; color:#fff;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
           <span>БРЕДЛИ ПЕРЕКУПЕР</span>
         </div>
       </div>
@@ -2656,23 +2662,18 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label">Иконка / Эмодзи:</label>
-        <div class="emoji-row" id="createEmojiRow">
-          <span class="emoji-chip active">📱</span>
-          <span class="emoji-chip">💻</span>
-          <span class="emoji-chip">📟</span>
-          <span class="emoji-chip">🎧</span>
-          <span class="emoji-chip">⌚️</span>
-          <span class="emoji-chip">🎮</span>
-          <span class="emoji-chip">💨</span>
-          <span class="emoji-chip">📷</span>
-          <span class="emoji-chip">📺</span>
-          <span class="emoji-chip">⚡️</span>
-          <span class="emoji-chip">📁</span>
-          <span class="emoji-chip">⭐️</span>
+        <label class="form-label">Иконка папки:</label>
+                <div class="emoji-row" id="createEmojiRow">
+          <span class="emoji-chip active" data-icon="phone" title="Смартфон"><span class="svg-icon" style="width:14px;height:14px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg></span></span>
+          <span class="emoji-chip" data-icon="laptop" title="Ноутбук"><span class="svg-icon" style="width:14px;height:14px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55A1 1 0 0 1 20.38 20H3.62a1 1 0 0 1-.9-1.45L4 16"/></svg></span></span>
+          <span class="emoji-chip" data-icon="tablet" title="Планшет"><span class="svg-icon" style="width:14px;height:14px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><line x1="12" x2="12.01" y1="18" y2="18"/></svg></span></span>
+          <span class="emoji-chip" data-icon="headphones" title="Наушники"><span class="svg-icon" style="width:14px;height:14px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></svg></span></span>
+          <span class="emoji-chip" data-icon="watch" title="Часы"><span class="svg-icon" style="width:14px;height:14px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="7"/><polyline points="12 9 12 12 13.5 13.5"/><path d="M16.51 17.35l-.35 3.83a2 2 0 0 1-2 1.82H9.83a2 2 0 0 1-2-1.82l-.35-3.83m.01-10.7.35-3.83A2 2 0 0 1 9.83 1h4.34a2 2 0 0 1 2 1.82l.35 3.83"/></svg></span></span>
+          <span class="emoji-chip" data-icon="gamepad" title="Консоли"><span class="svg-icon" style="width:14px;height:14px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" x2="10" y1="12" y2="12"/><line x1="8" x2="8" y1="10" y2="14"/><rect width="20" height="12" x="2" y="6" rx="6"/></svg></span></span>
+          <span class="emoji-chip" data-icon="folder" title="Папка"><span class="svg-icon" style="width:14px;height:14px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg></span></span>
         </div>
         <div style="display:flex; align-items:center; gap:8px;">
-          <input type="text" class="form-input" id="newCatEmoji" value="📱" style="width:60px; text-align:center; font-size:18px">
+          <input type="text" class="form-input" id="newCatEmoji" value="phone" style="width:60px; text-align:center; font-size:18px">
           <span style="font-size:12px; color:var(--text-muted)">Можно выбрать из списка или ввести свой</span>
         </div>
       </div>
@@ -2735,20 +2736,15 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label">Иконка / Эмодзи:</label>
-        <div class="emoji-row" id="editEmojiRow">
-          <span class="emoji-chip">📱</span>
-          <span class="emoji-chip">💻</span>
-          <span class="emoji-chip">📟</span>
-          <span class="emoji-chip">🎧</span>
-          <span class="emoji-chip">⌚️</span>
-          <span class="emoji-chip">🎮</span>
-          <span class="emoji-chip">💨</span>
-          <span class="emoji-chip">📷</span>
-          <span class="emoji-chip">📺</span>
-          <span class="emoji-chip">⚡️</span>
-          <span class="emoji-chip">📁</span>
-          <span class="emoji-chip">⭐️</span>
+        <label class="form-label">Иконка папки:</label>
+                <div class="emoji-row" id="editEmojiRow">
+          <span class="emoji-chip active" data-icon="phone" title="Смартфон"><span class="svg-icon" style="width:14px;height:14px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg></span></span>
+          <span class="emoji-chip" data-icon="laptop" title="Ноутбук"><span class="svg-icon" style="width:14px;height:14px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55A1 1 0 0 1 20.38 20H3.62a1 1 0 0 1-.9-1.45L4 16"/></svg></span></span>
+          <span class="emoji-chip" data-icon="tablet" title="Планшет"><span class="svg-icon" style="width:14px;height:14px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><line x1="12" x2="12.01" y1="18" y2="18"/></svg></span></span>
+          <span class="emoji-chip" data-icon="headphones" title="Наушники"><span class="svg-icon" style="width:14px;height:14px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></svg></span></span>
+          <span class="emoji-chip" data-icon="watch" title="Часы"><span class="svg-icon" style="width:14px;height:14px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="7"/><polyline points="12 9 12 12 13.5 13.5"/><path d="M16.51 17.35l-.35 3.83a2 2 0 0 1-2 1.82H9.83a2 2 0 0 1-2-1.82l-.35-3.83m.01-10.7.35-3.83A2 2 0 0 1 9.83 1h4.34a2 2 0 0 1 2 1.82l.35 3.83"/></svg></span></span>
+          <span class="emoji-chip" data-icon="gamepad" title="Консоли"><span class="svg-icon" style="width:14px;height:14px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" x2="10" y1="12" y2="12"/><line x1="8" x2="8" y1="10" y2="14"/><rect width="20" height="12" x="2" y="6" rx="6"/></svg></span></span>
+          <span class="emoji-chip" data-icon="folder" title="Папка"><span class="svg-icon" style="width:14px;height:14px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg></span></span>
         </div>
         <div style="display:flex; align-items:center; gap:8px;">
           <input type="text" class="form-input" id="editCatEmoji" style="width:60px; text-align:center; font-size:18px">
@@ -2793,11 +2789,11 @@
         </select>
       </div>
 
-      <!-- Появляется, если выбрано "➕ Создать новую папку..." -->
+      <!-- Появляется, если выбрано "+ Создать новую папку..." -->
       <div id="inlineNewCategoryBox" style="display:none; background:rgba(255,255,255,0.03); border:1px solid var(--card-border); border-radius:10px; padding:10px; margin-bottom:12px;">
         <label class="form-label" style="font-size:11px; margin-bottom:4px;">Название новой папки / бренда:</label>
         <div style="display:flex; gap:8px;">
-          <input type="text" class="form-input" id="inlineNewCatEmoji" value="📱" style="width:50px; text-align:center; font-size:16px;">
+          <input type="text" class="form-input" id="inlineNewCatEmoji" value="phone" style="width:50px; text-align:center; font-size:16px;">
           <input type="text" class="form-input" id="inlineNewCatName" placeholder="например Xiaomi или Dyson">
         </div>
       </div>
@@ -2806,7 +2802,7 @@
       <div class="form-group" style="margin-bottom:12px;">
         <label class="form-label" style="display:flex; justify-content:space-between; align-items:center;">
           <span>Ссылка на поиск Авито/Юлы</span>
-          <span style="font-size:11px; color:var(--accent-highlight); font-weight:normal;">Автозаполнение ⚡️</span>
+          <span style="font-size:11px; color:var(--accent-highlight); font-weight:normal;">Автозаполнение</span>
         </label>
         <input type="text" class="form-input" id="newModelSearchLink" placeholder="Вставьте ссылку на поиск (например, с фильтрами)...">
         <div style="font-size:11px; color:var(--text-muted); margin-top:3px;">
@@ -2830,7 +2826,7 @@
           <button type="button" class="mem-chip" data-val="0">Без памяти</button>
         </div>
         <input type="number" class="form-input" id="newModelStorage" value="128" placeholder="или введите вручную: 128, 256, 512, 1024" style="margin-top:6px;">
-        <div style="font-size:11px; color:var(--text-muted); margin-top:3px;">💡 Можно выбрать один или несколько объемов сразу</div>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:3px;">Можно выбрать один или несколько объемов сразу</div>
       </div>
 
       <div class="form-group">
@@ -2931,9 +2927,7 @@
       <div style="padding: 10px 0 6px 0; display: flex; flex-direction: column; gap: 10px;">
         <!-- Карточка 1: Восстановить по умолчанию -->
         <div class="catalog-action-card" id="btnActionRestoreDefault">
-          <div class="action-card-icon" style="background: rgba(10, 132, 255, 0.18); border-color: rgba(10, 132, 255, 0.35); color: var(--accent-color);">
-            🔄
-          </div>
+          <div class="action-card-icon" style="background: rgba(10, 132, 255, 0.18); border-color: rgba(10, 132, 255, 0.35); color: var(--accent-color);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></div>
           <div class="action-card-content">
             <div class="action-card-title">Восстановить по умолчанию</div>
             <div class="action-card-desc">Вернуть стандартный каталог (флагманы iPhone, MacBook, Samsung Galaxy, Google Pixel) со стандартными ценами</div>
@@ -2942,9 +2936,7 @@
 
         <!-- Карточка 2: Полная очистка -->
         <div class="catalog-action-card danger" id="btnActionClearAll">
-          <div class="action-card-icon" style="background: rgba(255, 69, 58, 0.18); border-color: rgba(255, 69, 58, 0.35); color: #ff453a;">
-            🗑️
-          </div>
+          <div class="action-card-icon" style="background: rgba(255, 69, 58, 0.18); border-color: rgba(255, 69, 58, 0.35); color: #ff453a;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg></div>
           <div class="action-card-content">
             <div class="action-card-title" style="color: #ff453a;">Очистить всё (с чистого листа)</div>
             <div class="action-card-desc">Удалить абсолютно все модели, чтобы вручную выстроить свой собственный список гаджетов с нуля</div>
@@ -2953,7 +2945,7 @@
       </div>
 
       <div style="margin-top: 10px;">
-        <button class="btn-cancel-modal" id="btnCancelCatalogManage" style="width: 100%;">✕ Отмена</button>
+        <button class="btn-cancel-modal" id="btnCancelCatalogManage" style="width: 100%;">Отмена</button>
       </div>
     </div>
   </div>
@@ -2961,7 +2953,7 @@
   <div class="ios-alert-overlay" id="iosAlertModal">
     <div class="ios-alert-dialog">
       <div class="ios-alert-content">
-        <div class="ios-alert-icon" id="iosAlertIcon">⚠️</div>
+        <div class="ios-alert-icon" id="iosAlertIcon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:32px;height:32px;margin:0 auto;color:var(--warning-color);"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
         <div class="ios-alert-title" id="iosAlertTitle">Подтверждение</div>
         <div class="ios-alert-message" id="iosAlertMessage">Текст сообщения</div>
       </div>
@@ -2973,12 +2965,39 @@
   </div>
 
   <script>
+    // Apple SF Symbol Style SVG Icons Library (No Emojis)
+    const AppIcons = {
+      tag: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><circle cx="7" cy="7" r=".5" fill="currentColor"/></svg>`,
+      analytics: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>`,
+      settings: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`,
+      search: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>`,
+      plus: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>`,
+      mapPin: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>`,
+      save: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>`,
+      reset: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>`,
+      trash: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>`,
+      close: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>`,
+      edit: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>`,
+      check: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+      folder: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>`,
+      phone: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>`,
+      laptop: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55A1 1 0 0 1 20.38 20H3.62a1 1 0 0 1-.9-1.45L4 16"/></svg>`,
+      tablet: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><line x1="12" x2="12.01" y1="18" y2="18"/></svg>`,
+      gamepad: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" x2="10" y1="12" y2="12"/><line x1="8" x2="8" y1="10" y2="14"/><rect width="20" height="12" x="2" y="6" rx="6"/></svg>`,
+      headphones: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></svg>`,
+      watch: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="7"/><polyline points="12 9 12 12 13.5 13.5"/><path d="M16.51 17.35l-.35 3.83a2 2 0 0 1-2 1.82H9.83a2 2 0 0 1-2-1.82l-.35-3.83m.01-10.7.35-3.83A2 2 0 0 1 9.83 1h4.34a2 2 0 0 1 2 1.82l.35 3.83"/></svg>`
+    };
+
     const tg = window.Telegram?.WebApp;
     if (tg) {
-      tg.ready();
-      tg.expand();
-      if (tg.setHeaderColor) tg.setHeaderColor('#000000');
-      if (tg.setBackgroundColor) tg.setBackgroundColor('#000000');
+      try {
+        tg.ready();
+        tg.expand();
+        if (typeof tg.setHeaderColor === 'function') tg.setHeaderColor('#000000');
+        if (typeof tg.setBackgroundColor === 'function') tg.setBackgroundColor('#000000');
+      } catch (err) {
+        console.warn("Telegram WebApp init warning:", err);
+      }
     }
 
     // iOS Large Title Dynamic Scroll Collapse
@@ -3028,7 +3047,7 @@ const POPULAR_TEMPLATES = [
       {
         id: "iphone",
         name: "iPhone",
-        icon: "📱",
+        icon: "phone",
         models: [
           { model: "iPhone 16 Pro Max", storage: 256, price: 105000, market: 126000 },
           { model: "iPhone 16 Pro Max", storage: 512, price: 118000, market: 141600 },
@@ -3110,7 +3129,7 @@ const POPULAR_TEMPLATES = [
       {
         id: "macbook",
         name: "Mac",
-        icon: "💻",
+        icon: "laptop",
         models: [
           { model: "MacBook Air M1", storage: 256, price: 42000, market: 52000 },
           { model: "MacBook Air M1", storage: 512, price: 55000, market: 66000 },
@@ -3124,7 +3143,7 @@ const POPULAR_TEMPLATES = [
       {
         id: "samsung",
         name: "Samsung",
-        icon: "📱",
+        icon: "phone",
         models: [
           { model: "Samsung Galaxy S24 Ultra", storage: 256, price: 65000, market: 78000 },
           { model: "Samsung Galaxy S24 Ultra", storage: 512, price: 74000, market: 88000 },
@@ -3142,7 +3161,7 @@ const POPULAR_TEMPLATES = [
       {
         id: "pixel",
         name: "Pixel",
-        icon: "📱",
+        icon: "phone",
         models: [
           { model: "Google Pixel 9 Pro", storage: 128, price: 58000, market: 69600 },
           { model: "Google Pixel 9 Pro", storage: 256, price: 70000, market: 84000 },
@@ -3638,8 +3657,8 @@ const POPULAR_TEMPLATES = [
             <div style="text-align:center; padding: 45px 15px; color: var(--text-muted)">
               <div class="svg-icon" style="width: 44px; height: 44px; margin: 0 auto 12px; color: var(--text-tertiary);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div>
               <p style="font-size: 15px; font-weight: 700; color: #fff;">Каталог полностью очищен</p>
-              <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px; line-height: 1.4;">Вы можете выстроить свой собственный список моделей с нуля с помощью кнопки «➕ Модель» или восстановить базовый каталог через «🔄 Сброс».</p>
-              <button type="button" class="btn-save" id="btnEmptyAddFirstModel" style="margin: 14px auto 0 auto; padding: 9px 18px; font-size: 13px; max-width: 240px;">➕ Добавить первую модель</button>
+              <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px; line-height: 1.4;">Вы можете выстроить свой собственный список моделей с нуля с помощью кнопки «Модель» или восстановить базовый каталог через «Сброс».</p>
+              <button type="button" class="btn-save" id="btnEmptyAddFirstModel" style="margin: 14px auto 0 auto; padding: 9px 18px; font-size: 13px; max-width: 240px;">Добавить первую модель</button>
             </div>
           `;
           const btnAddFirst = container.querySelector('#btnEmptyAddFirstModel');
@@ -3658,8 +3677,8 @@ const POPULAR_TEMPLATES = [
               <p style="font-size: 15px; font-weight: 700; color: #fff;">Папка «${catName}» пуста</p>
               <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px; line-height: 1.4;">В этой папке пока нет моделей. Добавьте модель вручную${tpl ? ' или загрузите готовые модели бренда' : ''}.</p>
               <div style="display: flex; gap: 8px; justify-content: center; margin-top: 14px; flex-wrap: wrap;">
-                <button type="button" class="btn-save" id="btnEmptyFolderAddModel" style="padding: 9px 16px; font-size: 13px;">➕ Добавить модель</button>
-                ${tpl ? `<button type="button" class="btn-secondary" id="btnEmptyFolderAddPreset" style="padding: 9px 16px; font-size: 13px;">⚡️ Добавить из шаблона</button>` : ''}
+                <button type="button" class="btn-save" id="btnEmptyFolderAddModel" style="padding: 9px 16px; font-size: 13px;">Добавить модель</button>
+                ${tpl ? `<button type="button" class="btn-secondary" id="btnEmptyFolderAddPreset" style="padding: 9px 16px; font-size: 13px;">Добавить из шаблона</button>` : ''}
               </div>
             </div>
           `;
@@ -3680,7 +3699,7 @@ const POPULAR_TEMPLATES = [
             <div style="text-align:center; padding: 40px 10px; color: var(--text-muted)">
               <div class="svg-icon" style="width: 38px; height: 38px; margin: 0 auto 10px; color: var(--text-tertiary);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></div>
               <p style="font-size: 14px; font-weight: 600">В этой вкладке пока нет моделей</p>
-              <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px">Нажмите «➕ Добавить модель», чтобы добавить сюда гаджет</p>
+              <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px">Нажмите «Добавить модель», чтобы добавить сюда гаджет</p>
             </div>
           `;
         }
@@ -3793,7 +3812,7 @@ const POPULAR_TEMPLATES = [
           <div class="card-footer" style="display:flex; justify-content:space-between; align-items:center;">
             <span class="profit-badge ${profit < 0 ? 'negative' : ''}" data-current-value="${profit}">Навар: ~${profit.toLocaleString('ru-RU')} ₽</span>
             <button type="button" class="btn-toggle-config ${activeItem.enabled ? 'active' : ''}" title="Отслеживать именно этот объем памяти">
-              <span class="config-check-icon">${activeItem.enabled ? '🟢 Включен' : '⚪️ Отключен'}</span>
+              <span class="config-check-icon">${activeItem.enabled ? '<span class="config-dot active"></span>Включен' : '<span class="config-dot"></span>Отключен'}</span>
             </button>
           </div>
         `;
@@ -3812,7 +3831,7 @@ const POPULAR_TEMPLATES = [
 
         function updateConfigToggleBtn() {
           btnToggleConfig.classList.toggle('active', activeItem.enabled);
-          configCheckIcon.textContent = activeItem.enabled ? '🟢 Включен' : '⚪️ Отключен';
+          configCheckIcon.innerHTML = activeItem.enabled ? '<span class="config-dot active"></span>Включен' : '<span class="config-dot"></span>Отключен';
         }
 
         function refreshActiveChip() {
@@ -3830,11 +3849,11 @@ const POPULAR_TEMPLATES = [
             if (activeItem.search_link) {
               linkBtn.className = 'badge-link-pill btn-edit-model-link';
               linkBtn.title = `Нажмите, чтобы изменить ссылку: ${activeItem.search_link}`;
-              linkBtn.innerHTML = '🔗 По ссылке';
+              linkBtn.innerHTML = '<span class="svg-icon" style="width:11px; height:11px; margin-right:3px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>По ссылке';
             } else {
               linkBtn.className = 'badge-link-add btn-edit-model-link';
               linkBtn.title = 'Привязать ссылку поиска с Авито/Юлы';
-              linkBtn.innerHTML = '+ 🔗 ссылка';
+              linkBtn.innerHTML = '<span class="svg-icon" style="width:11px; height:11px; margin-right:3px;">' + AppIcons.plus + '</span>Ссылка';
             }
           }
         }
@@ -3930,14 +3949,14 @@ const POPULAR_TEMPLATES = [
               confirmText: "Удалить",
               cancelText: "Отмена",
               isDestructive: true,
-              icon: "🗑️"
+              icon: ""
             });
             if (!confirmed) return;
             group.items.forEach(it => deletedKeys.add(it.key));
             currentMatrix = currentMatrix.filter(m => m.model !== group.model);
             saveLocal();
             renderCards();
-            showDynamicIsland("Удалено", `${group.model} убран из каталога`, "🗑️");
+            showDynamicIsland("Удалено", `${group.model} убран из каталога`, "");
           });
         }
 
@@ -4038,7 +4057,7 @@ const POPULAR_TEMPLATES = [
       const toggleBtn = document.getElementById('btnToggleAllPresets');
 
       if (counterEl) counterEl.textContent = `Выбрано: ${count} из ${total}`;
-      if (labelEl) labelEl.textContent = count > 0 ? `✅ Добавить выбранные (${count})` : `✅ Создать пустую папку`;
+      if (labelEl) labelEl.textContent = count > 0 ? `Добавить выбранные (${count})` : `Создать пустую папку`;
       if (toggleBtn) toggleBtn.textContent = count === total ? 'Снять все' : 'Выбрать все';
     }
 
@@ -4184,7 +4203,7 @@ const POPULAR_TEMPLATES = [
       createCatModal.classList.add('active');
       document.getElementById('newCatName').value = '';
       if (document.getElementById('newCatSearchLink')) document.getElementById('newCatSearchLink').value = '';
-      document.getElementById('newCatEmoji').value = '📱';
+      document.getElementById('newCatEmoji').value = 'phone';
       document.querySelectorAll('#createEmojiRow .emoji-chip').forEach((c, idx) => {
         c.classList.toggle('active', idx === 0);
       });
@@ -4199,13 +4218,13 @@ const POPULAR_TEMPLATES = [
       chip.addEventListener('click', () => {
         document.querySelectorAll('#createEmojiRow .emoji-chip').forEach(c => c.classList.remove('active'));
         chip.classList.add('active');
-        document.getElementById('newCatEmoji').value = chip.textContent.trim();
+        document.getElementById('newCatEmoji').value = chip.dataset.icon || 'phone';
       });
     });
 
     document.getElementById('btnSubmitCreateCategory').addEventListener('click', () => {
       const name = document.getElementById('newCatName').value.trim();
-      const icon = document.getElementById('newCatEmoji').value.trim() || '📁';
+      const icon = document.getElementById('newCatEmoji').value.trim() || 'folder';
       if (!name) {
         triggerFieldError(document.getElementById('newCatName'), "Введите название папки или бренда");
         return;
@@ -4237,10 +4256,10 @@ const POPULAR_TEMPLATES = [
 
       document.getElementById('editCatId').value = cat.id;
       document.getElementById('editCatName').value = cat.name;
-      document.getElementById('editCatEmoji').value = cat.icon || '📱';
+      document.getElementById('editCatEmoji').value = cat.icon || 'phone';
 
       document.querySelectorAll('#editEmojiRow .emoji-chip').forEach(c => {
-        c.classList.toggle('active', c.textContent.trim() === cat.icon);
+        c.classList.toggle('active', c.dataset.icon === cat.icon);
       });
 
       // Проверяем, есть ли готовый пресет моделей для этого бренда
@@ -4269,14 +4288,14 @@ const POPULAR_TEMPLATES = [
       chip.addEventListener('click', () => {
         document.querySelectorAll('#editEmojiRow .emoji-chip').forEach(c => c.classList.remove('active'));
         chip.classList.add('active');
-        document.getElementById('editCatEmoji').value = chip.textContent.trim();
+        document.getElementById('editCatEmoji').value = chip.dataset.icon || 'phone';
       });
     });
 
     document.getElementById('btnSaveCategoryEdit').addEventListener('click', () => {
       const id = document.getElementById('editCatId').value;
       const name = document.getElementById('editCatName').value.trim();
-      const icon = document.getElementById('editCatEmoji').value.trim() || '📁';
+      const icon = document.getElementById('editCatEmoji').value.trim() || 'folder';
       if (!name) {
         triggerFieldError(document.getElementById('editCatName'), "Название папки не может быть пустым");
         return;
@@ -4300,7 +4319,7 @@ const POPULAR_TEMPLATES = [
         updateCategoryDropdown();
         renderCards();
         manageCatModal.classList.remove('active');
-        showDynamicIsland("Папка сохранена", `«${name}» обновлена`, "📁");
+        showDynamicIsland("Папка сохранена", `«${name}» обновлена`, "");
       }
     });
 
@@ -4315,7 +4334,7 @@ const POPULAR_TEMPLATES = [
         confirmText: "Удалить",
         cancelText: "Отмена",
         isDestructive: true,
-        icon: "📁"
+        icon: "folder"
       });
       if (!confirmed) return;
 
@@ -4329,7 +4348,7 @@ const POPULAR_TEMPLATES = [
       updateCategoryDropdown();
       renderCards();
       manageCatModal.classList.remove('active');
-      showDynamicIsland("Папка удалена", `«${cat.name}» скрыта`, "🗑️");
+      showDynamicIsland("Папка удалена", `«${cat.name}» скрыта`, "");
     });
 
     // Обновление списка папок в модалке «Добавить модель»
@@ -4341,19 +4360,19 @@ const POPULAR_TEMPLATES = [
       // Первым пунктом всегда "Все (без привязки к папке)"
       const allOpt = document.createElement('option');
       allOpt.value = 'all';
-      allOpt.textContent = '📁 Все (без привязки к папке)';
+      allOpt.textContent = 'Все (без привязки к папке)';
       select.appendChild(allOpt);
 
       categories.forEach(cat => {
         const opt = document.createElement('option');
         opt.value = cat.id;
-        opt.textContent = `${cat.icon || '📁'} ${cat.name}`;
+        opt.textContent = cat.name;
         select.appendChild(opt);
       });
 
       const newOpt = document.createElement('option');
       newOpt.value = '__new__';
-      newOpt.textContent = '➕ Создать новую папку...';
+      newOpt.textContent = '+ Создать новую папку...';
       select.appendChild(newOpt);
 
       if (inlineNewCatBox) inlineNewCatBox.style.display = 'none';
@@ -4384,9 +4403,9 @@ const POPULAR_TEMPLATES = [
       const btn = document.getElementById('btnSubmitNewModelText');
       if (!btn) return;
       if (selectedAddModalMemories.size > 1) {
-        btn.textContent = `✅ Добавить (${selectedAddModalMemories.size} конф.)`;
+        btn.textContent = `Добавить (${selectedAddModalMemories.size} конф.)`;
       } else {
-        btn.textContent = `✅ Добавить в матрицу`;
+        btn.textContent = `Добавить в матрицу`;
       }
     }
 
@@ -4470,7 +4489,7 @@ const POPULAR_TEMPLATES = [
         categoryName = '';
       } else if (selectedSeries === '__new__') {
         const inlineName = document.getElementById('inlineNewCatName').value.trim();
-        const inlineIcon = document.getElementById('inlineNewCatEmoji').value.trim() || '📱';
+        const inlineIcon = document.getElementById('inlineNewCatEmoji').value.trim() || 'phone';
         if (!inlineName) {
           triggerFieldError(document.getElementById('inlineNewCatName'), "Введите название новой папки");
           return;
@@ -4619,7 +4638,7 @@ const POPULAR_TEMPLATES = [
             updateAddSubmitButtonText();
           }
           if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-          showDynamicIsland("Ссылка распознана", `${detected.name || 'Параметры подставлены'} ⚡️`, "🔗");
+          showDynamicIsland("Ссылка распознана", `${detected.name || 'Параметры подставлены'}`, "");
         }
       });
     }
@@ -4635,7 +4654,7 @@ const POPULAR_TEMPLATES = [
       if (!item) return;
 
       editLinkTargetKey.value = itemKey;
-      editLinkModalTitle.textContent = `🔗 Ссылка: ${item.model}`;
+      editLinkModalTitle.textContent = `Ссылка: ${item.model}`;
       editLinkInput.value = item.search_link || '';
       editLinkModal.classList.add('active');
       setTimeout(() => editLinkInput.focus(), 100);
@@ -4658,7 +4677,7 @@ const POPULAR_TEMPLATES = [
       editLinkModal.classList.remove('active');
 
       if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-      showDynamicIsland(link ? "Ссылка сохранена" : "Ссылка очищена", `${item.model} • Нажмите «Применить в бота» ⚡️`, "🔗");
+      showDynamicIsland(link ? "Ссылка сохранена" : "Ссылка очищена", `${item.model} • Нажмите «Применить»`, "");
     });
 
     document.getElementById('btnDeleteEditLink')?.addEventListener('click', () => {
@@ -4672,7 +4691,7 @@ const POPULAR_TEMPLATES = [
       editLinkModal.classList.remove('active');
 
       if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
-      showDynamicIsland("Ссылка удалена", `${item.model} • Стандартный поиск ⚡️`, "🗑️");
+      showDynamicIsland("Ссылка удалена", `${item.model} • Стандартный поиск`, "");
     });
 
     // Модалка быстрого добавления объема памяти в карточку
@@ -4681,7 +4700,7 @@ const POPULAR_TEMPLATES = [
 
     function openQuickAddStorageModal(group, activeItem) {
       quickAddCurrentGroup = group;
-      document.getElementById('quickAddStorageTitle').textContent = `➕ Память: ${group.model}`;
+      document.getElementById('quickAddStorageTitle').textContent = `Память: ${group.model}`;
       document.getElementById('quickAddModelName').value = group.model;
 
       // Предлагаем следующий объем, которого еще нет в модели
@@ -4859,10 +4878,15 @@ const POPULAR_TEMPLATES = [
         tTitle.textContent = title;
         tDesc.textContent = desc;
         if (tIcon) {
-          if (theme === 'error') tIcon.textContent = "⚠️";
-          else if (theme === 'warning') tIcon.textContent = "⏸";
-          else if (theme === 'success') tIcon.textContent = "✅";
-          else tIcon.textContent = "⚡️";
+          if (theme === 'error') {
+            tIcon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+          } else if (theme === 'warning') {
+            tIcon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px;height:16px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
+          } else if (theme === 'success') {
+            tIcon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px;height:16px;"><polyline points="20 6 9 17 4 12"/></svg>';
+          } else {
+            tIcon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px;height:16px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>';
+          }
         }
         toast.classList.remove('toast-error', 'toast-warning', 'show');
         if (theme === 'error') toast.classList.add('toast-error');
@@ -4883,7 +4907,7 @@ const POPULAR_TEMPLATES = [
       }
     }
 
-    function showDynamicIsland(title, desc, icon = "⚡️", theme = "default") {
+    function showDynamicIsland(title, desc, icon = "", theme = "default") {
       showDynamicToast(title, desc, theme);
     }
     window.showDynamicIsland = showDynamicIsland;
@@ -4943,10 +4967,10 @@ const POPULAR_TEMPLATES = [
       if (notify) {
         if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
         const platNames = {
-          all: '🟢 Авито + 🟣 Юла (Все)',
-          avito: '🟢 Только Авито',
-          youla: '🟣 Только Юла',
-          none: '⏸ Мониторинг на паузе'
+          all: 'Авито + Юла (Все)',
+          avito: 'Только Авито',
+          youla: 'Только Юла',
+          none: 'Мониторинг на паузе'
         };
         const theme = currentPlatformFilter === 'none' ? 'warning' : 'success';
         showDynamicToast('Площадки поиска', platNames[currentPlatformFilter], theme);
@@ -4994,7 +5018,7 @@ const POPULAR_TEMPLATES = [
       if (filtered.length === 0) {
         const customRow = document.createElement('div');
         customRow.className = 'region-item-row';
-        customRow.innerHTML = `<span>Выбрать: <b>${regionSearchInput.value}</b></span> <span>⚡️</span>`;
+        customRow.innerHTML = `<span>Выбрать: <b>${regionSearchInput.value}</b></span> <span>+</span>`;
         customRow.addEventListener('click', () => {
           selectRegion(regionSearchInput.value.trim(), "");
         });
@@ -5006,7 +5030,7 @@ const POPULAR_TEMPLATES = [
           row.className = 'region-item-row' + (isAct ? ' active' : '');
           row.innerHTML = `
             <span>${c.name}</span>
-            <span style="font-size: 13px; color: ${isAct ? '#fff' : 'var(--text-muted)'};">${isAct ? '✓ Выбран' : 'Выбрать'}</span>
+            <span style="font-size: 13px; color: ${isAct ? '#fff' : 'var(--text-muted)'};">${isAct ? 'Выбран' : 'Выбрать'}</span>
           `;
           row.addEventListener('click', () => {
             selectRegion(c.name, c.key);
@@ -5035,7 +5059,7 @@ const POPULAR_TEMPLATES = [
           inputElement.classList.remove('input-error');
         }, 2200);
       }
-      showDynamicIsland("Внимание", message, "⚠️", "warning");
+      showDynamicIsland("Внимание", message, "", "warning");
     }
 
     function showIosAlert({ title, message, confirmText = "OK", cancelText = null, isDestructive = false, icon = "" }) {
@@ -5100,18 +5124,16 @@ const POPULAR_TEMPLATES = [
       });
     }
 
-    // Global Unhandled Error Boundary (keeps everything inside the in-app concept)
+    // Global Unhandled Error Boundary (console logging only to prevent false-alarm popups)
     window.addEventListener('error', (e) => {
-      console.error("Unhandled error:", e);
-      showDynamicIsland("Сбой в приложении", e.message || "Непредвиденная ошибка", "⚠️", "error");
+      console.error("App error:", e);
     });
     window.addEventListener('unhandledrejection', (e) => {
-      console.error("Unhandled rejection:", e);
-      showDynamicIsland("Сетевой сбой", "Не удалось завершить операцию", "⚠️", "error");
+      console.error("App rejection:", e);
     });
 
     function showRegionToast(cityName) {
-      showDynamicIsland("Регион обновлен", `${cityName} • Воркеры переключены`, "📍");
+      showDynamicIsland("Регион обновлен", `${cityName} • Воркеры переключены`, "");
     }
 
     function selectRegion(name, key = "", triggerToast = true) {
@@ -5122,7 +5144,7 @@ const POPULAR_TEMPLATES = [
       regionModal.classList.remove('active');
 
       if (triggerToast) {
-        showDynamicIsland("Регион изменен", `${name} • Нажмите «Применить в бота» ⚡️`, "📍");
+        showDynamicIsland("Регион изменен", `${name} • Нажмите «Применить»`, "");
       } else if (tg?.HapticFeedback) {
         tg.HapticFeedback.selectionChanged();
       }
@@ -5183,9 +5205,9 @@ const POPULAR_TEMPLATES = [
         triggerDirty();
         if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
         if (newState) {
-          showDynamicToast('▶️ Поиск включен', `Активировано моделей: ${currentMatrix.length}. Нажмите «Применить»`, 'success');
+          showDynamicToast('Поиск включен', `Активировано моделей: ${currentMatrix.length}. Нажмите «Применить»`, 'success');
         } else {
-          showDynamicToast('⏸ Поиск выключен', 'Все модели отключены. Нажмите «Применить»', 'warning');
+          showDynamicToast('Поиск выключен', 'Все модели отключены. Нажмите «Применить»', 'warning');
         }
       });
     }
@@ -5226,9 +5248,9 @@ const POPULAR_TEMPLATES = [
         updateGlobalSearchSwitchUI();
         if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
         if (newState) {
-          showDynamicToast('▶️ Поиск включен', `Активировано моделей: ${currentMatrix.length}`, 'success');
+          showDynamicToast('Поиск включен', `Активировано моделей: ${currentMatrix.length}`, 'success');
         } else {
-          showDynamicToast('⏸ Поиск выключен', 'Все модели отключены (пауза)', 'warning');
+          showDynamicToast('Поиск выключен', 'Все модели отключены (пауза)', 'warning');
         }
       });
     }
@@ -5254,7 +5276,7 @@ const POPULAR_TEMPLATES = [
         barEl.classList.toggle('paused', !isActive);
       }
       if (textEl) {
-        textEl.textContent = isActive ? '🟢 Поиск активен' : '⏸ На паузе';
+        textEl.textContent = isActive ? 'Поиск активен' : 'На паузе';
       }
     }
 
@@ -5275,7 +5297,7 @@ const POPULAR_TEMPLATES = [
         confirmText: "Восстановить",
         cancelText: "Отмена",
         isDestructive: true,
-        icon: "🔄"
+        icon: ""
       });
       if (!confirmed) return;
 
@@ -5353,9 +5375,9 @@ const POPULAR_TEMPLATES = [
         updateStats();
 
         if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-        showDynamicIsland("Каталог сброшен", "Заводские цены восстановлены ⚡️", "🔄");
+        showDynamicIsland("Каталог сброшен", "Заводские цены восстановлены", "");
       } catch (err) {
-        showDynamicIsland("Ошибка сброса", err.message || "Не удалось сбросить", "✕", "error");
+        showDynamicIsland("Ошибка сброса", err.message || "Не удалось сбросить", "", "error");
       }
     });
 
@@ -5368,7 +5390,7 @@ const POPULAR_TEMPLATES = [
         confirmText: "Очистить всё",
         cancelText: "Отмена",
         isDestructive: true,
-        icon: "🗑️"
+        icon: ""
       });
       if (!confirmed) return;
 
@@ -5384,9 +5406,9 @@ const POPULAR_TEMPLATES = [
         updateStats();
 
         if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
-        showDynamicIsland("Каталог очищен", "Все модели удалены (0 шт.)", "🗑️");
+        showDynamicIsland("Каталог очищен", "Все модели удалены (0 шт.)", "");
       } catch (err) {
-        showDynamicIsland("Ошибка очистки", err.message || "Не удалось очистить", "✕", "error");
+        showDynamicIsland("Ошибка очистки", err.message || "Не удалось очистить", "", "error");
       }
     });
 
@@ -5472,8 +5494,8 @@ const POPULAR_TEMPLATES = [
       }
 
       const activeCount = currentMatrix.filter(m => m.enabled !== false).length;
-      const platLabels = { all: 'Все площадки', avito: 'Авито', youla: 'Юла', none: '⏸ Пауза' };
-      showDynamicIsland("Настройки применены", `${currentSelectedRegion} • ${platLabels[currentPlatformFilter] || 'Все'} • ${activeCount} мод.`, "💾");
+      const platLabels = { all: 'Все площадки', avito: 'Авито', youla: 'Юла', none: 'Пауза' };
+      showDynamicIsland("Настройки применены", `${currentSelectedRegion} • ${platLabels[currentPlatformFilter] || 'Все'} • ${activeCount} мод.`, "");
     });
 
       // ========================================================
@@ -5778,13 +5800,13 @@ const POPULAR_TEMPLATES = [
 
       function calcTrend(cur, prev) {
         if (prev === 0) {
-          if (cur > 0) return { pct: 100, isUp: true, text: '▲ +100%' };
+          if (cur > 0) return { pct: 100, isUp: true, text: '+100%' };
           return { pct: 0, isUp: true, text: '0%' };
         }
         const diff = ((cur - prev) / prev) * 100;
         const rounded = Math.abs(Math.round(diff * 10) / 10);
-        if (diff >= 0) return { pct: rounded, isUp: true, text: `▲ +${rounded}%` };
-        return { pct: rounded, isUp: false, text: `▼ -${rounded}%` };
+        if (diff >= 0) return { pct: rounded, isUp: true, text: `+${rounded}%` };
+        return { pct: rounded, isUp: false, text: `-${rounded}%` };
       }
 
       let trendProfit = { pct: 0, isUp: true, text: '0%' };
@@ -5802,25 +5824,25 @@ const POPULAR_TEMPLATES = [
           trendProfit = {
             pct: Math.abs(diffProfit),
             isUp: diffProfit >= 0,
-            text: diffProfit >= 0 ? `▲ +${diffProfit}%` : `▼ ${diffProfit}%`
+            text: diffProfit >= 0 ? `+${diffProfit}%` : `${diffProfit}%`
           };
           trendCount = {
             pct: 100,
             isUp: true,
-            text: `▲ +${Math.round((1 / (sorted.length - 1)) * 100)}%`
+            text: `+${Math.round((1 / (sorted.length - 1)) * 100)}%`
           };
           trendAvg = {
             pct: totalMarginPct,
             isUp: totalMarginPct >= 0,
-            text: totalMarginPct >= 0 ? `▲ +${totalMarginPct}% маржа` : `${totalMarginPct}% маржа`
+            text: totalMarginPct >= 0 ? `+${totalMarginPct}% маржа` : `${totalMarginPct}% маржа`
           };
         } else if (sorted.length === 1) {
-          trendProfit = { pct: 100, isUp: curProfit >= 0, text: '▲ +100%' };
-          trendCount = { pct: 100, isUp: true, text: '▲ 100%' };
+          trendProfit = { pct: 100, isUp: curProfit >= 0, text: '+100%' };
+          trendCount = { pct: 100, isUp: true, text: '100%' };
           trendAvg = {
             pct: totalMarginPct,
             isUp: totalMarginPct >= 0,
-            text: totalMarginPct >= 0 ? `▲ +${totalMarginPct}% маржа` : `${totalMarginPct}% маржа`
+            text: totalMarginPct >= 0 ? `+${totalMarginPct}% маржа` : `${totalMarginPct}% маржа`
           };
         }
       } else {
@@ -5987,14 +6009,14 @@ const POPULAR_TEMPLATES = [
             confirmText: "Удалить",
             cancelText: "Отмена",
             isDestructive: true,
-            icon: "🗑️"
+            icon: ""
           });
           if (!confirmed) return;
 
           userDeals = userDeals.filter(d => d.id !== dealId);
           saveUserDeals();
           renderAnalyticsDashboard();
-          showDynamicIsland("Сделка удалена", `«${found.model}» убрана из учета`, "🗑️");
+          showDynamicIsland("Сделка удалена", `«${found.model}» убрана из учета`, "");
         });
       });
     }
@@ -6017,13 +6039,13 @@ const POPULAR_TEMPLATES = [
         message: "Восстановить стартовые примеры продаж для наглядности графиков?",
         confirmText: "Восстановить",
         cancelText: "Отмена",
-        icon: "🔄"
+        icon: ""
       });
       if (!confirmed) return;
       userDeals = generateDemoDeals();
       saveUserDeals();
       renderAnalyticsDashboard();
-      showDynamicIsland("Демо-данные загружены", "Графики и проценты обновлены", "📊");
+      showDynamicIsland("Демо-данные загружены", "Графики и проценты обновлены", "");
     });
 
     // Модалка добавления сделки
@@ -6160,7 +6182,7 @@ const POPULAR_TEMPLATES = [
       addDealModal.classList.remove('active');
 
       if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-      showDynamicIsland("Сделка сохранена", `+${profit.toLocaleString('ru-RU')} ₽ чистая маржа ⚡️`, "💰");
+      showDynamicIsland("Сделка сохранена", `+${profit.toLocaleString('ru-RU')} ₽ чистая маржа`, "");
     });
 
 
