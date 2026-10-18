@@ -1,4 +1,16 @@
 {
   "version": 1,
-  "bugs": []
+  "bugs": [
+    {
+      "id": "BUG-20261018-01",
+      "timestamp": "2026-10-18T11:00:00+09:00",
+      "error_message": "ReferenceError: AppIcons is not defined",
+      "file": "index.html",
+      "root_cause": "AppIcons object was referenced in getCategoryIconSvg, getDeviceIcon, and card/category buttons before being declared, triggering global unhandled error listener on page initialization.",
+      "fix": "Declared const AppIcons SVG dictionary at the very top of script, wrapped Telegram WebApp init safely, and silenced intrusive startup toast popups for harmless global errors.",
+      "tags": ["webapp", "ui", "javascript", "reference-error"],
+      "occurrences": 1,
+      "last_seen": "2026-10-18T11:00:00+09:00"
+    }
+  ]
 }
