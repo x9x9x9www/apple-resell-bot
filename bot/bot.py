@@ -125,8 +125,9 @@ async def cleanup_user_message(message: types.Message) -> None:
 from pathlib import Path
 
 BANNER_FILE_PATH = Path(__file__).resolve().parent.parent / "assets" / "banner.jpg"
+BANNER_GIF_PATH = Path(__file__).resolve().parent.parent / "assets" / "banner.gif"
 BANNER_VIDEO_PATH = Path(__file__).resolve().parent.parent / "assets" / "banner.mp4"
-_cached_banner_file_id: Optional[str] = "BAACAgIAAxUAAWrO6h_5oPYpDeylG7EzN1AuG6TAAAJQowAC1gt4SjGoXYWb75KoPQQ"
+_cached_banner_file_id: Optional[str] = None
 
 
 async def send_or_replace_functional_message(
@@ -191,6 +192,11 @@ async def send_or_replace_functional_message(
                     size=1,
                 )
                 video_target = video or _cached_banner_file_id
+                if not video_target:
+                    if BANNER_VIDEO_PATH.exists():
+                        video_target = FSInputFile(str(BANNER_VIDEO_PATH))
+                    elif BANNER_GIF_PATH.exists():
+                        video_target = FSInputFile(str(BANNER_GIF_PATH))
                 video_block = InputRichBlockVideo(
                     video=InputMediaVideo(media=video_target)
                 )
@@ -213,11 +219,14 @@ async def send_or_replace_functional_message(
             except Exception as rich_err:
                 logger.debug("send_rich_message не удался: %s. Переход к fallback...", rich_err)
 
-        # 2. Fallback: отправка анимированного баннера .mp4 (через send_animation)
+        # 2. Fallback: отправка анимированного баннера .gif / .mp4 (через send_animation)
         if msg is None:
             anim_target = video or _cached_banner_file_id
-            if not anim_target and BANNER_VIDEO_PATH.exists():
-                anim_target = FSInputFile(str(BANNER_VIDEO_PATH))
+            if not anim_target:
+                if BANNER_GIF_PATH.exists():
+                    anim_target = FSInputFile(str(BANNER_GIF_PATH))
+                elif BANNER_VIDEO_PATH.exists():
+                    anim_target = FSInputFile(str(BANNER_VIDEO_PATH))
 
             if anim_target and hasattr(bot, "send_animation"):
                 try:
