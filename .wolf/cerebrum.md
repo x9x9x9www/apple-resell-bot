@@ -20,14 +20,14 @@ budget_tokens: 2000
 - **Telegram Premium эмодзи:**
   - Использовать теги `<tg-emoji>` для анимированных смайликов (iPhone, огонь, деньги, звезда).
 - **Стиль баннера:**
-  - Минималистичный Apple Keynote стиль: теплый светлый фон (`#F6F5F3`), титановый iPhone 16 Pro Deep Burgundy / Wine, надпись «БРЕДЛИ ПЕРКУПЕР / ДЕЛАЕТ ВЕЩИ».
+  - Dark 3D Liquid Glass: глубокий графитовый фон, 3D стеклянные стрелки циркуляции/ресейла, Telegram-бабл «Бредли перекупер / -делаем вещи».
 - **WebApp UI без смайликов на кнопках:** Категорический отказ от эмодзи на кнопках, чипах, переключателях и уведомлениях в WebApp. Использовать только векторные SF-Symbols SVG-иконки и аккуратный текст.
 - **Производительность WebApp (No heavy blur on list cards):** Запрещено вешать `backdrop-filter: blur()` и множественные `box-shadow` на повторяющиеся элементы списков (`.model-card`), а также бесконечные keyframe-анимации на гигантские размытые псевдоэлементы. Использовать `contain: content;`, аппаратное ускорение `transform: translateZ(0)` и оставлять blur только на плавающем таббаре.
 
 ## Key Learnings
 
 - **Telegram Article (`send_rich_message`):** Встроенный в Telegram интерфейс статьи через скрепку соответствует API-методу `send_rich_message`.
-- **Кэширование медиа в Telegram:** Сохранение `file_id` загруженного видео (`BAACAgIAAxUAAWrO6h_5oPYpDeylG7EzN1AuG6TAAAJQowAC1gt4SjGoXYWb75KoPQQ`) ускоряет отправку баннера до ~50 мс без расхода трафика на повторную загрузку.
+- **Кэширование медиа в Telegram:** Динамическое сохранение `file_id` загруженной анимации (`msg.animation.file_id` / `msg.video.file_id`) ускоряет отправку баннера до ~50 мс без расхода трафика на повторную загрузку.
 - **OpenWolf 2.5.2:** Установлен глобально в `~/.local/bin/openwolf`. Позволяет мгновенно находить функции и символы через `openwolf find <name>`.
 - **Деплой Telegram WebApp на GitHub Pages:** GitHub Pages в репозитории настроен на ветку `gh-pages` (legacy branch deploy), а не на GitHub Actions. Чтобы изменения в WebApp отображались в Telegram-боте, файлы интерфейса (`index.html`, `webapp/index.html`, `docs/index.html` и ассеты) необходимо пушить напрямую в ветку `gh-pages`.
 
