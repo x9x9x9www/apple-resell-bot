@@ -5,7 +5,8 @@ import json
 import logging
 import re
 import time
-from typing import Optional
+from typing import Optional, Callable, Any
+import aiohttp
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.client.default import DefaultBotProperties
 from aiogram.client.session.aiohttp import AiohttpSession
@@ -136,7 +137,63 @@ BANNER_VIDEO_PATH = (
     if (Path(__file__).resolve().parent.parent / "assets" / "пока что видео.mp4").exists()
     else Path(__file__).resolve().parent.parent / "assets" / "banner.mp4"
 )
-_cached_banner_file_id: Optional[str] = "BQACAgIAAxkDAAIDUmrW3gesnDDS9sZPwx_ocHwSBRjIAAIXrAACcZW4SlxH94WXPmVUPQQ"
+BANNER_ANIMATION_FILE_ID: str = "CgACAgIAAxUAAWrW4EF1zaziGV5uyNSraLKYuzqVAAJ-sgACnFSwSpC-4CnNcmxePQQ"
+_cached_banner_file_id: Optional[str] = BANNER_ANIMATION_FILE_ID
+
+
+async def _send_telegram_rich_article(
+    chat_id: int,
+    bot: Bot,
+    text: str,
+    reply_markup: Optional[types.ReplyKeyboardMarkup | types.ReplyKeyboardRemove | types.InlineKeyboardMarkup] = None,
+) -> Optional[types.Message]:
+    """
+    Отправляет сервисное сообщение в нативном формате Telegram Rich Message (Статья):
+    заголовок статьи сверху, анимированный баннер по центру и текст дашборда снизу без разбивки на несколько сообщений.
+    """
+    try:
+        clean_text = re.sub(r"<[^>]+>", "", text).strip()
+        payload: dict[str, Any] = {
+            "chat_id": chat_id,
+            "rich_message": {
+                "blocks": [
+                    {
+                        "type": "heading",
+                        "text": "⚡️ БРЕДЛИ ПЕРЕКУПЕР",
+                        "size": 1,
+                    },
+                    {
+                        "type": "animation",
+                        "animation": {
+                            "type": "animation",
+                            "media": BANNER_ANIMATION_FILE_ID,
+                        },
+                        "need_autoplay": True,
+                    },
+                    {
+                        "type": "paragraph",
+                        "text": clean_text,
+                    },
+                ]
+            },
+        }
+        if reply_markup is not None:
+            if hasattr(reply_markup, "model_dump"):
+                payload["reply_markup"] = reply_markup.model_dump(exclude_none=True)
+            elif isinstance(reply_markup, dict):
+                payload["reply_markup"] = reply_markup
+
+        if hasattr(bot, "session") and hasattr(bot.session, "create_session"):
+            client_session = await bot.session.create_session()
+            url = f"https://api.telegram.org/bot{settings.BOT_TOKEN}/sendRichMessage"
+            async with client_session.post(url, json=payload, timeout=aiohttp.ClientTimeout(total=10.0)) as resp:
+                if resp.status == 200:
+                    data = await resp.json()
+                    if data.get("ok") and data.get("result"):
+                        return types.Message(**data["result"])
+    except Exception as e:
+        logger.debug("sendRichMessage не сработал: %s. Переход к fallback через LinkPreviewOptions...", e)
+    return None
 
 
 async def send_or_replace_functional_message(
@@ -152,7 +209,7 @@ async def send_or_replace_functional_message(
     """
     Отправляет сервисное/функциональное сообщение бота с анимированным баннером 'БРЕДЛИ ПЕРЕКУПЕР', предварительно
     удаляя предыдущее функциональное сообщение в этом чате.
-    Соблюдает правило 'одного живого сообщения' и оформление с разделителем '•••' под медиа.
+    Соблюдает правило 'одного живого сообщения' (Single Living Message) и формат статьи без разделения на 2 сообщения.
     """
     old_msg_id = _last_functional_messages.get(chat_id)
     if old_msg_id:
@@ -170,111 +227,75 @@ async def send_or_replace_functional_message(
             current_reg_name = _active_region_manager.current["name"] if _active_region_manager else "Москва"
             reply_markup = get_reply_keyboard(current_region=current_reg_name)
 
-    # Гарантируем разделитель '•••' под баннером/фотографией
-    caption_text = text
-    if with_banner and not caption_text.startswith("•••"):
-        caption_text = f"•••\n\n{caption_text}"
+    msg: Optional[types.Message] = None
 
-    # Отправка анимированного видео-баннера или фото
-    msg = None
-    global _cached_banner_file_id
-
-    if with_banner:
-        # 1. Приоритет: отправка сообщения в формате Telegram «Статья» (через скрепку / send_rich_message)
-        if hasattr(bot, "send_rich_message"):
-            try:
-                # Извлекаем заголовок из текста или используем «Бредли Перекупер»
-                heading_title = "Бредли Перекупер"
-                raw_lines = [line.strip() for line in text.split("\n") if line.strip()]
-                clean_lines = []
-                for line in raw_lines:
-                    clean_line = re.sub(r"<[^>]+>", "", line).strip()
-                    if clean_line.startswith("•••") or clean_line.startswith("***"):
-                        continue
-                    if "БРЕДЛИ ПЕРЕКУПЕР" in clean_line.upper():
-                        heading_title = clean_line.replace("|", "—").strip()
-                    else:
-                        clean_lines.append(clean_line)
-
-                heading_block = InputRichBlockSectionHeading(
-                    text=RichTextUnderline(text=RichTextItalic(text=RichTextBold(text=heading_title))),
-                    size=1,
-                )
-                video_target = video or _cached_banner_file_id
-                if not video_target:
-                    if BANNER_VIDEO_PATH.exists():
-                        video_target = FSInputFile(str(BANNER_VIDEO_PATH))
-                    elif BANNER_GIF_PATH.exists():
-                        video_target = FSInputFile(str(BANNER_GIF_PATH))
-                video_block = InputRichBlockVideo(
-                    video=InputMediaVideo(media=video_target)
-                )
-                dots_block = InputRichBlockParagraph(text="***")
-                body_block = InputRichBlockParagraph(text="\n".join(clean_lines))
-
-                rm = InputRichMessage(
-                    blocks=[
-                        heading_block,
-                        video_block,
-                        dots_block,
-                        body_block,
-                    ]
-                )
-                msg = await bot.send_rich_message(
-                    chat_id=chat_id,
-                    rich_message=rm,
-                    reply_markup=reply_markup,
-                )
-            except Exception as rich_err:
-                logger.debug("send_rich_message не удался: %s. Переход к fallback...", rich_err)
-
-        # 2. Fallback: отправка анимированного баннера .gif / .mp4 (через send_animation)
-        if msg is None:
-            anim_target = video or _cached_banner_file_id
-            if not anim_target:
-                if BANNER_GIF_PATH.exists():
-                    anim_target = FSInputFile(str(BANNER_GIF_PATH))
-                elif BANNER_VIDEO_PATH.exists():
-                    anim_target = FSInputFile(str(BANNER_VIDEO_PATH))
-
-            if anim_target and hasattr(bot, "send_animation"):
-                try:
-                    msg = await bot.send_animation(
-                        chat_id=chat_id,
-                        animation=anim_target,
-                        caption=caption_text,
-                        parse_mode="HTML",
-                        reply_markup=reply_markup,
-                        show_caption_above_media=False,
-                    )
-                    if hasattr(msg, "video") and msg.video:
-                        _cached_banner_file_id = msg.video.file_id
-                    elif hasattr(msg, "animation") and msg.animation:
-                        _cached_banner_file_id = msg.animation.file_id
-                    elif hasattr(msg, "document") and msg.document:
-                        _cached_banner_file_id = msg.document.file_id
-                except Exception as anim_err:
-                    logger.debug("Не удалось отправить анимированный баннер: %s. Переход к фото...", anim_err)
-
-        # 3. Fallback: статичный роскошный фото-баннер
-        if msg is None and BANNER_FILE_PATH.exists() and hasattr(bot, "send_photo"):
-            photo_obj = FSInputFile(str(BANNER_FILE_PATH)) if photo is None else (
-                FSInputFile(photo) if isinstance(photo, str) else photo
+    # 1. Если передан явный photo (например, фото конкретного лота с Авито)
+    if photo is not None and hasattr(bot, "send_photo"):
+        caption_text = text if text.startswith("•••") else f"•••\n\n{text}"
+        photo_obj = FSInputFile(photo) if isinstance(photo, str) else photo
+        try:
+            msg = await bot.send_photo(
+                chat_id=chat_id,
+                photo=photo_obj,
+                caption=caption_text,
+                parse_mode="HTML",
+                reply_markup=reply_markup,
             )
+        except Exception as e:
+            logger.debug("Не удалось отправить photo: %s", e)
+
+    # 2. Если передан явный video/анимация лота
+    elif video is not None and hasattr(bot, "send_animation"):
+        caption_text = text if text.startswith("•••") else f"•••\n\n{text}"
+        video_obj = FSInputFile(video) if isinstance(video, str) else video
+        try:
+            msg = await bot.send_animation(
+                chat_id=chat_id,
+                animation=video_obj,
+                caption=caption_text,
+                parse_mode="HTML",
+                reply_markup=reply_markup,
+            )
+        except Exception as e:
+            logger.debug("Не удалось отправить video: %s", e)
+
+    # 3. Основной фирменный формат сервисных экранов: Telegram «Статья»
+    # (карточка со статьей: заголовок статьи сверху, баннер по центру и текст дашборда снизу)
+    if msg is None and with_banner:
+        # 3.1 Попытка нативного Rich Message
+        msg = await _send_telegram_rich_article(
+            chat_id=chat_id,
+            bot=bot,
+            text=text,
+            reply_markup=reply_markup,
+        )
+
+        # 3.2 Fallback через OpenGraph LinkPreviewOptions
+        if msg is None and hasattr(bot, "send_message"):
+            base_url = getattr(settings, "WEBAPP_URL", "https://x9x9x9www.github.io/apple-resell-bot/")
+            if not base_url.endswith("/"):
+                base_url += "/"
+            article_url = f"{base_url}article.html?v=16"
+            link_opts = LinkPreviewOptions(
+                is_disabled=False,
+                url=article_url,
+                prefer_large_media=True,
+                show_above_text=True,
+            )
+            article_text = text if f'<a href="{article_url}">' in text else f'<a href="{article_url}">&#8203;</a>{text}'
             try:
-                msg = await bot.send_photo(
+                msg = await bot.send_message(
                     chat_id=chat_id,
-                    photo=photo_obj,
-                    caption=caption_text,
+                    text=article_text,
                     parse_mode="HTML",
                     reply_markup=reply_markup,
-                    show_caption_above_media=False,
+                    link_preview_options=link_opts,
                 )
-            except Exception as photo_err:
-                logger.warning("Не удалось отправить фото баннера: %s", photo_err)
+            except Exception as article_err:
+                logger.warning("Не удалось отправить сообщение со статьей: %s. Переход к fallback...", article_err)
 
-    # 4. Финальный fallback на текстовое сообщение
-    if msg is None:
+    # 4. Финальный fallback на текстовое сообщение (если статья не отправилась или with_banner=False)
+    if msg is None and hasattr(bot, "send_message"):
         msg = await bot.send_message(
             chat_id=chat_id,
             text=text,
@@ -283,7 +304,8 @@ async def send_or_replace_functional_message(
             link_preview_options=link_preview_options,
         )
 
-    _last_functional_messages[chat_id] = msg.message_id
+    if msg is not None:
+        _last_functional_messages[chat_id] = msg.message_id
     return msg
 
 
@@ -295,7 +317,8 @@ async def send_rich_message(
     article_url: Optional[str] = None,
 ) -> types.Message:
     """
-    Отправляет главное меню / сервисное сообщение с гарантированным показом баннера 'БРЕДЛИ ПЕРЕКУПЕР'.
+    Отправляет сервисное/функциональное сообщение бота в формате Telegram «Статья»:
+    карточка со статьей (заголовок сверху, большой баннер по центру и текст дашборда снизу).
     """
     return await send_or_replace_functional_message(
         chat_id=chat_id,
@@ -2007,7 +2030,24 @@ def create_bot_dispatcher(
                 )
             except Exception:
                 pass
-        return True
+    @dp.message()
+    async def catch_any_unhandled_message(message: types.Message):
+        """Перехватывает любые сообщения, присланные пользователем (образец баннера, медиа и т.д.)"""
+        logger.info(
+            "ПОЛУЧЕНО СООБЩЕНИЕ ОТ ПОЛЬЗОВАТЕЛЯ %s: text=%r, caption=%r, photo=%s, video=%s, animation=%s, document=%s",
+            message.chat.id,
+            message.text,
+            message.caption,
+            bool(message.photo),
+            bool(message.video),
+            bool(message.animation),
+            bool(message.document),
+        )
+        sample_path = settings.BASE_DIR / "user_sample_message.json"
+        try:
+            sample_path.write_text(message.model_dump_json(indent=2, exclude_none=True), encoding="utf-8")
+        except Exception as e:
+            logger.debug("Не удалось сохранить user_sample_message.json: %s", e)
 
     return dp
 

@@ -157,6 +157,22 @@ async def main() -> None:
         asyncio.create_task(youla_worker.run(), name="YoulaWorker"),
     ]
 
+    # Graceful Shutdown
+    loop = asyncio.get_running_loop()
+    stop_event = asyncio.Event()
+
+    async def _run_bot_polling() -> None:
+        while not stop_event.is_set():
+            try:
+                await bot_dp.start_polling(bot, handle_signals=False)
+            except asyncio.CancelledError:
+                break
+            except Exception as poll_err:
+                if stop_event.is_set():
+                    break
+                logger.warning("Сбой в polling бота: %s. Перезапуск через 3 сек...", poll_err)
+                await asyncio.sleep(3)
+
     # Если токен настроен, регистрируем команды и запускаем polling бота
     if settings.BOT_TOKEN and settings.BOT_TOKEN != "YOUR_BOT_TOKEN_HERE":
         try:
@@ -165,7 +181,7 @@ async def main() -> None:
             logger.debug("Не удалось зарегистрировать команды бота: %s", e)
         tasks.append(
             asyncio.create_task(
-                bot_dp.start_polling(bot, handle_signals=False),
+                _run_bot_polling(),
                 name="BotPolling",
             )
         )
@@ -173,10 +189,6 @@ async def main() -> None:
         logger.warning(
             "ВНИМАНИЕ: BOT_TOKEN не заполнен в .env! Запуск в режиме имитации/тестирования."
         )
-
-    # Graceful Shutdown
-    loop = asyncio.get_running_loop()
-    stop_event = asyncio.Event()
 
     def _shutdown_handler(sig_name: str) -> None:
         logger.info("Получен сигнал %s. Завершение работы...", sig_name)
