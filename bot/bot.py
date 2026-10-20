@@ -8,6 +8,7 @@ import time
 from typing import Optional
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.client.default import DefaultBotProperties
+from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.enums import ParseMode
 from aiogram.filters import Command
 from aiogram.types import (
@@ -125,9 +126,17 @@ async def cleanup_user_message(message: types.Message) -> None:
 from pathlib import Path
 
 BANNER_FILE_PATH = Path(__file__).resolve().parent.parent / "assets" / "banner.jpg"
-BANNER_GIF_PATH = Path(__file__).resolve().parent.parent / "assets" / "banner.gif"
-BANNER_VIDEO_PATH = Path(__file__).resolve().parent.parent / "assets" / "banner.mp4"
-_cached_banner_file_id: Optional[str] = None
+BANNER_GIF_PATH = (
+    Path(__file__).resolve().parent.parent / "assets" / "пока что видео.gif"
+    if (Path(__file__).resolve().parent.parent / "assets" / "пока что видео.gif").exists()
+    else Path(__file__).resolve().parent.parent / "assets" / "banner.gif"
+)
+BANNER_VIDEO_PATH = (
+    Path(__file__).resolve().parent.parent / "assets" / "пока что видео.mp4"
+    if (Path(__file__).resolve().parent.parent / "assets" / "пока что видео.mp4").exists()
+    else Path(__file__).resolve().parent.parent / "assets" / "banner.mp4"
+)
+_cached_banner_file_id: Optional[str] = "BQACAgIAAxkDAAIDUmrW3gesnDDS9sZPwx_ocHwSBRjIAAIXrAACcZW4SlxH94WXPmVUPQQ"
 
 
 async def send_or_replace_functional_message(
@@ -242,6 +251,8 @@ async def send_or_replace_functional_message(
                         _cached_banner_file_id = msg.video.file_id
                     elif hasattr(msg, "animation") and msg.animation:
                         _cached_banner_file_id = msg.animation.file_id
+                    elif hasattr(msg, "document") and msg.document:
+                        _cached_banner_file_id = msg.document.file_id
                 except Exception as anim_err:
                     logger.debug("Не удалось отправить анимированный баннер: %s. Переход к фото...", anim_err)
 
@@ -321,8 +332,10 @@ async def _show_city_selection_guide(message: types.Message, reg_manager: Region
 
 def create_bot() -> Bot:
     """Создает и настраивает экземпляр aiogram 3 Bot."""
+    session = AiohttpSession(timeout=120.0)
     return Bot(
         token=settings.BOT_TOKEN,
+        session=session,
         default=DefaultBotProperties(parse_mode=ParseMode.HTML),
     )
 
